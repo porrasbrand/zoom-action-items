@@ -215,7 +215,7 @@ export function updateActionItem(id, updates) {
   const d = getDb();
   const allowedFields = [
     'title', 'description', 'owner_name', 'due_date', 'priority', 'status', 'category',
-    'transcript_excerpt', 'ph_project_id', 'ph_task_list_id', 'ph_assignee_id'
+    'transcript_excerpt', 'ph_project_id', 'ph_task_list_id', 'ph_assignee_id', 'ph_task_id'
   ];
   const sets = [];
   const params = [];
@@ -251,6 +251,12 @@ export function getDistinctOwners() {
     ORDER BY count DESC
   `).all();
   return rows.map(r => r.owner_name);
+}
+
+// Set pushed_at timestamp
+export function setPushedAt(id) {
+  const d = getDb();
+  return d.prepare("UPDATE action_items SET pushed_at = datetime('now') WHERE id = ?").run(id);
 }
 
 export function setActionItemStatus(id, status) {
