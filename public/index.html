@@ -1651,11 +1651,7 @@
     }
 
     // Cancel inline edit
-    function cancelEdit() {
-      if (!currentEditField) return;
-      currentEditField = null;
-      refreshActionItem(currentEditItemId);
-    }
+    function cancelEdit() {      if (!currentEditField) return;      const editId = currentEditField.id;      currentEditField = null;      refreshActionItem(editId);    }
 
     // Cycle through priorities
     async function cyclePriority(id, currentPriority) {
