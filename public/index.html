@@ -1390,7 +1390,7 @@
       projectSelect.innerHTML = '<option value="">Loading...</option>';
       const projects = await fetchPHProjects();
       projectSelect.innerHTML = '<option value="">Select project...</option>' +
-        projects.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('');
+        projects.map(p => `<option value="${p.id}">${escapeHtml(p.title || p.name || "Unnamed")}</option>`).join('');
 
       // Auto-select project from client
       if (clientId) {
@@ -1495,7 +1495,7 @@
       projectSelect.innerHTML = '<option value="">Loading...</option>';
       const projects = await fetchPHProjects();
       projectSelect.innerHTML = '<option value="">Select project...</option>' +
-        projects.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('');
+        projects.map(p => `<option value="${p.id}">${escapeHtml(p.title || p.name || "Unnamed")}</option>`).join('');
 
       // Auto-select from client
       if (clientId) {
