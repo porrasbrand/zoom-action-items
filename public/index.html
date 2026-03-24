@@ -1236,7 +1236,7 @@
       const clientId = meeting?.client_id || '';
 
       return `
-        <div class="action-item ${statusClass}" id="action-${item.id}" data-item='${escapeHtml(JSON.stringify(item))}'>
+        <div class="action-item ${statusClass}" id="action-${item.id}">
           <div class="item-content">
             <div class="item-row">
               <div class="item-title inline-edit" onclick="startEdit(${item.id}, 'title', this)">${escapeHtml(item.title)}</div>
@@ -1727,23 +1727,7 @@
     // Complete action item
 
     // Update a single action item card without re-rendering the whole panel
-    async function refreshActionItem(itemId) {
-      try {
-        const res = await fetch(API + '/action-items/' + itemId);
-        const item = await res.json();
-        const card = document.getElementById('action-' + itemId);
-        if (!card) return;
-        // Get current meeting data from the stored meeting context
-        const meeting = window._currentMeeting || {};
-        const newHtml = renderActionItem(item, meeting);
-        const temp = document.createElement('div');
-        temp.innerHTML = newHtml;
-        const newCard = temp.firstElementChild;
-        card.replaceWith(newCard);
-      } catch (e) {
-        console.warn('Failed to refresh action item:', e);
-      }
-    }
+    async function refreshActionItem(itemId) {      try {        const res = await fetch(API + "/action-items/" + itemId);        if (!res.ok) throw new Error("HTTP " + res.status);        const item = await res.json();        const card = document.getElementById("action-" + itemId);        if (!card) { console.warn("Card not found: action-" + itemId); return; }        const meeting = window._currentMeeting || {};        const newHtml = renderActionItem(item, meeting).trim();        const temp = document.createElement("div");        temp.innerHTML = newHtml;        const newCard = temp.firstElementChild;        if (!newCard) { console.warn("Failed to create new card element"); return; }        card.replaceWith(newCard);      } catch (e) {        console.warn("Failed to refresh action item " + itemId + ":", e);      }    }
 
     // Update stats without full reload
     async function refreshStats() {
