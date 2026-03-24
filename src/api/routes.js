@@ -111,7 +111,7 @@ router.put('/action-items/:id', (req, res) => {
     if (!updated) {
       return res.status(404).json({ error: 'Action item not found or no changes' });
     }
-    res.json({ success: true });
+    res.json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -151,6 +151,18 @@ router.post('/action-items/:id/reopen', (req, res) => {
       return res.status(404).json({ error: 'Action item not found' });
     }
     res.json({ success: true, status: 'open' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ OWNERS ============
+
+// GET /api/owners - Distinct owner names
+router.get('/owners', (req, res) => {
+  try {
+    const owners = db.getDistinctOwners();
+    res.json({ owners });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

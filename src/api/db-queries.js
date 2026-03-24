@@ -20,6 +20,32 @@ function getDb() {
   return db;
 }
 
+// Run migrations on startup
+export function runMigrations() {
+  const d = getDb();
+
+  // Check which columns exist
+  const tableInfo = d.prepare("PRAGMA table_info(action_items)").all();
+  const existingColumns = new Set(tableInfo.map(c => c.name));
+
+  const newColumns = [
+    { name: 'transcript_excerpt', type: 'TEXT' },
+    { name: 'ph_project_id', type: 'TEXT' },
+    { name: 'ph_task_list_id', type: 'TEXT' },
+    { name: 'ph_assignee_id', type: 'TEXT' },
+    { name: 'pushed_at', type: 'TEXT' },
+  ];
+
+  for (const col of newColumns) {
+    if (!existingColumns.has(col.name)) {
+      console.log(`[Migration] Adding column: ${col.name}`);
+      d.exec(`ALTER TABLE action_items ADD COLUMN ${col.name} ${col.type}`);
+    }
+  }
+
+  console.log('[Migration] Database schema up to date');
+}
+
 // ============ MEETINGS ============
 
 export function getMeetings({ client_id, status, from, to, limit = 50, offset = 0, sort = 'desc' } = {}) {
@@ -187,7 +213,10 @@ export function getActionItemById(id) {
 
 export function updateActionItem(id, updates) {
   const d = getDb();
-  const allowedFields = ['title', 'description', 'owner_name', 'due_date', 'priority', 'status', 'category'];
+  const allowedFields = [
+    'title', 'description', 'owner_name', 'due_date', 'priority', 'status', 'category',
+    'transcript_excerpt', 'ph_project_id', 'ph_task_list_id', 'ph_assignee_id'
+  ];
   const sets = [];
   const params = [];
 
@@ -198,12 +227,30 @@ export function updateActionItem(id, updates) {
     }
   }
 
-  if (sets.length === 0) return false;
+  if (sets.length === 0) return null;
 
   params.push(id);
   const sql = `UPDATE action_items SET ${sets.join(', ')} WHERE id = ?`;
   const result = d.prepare(sql).run(...params);
-  return result.changes > 0;
+
+  if (result.changes > 0) {
+    // Return the updated record
+    return getActionItemById(id);
+  }
+  return null;
+}
+
+// Get distinct owner names
+export function getDistinctOwners() {
+  const d = getDb();
+  const rows = d.prepare(`
+    SELECT owner_name, COUNT(*) as count
+    FROM action_items
+    WHERE owner_name IS NOT NULL AND owner_name != ''
+    GROUP BY owner_name
+    ORDER BY count DESC
+  `).all();
+  return rows.map(r => r.owner_name);
 }
 
 export function setActionItemStatus(id, status) {

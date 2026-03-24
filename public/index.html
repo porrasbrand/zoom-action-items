@@ -577,6 +577,109 @@
       padding: 40px;
       color: #8b949e;
     }
+
+    /* Inline editing */
+    .inline-edit {
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+
+    .inline-edit:hover {
+      background: #30363d;
+    }
+
+    .inline-edit-input {
+      background: #0d1117;
+      border: 1px solid #58a6ff;
+      border-radius: 4px;
+      color: #c9d1d9;
+      font-size: inherit;
+      padding: 4px 8px;
+      width: 100%;
+    }
+
+    .inline-edit-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #58a6ff44;
+    }
+
+    .inline-edit-textarea {
+      background: #0d1117;
+      border: 1px solid #58a6ff;
+      border-radius: 4px;
+      color: #c9d1d9;
+      font-size: 13px;
+      padding: 6px 8px;
+      width: 100%;
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .inline-edit-textarea:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #58a6ff44;
+    }
+
+    .inline-edit-select {
+      background: #0d1117;
+      border: 1px solid #58a6ff;
+      border-radius: 4px;
+      color: #c9d1d9;
+      font-size: 12px;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+
+    .item-desc {
+      font-size: 13px;
+      color: #8b949e;
+      margin: 6px 0;
+      line-height: 1.5;
+    }
+
+    .item-desc.empty {
+      font-style: italic;
+      color: #6e7681;
+    }
+
+    .saving-indicator {
+      font-size: 11px;
+      color: #58a6ff;
+      margin-left: 8px;
+    }
+
+    .priority-badge {
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .priority-badge.high {
+      background: #f8514922;
+      color: #f85149;
+    }
+
+    .priority-badge.medium {
+      background: #d2992222;
+      color: #d29922;
+    }
+
+    .priority-badge.low {
+      background: #8b949e22;
+      color: #8b949e;
+    }
+
+    .action-item .item-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
   </style>
 </head>
 <body>
@@ -649,8 +752,10 @@
 
     let meetings = [];
     let clients = [];
+    let owners = [];
     let selectedMeetingId = null;
     let autoRefreshInterval = null;
+    let currentEditField = null;
 
     // XSS Prevention
     function escapeHtml(text) {
@@ -720,6 +825,17 @@
         });
       } catch (err) {
         console.error('Failed to load clients:', err);
+      }
+    }
+
+    // Load owners for autocomplete
+    async function loadOwners() {
+      try {
+        const res = await fetch(`${API}/owners`);
+        const data = await res.json();
+        owners = data.owners || [];
+      } catch (err) {
+        console.error('Failed to load owners:', err);
       }
     }
 
@@ -868,20 +984,25 @@
       `;
     }
 
-    // Render action item
+    // Render action item with inline editing
     function renderActionItem(item) {
       const statusClass = item.status === 'complete' ? 'complete' :
                           item.status === 'rejected' ? 'rejected' : '';
-      const priorityClass = `priority-${item.priority || 'medium'}`;
+      const priority = item.priority || 'medium';
 
       return `
-        <div class="action-item ${statusClass}" id="action-${item.id}">
+        <div class="action-item ${statusClass}" id="action-${item.id}" data-item='${escapeHtml(JSON.stringify(item))}'>
           <div class="item-content">
-            <div class="item-title">${escapeHtml(item.title)}</div>
+            <div class="item-row">
+              <div class="item-title inline-edit" onclick="startEdit(${item.id}, 'title', this)">${escapeHtml(item.title)}</div>
+            </div>
+            <div class="item-desc ${item.description ? '' : 'empty'} inline-edit" onclick="startEdit(${item.id}, 'description', this)">
+              ${item.description ? escapeHtml(item.description) : 'Click to add description...'}
+            </div>
             <div class="item-meta">
-              <span class="owner">👤 ${escapeHtml(item.owner_name || 'TBD')}</span>
-              ${item.due_date ? `<span>📅 ${escapeHtml(formatShortDate(item.due_date))}</span>` : ''}
-              <span class="${priorityClass}">● ${escapeHtml(item.priority || 'medium')}</span>
+              <span class="owner inline-edit" onclick="startEdit(${item.id}, 'owner_name', this)">👤 ${escapeHtml(item.owner_name || 'TBD')}</span>
+              <span class="inline-edit" onclick="startEdit(${item.id}, 'due_date', this)">📅 ${item.due_date ? escapeHtml(formatShortDate(item.due_date)) : 'No date'}</span>
+              <span class="priority-badge ${priority}" onclick="cyclePriority(${item.id}, '${priority}')">${escapeHtml(priority)}</span>
               <span class="status-badge status-${item.status || 'open'}">${escapeHtml(item.status || 'open')}</span>
             </div>
           </div>
@@ -889,13 +1010,125 @@
             ${item.status === 'open' ? `
               <button class="action-btn complete-btn" onclick="completeItem(${item.id})">✓</button>
               <button class="action-btn reject-btn" onclick="rejectItem(${item.id})">✕</button>
-              <button class="action-btn edit-btn" onclick="editItem(${item.id})">✎</button>
             ` : `
               <button class="action-btn reopen-btn" onclick="reopenItem(${item.id})">↩</button>
             `}
           </div>
         </div>
       `;
+    }
+
+    // Start inline editing
+    function startEdit(id, field, element) {
+      if (currentEditField) return; // Already editing
+      currentEditField = { id, field, element };
+
+      const itemEl = document.getElementById(`action-${id}`);
+      const item = JSON.parse(itemEl.dataset.item);
+      const currentValue = item[field] || '';
+
+      let input;
+      if (field === 'description') {
+        input = document.createElement('textarea');
+        input.className = 'inline-edit-textarea';
+        input.rows = 3;
+        input.value = currentValue;
+      } else if (field === 'due_date') {
+        input = document.createElement('input');
+        input.type = 'date';
+        input.className = 'inline-edit-input';
+        input.value = currentValue ? currentValue.slice(0, 10) : '';
+      } else if (field === 'owner_name') {
+        input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'inline-edit-input';
+        input.value = currentValue;
+        input.setAttribute('list', 'ownersList');
+      } else {
+        input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'inline-edit-input';
+        input.value = currentValue;
+      }
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          saveEdit(input.value);
+        } else if (e.key === 'Escape') {
+          cancelEdit();
+        }
+      });
+
+      input.addEventListener('blur', () => {
+        // Small delay to allow click on other elements
+        setTimeout(() => {
+          if (currentEditField && currentEditField.element === element) {
+            saveEdit(input.value);
+          }
+        }, 150);
+      });
+
+      element.innerHTML = '';
+      element.appendChild(input);
+      input.focus();
+      if (input.select) input.select();
+    }
+
+    // Save inline edit
+    async function saveEdit(newValue) {
+      if (!currentEditField) return;
+
+      const { id, field, element } = currentEditField;
+      currentEditField = null;
+
+      // Show saving indicator
+      element.innerHTML = `<span class="saving-indicator">Saving...</span>`;
+
+      try {
+        const res = await fetch(`${API}/action-items/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ [field]: newValue || null })
+        });
+
+        if (!res.ok) throw new Error('Failed to save');
+
+        showToast('Saved');
+        loadMeetingDetail(selectedMeetingId);
+      } catch (err) {
+        showToast('Failed to save', true);
+        loadMeetingDetail(selectedMeetingId);
+      }
+    }
+
+    // Cancel inline edit
+    function cancelEdit() {
+      if (!currentEditField) return;
+      currentEditField = null;
+      loadMeetingDetail(selectedMeetingId);
+    }
+
+    // Cycle through priorities
+    async function cyclePriority(id, currentPriority) {
+      const priorities = ['low', 'medium', 'high'];
+      const currentIndex = priorities.indexOf(currentPriority);
+      const newPriority = priorities[(currentIndex + 1) % priorities.length];
+
+      try {
+        const res = await fetch(`${API}/action-items/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ priority: newPriority })
+        });
+
+        if (!res.ok) throw new Error('Failed to update priority');
+
+        showToast(`Priority: ${newPriority}`);
+        loadMeetingDetail(selectedMeetingId);
+      } catch (err) {
+        showToast('Failed to update priority', true);
+      }
     }
 
     // Render decision
@@ -985,10 +1218,6 @@
       }
     }
 
-    // Edit action item (simplified inline)
-    function editItem(id) {
-      showToast('Edit functionality coming soon');
-    }
 
     // Assign client
     async function assignClient(meetingId, clientId) {
@@ -1040,7 +1269,18 @@
     async function init() {
       await loadStats();
       await loadClients();
+      await loadOwners();
       await loadMeetings();
+
+      // Create owners datalist
+      const datalist = document.createElement('datalist');
+      datalist.id = 'ownersList';
+      owners.forEach(owner => {
+        const opt = document.createElement('option');
+        opt.value = owner;
+        datalist.appendChild(opt);
+      });
+      document.body.appendChild(datalist);
     }
 
     init();

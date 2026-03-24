@@ -14,6 +14,10 @@ dotenv.config({ path: join(__dirname, '..', '..', '.env') });
 
 import routes from './routes.js';
 import { createWebhookHandler } from './webhook-handler.js';
+import { runMigrations } from './db-queries.js';
+
+// Run DB migrations on startup
+runMigrations();
 
 const PORT = process.env.DASHBOARD_PORT || 3875;
 const BASE_PATH = '/zoom';
