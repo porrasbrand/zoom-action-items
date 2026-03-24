@@ -14,7 +14,8 @@ dotenv.config({ path: join(__dirname, '..', '.env'), override: true });
 
 import { pollOnce } from './poll.js';
 import { listUsers } from './lib/zoom-client.js';
-import { postAlert } from './lib/slack-publisher.js';
+import { postAlert, verifyChannelAccess } from './lib/slack-publisher.js';
+import { getAllClients } from './lib/client-matcher.js';
 
 const POLL_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
 const DRY_RUN = process.env.DRY_RUN === 'true';
@@ -71,11 +72,50 @@ async function validateCredentials() {
     throw new Error(`Slack API test failed: ${err.message}`);
   }
 
+  // Verify channel access for configured clients
+  await verifyConfiguredChannels();
+
   // Note: We don't test Gemini here as it would cost tokens
   // The AI extractor will throw on first use if key is invalid
   log('  Gemini: Key present (will validate on first use)');
 
   log('Credential validation: PASSED');
+}
+
+/**
+ * Verify bot has access to all configured client channels.
+ * Logs warnings for inaccessible channels but doesn't fail.
+ */
+async function verifyConfiguredChannels() {
+  log('  Verifying channel access...');
+
+  const clients = getAllClients();
+  const configuredChannels = clients
+    .filter(c => c.slack_channel_id)
+    .map(c => ({ id: c.slack_channel_id, name: c.slack_channel_name || c.name }));
+
+  if (configuredChannels.length === 0) {
+    log('    No client channels configured (will use fallback)');
+    return;
+  }
+
+  let accessible = 0;
+  let inaccessible = 0;
+
+  for (const ch of configuredChannels) {
+    const result = await verifyChannelAccess(ch.id);
+    if (result.accessible) {
+      accessible++;
+    } else {
+      inaccessible++;
+      log(`    WARNING: Cannot access ${ch.name} (${ch.id}): ${result.error}`);
+    }
+  }
+
+  log(`    Channel verification: ${accessible} accessible, ${inaccessible} inaccessible`);
+  if (inaccessible > 0) {
+    log('    Note: Inaccessible channels will fall back to default channel');
+  }
 }
 
 /**

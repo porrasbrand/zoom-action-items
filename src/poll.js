@@ -18,16 +18,13 @@ dotenv.config({ path: join(__dirname, '..', '.env'), override: true });
 
 import { listRecordings, filterMeetingsWithTranscripts, downloadTranscript } from './lib/zoom-client.js';
 import { parseVTT, extractSpeakers } from './lib/vtt-parser.js';
-import { matchClient } from './lib/client-matcher.js';
+import { matchClient, isInternalMeeting } from './lib/client-matcher.js';
 import { extractMeetingData } from './lib/ai-extractor.js';
-import { postToSlack, formatSlackMessage, postAlert } from './lib/slack-publisher.js';
+import { postToSlack, formatSlackMessage, postAlert, resolveChannel } from './lib/slack-publisher.js';
 import * as db from './lib/database.js';
 
 const DRY_RUN = process.argv.includes('--dry-run') || process.env.DRY_RUN === 'true';
 const LOOKBACK_HOURS = parseInt(process.env.LOOKBACK_HOURS || '24', 10);
-
-// Default channel for unmatched clients or clients without channel config
-const DEFAULT_SLACK_CHANNEL = process.env.SLACK_DEFAULT_CHANNEL || 'zoom-meeting-notes';
 
 function log(msg) {
   const ts = new Date().toISOString();
@@ -57,11 +54,15 @@ async function processMeeting(meeting) {
 
   log(`  Processing: "${topic}" (${start_time})`);
 
-  // Match client
+  // Match client and check if internal
   const client = matchClient(topic);
+  const isInternal = client?.internal || isInternalMeeting(topic);
   const clientName = client?.name || 'Unmatched';
   const clientId = client?.id || 'unmatched';
-  log(`  Client: ${clientName}`);
+
+  // Resolve target channel for logging
+  const { channelName, routing } = resolveChannel(client, isInternal);
+  log(`  Client: ${clientName} | Routing: ${routing} → ${channelName}`);
 
   // Insert meeting record (status: processing)
   const meetingId = db.insertMeeting({
@@ -111,26 +112,26 @@ async function processMeeting(meeting) {
       db.insertDecisions(meetingId, clientId, extraction.decisions);
     }
 
-    // Post to Slack
-    const channelId = client?.slack_channel_id || DEFAULT_SLACK_CHANNEL;
-
+    // Post to Slack with channel routing
     if (DRY_RUN) {
-      log('  [DRY RUN] Would post to Slack:');
-      console.log(formatSlackMessage({ topic, clientName, meetingDate: start_time, extraction }));
+      log(`  [DRY RUN] Would post to Slack (${routing} → ${channelName}):`);
+      console.log(formatSlackMessage({ topic, clientName, meetingDate: start_time, extraction, isInternal }));
     } else {
-      log(`  Posting to Slack channel: ${channelId}`);
+      log(`  Posting to Slack: ${routing} → ${channelName}`);
       const slackResult = await postToSlack({
-        channelId,
         topic,
         clientName,
         meetingDate: start_time,
         extraction,
+        client,
+        isInternal,
       });
       db.updateMeetingResults(meetingId, {
         slackMessageTs: slackResult.ts,
         slackChannelId: slackResult.channel,
       });
-      log(`  Posted to Slack: ${slackResult.channel} (ts: ${slackResult.ts})`);
+      const fallbackNote = slackResult.usedFallback ? ' (used fallback)' : '';
+      log(`  Posted to Slack: ${slackResult.channel} (${slackResult.routing})${fallbackNote}`);
     }
 
     return { processed: true, clientName, actionCount, decisionCount };

@@ -1,0 +1,33 @@
+{
+  "triage": {
+    "unmatched": {
+      "id": "",
+      "name": "zoom-unmatched",
+      "description": "Meetings that don't match any client"
+    },
+    "internal": {
+      "id": "",
+      "name": "zoom-internal",
+      "description": "B3X internal meetings (huddles, standups, etc.)"
+    },
+    "fallback": {
+      "id": "",
+      "name": "zoom-meeting-notes",
+      "description": "Fallback when target channel is inaccessible"
+    }
+  },
+  "notes": [
+    "Channel IDs left empty because bot lacks channels:read scope",
+    "The bot will try to post by channel name and log warnings on failure",
+    "To fix: Add channels:read scope to the Slack bot, or manually add the bot to channels",
+    "Known client channels from spec (need manual bot invite):",
+    "  int-1st-choice-pro-services-brendan (C07JUKN9Z7W)",
+    "  int-echelon (C08RTPBLV46)",
+    "  int-empower-home-services (C09KR0XRW3V)",
+    "  int-gs-home-services (C09KYEXUQMQ)",
+    "  int-jerry-levinson-profit-now (C09PAC3G39N)",
+    "  int-legendary-service (C07V3CH2H3Q)",
+    "  int-northern-services-greg-and-cathy-helin (C0765SH0FCY)",
+    "  int-pearce-hvac (C09LKD22ZMZ)"
+  ]
+}
