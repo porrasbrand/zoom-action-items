@@ -133,8 +133,8 @@ export function updateMeetingResults(meetingId, { transcriptRaw, aiExtraction, s
 export function insertActionItems(meetingId, clientId, actionItems) {
   const d = getDb();
   const stmt = d.prepare(`
-    INSERT INTO action_items (meeting_id, client_id, title, description, owner_name, due_date, priority, category)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO action_items (meeting_id, client_id, title, description, owner_name, due_date, priority, category, transcript_excerpt)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   const insertMany = d.transaction((items) => {
@@ -143,7 +143,8 @@ export function insertActionItems(meetingId, clientId, actionItems) {
         meetingId, clientId,
         item.title, item.description || null,
         item.owner || null, item.due_date || null,
-        item.priority || 'medium', item.category || 'other'
+        item.priority || 'medium', item.category || 'other',
+        item.transcript_excerpt || null
       );
     }
   });

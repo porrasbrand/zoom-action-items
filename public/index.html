@@ -680,6 +680,42 @@
       margin-bottom: 4px;
       flex-wrap: wrap;
     }
+
+    /* Transcript excerpt context */
+    .transcript-excerpt {
+      background: #161b22;
+      border-left: 3px solid #30363d;
+      padding: 10px 14px;
+      margin-top: 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #8b949e;
+      font-family: 'SF Mono', Monaco, monospace;
+      white-space: pre-wrap;
+      display: none;
+    }
+
+    .transcript-excerpt.visible {
+      display: block;
+    }
+
+    .transcript-excerpt .speaker {
+      color: #58a6ff;
+      font-weight: 500;
+    }
+
+    .view-context-link {
+      font-size: 11px;
+      color: #58a6ff;
+      cursor: pointer;
+      margin-top: 6px;
+      display: inline-block;
+    }
+
+    .view-context-link:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -989,6 +1025,7 @@
       const statusClass = item.status === 'complete' ? 'complete' :
                           item.status === 'rejected' ? 'rejected' : '';
       const priority = item.priority || 'medium';
+      const hasExcerpt = item.transcript_excerpt && item.transcript_excerpt.length > 0;
 
       return `
         <div class="action-item ${statusClass}" id="action-${item.id}" data-item='${escapeHtml(JSON.stringify(item))}'>
@@ -1005,6 +1042,10 @@
               <span class="priority-badge ${priority}" onclick="cyclePriority(${item.id}, '${priority}')">${escapeHtml(priority)}</span>
               <span class="status-badge status-${item.status || 'open'}">${escapeHtml(item.status || 'open')}</span>
             </div>
+            ${hasExcerpt ? `
+              <div class="view-context-link" onclick="toggleExcerpt(${item.id})">▶ View context</div>
+              <div class="transcript-excerpt" id="excerpt-${item.id}">${formatExcerpt(item.transcript_excerpt)}</div>
+            ` : ''}
           </div>
           <div class="item-actions">
             ${item.status === 'open' ? `
@@ -1016,6 +1057,32 @@
           </div>
         </div>
       `;
+    }
+
+    // Format transcript excerpt with speaker highlighting
+    function formatExcerpt(text) {
+      if (!text) return '';
+      // Split by newlines and highlight speaker names
+      return escapeHtml(text).split('\n').map(line => {
+        const match = line.match(/^([^:]+):\s*(.*)$/);
+        if (match) {
+          return `<span class="speaker">${match[1]}:</span> ${match[2]}`;
+        }
+        return line;
+      }).join('\n');
+    }
+
+    // Toggle transcript excerpt visibility
+    function toggleExcerpt(id) {
+      const excerpt = document.getElementById(`excerpt-${id}`);
+      const link = excerpt.previousElementSibling;
+      if (excerpt.classList.contains('visible')) {
+        excerpt.classList.remove('visible');
+        link.textContent = '▶ View context';
+      } else {
+        excerpt.classList.add('visible');
+        link.textContent = '▼ Hide context';
+      }
     }
 
     // Start inline editing

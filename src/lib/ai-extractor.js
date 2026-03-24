@@ -47,7 +47,8 @@ Extract the following in JSON format:
       "owner": "Person responsible (use their name from transcript)",
       "due_date": "YYYY-MM-DD or null if not mentioned",
       "priority": "high|medium|low",
-      "category": "seo|ads|content|design|dev|admin|other"
+      "category": "seo|ads|content|design|dev|admin|other",
+      "transcript_excerpt": "The 2-4 lines from the transcript where this action item was discussed. Copy VERBATIM including speaker names. Example: 'Dan: Can you get the ads updated by Friday?\\nPhilip: Yes I will handle that'"
     }
   ],
   "decisions": [
@@ -66,6 +67,7 @@ Rules:
 - If a due date wasn't mentioned, set it to null
 - Priority: "high" = urgent/blocking, "medium" = this week, "low" = nice to have
 - Be concise but specific in titles
+- transcript_excerpt MUST be the exact verbatim lines from the transcript where this task was discussed
 - If transcript is too short or unclear, still return valid JSON with empty arrays`;
 
 /**

@@ -24,7 +24,15 @@ Return JSON with this exact structure:
 {
   "summary": "2-3 sentence summary of the meeting",
   "action_items": [
-    { "title": "task description", "owner": "person name", "due_date": "YYYY-MM-DD or null", "priority": "high/medium/low", "category": "follow-up/deliverable/decision/other", "description": "additional context" }
+    {
+      "title": "task description",
+      "owner": "person name",
+      "due_date": "YYYY-MM-DD or null",
+      "priority": "high/medium/low",
+      "category": "follow-up/deliverable/decision/other",
+      "description": "additional context",
+      "transcript_excerpt": "The 2-4 lines from the transcript where this action item was discussed. Copy VERBATIM including speaker names."
+    }
   ],
   "decisions": [
     { "decision": "what was decided", "context": "why/how" }
@@ -35,6 +43,7 @@ Return JSON with this exact structure:
 
 Be thorough — capture ALL action items, even implied ones. Include the specific person responsible.
 If a due date is mentioned or implied, include it. If priority is discussed (urgent, ASAP, etc.), reflect it.
+transcript_excerpt MUST be the exact verbatim lines from the transcript where this task was discussed.
 
 TRANSCRIPT:
 `;
@@ -47,9 +56,98 @@ async function fetchTranscript(token, downloadUrl) {
   return await res.text();
 }
 
+async function reprocessMeeting(meetingId) {
+  const meeting = db.prepare("SELECT * FROM meetings WHERE id = ?").get(meetingId);
+  if (!meeting) {
+    console.log(`Meeting ${meetingId} not found`);
+    return false;
+  }
+
+  if (!meeting.transcript_raw || meeting.transcript_raw.length < 100) {
+    console.log(`Meeting ${meetingId} has no valid transcript`);
+    return false;
+  }
+
+  console.log(`Reprocessing: "${meeting.topic}"`);
+
+  const model = genAI.getGenerativeModel({
+    model: 'gemini-3-flash-preview',
+    generationConfig: { responseMimeType: 'application/json' }
+  });
+
+  const result = await model.generateContent(PROMPT + meeting.transcript_raw.slice(0, 100000));
+  const text = result.response.text();
+  const usage = result.response.usageMetadata;
+  const extraction = JSON.parse(text);
+
+  // Update meeting
+  db.prepare(`
+    UPDATE meetings SET ai_extraction = ?, updated_at = datetime('now') WHERE id = ?
+  `).run(JSON.stringify(extraction), meetingId);
+
+  // Delete old action items and decisions
+  db.prepare("DELETE FROM action_items WHERE meeting_id = ?").run(meetingId);
+  db.prepare("DELETE FROM decisions WHERE meeting_id = ?").run(meetingId);
+
+  // Insert new action items with transcript_excerpt
+  const insertItem = db.prepare(`
+    INSERT INTO action_items (meeting_id, client_id, title, description, owner_name, due_date, priority, category, transcript_excerpt, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'open')
+  `);
+  for (const a of (extraction.action_items || [])) {
+    insertItem.run(meetingId, meeting.client_id, a.title, a.description || null, a.owner || null, a.due_date || null, a.priority || 'medium', a.category || 'other', a.transcript_excerpt || null);
+  }
+
+  // Insert decisions
+  const insertDecision = db.prepare(`
+    INSERT INTO decisions (meeting_id, client_id, decision, context) VALUES (?, ?, ?, ?)
+  `);
+  for (const d of (extraction.decisions || [])) {
+    insertDecision.run(meetingId, meeting.client_id, d.decision, d.context || null);
+  }
+
+  console.log(`  ✅ ${extraction.action_items?.length || 0} items, ${extraction.decisions?.length || 0} decisions | ${usage?.promptTokenCount}/${usage?.candidatesTokenCount} tokens`);
+  return true;
+}
+
 async function main() {
+  const args = process.argv.slice(2);
+  const reprocessFlag = args.includes('--reprocess');
+  const reprocessAll = args.includes('--reprocess-all');
+  const meetingIdArg = args.find(a => a.startsWith('--meeting='));
+  const meetingId = meetingIdArg ? parseInt(meetingIdArg.split('=')[1]) : null;
+
   const startTime = Date.now();
   console.log(`[${new Date().toISOString()}] === BATCH PROCESSOR START ===`);
+
+  // Handle reprocess modes
+  if (reprocessAll) {
+    console.log('Reprocessing ALL meetings...');
+    const meetings = db.prepare("SELECT id FROM meetings WHERE status = 'completed' ORDER BY id").all();
+    let success = 0, errors = 0;
+    for (const m of meetings) {
+      try {
+        await reprocessMeeting(m.id);
+        success++;
+        await new Promise(r => setTimeout(r, 2000)); // Rate limit
+      } catch (err) {
+        console.log(`  ❌ Error: ${err.message}`);
+        errors++;
+      }
+    }
+    console.log(`\nReprocessed: ${success} | Errors: ${errors}`);
+    return;
+  }
+
+  if (reprocessFlag && meetingId) {
+    await reprocessMeeting(meetingId);
+    return;
+  }
+
+  if (reprocessFlag) {
+    console.log('Usage: --reprocess --meeting=<id> or --reprocess-all');
+    return;
+  }
 
   const token = await getAccessToken();
   const processed = new Set(db.prepare("SELECT zoom_meeting_uuid FROM meetings").all().map(r => r.zoom_meeting_uuid));
@@ -126,11 +224,11 @@ async function main() {
 
       // Insert action items
       const insertItem = db.prepare(`
-        INSERT INTO action_items (meeting_id, client_id, title, description, owner_name, due_date, priority, category, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'open')
+        INSERT INTO action_items (meeting_id, client_id, title, description, owner_name, due_date, priority, category, transcript_excerpt, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'open')
       `);
       for (const a of (extraction.action_items || [])) {
-        insertItem.run(meetingId, clientId, a.title, a.description || null, a.owner || null, a.due_date || null, a.priority || 'medium', a.category || 'other');
+        insertItem.run(meetingId, clientId, a.title, a.description || null, a.owner || null, a.due_date || null, a.priority || 'medium', a.category || 'other', a.transcript_excerpt || null);
       }
 
       // Insert decisions
