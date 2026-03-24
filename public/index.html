@@ -716,6 +716,170 @@
     .view-context-link:hover {
       text-decoration: underline;
     }
+
+    /* Push to ProofHub */
+    .action-btn.push-btn {
+      background: transparent;
+      border: 1px solid #58a6ff;
+      color: #58a6ff;
+    }
+
+    .action-btn.push-btn:hover {
+      background: #58a6ff22;
+    }
+
+    .action-btn.push-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .pushed-badge {
+      background: #3fb95022;
+      color: #3fb950;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 500;
+      margin-left: 8px;
+    }
+
+    .ph-link {
+      font-size: 11px;
+      color: #58a6ff;
+      margin-left: 8px;
+    }
+
+    .push-panel {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 16px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .push-panel.visible {
+      display: block;
+    }
+
+    .push-panel h4 {
+      font-size: 13px;
+      color: #f0f6fc;
+      margin-bottom: 12px;
+    }
+
+    .push-panel .form-row {
+      margin-bottom: 12px;
+    }
+
+    .push-panel label {
+      display: block;
+      font-size: 12px;
+      color: #8b949e;
+      margin-bottom: 4px;
+    }
+
+    .push-panel select,
+    .push-panel input,
+    .push-panel textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #30363d;
+      border-radius: 4px;
+      background: #0d1117;
+      color: #c9d1d9;
+      font-size: 13px;
+    }
+
+    .push-panel textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .push-panel .resolved-info {
+      font-size: 11px;
+      color: #3fb950;
+      margin-top: 4px;
+    }
+
+    .push-panel .form-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .push-panel .push-confirm-btn {
+      background: #238636;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .push-panel .push-confirm-btn:hover {
+      background: #2ea043;
+    }
+
+    .push-panel .push-confirm-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .push-panel .push-cancel-btn {
+      background: #30363d;
+      color: #8b949e;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .push-all-btn {
+      background: #238636;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .push-all-btn:hover {
+      background: #2ea043;
+    }
+
+    .push-all-panel {
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .push-all-panel.visible {
+      display: block;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid #30363d;
+      border-top-color: #58a6ff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -792,6 +956,11 @@
     let selectedMeetingId = null;
     let autoRefreshInterval = null;
     let currentEditField = null;
+
+    // ProofHub cache
+    let phProjects = null;
+    let phPeople = null;
+    let phTaskListsCache = {};
 
     // XSS Prevention
     function escapeHtml(text) {
@@ -995,9 +1164,41 @@
           ` : ''}
 
           <div class="section">
-            <h3>✅ Action Items (${action_items.length})</h3>
+            <h3 style="display: flex; justify-content: space-between; align-items: center;">
+              <span>✅ Action Items (${action_items.length})</span>
+              ${(() => {
+                const openItems = action_items.filter(i => i.status === 'open' && !i.pushed_at);
+                return openItems.length > 0 ? `
+                  <button class="push-all-btn" onclick="showPushAllPanel(${meeting.id}, '${escapeHtml(meeting.client_id || '')}')">
+                    Push All to PH (${openItems.length})
+                  </button>
+                ` : '';
+              })()}
+            </h3>
+            <div class="push-all-panel" id="push-all-panel">
+              <h4>Push ${action_items.filter(i => i.status === 'open' && !i.pushed_at).length} action items to ProofHub</h4>
+              <div class="form-row">
+                <label>ProofHub Project</label>
+                <select id="push-all-project" onchange="loadTaskListsForPushAll(this.value)">
+                  <option value="">Loading projects...</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label>Task List</label>
+                <select id="push-all-tasklist">
+                  <option value="">Select a project first</option>
+                </select>
+              </div>
+              <p style="font-size: 12px; color: #8b949e; margin: 12px 0;">
+                Assignees will be auto-resolved from owner names in the meeting transcript.
+              </p>
+              <div class="form-actions">
+                <button class="push-confirm-btn" id="push-all-confirm-btn" onclick="pushAllToPH(${meeting.id})">Push All</button>
+                <button class="push-cancel-btn" onclick="hidePushAllPanel()">Cancel</button>
+              </div>
+            </div>
             ${action_items.length > 0
-              ? `<div class="action-items-list">${action_items.map(renderActionItem).join('')}</div>`
+              ? `<div class="action-items-list">${action_items.map(i => renderActionItem(i, meeting)).join('')}</div>`
               : '<div class="empty-state">No action items extracted from this meeting.</div>'
             }
           </div>
@@ -1021,17 +1222,24 @@
     }
 
     // Render action item with inline editing
-    function renderActionItem(item) {
+    function renderActionItem(item, meeting) {
       const statusClass = item.status === 'complete' ? 'complete' :
                           item.status === 'rejected' ? 'rejected' : '';
       const priority = item.priority || 'medium';
       const hasExcerpt = item.transcript_excerpt && item.transcript_excerpt.length > 0;
+      const isPushed = item.pushed_at || item.ph_task_id;
+      const canPush = item.status === 'open' && !isPushed;
+      const meetingTopic = meeting?.topic || '';
+      const meetingDate = meeting?.start_time || '';
+      const clientId = meeting?.client_id || '';
 
       return `
         <div class="action-item ${statusClass}" id="action-${item.id}" data-item='${escapeHtml(JSON.stringify(item))}'>
           <div class="item-content">
             <div class="item-row">
               <div class="item-title inline-edit" onclick="startEdit(${item.id}, 'title', this)">${escapeHtml(item.title)}</div>
+              ${isPushed ? `<span class="pushed-badge">Pushed</span>` : ''}
+              ${item.ph_task_id ? `<a class="ph-link" href="https://breakthrough3x.proofhub.com/#tasks/${item.ph_task_id}" target="_blank">View in PH</a>` : ''}
             </div>
             <div class="item-desc ${item.description ? '' : 'empty'} inline-edit" onclick="startEdit(${item.id}, 'description', this)">
               ${item.description ? escapeHtml(item.description) : 'Click to add description...'}
@@ -1046,11 +1254,50 @@
               <div class="view-context-link" onclick="toggleExcerpt(${item.id})">▶ View context</div>
               <div class="transcript-excerpt" id="excerpt-${item.id}">${formatExcerpt(item.transcript_excerpt)}</div>
             ` : ''}
+            <div class="push-panel" id="push-panel-${item.id}">
+              <h4>Push to ProofHub</h4>
+              <div class="form-row">
+                <label>Project</label>
+                <select id="ph-project-${item.id}" onchange="loadTaskListsFor(${item.id}, this.value)">
+                  <option value="">Loading...</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label>Task List</label>
+                <select id="ph-tasklist-${item.id}">
+                  <option value="">Select project first</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label>Assignee</label>
+                <select id="ph-assignee-${item.id}">
+                  <option value="">Loading...</option>
+                </select>
+                <div class="resolved-info" id="resolved-info-${item.id}"></div>
+              </div>
+              <div class="form-row">
+                <label>Title</label>
+                <input type="text" id="ph-title-${item.id}" value="${escapeHtml(item.title)}">
+              </div>
+              <div class="form-row">
+                <label>Description</label>
+                <textarea id="ph-desc-${item.id}">${escapeHtml(item.description || '')}${hasExcerpt ? '\n\n---\nFrom meeting: ' + escapeHtml(meetingTopic) + '\n' + escapeHtml(item.transcript_excerpt || '') : ''}</textarea>
+              </div>
+              <div class="form-row">
+                <label>Due Date</label>
+                <input type="date" id="ph-due-${item.id}" value="${item.due_date ? item.due_date.slice(0, 10) : ''}">
+              </div>
+              <div class="form-actions">
+                <button class="push-confirm-btn" id="push-btn-${item.id}" onclick="pushToPH(${item.id})">Push</button>
+                <button class="push-cancel-btn" onclick="hidePushPanel(${item.id})">Cancel</button>
+              </div>
+            </div>
           </div>
           <div class="item-actions">
             ${item.status === 'open' ? `
               <button class="action-btn complete-btn" onclick="completeItem(${item.id})">✓</button>
               <button class="action-btn reject-btn" onclick="rejectItem(${item.id})">✕</button>
+              ${canPush ? `<button class="action-btn push-btn" onclick="showPushPanel(${item.id}, '${escapeHtml(clientId)}', '${escapeHtml(item.owner_name || '')}')">Push to PH</button>` : ''}
             ` : `
               <button class="action-btn reopen-btn" onclick="reopenItem(${item.id})">↩</button>
             `}
@@ -1082,6 +1329,238 @@
       } else {
         excerpt.classList.add('visible');
         link.textContent = '▼ Hide context';
+      }
+    }
+
+    // ============ ProofHub Push Functions ============
+
+    // Fetch and cache PH projects
+    async function fetchPHProjects() {
+      if (phProjects) return phProjects;
+      const res = await fetch(`${API}/proofhub/projects`);
+      const data = await res.json();
+      phProjects = data.projects || [];
+      return phProjects;
+    }
+
+    // Fetch and cache PH people
+    async function fetchPHPeople() {
+      if (phPeople) return phPeople;
+      const res = await fetch(`${API}/proofhub/people`);
+      const data = await res.json();
+      phPeople = data.people || [];
+      return phPeople;
+    }
+
+    // Fetch task lists for a project (cached)
+    async function fetchTaskLists(projectId) {
+      if (phTaskListsCache[projectId]) return phTaskListsCache[projectId];
+      const res = await fetch(`${API}/proofhub/projects/${projectId}/task-lists`);
+      const data = await res.json();
+      phTaskListsCache[projectId] = data.task_lists || [];
+      return phTaskListsCache[projectId];
+    }
+
+    // Resolve owner to PH user
+    async function resolveOwner(ownerName) {
+      if (!ownerName) return null;
+      const res = await fetch(`${API}/proofhub/resolve-owner/${encodeURIComponent(ownerName)}`);
+      return await res.json();
+    }
+
+    // Get client's PH project
+    async function getClientProject(clientId) {
+      if (!clientId) return null;
+      const res = await fetch(`${API}/proofhub/client-project/${encodeURIComponent(clientId)}`);
+      return await res.json();
+    }
+
+    // Show push panel for an action item
+    async function showPushPanel(itemId, clientId, ownerName) {
+      const panel = document.getElementById(`push-panel-${itemId}`);
+      panel.classList.add('visible');
+
+      const projectSelect = document.getElementById(`ph-project-${itemId}`);
+      const assigneeSelect = document.getElementById(`ph-assignee-${itemId}`);
+      const resolvedInfo = document.getElementById(`resolved-info-${itemId}`);
+
+      // Load projects
+      projectSelect.innerHTML = '<option value="">Loading...</option>';
+      const projects = await fetchPHProjects();
+      projectSelect.innerHTML = '<option value="">Select project...</option>' +
+        projects.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('');
+
+      // Auto-select project from client
+      if (clientId) {
+        const clientProject = await getClientProject(clientId);
+        if (clientProject?.ph_project_id) {
+          projectSelect.value = clientProject.ph_project_id;
+          loadTaskListsFor(itemId, clientProject.ph_project_id);
+        }
+      }
+
+      // Load people and resolve owner
+      const people = await fetchPHPeople();
+      assigneeSelect.innerHTML = '<option value="">Unassigned</option>' +
+        people.map(p => `<option value="${p.ph_id || ''}">${escapeHtml(p.name)} (${escapeHtml(p.email)})</option>`).join('');
+
+      if (ownerName) {
+        const resolved = await resolveOwner(ownerName);
+        if (resolved?.ph_id) {
+          assigneeSelect.value = resolved.ph_id;
+          resolvedInfo.textContent = `✓ Resolved "${ownerName}" → ${resolved.name}`;
+        } else {
+          resolvedInfo.textContent = `⚠ Could not resolve "${ownerName}"`;
+        }
+      }
+    }
+
+    // Hide push panel
+    function hidePushPanel(itemId) {
+      document.getElementById(`push-panel-${itemId}`).classList.remove('visible');
+    }
+
+    // Load task lists for an item's project dropdown
+    async function loadTaskListsFor(itemId, projectId) {
+      const select = document.getElementById(`ph-tasklist-${itemId}`);
+      if (!projectId) {
+        select.innerHTML = '<option value="">Select project first</option>';
+        return;
+      }
+      select.innerHTML = '<option value="">Loading...</option>';
+      const taskLists = await fetchTaskLists(projectId);
+      select.innerHTML = taskLists.length > 0
+        ? taskLists.map(tl => `<option value="${tl.id}">${escapeHtml(tl.title)}</option>`).join('')
+        : '<option value="">No task lists found</option>';
+    }
+
+    // Push single item to ProofHub
+    async function pushToPH(itemId) {
+      const btn = document.getElementById(`push-btn-${itemId}`);
+      btn.disabled = true;
+      btn.textContent = 'Pushing...';
+
+      const projectId = document.getElementById(`ph-project-${itemId}`).value;
+      const taskListId = document.getElementById(`ph-tasklist-${itemId}`).value;
+      const assigneeId = document.getElementById(`ph-assignee-${itemId}`).value;
+      const title = document.getElementById(`ph-title-${itemId}`).value;
+      const description = document.getElementById(`ph-desc-${itemId}`).value;
+      const dueDate = document.getElementById(`ph-due-${itemId}`).value;
+
+      if (!projectId) {
+        showToast('Please select a project', true);
+        btn.disabled = false;
+        btn.textContent = 'Push';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API}/action-items/${itemId}/push-ph`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ph_project_id: projectId,
+            ph_task_list_id: taskListId || null,
+            ph_assignee_id: assigneeId || null,
+            title,
+            description,
+            due_date: dueDate || null
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to push');
+
+        showToast('Pushed to ProofHub ✓');
+        hidePushPanel(itemId);
+        loadMeetingDetail(selectedMeetingId);
+        loadStats();
+      } catch (err) {
+        showToast(err.message, true);
+        btn.disabled = false;
+        btn.textContent = 'Push';
+      }
+    }
+
+    // Show Push All panel
+    async function showPushAllPanel(meetingId, clientId) {
+      const panel = document.getElementById('push-all-panel');
+      panel.classList.add('visible');
+
+      const projectSelect = document.getElementById('push-all-project');
+
+      // Load projects
+      projectSelect.innerHTML = '<option value="">Loading...</option>';
+      const projects = await fetchPHProjects();
+      projectSelect.innerHTML = '<option value="">Select project...</option>' +
+        projects.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('');
+
+      // Auto-select from client
+      if (clientId) {
+        const clientProject = await getClientProject(clientId);
+        if (clientProject?.ph_project_id) {
+          projectSelect.value = clientProject.ph_project_id;
+          loadTaskListsForPushAll(clientProject.ph_project_id);
+        }
+      }
+    }
+
+    // Hide Push All panel
+    function hidePushAllPanel() {
+      document.getElementById('push-all-panel').classList.remove('visible');
+    }
+
+    // Load task lists for Push All
+    async function loadTaskListsForPushAll(projectId) {
+      const select = document.getElementById('push-all-tasklist');
+      if (!projectId) {
+        select.innerHTML = '<option value="">Select project first</option>';
+        return;
+      }
+      select.innerHTML = '<option value="">Loading...</option>';
+      const taskLists = await fetchTaskLists(projectId);
+      select.innerHTML = taskLists.length > 0
+        ? taskLists.map(tl => `<option value="${tl.id}">${escapeHtml(tl.title)}</option>`).join('')
+        : '<option value="">No task lists found</option>';
+    }
+
+    // Push all open items to ProofHub
+    async function pushAllToPH(meetingId) {
+      const btn = document.getElementById('push-all-confirm-btn');
+      btn.disabled = true;
+      btn.textContent = 'Pushing...';
+
+      const projectId = document.getElementById('push-all-project').value;
+      const taskListId = document.getElementById('push-all-tasklist').value;
+
+      if (!projectId) {
+        showToast('Please select a project', true);
+        btn.disabled = false;
+        btn.textContent = 'Push All';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API}/meetings/${meetingId}/push-all-ph`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ph_project_id: projectId,
+            ph_task_list_id: taskListId || null
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to push');
+
+        showToast(`Pushed ${data.pushed} items to ProofHub ✓`);
+        hidePushAllPanel();
+        loadMeetingDetail(selectedMeetingId);
+        loadStats();
+      } catch (err) {
+        showToast(err.message, true);
+        btn.disabled = false;
+        btn.textContent = 'Push All';
       }
     }
 
