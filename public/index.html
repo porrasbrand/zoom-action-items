@@ -880,7 +880,24 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-  </style>
+  
+    /* Flatpickr dark theme overrides */
+    .flatpickr-calendar { background: #1a1f2e !important; border: 1px solid #333 !important; box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important; }
+    .flatpickr-day { color: #c9d1d9 !important; }
+    .flatpickr-day:hover { background: #4c9aff !important; border-color: #4c9aff !important; }
+    .flatpickr-day.selected { background: #4c9aff !important; border-color: #4c9aff !important; }
+    .flatpickr-months .flatpickr-month { color: #c9d1d9 !important; }
+    .flatpickr-current-month .flatpickr-monthDropdown-months { color: #c9d1d9 !important; background: #1a1f2e !important; }
+    .flatpickr-weekdays { color: #8b949e !important; }
+    span.flatpickr-weekday { color: #8b949e !important; }
+    .flatpickr-day.today { border-color: #4c9aff !important; }
+    .numInputWrapper span { border-color: #333 !important; }
+    .numInputWrapper:hover { background: transparent !important; }
+    .flatpickr-input { background: #161b22 !important; color: #c9d1d9 !important; border: 1px solid #4c9aff !important; }
+    </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
   <div class="app">
@@ -1378,9 +1395,18 @@
     }
 
     // Show push panel for an action item
-    async function showPushPanel(itemId, clientId, ownerName) {
+    async 
+    // Initialize Flatpickr on push panel date inputs when shown
+    function initPushDatePicker(itemId) {
+      const el = document.getElementById('ph-due-' + itemId);
+      if (el && !el._flatpickr) {
+        flatpickr(el, { dateFormat: 'Y-m-d', theme: 'dark', allowInput: true });
+      }
+    }
+    function showPushPanel(itemId, clientId, ownerName) {
       const panel = document.getElementById(`push-panel-${itemId}`);
       panel.classList.add('visible');
+      initPushDatePicker(itemId);
 
       const projectSelect = document.getElementById(`ph-project-${itemId}`);
       const assigneeSelect = document.getElementById(`ph-assignee-${itemId}`);
@@ -1587,8 +1613,9 @@
         input.value = currentValue;
       } else if (field === 'due_date') {
         input = document.createElement('input');
-        input.type = 'date';
-        input.className = 'inline-edit-input';
+        input.type = 'text';
+        input.className = 'inline-edit-input flatpickr-input';
+        input.placeholder = 'Pick a date...';
         input.value = currentValue ? currentValue.slice(0, 10) : '';
       } else if (field === 'owner_name') {
         input = document.createElement('input');
@@ -1624,6 +1651,21 @@
       element.innerHTML = '';
       element.appendChild(input);
       input.focus();
+
+      // Initialize Flatpickr for date fields
+      if (field === 'due_date') {
+        const fp = flatpickr(input, {
+          dateFormat: 'Y-m-d',
+          defaultDate: currentValue ? currentValue.slice(0, 10) : null,
+          theme: 'dark',
+          allowInput: true,
+          onClose: function(selectedDates, dateStr) {
+            saveEdit(dateStr || null);
+          }
+        });
+        fp.open();
+        return; // Flatpickr handles its own events
+      }
       if (input.select) input.select();
     }
 
