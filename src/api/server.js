@@ -13,6 +13,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: join(__dirname, '..', '..', '.env') });
 
 import routes from './routes.js';
+import { createWebhookHandler } from './webhook-handler.js';
 
 const PORT = process.env.DASHBOARD_PORT || 3875;
 const BASE_PATH = '/zoom';
@@ -40,6 +41,22 @@ app.use(`${BASE_PATH}/api`, (req, res, next) => {
 });
 
 // Mount API routes at /zoom/api/
+
+// Zoom webhook endpoint
+const webhookHandler = createWebhookHandler({
+  secretToken: process.env.ZOOM_WEBHOOK_SECRET,
+  onRecordingCompleted: async ({ meetingId, topic }) => {
+    console.log("[Webhook] Triggering pipeline for:", topic);
+    try {
+      const { pollOnce } = await import("../poll.js");
+      await pollOnce();
+      console.log("[Webhook] Pipeline run complete");
+    } catch (err) {
+      console.error("[Webhook] Pipeline error:", err.message);
+    }
+  }
+});
+app.post(BASE_PATH + "/webhook", webhookHandler);
 app.use(`${BASE_PATH}/api`, routes);
 
 // Serve static files from public/ at /zoom/
