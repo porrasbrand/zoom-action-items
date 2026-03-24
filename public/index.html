@@ -1104,6 +1104,7 @@
 
     // Load meeting detail
     async function loadMeetingDetail(id) {
+      window._currentMeetingId = id;
       selectedMeetingId = id;
       renderMeetingList(); // Update active state
 
@@ -1123,6 +1124,7 @@
     // Render meeting detail
     function renderMeetingDetail(data) {
       const { meeting, action_items, decisions } = data;
+      window._currentMeeting = meeting;
       const panel = document.getElementById('rightPanel');
       const isUnmatched = !meeting.client_id || meeting.client_id === 'unmatched';
 
@@ -1473,7 +1475,7 @@
 
         showToast('Pushed to ProofHub ✓');
         hidePushPanel(itemId);
-        loadMeetingDetail(selectedMeetingId);
+        refreshActionItem(itemId);
         loadStats();
       } catch (err) {
         showToast(err.message, true);
@@ -1641,10 +1643,10 @@
         if (!res.ok) throw new Error('Failed to save');
 
         showToast('Saved');
-        loadMeetingDetail(selectedMeetingId);
+        refreshActionItem(currentEditItemId || id);
       } catch (err) {
         showToast('Failed to save', true);
-        loadMeetingDetail(selectedMeetingId);
+        // error fallback - no reload
       }
     }
 
@@ -1652,7 +1654,7 @@
     function cancelEdit() {
       if (!currentEditField) return;
       currentEditField = null;
-      loadMeetingDetail(selectedMeetingId);
+      refreshActionItem(currentEditItemId);
     }
 
     // Cycle through priorities
@@ -1671,7 +1673,7 @@
         if (!res.ok) throw new Error('Failed to update priority');
 
         showToast(`Priority: ${newPriority}`);
-        loadMeetingDetail(selectedMeetingId);
+        refreshActionItem(id);
       } catch (err) {
         showToast('Failed to update priority', true);
       }
@@ -1727,11 +1729,45 @@
     }
 
     // Complete action item
+
+    // Update a single action item card without re-rendering the whole panel
+    async function refreshActionItem(itemId) {
+      try {
+        const res = await fetch(API + '/action-items/' + itemId);
+        const item = await res.json();
+        const card = document.getElementById('action-' + itemId);
+        if (!card) return;
+        // Get current meeting data from the stored meeting context
+        const meeting = window._currentMeeting || {};
+        const newHtml = renderActionItem(item, meeting);
+        const temp = document.createElement('div');
+        temp.innerHTML = newHtml;
+        const newCard = temp.firstElementChild;
+        card.replaceWith(newCard);
+      } catch (e) {
+        console.warn('Failed to refresh action item:', e);
+      }
+    }
+
+    // Update stats without full reload
+    async function refreshStats() {
+      try {
+        const res = await fetch(API + '/stats');
+        const stats = await res.json();
+        const el = document.getElementById('stats-bar');
+        if (el) {
+          el.querySelector('.stat-meetings-total')?.setAttribute('data-value', stats.meetings_total);
+          el.querySelector('.stat-items-open')?.setAttribute('data-value', stats.action_items_open);
+          el.querySelector('.stat-items-complete')?.setAttribute('data-value', stats.action_items_completed);
+        }
+      } catch (e) {}
+    }
+
     async function completeItem(id) {
       try {
         await fetch(`${API}/action-items/${id}/complete`, { method: 'POST' });
         showToast('Action item marked as complete');
-        loadMeetingDetail(selectedMeetingId);
+        refreshActionItem(id);
         loadStats();
       } catch (err) {
         showToast('Failed to update action item', true);
@@ -1745,7 +1781,7 @@
       try {
         await fetch(`${API}/action-items/${id}/reject`, { method: 'POST' });
         showToast('Action item marked as rejected');
-        loadMeetingDetail(selectedMeetingId);
+        refreshActionItem(id);
         loadStats();
       } catch (err) {
         showToast('Failed to update action item', true);
@@ -1757,7 +1793,7 @@
       try {
         await fetch(`${API}/action-items/${id}/reopen`, { method: 'POST' });
         showToast('Action item reopened');
-        loadMeetingDetail(selectedMeetingId);
+        refreshActionItem(id);
         loadStats();
       } catch (err) {
         showToast('Failed to update action item', true);
