@@ -1403,7 +1403,7 @@
         flatpickr(el, { dateFormat: 'Y-m-d', theme: 'dark', allowInput: true });
       }
     }
-    function showPushPanel(itemId, clientId, ownerName) {
+    async function showPushPanel(itemId, clientId, ownerName) {
       const panel = document.getElementById(`push-panel-${itemId}`);
       panel.classList.add('visible');
       initPushDatePicker(itemId);
