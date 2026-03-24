@@ -1635,22 +1635,29 @@
       currentEditField = null;
 
       // Show saving indicator
-      element.innerHTML = `<span class="saving-indicator">Saving...</span>`;
+      element.innerHTML = '<span class=saving-indicator>Saving...</span>';
 
       try {
-        const res = await fetch(`${API}/action-items/${id}`, {
+        const res = await fetch(API + '/action-items/' + id, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ [field]: newValue || null })
         });
 
-        if (!res.ok) throw new Error('Failed to save');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
 
         showToast('Saved');
-        refreshActionItem(currentEditItemId || id);
       } catch (err) {
-        showToast('Failed to save', true);
-        // error fallback - no reload
+        console.error('Save failed:', err);
+        showToast('Failed to save: ' + err.message, true);
+      }
+
+      // Always refresh the card (even on error, to restore display)
+      try {
+        await refreshActionItem(id);
+      } catch (e) {
+        console.warn('Card refresh failed, reloading panel');
+        loadMeetingDetail(selectedMeetingId);
       }
     }
 
