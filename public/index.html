@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoom Meeting Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 600px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h1 { color: #333; margin-bottom: 16px; }
+    p { color: #666; margin-bottom: 24px; line-height: 1.6; }
+    .status { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
+    .stat {
+      background: #f0f7ff;
+      padding: 16px 24px;
+      border-radius: 8px;
+      min-width: 120px;
+    }
+    .stat-value { font-size: 32px; font-weight: bold; color: #2563eb; }
+    .stat-label { font-size: 12px; color: #666; text-transform: uppercase; }
+    .endpoints {
+      text-align: left;
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    .endpoints h3 { margin-bottom: 12px; color: #333; }
+    .endpoints a {
+      display: block;
+      color: #2563eb;
+      padding: 4px 0;
+      text-decoration: none;
+    }
+    .endpoints a:hover { text-decoration: underline; }
+    code { background: #e5e7eb; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Zoom Meeting Dashboard</h1>
+    <p>Meeting notes, action items, and decisions from Zoom recordings processed by the AI pipeline.</p>
+
+    <div class="status" id="stats">
+      <div class="stat">
+        <div class="stat-value" id="meetings">-</div>
+        <div class="stat-label">Meetings</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="action-items">-</div>
+        <div class="stat-label">Action Items</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="clients">-</div>
+        <div class="stat-label">Clients</div>
+      </div>
+    </div>
+
+    <div class="endpoints">
+      <h3>API Endpoints</h3>
+      <a href="/zoom/api/meetings">/zoom/api/meetings</a>
+      <a href="/zoom/api/action-items">/zoom/api/action-items</a>
+      <a href="/zoom/api/decisions">/zoom/api/decisions</a>
+      <a href="/zoom/api/clients">/zoom/api/clients</a>
+      <a href="/zoom/api/stats">/zoom/api/stats</a>
+      <a href="/zoom/api/health">/zoom/api/health</a>
+    </div>
+
+    <p style="margin-top: 20px; font-size: 14px; color: #999;">
+      Full UI coming in Phase 05
+    </p>
+  </div>
+
+  <script>
+    async function loadStats() {
+      try {
+        const stats = await fetch('/zoom/api/stats').then(r => r.json());
+        const clients = await fetch('/zoom/api/clients').then(r => r.json());
+
+        document.getElementById('meetings').textContent = stats.meetings_total || 0;
+        document.getElementById('action-items').textContent = stats.action_items_total || 0;
+        document.getElementById('clients').textContent = clients.total || 0;
+      } catch (err) {
+        console.error('Failed to load stats:', err);
+      }
+    }
+    loadStats();
+  </script>
+</body>
+</html>
