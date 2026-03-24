@@ -3,105 +3,1047 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoom Meeting Dashboard</title>
+  <title>Zoom Meeting Notes</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f5f5f5;
+      background: #0d1117;
+      color: #c9d1d9;
       min-height: 100vh;
+    }
+
+    /* Layout */
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .header {
+      background: #161b22;
+      padding: 16px 24px;
+      border-bottom: 1px solid #30363d;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      color: #f0f6fc;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header h1::before {
+      content: "📹";
+    }
+
+    .auto-refresh {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #8b949e;
+    }
+
+    .auto-refresh input {
+      cursor: pointer;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      background: #21262d;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 600;
+      color: #58a6ff;
+    }
+
+    .stat-value.green { color: #3fb950; }
+    .stat-value.yellow { color: #d29922; }
+
+    .stat-label {
+      font-size: 11px;
+      color: #8b949e;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Left Panel - Meeting List */
+    .left-panel {
+      width: 30%;
+      min-width: 300px;
+      background: #161b22;
+      border-right: 1px solid #30363d;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .filters {
+      padding: 16px;
+      border-bottom: 1px solid #30363d;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .filter-row select, .filter-row input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      background: #21262d;
+      color: #c9d1d9;
+      font-size: 13px;
+    }
+
+    .filter-row select:focus, .filter-row input:focus {
+      outline: none;
+      border-color: #58a6ff;
+    }
+
+    .meeting-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+    }
+
+    .meeting-card {
+      background: #21262d;
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      border-left: 4px solid #58a6ff;
+      transition: background 0.15s;
+    }
+
+    .meeting-card:hover {
+      background: #30363d;
+    }
+
+    .meeting-card.active {
+      background: #30363d;
+      border-left-color: #3fb950;
+    }
+
+    .meeting-card.unmatched {
+      border-left-color: #d29922;
+    }
+
+    .meeting-card .date {
+      font-size: 12px;
+      color: #8b949e;
+      margin-bottom: 6px;
+    }
+
+    .meeting-card .topic {
+      font-size: 14px;
+      font-weight: 500;
+      color: #f0f6fc;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .meeting-card .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .meeting-card .client {
+      color: #58a6ff;
+    }
+
+    .meeting-card .client.unmatched {
+      color: #d29922;
+    }
+
+    .meeting-card .counts {
+      color: #8b949e;
+    }
+
+    /* Right Panel - Meeting Detail */
+    .right-panel {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+    }
+
+    .no-selection {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 20px;
-    }
-    .container {
-      background: white;
-      border-radius: 12px;
-      padding: 40px;
-      max-width: 600px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      height: 100%;
+      color: #8b949e;
       text-align: center;
     }
-    h1 { color: #333; margin-bottom: 16px; }
-    p { color: #666; margin-bottom: 24px; line-height: 1.6; }
-    .status { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
-    .stat {
-      background: #f0f7ff;
-      padding: 16px 24px;
-      border-radius: 8px;
-      min-width: 120px;
+
+    .no-selection h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: #c9d1d9;
     }
-    .stat-value { font-size: 32px; font-weight: bold; color: #2563eb; }
-    .stat-label { font-size: 12px; color: #666; text-transform: uppercase; }
-    .endpoints {
-      text-align: left;
-      background: #f8f9fa;
+
+    .meeting-detail .header-section {
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #30363d;
+    }
+
+    .meeting-detail .topic-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #f0f6fc;
+      margin-bottom: 12px;
+    }
+
+    .meeting-detail .meta-row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      font-size: 14px;
+      color: #8b949e;
+    }
+
+    .meeting-detail .meta-row span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .badge-client {
+      background: #58a6ff22;
+      color: #58a6ff;
+    }
+
+    .badge-unmatched {
+      background: #d2992222;
+      color: #d29922;
+    }
+
+    .section {
+      background: #161b22;
+      border-radius: 8px;
       padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .section h3 {
+      font-size: 14px;
+      text-transform: uppercase;
+      color: #8b949e;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section h3.collapsible {
+      cursor: pointer;
+    }
+
+    .section h3.collapsible::after {
+      content: "▼";
+      font-size: 10px;
+      transition: transform 0.2s;
+    }
+
+    .section h3.collapsible.collapsed::after {
+      transform: rotate(-90deg);
+    }
+
+    .summary-text {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #c9d1d9;
+    }
+
+    /* Action Items */
+    .action-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .action-item {
+      background: #21262d;
+      border-radius: 6px;
+      padding: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .action-item.complete {
+      opacity: 0.6;
+    }
+
+    .action-item.rejected {
+      opacity: 0.5;
+    }
+
+    .action-item.rejected .item-title {
+      text-decoration: line-through;
+      color: #8b949e;
+    }
+
+    .action-item .item-content {
+      flex: 1;
+    }
+
+    .action-item .item-title {
+      font-size: 14px;
+      color: #f0f6fc;
+      margin-bottom: 6px;
+    }
+
+    .action-item .item-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      color: #8b949e;
+      flex-wrap: wrap;
+    }
+
+    .action-item .item-meta .owner {
+      color: #58a6ff;
+    }
+
+    .priority-high { color: #f85149 !important; }
+    .priority-medium { color: #d29922 !important; }
+    .priority-low { color: #8b949e !important; }
+
+    .action-item .item-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .action-btn {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background 0.15s;
+    }
+
+    .action-btn.complete-btn {
+      background: #238636;
+      color: white;
+    }
+
+    .action-btn.complete-btn:hover {
+      background: #2ea043;
+    }
+
+    .action-btn.reject-btn {
+      background: #da3633;
+      color: white;
+    }
+
+    .action-btn.reject-btn:hover {
+      background: #f85149;
+    }
+
+    .action-btn.reopen-btn {
+      background: #30363d;
+      color: #8b949e;
+    }
+
+    .action-btn.reopen-btn:hover {
+      background: #484f58;
+    }
+
+    .action-btn.edit-btn {
+      background: #30363d;
+      color: #8b949e;
+    }
+
+    .action-btn.edit-btn:hover {
+      background: #484f58;
+    }
+
+    .status-badge {
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .status-open { background: #58a6ff22; color: #58a6ff; }
+    .status-complete { background: #3fb95022; color: #3fb950; }
+    .status-rejected { background: #f8514922; color: #f85149; }
+
+    /* Decisions */
+    .decisions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .decision-item {
+      background: #21262d;
+      border-radius: 6px;
+      padding: 12px;
+      border-left: 3px solid #a371f7;
+    }
+
+    .decision-item .decision-text {
+      font-size: 14px;
+      color: #f0f6fc;
+      margin-bottom: 6px;
+    }
+
+    .decision-item .decision-context {
+      font-size: 12px;
+      color: #8b949e;
+      font-style: italic;
+    }
+
+    /* Transcript */
+    .transcript-content {
+      max-height: 400px;
+      overflow-y: auto;
+      background: #0d1117;
+      border-radius: 6px;
+      padding: 16px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .transcript-content.collapsed {
+      display: none;
+    }
+
+    .transcript-line {
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-bottom: 4px;
+    }
+
+    .transcript-line:nth-child(odd) {
+      background: #161b22;
+    }
+
+    .transcript-line .speaker {
+      color: #58a6ff;
+      font-weight: 500;
+    }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      background: #238636;
+      color: white;
+      padding: 12px 20px;
       border-radius: 8px;
-      margin-top: 20px;
+      font-size: 14px;
+      animation: slideIn 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }
-    .endpoints h3 { margin-bottom: 12px; color: #333; }
-    .endpoints a {
-      display: block;
-      color: #2563eb;
-      padding: 4px 0;
-      text-decoration: none;
+
+    .toast.error {
+      background: #da3633;
     }
-    .endpoints a:hover { text-decoration: underline; }
-    code { background: #e5e7eb; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Edit Form */
+    .edit-form {
+      background: #21262d;
+      border-radius: 6px;
+      padding: 16px;
+      margin-top: 8px;
+    }
+
+    .edit-form .form-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .edit-form input, .edit-form select {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #30363d;
+      border-radius: 4px;
+      background: #0d1117;
+      color: #c9d1d9;
+      font-size: 13px;
+    }
+
+    .edit-form .form-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .edit-form button {
+      padding: 6px 14px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .edit-form .save-btn {
+      background: #238636;
+      color: white;
+    }
+
+    .edit-form .cancel-btn {
+      background: #30363d;
+      color: #8b949e;
+    }
+
+    /* Client assign dropdown */
+    .assign-client {
+      margin-top: 10px;
+    }
+
+    .assign-client select {
+      padding: 6px 10px;
+      border: 1px solid #30363d;
+      border-radius: 4px;
+      background: #21262d;
+      color: #c9d1d9;
+      font-size: 13px;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #8b949e;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #8b949e;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Zoom Meeting Dashboard</h1>
-    <p>Meeting notes, action items, and decisions from Zoom recordings processed by the AI pipeline.</p>
-
-    <div class="status" id="stats">
-      <div class="stat">
-        <div class="stat-value" id="meetings">-</div>
-        <div class="stat-label">Meetings</div>
+  <div class="app">
+    <div class="header">
+      <div class="header-top">
+        <h1>Zoom Meeting Notes</h1>
+        <label class="auto-refresh">
+          <input type="checkbox" id="autoRefresh">
+          Auto-refresh (60s)
+        </label>
       </div>
-      <div class="stat">
-        <div class="stat-value" id="action-items">-</div>
-        <div class="stat-label">Action Items</div>
-      </div>
-      <div class="stat">
-        <div class="stat-value" id="clients">-</div>
-        <div class="stat-label">Clients</div>
+      <div class="stats-bar" id="statsBar">
+        <div class="stat">
+          <div class="stat-value" id="statMeetings">-</div>
+          <div class="stat-label">Total Meetings</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="statThisWeek">-</div>
+          <div class="stat-label">This Week</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value yellow" id="statOpen">-</div>
+          <div class="stat-label">Action Items Open</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value green" id="statCompleted">-</div>
+          <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="statAvg">-</div>
+          <div class="stat-label">Avg per Meeting</div>
+        </div>
       </div>
     </div>
 
-    <div class="endpoints">
-      <h3>API Endpoints</h3>
-      <a href="/zoom/api/meetings">/zoom/api/meetings</a>
-      <a href="/zoom/api/action-items">/zoom/api/action-items</a>
-      <a href="/zoom/api/decisions">/zoom/api/decisions</a>
-      <a href="/zoom/api/clients">/zoom/api/clients</a>
-      <a href="/zoom/api/stats">/zoom/api/stats</a>
-      <a href="/zoom/api/health">/zoom/api/health</a>
-    </div>
+    <div class="main">
+      <div class="left-panel">
+        <div class="filters">
+          <div class="filter-row">
+            <select id="filterClient">
+              <option value="">All Clients</option>
+            </select>
+          </div>
+          <div class="filter-row">
+            <input type="text" id="filterSearch" placeholder="Search by topic...">
+          </div>
+        </div>
+        <div class="meeting-list" id="meetingList">
+          <div class="loading">Loading meetings...</div>
+        </div>
+      </div>
 
-    <p style="margin-top: 20px; font-size: 14px; color: #999;">
-      Full UI coming in Phase 05
-    </p>
+      <div class="right-panel" id="rightPanel">
+        <div class="no-selection">
+          <h2>Select a meeting</h2>
+          <p>Click on a meeting from the list to view details</p>
+        </div>
+      </div>
+    </div>
   </div>
 
+  <div class="toast-container" id="toastContainer"></div>
+
   <script>
+    // API base path - handle both /zoom/ and direct access
+    const API = window.location.pathname.startsWith('/zoom')
+      ? '/zoom/api'
+      : '/zoom/api';
+
+    let meetings = [];
+    let clients = [];
+    let selectedMeetingId = null;
+    let autoRefreshInterval = null;
+
+    // XSS Prevention
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Toast notifications
+    function showToast(message, isError = false) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast' + (isError ? ' error' : '');
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Format date
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      const d = new Date(dateStr);
+      return d.toLocaleDateString('en-US', {
+        month: 'short', day: 'numeric', year: 'numeric',
+        hour: 'numeric', minute: '2-digit'
+      });
+    }
+
+    function formatShortDate(dateStr) {
+      if (!dateStr) return '';
+      const d = new Date(dateStr);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    // Load stats
     async function loadStats() {
       try {
-        const stats = await fetch('/zoom/api/stats').then(r => r.json());
-        const clients = await fetch('/zoom/api/clients').then(r => r.json());
-
-        document.getElementById('meetings').textContent = stats.meetings_total || 0;
-        document.getElementById('action-items').textContent = stats.action_items_total || 0;
-        document.getElementById('clients').textContent = clients.total || 0;
+        const res = await fetch(`${API}/stats`);
+        const data = await res.json();
+        document.getElementById('statMeetings').textContent = data.meetings_total || 0;
+        document.getElementById('statThisWeek').textContent = data.meetings_this_week || 0;
+        document.getElementById('statOpen').textContent = data.action_items_open || 0;
+        document.getElementById('statCompleted').textContent = data.action_items_completed || 0;
+        document.getElementById('statAvg').textContent = data.average_action_items_per_meeting || 0;
       } catch (err) {
         console.error('Failed to load stats:', err);
       }
     }
-    loadStats();
+
+    // Load clients
+    async function loadClients() {
+      try {
+        const res = await fetch(`${API}/clients`);
+        const data = await res.json();
+        clients = data.clients || [];
+
+        const select = document.getElementById('filterClient');
+        select.innerHTML = '<option value="">All Clients</option>';
+        clients.forEach(c => {
+          if (c.total_meetings > 0) {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = `${escapeHtml(c.name)} (${c.total_meetings})`;
+            select.appendChild(opt);
+          }
+        });
+      } catch (err) {
+        console.error('Failed to load clients:', err);
+      }
+    }
+
+    // Load meetings
+    async function loadMeetings() {
+      const clientId = document.getElementById('filterClient').value;
+      const search = document.getElementById('filterSearch').value.toLowerCase();
+
+      try {
+        let url = `${API}/meetings?limit=100&sort=desc`;
+        if (clientId) url += `&client_id=${clientId}`;
+
+        const res = await fetch(url);
+        const data = await res.json();
+        meetings = data.meetings || [];
+
+        // Filter by search
+        if (search) {
+          meetings = meetings.filter(m =>
+            (m.topic || '').toLowerCase().includes(search)
+          );
+        }
+
+        renderMeetingList();
+      } catch (err) {
+        console.error('Failed to load meetings:', err);
+        document.getElementById('meetingList').innerHTML =
+          '<div class="empty-state">Failed to load meetings</div>';
+      }
+    }
+
+    // Render meeting list
+    function renderMeetingList() {
+      const container = document.getElementById('meetingList');
+
+      if (meetings.length === 0) {
+        container.innerHTML = '<div class="empty-state">No meetings found. Pipeline is polling every 5 minutes.</div>';
+        return;
+      }
+
+      container.innerHTML = meetings.map(m => {
+        const isUnmatched = !m.client_id || m.client_id === 'unmatched';
+        const isActive = m.id === selectedMeetingId;
+        return `
+          <div class="meeting-card ${isUnmatched ? 'unmatched' : ''} ${isActive ? 'active' : ''}"
+               onclick="loadMeetingDetail(${m.id})">
+            <div class="date">${escapeHtml(formatDate(m.start_time))}</div>
+            <div class="topic">${escapeHtml(m.topic || 'Untitled')}</div>
+            <div class="meta">
+              <span class="client ${isUnmatched ? 'unmatched' : ''}">
+                ${isUnmatched ? '⚠️ Unmatched' : escapeHtml(m.client_name)}
+              </span>
+              <span class="counts">
+                ${m.action_item_count || 0} actions · ${m.duration_minutes || 0}m
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Load meeting detail
+    async function loadMeetingDetail(id) {
+      selectedMeetingId = id;
+      renderMeetingList(); // Update active state
+
+      const panel = document.getElementById('rightPanel');
+      panel.innerHTML = '<div class="loading">Loading meeting details...</div>';
+
+      try {
+        const res = await fetch(`${API}/meetings/${id}`);
+        const data = await res.json();
+        renderMeetingDetail(data);
+      } catch (err) {
+        console.error('Failed to load meeting:', err);
+        panel.innerHTML = '<div class="empty-state">Failed to load meeting details</div>';
+      }
+    }
+
+    // Render meeting detail
+    function renderMeetingDetail(data) {
+      const { meeting, action_items, decisions } = data;
+      const panel = document.getElementById('rightPanel');
+      const isUnmatched = !meeting.client_id || meeting.client_id === 'unmatched';
+
+      let extraction = {};
+      try {
+        extraction = meeting.ai_extraction_parsed || JSON.parse(meeting.ai_extraction || '{}');
+      } catch {}
+
+      const attendees = extraction.attendees || [];
+      const summary = extraction.summary || '';
+
+      panel.innerHTML = `
+        <div class="meeting-detail">
+          <div class="header-section">
+            <div class="topic-title">${escapeHtml(meeting.topic || 'Untitled')}</div>
+            <div class="meta-row">
+              <span>📅 ${escapeHtml(formatDate(meeting.start_time))}</span>
+              <span>⏱️ ${meeting.duration_minutes || 0} minutes</span>
+              <span>
+                ${isUnmatched
+                  ? `<span class="badge badge-unmatched">⚠️ Unmatched</span>`
+                  : `<span class="badge badge-client">${escapeHtml(meeting.client_name)}</span>`
+                }
+              </span>
+            </div>
+            ${isUnmatched ? renderClientAssign(meeting.id) : ''}
+            ${attendees.length > 0 ? `
+              <div class="meta-row" style="margin-top: 10px;">
+                <span>👥 ${attendees.map(a => escapeHtml(a)).join(', ')}</span>
+              </div>
+            ` : ''}
+          </div>
+
+          ${summary ? `
+            <div class="section">
+              <h3>📝 Summary</h3>
+              <div class="summary-text">${escapeHtml(summary)}</div>
+            </div>
+          ` : ''}
+
+          <div class="section">
+            <h3>✅ Action Items (${action_items.length})</h3>
+            ${action_items.length > 0
+              ? `<div class="action-items-list">${action_items.map(renderActionItem).join('')}</div>`
+              : '<div class="empty-state">No action items extracted from this meeting.</div>'
+            }
+          </div>
+
+          <div class="section">
+            <h3>📌 Decisions (${decisions.length})</h3>
+            ${decisions.length > 0
+              ? `<div class="decisions-list">${decisions.map(renderDecision).join('')}</div>`
+              : '<div class="empty-state">No decisions recorded.</div>'
+            }
+          </div>
+
+          <div class="section">
+            <h3 class="collapsible" onclick="toggleTranscript()">📜 Transcript</h3>
+            <div class="transcript-content collapsed" id="transcriptContent">
+              ${renderTranscript(meeting.transcript_raw)}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Render action item
+    function renderActionItem(item) {
+      const statusClass = item.status === 'complete' ? 'complete' :
+                          item.status === 'rejected' ? 'rejected' : '';
+      const priorityClass = `priority-${item.priority || 'medium'}`;
+
+      return `
+        <div class="action-item ${statusClass}" id="action-${item.id}">
+          <div class="item-content">
+            <div class="item-title">${escapeHtml(item.title)}</div>
+            <div class="item-meta">
+              <span class="owner">👤 ${escapeHtml(item.owner_name || 'TBD')}</span>
+              ${item.due_date ? `<span>📅 ${escapeHtml(formatShortDate(item.due_date))}</span>` : ''}
+              <span class="${priorityClass}">● ${escapeHtml(item.priority || 'medium')}</span>
+              <span class="status-badge status-${item.status || 'open'}">${escapeHtml(item.status || 'open')}</span>
+            </div>
+          </div>
+          <div class="item-actions">
+            ${item.status === 'open' ? `
+              <button class="action-btn complete-btn" onclick="completeItem(${item.id})">✓</button>
+              <button class="action-btn reject-btn" onclick="rejectItem(${item.id})">✕</button>
+              <button class="action-btn edit-btn" onclick="editItem(${item.id})">✎</button>
+            ` : `
+              <button class="action-btn reopen-btn" onclick="reopenItem(${item.id})">↩</button>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    // Render decision
+    function renderDecision(item) {
+      return `
+        <div class="decision-item">
+          <div class="decision-text">${escapeHtml(item.decision)}</div>
+          ${item.context ? `<div class="decision-context">${escapeHtml(item.context)}</div>` : ''}
+        </div>
+      `;
+    }
+
+    // Render transcript
+    function renderTranscript(text) {
+      if (!text) return '<div class="empty-state">No transcript available.</div>';
+
+      // Simple line-by-line render with speaker detection
+      const lines = text.split('\n').filter(l => l.trim());
+      return lines.map(line => {
+        const match = line.match(/^([^:]+):\s*(.*)$/);
+        if (match) {
+          return `<div class="transcript-line"><span class="speaker">${escapeHtml(match[1])}:</span> ${escapeHtml(match[2])}</div>`;
+        }
+        return `<div class="transcript-line">${escapeHtml(line)}</div>`;
+      }).join('');
+    }
+
+    // Render client assign dropdown
+    function renderClientAssign(meetingId) {
+      const options = clients.map(c =>
+        `<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`
+      ).join('');
+
+      return `
+        <div class="assign-client">
+          <select onchange="assignClient(${meetingId}, this.value)">
+            <option value="">Assign to client...</option>
+            ${options}
+          </select>
+        </div>
+      `;
+    }
+
+    // Toggle transcript
+    function toggleTranscript() {
+      const content = document.getElementById('transcriptContent');
+      const header = content.previousElementSibling;
+      content.classList.toggle('collapsed');
+      header.classList.toggle('collapsed');
+    }
+
+    // Complete action item
+    async function completeItem(id) {
+      try {
+        await fetch(`${API}/action-items/${id}/complete`, { method: 'POST' });
+        showToast('Action item marked as complete');
+        loadMeetingDetail(selectedMeetingId);
+        loadStats();
+      } catch (err) {
+        showToast('Failed to update action item', true);
+      }
+    }
+
+    // Reject action item
+    async function rejectItem(id) {
+      if (!confirm('Mark as rejected (AI hallucination)?')) return;
+
+      try {
+        await fetch(`${API}/action-items/${id}/reject`, { method: 'POST' });
+        showToast('Action item marked as rejected');
+        loadMeetingDetail(selectedMeetingId);
+        loadStats();
+      } catch (err) {
+        showToast('Failed to update action item', true);
+      }
+    }
+
+    // Reopen action item
+    async function reopenItem(id) {
+      try {
+        await fetch(`${API}/action-items/${id}/reopen`, { method: 'POST' });
+        showToast('Action item reopened');
+        loadMeetingDetail(selectedMeetingId);
+        loadStats();
+      } catch (err) {
+        showToast('Failed to update action item', true);
+      }
+    }
+
+    // Edit action item (simplified inline)
+    function editItem(id) {
+      showToast('Edit functionality coming soon');
+    }
+
+    // Assign client
+    async function assignClient(meetingId, clientId) {
+      if (!clientId) return;
+
+      const client = clients.find(c => c.id === clientId);
+      try {
+        await fetch(`${API}/meetings/${meetingId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ client_id: clientId, client_name: client?.name || clientId })
+        });
+        showToast('Client assigned successfully');
+        loadMeetings();
+        loadMeetingDetail(meetingId);
+      } catch (err) {
+        showToast('Failed to assign client', true);
+      }
+    }
+
+    // Auto-refresh
+    document.getElementById('autoRefresh').addEventListener('change', function() {
+      if (this.checked) {
+        autoRefreshInterval = setInterval(() => {
+          loadStats();
+          loadMeetings();
+        }, 60000);
+      } else {
+        clearInterval(autoRefreshInterval);
+      }
+    });
+
+    // Filter listeners
+    document.getElementById('filterClient').addEventListener('change', loadMeetings);
+    document.getElementById('filterSearch').addEventListener('input',
+      debounce(loadMeetings, 300)
+    );
+
+    // Debounce helper
+    function debounce(fn, delay) {
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn.apply(this, args), delay);
+      };
+    }
+
+    // Init
+    async function init() {
+      await loadStats();
+      await loadClients();
+      await loadMeetings();
+    }
+
+    init();
   </script>
 </body>
 </html>
