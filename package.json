@@ -1,0 +1,17 @@
+{
+  "name": "zoom-action-items",
+  "version": "1.0.0",
+  "description": "Extract action items from Zoom meeting transcripts and post to Slack + Proofhub",
+  "type": "module",
+  "scripts": {
+    "poll": "node src/poll.js",
+    "poll:dry": "node src/poll.js --dry-run",
+    "init-db": "node -e \"import('./src/lib/database.js').then(db => { db.initialize(); console.log('DB initialized'); })\""
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "@slack/web-api": "^7.8.0",
+    "better-sqlite3": "^11.7.0",
+    "dotenv": "^16.4.7"
+  }
+}
