@@ -1571,9 +1571,13 @@
       if (currentEditField) return; // Already editing
       currentEditField = { id, field, element };
 
-      const itemEl = document.getElementById(`action-${id}`);
-      const item = JSON.parse(itemEl.dataset.item);
-      const currentValue = item[field] || '';
+      // Read current value from the clicked element's text content
+      let currentValue = element.textContent.trim();
+      // Clean up placeholder text
+      if (currentValue === 'Click to add description...' || currentValue === 'TBD' || currentValue === 'No date') currentValue = '';
+      // Strip emoji prefixes from owner/date fields
+      if (field === 'owner_name') currentValue = currentValue.replace(/^\u{1F464}\s*/u, '');
+      if (field === 'due_date') currentValue = currentValue.replace(/^\u{1F4C5}\s*/u, '');
 
       let input;
       if (field === 'description') {
