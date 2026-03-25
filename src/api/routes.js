@@ -13,6 +13,8 @@ import { scanTranscript } from '../lib/keyword-scanner.js';
 import { calculateConfidence } from '../lib/confidence-calculator.js';
 import { verifyExtraction } from '../lib/adversarial-verifier.js';
 import { analyzeCoverage, classifyLines } from '../lib/coverage-analyzer.js';
+import { extractMeetingData } from '../lib/ai-extractor.js';
+import { parseVTT, extractSpeakers } from '../lib/vtt-parser.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
@@ -965,6 +967,99 @@ router.get('/meetings/:id/coverage', (req, res) => {
 
     res.json(analysis);
   } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ REEXTRACT ============
+
+// POST /api/meetings/:id/reextract - Re-run Gemini extraction for a meeting
+router.post('/meetings/:id/reextract', async (req, res) => {
+  try {
+    const meetingId = parseInt(req.params.id);
+    const meeting = db.getMeetingForReextract(meetingId);
+
+    if (!meeting) {
+      return res.status(404).json({ error: 'Meeting not found' });
+    }
+
+    if (!meeting.transcript_raw || meeting.transcript_length < 5000) {
+      return res.status(400).json({
+        error: 'Transcript too short for reextraction',
+        transcript_length: meeting.transcript_length || 0
+      });
+    }
+
+    console.log(`[Reextract] Starting reextraction for meeting ${meetingId}: "${meeting.topic}"`);
+
+    // Supersede existing adversarial suggestions
+    const superseded = db.supersedeAdversarialItems(meetingId);
+    console.log(`[Reextract] Superseded ${superseded.changes} adversarial suggestions`);
+
+    // Extract speakers from transcript (assume raw text format, not VTT)
+    const speakers = [];
+    const speakerMatches = meeting.transcript_raw.match(/^([^:]+):/gm);
+    if (speakerMatches) {
+      const uniqueSpeakers = [...new Set(speakerMatches.map(s => s.replace(':', '').trim()))];
+      speakers.push(...uniqueSpeakers.slice(0, 10)); // Limit to 10 speakers
+    }
+
+    // Run Gemini extraction
+    console.log(`[Reextract] Running Gemini extraction (${meeting.transcript_length} chars, ${speakers.length} speakers)...`);
+    const extraction = await extractMeetingData({
+      transcript: meeting.transcript_raw,
+      topic: meeting.topic,
+      clientName: meeting.client_name,
+      meetingDate: meeting.start_time,
+      speakers,
+    });
+
+    const actionCount = extraction.action_items?.length || 0;
+    const decisionCount = extraction.decisions?.length || 0;
+    console.log(`[Reextract] Extracted: ${actionCount} action items, ${decisionCount} decisions`);
+
+    // Insert new action items
+    if (extraction.action_items?.length) {
+      db.insertReextractedItems(meetingId, meeting.client_id, extraction.action_items);
+    }
+
+    // Insert new decisions
+    if (extraction.decisions?.length) {
+      db.insertReextractedDecisions(meetingId, meeting.client_id, extraction.decisions);
+    }
+
+    // Update meeting with new extraction
+    db.updateMeetingReextract(meetingId, extraction);
+
+    // Re-run keyword validation
+    const scanResult = scanTranscript(meeting.transcript_raw);
+    const confidence = calculateConfidence(
+      scanResult,
+      actionCount,
+      meeting.transcript_raw,
+      'completed'
+    );
+
+    db.updateMeetingValidation(meetingId, {
+      keywordCount: scanResult.totalPhrases,
+      keywordRatio: confidence.ratio,
+      confidenceSignal: confidence.signal,
+      validationStatus: 'validated'
+    });
+
+    console.log(`[Reextract] Complete. New confidence: ${confidence.signal}`);
+
+    res.json({
+      success: true,
+      reextracted: true,
+      action_items: actionCount,
+      decisions: decisionCount,
+      superseded_count: superseded.changes,
+      confidence_signal: confidence.signal,
+      keyword_ratio: confidence.ratio
+    });
+  } catch (err) {
+    console.error('[Reextract] Error:', err);
     res.status(500).json({ error: err.message });
   }
 });

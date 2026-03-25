@@ -1423,6 +1423,68 @@
       gap: 8px;
       margin-top: 16px;
     }
+
+    /* Reextract banner */
+    .reextract-banner {
+      background: #2a2000;
+      border: 1px solid #ffd43b44;
+      border-left: 3px solid #ffd43b;
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .reextract-banner .banner-icon {
+      font-size: 18px;
+    }
+
+    .reextract-banner .banner-text {
+      flex: 1;
+      font-size: 13px;
+      color: #ffd43b;
+    }
+
+    .reextract-banner .banner-text strong {
+      color: #ffe066;
+    }
+
+    .reextract-btn {
+      background: #ffd43b;
+      color: #1a1500;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .reextract-btn:hover {
+      background: #ffe066;
+    }
+
+    .reextract-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .reextract-banner .dismiss-btn {
+      background: transparent;
+      color: #8b949e;
+      border: 1px solid #30363d;
+      padding: 8px 14px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .reextract-banner .dismiss-btn:hover {
+      background: #21262d;
+    }
     </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
@@ -1742,6 +1804,8 @@
             ` : ''}
             ${renderConfidenceSignal(meeting, action_items.filter(i => i.source !== 'adversarial_added').length, action_items.filter(i => i.source === 'adversarial_added' && i.status === 'suggested').length)}
           </div>
+
+          ${renderReextractBanner(meeting, action_items.filter(i => i.source !== 'adversarial_added').length)}
 
           ${summary ? `
             <div class="section">
@@ -2496,6 +2560,72 @@
           <button class="verify-btn" onclick="verifyMeeting(${meeting.id})">${verified ? 'Re-verify' : 'Verify'}</button>
         </div>
       `;
+    }
+
+    // Track dismissed reextract banners for this session
+    const dismissedReextract = new Set();
+
+    // Render reextract banner for meetings with 0 items
+    function renderReextractBanner(meeting, itemCount) {
+      // Don't show if already dismissed this session
+      if (dismissedReextract.has(meeting.id)) return '';
+
+      // Detection: 0 items AND (long transcript OR many keywords)
+      const transcriptLength = meeting.transcript_length || 0;
+      const keywordCount = meeting.keyword_count || 0;
+      const showBanner = itemCount === 0 && (transcriptLength > 5000 || keywordCount > 10);
+
+      if (!showBanner) return '';
+
+      const durationMin = meeting.duration_minutes || 0;
+      const durationText = durationMin > 0 ? `${durationMin}-minute` : 'long';
+
+      return `
+        <div class="reextract-banner" id="reextract-banner-${meeting.id}">
+          <span class="banner-icon">⚠️</span>
+          <span class="banner-text">
+            Extraction may have failed — <strong>0 action items</strong> from a <strong>${durationText}</strong> meeting
+            (${Math.round(transcriptLength / 1000)}k chars, ${keywordCount} commitment phrases).
+          </span>
+          <button class="reextract-btn" id="reextract-btn-${meeting.id}" onclick="reextractMeeting(${meeting.id})">Re-run Extraction</button>
+          <button class="dismiss-btn" onclick="dismissReextract(${meeting.id})">Keep as-is</button>
+        </div>
+      `;
+    }
+
+    // Re-extract action items for a meeting
+    async function reextractMeeting(meetingId) {
+      const btn = document.getElementById(`reextract-btn-${meetingId}`);
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Re-extracting... (15-20s)';
+      }
+
+      showToast('Re-extracting... this may take 15-20 seconds');
+
+      try {
+        const res = await fetch(`${API}/meetings/${meetingId}/reextract`, { method: 'POST' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Reextraction failed');
+
+        showToast(`Re-extraction complete: ${data.action_items} action items, ${data.decisions} decisions`);
+        loadMeetings();
+        loadMeetingDetail(meetingId);
+        loadStats();
+      } catch (err) {
+        showToast('Reextraction failed: ' + err.message, true);
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Re-run Extraction';
+        }
+      }
+    }
+
+    // Dismiss the reextract banner for this session
+    function dismissReextract(meetingId) {
+      dismissedReextract.add(meetingId);
+      const banner = document.getElementById(`reextract-banner-${meetingId}`);
+      if (banner) banner.remove();
     }
 
     // Validate a meeting

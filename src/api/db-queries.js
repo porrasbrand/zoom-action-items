@@ -108,7 +108,8 @@ export function getMeetings({ client_id, status, from, to, limit = 50, offset = 
       m.duration_minutes, m.status, m.created_at,
       m.confidence_signal, m.keyword_count, m.keyword_ratio, m.validation_status,
       m.completeness_assessment, m.adversarial_run_at,
-      (SELECT COUNT(*) FROM action_items WHERE meeting_id = m.id AND source != 'adversarial_added') as action_item_count,
+      LENGTH(m.transcript_raw) as transcript_length,
+      (SELECT COUNT(*) FROM action_items WHERE meeting_id = m.id AND source != 'adversarial_added' AND (status IS NULL OR status NOT IN ('superseded'))) as action_item_count,
       (SELECT COUNT(*) FROM action_items WHERE meeting_id = m.id AND source = 'adversarial_added' AND status = 'suggested') as suggested_count,
       (SELECT COUNT(*) FROM decisions WHERE meeting_id = m.id) as decision_count
     FROM meetings m
@@ -126,7 +127,7 @@ export function getMeetingById(id) {
   const d = getDb();
 
   const meeting = d.prepare(`
-    SELECT * FROM meetings WHERE id = ?
+    SELECT *, LENGTH(transcript_raw) as transcript_length FROM meetings WHERE id = ?
   `).get(id);
 
   if (!meeting) return null;
@@ -138,9 +139,9 @@ export function getMeetingById(id) {
     } catch { /* ignore parse errors */ }
   }
 
-  // Get action items
+  // Get action items (exclude superseded by default)
   const action_items = d.prepare(`
-    SELECT * FROM action_items WHERE meeting_id = ? ORDER BY priority DESC, created_at ASC
+    SELECT * FROM action_items WHERE meeting_id = ? AND (status IS NULL OR status != 'superseded') ORDER BY priority DESC, created_at ASC
   `).all(id);
 
   // Get decisions
@@ -618,4 +619,77 @@ export function insertManualActionItem(meetingId, clientId, data) {
   );
 
   return d.prepare('SELECT * FROM action_items WHERE id = ?').get(result.lastInsertRowid);
+}
+
+// Supersede adversarial suggestions for a meeting (used before reextract)
+export function supersedeAdversarialItems(meetingId) {
+  const d = getDb();
+  return d.prepare(`
+    UPDATE action_items
+    SET status = 'superseded'
+    WHERE meeting_id = ?
+      AND source = 'adversarial_added'
+      AND status = 'suggested'
+  `).run(meetingId);
+}
+
+// Get meeting data for reextraction
+export function getMeetingForReextract(meetingId) {
+  const d = getDb();
+  return d.prepare(`
+    SELECT id, topic, client_id, client_name, start_time, transcript_raw, LENGTH(transcript_raw) as transcript_length
+    FROM meetings WHERE id = ?
+  `).get(meetingId);
+}
+
+// Insert action items from reextraction
+export function insertReextractedItems(meetingId, clientId, actionItems) {
+  const d = getDb();
+  const stmt = d.prepare(`
+    INSERT INTO action_items (meeting_id, client_id, title, description, owner_name, due_date, priority, category, source, status, transcript_excerpt)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'llm_extracted', 'open', ?)
+  `);
+
+  const insertMany = d.transaction((items) => {
+    for (const item of items) {
+      stmt.run(
+        meetingId, clientId,
+        item.title, item.description || null,
+        item.owner || null, item.due_date || null,
+        item.priority || 'medium', item.category || 'other',
+        item.transcript_excerpt || null
+      );
+    }
+  });
+
+  insertMany(actionItems);
+}
+
+// Insert decisions from reextraction
+export function insertReextractedDecisions(meetingId, clientId, decisions) {
+  const d = getDb();
+  const stmt = d.prepare(`
+    INSERT INTO decisions (meeting_id, client_id, decision, context)
+    VALUES (?, ?, ?, ?)
+  `);
+
+  const insertMany = d.transaction((items) => {
+    for (const item of items) {
+      stmt.run(meetingId, clientId, item.decision, item.context || null);
+    }
+  });
+
+  insertMany(decisions);
+}
+
+// Update meeting after reextraction
+export function updateMeetingReextract(meetingId, aiExtraction) {
+  const d = getDb();
+  d.prepare(`
+    UPDATE meetings SET
+      ai_extraction = ?,
+      status = 'completed',
+      updated_at = datetime('now')
+    WHERE id = ?
+  `).run(JSON.stringify(aiExtraction), meetingId);
 }
