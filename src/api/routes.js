@@ -442,7 +442,7 @@ router.post('/meetings/:id/push-all-ph', async (req, res) => {
       return res.status(404).json({ error: 'Meeting not found' });
     }
 
-    const { ph_project_id, ph_task_list_id } = req.body;
+    const { ph_project_id, ph_task_list_id, tier } = req.body;
 
     if (!ph_project_id) {
       return res.status(400).json({ error: 'ph_project_id required' });
@@ -458,8 +458,13 @@ router.post('/meetings/:id/push-all-ph', async (req, res) => {
       taskListId = taskLists[0].id;
     }
 
-    // Get open action items for this meeting
-    const openItems = meeting.action_items.filter(item => item.status === 'open');
+    // Get open action items for this meeting, optionally filtered by tier
+    let openItems = meeting.action_items.filter(item => item.status === 'open' && !item.pushed_at);
+    if (tier === 'recap') {
+      openItems = openItems.filter(item => item.confidence_tier === 'recap');
+    } else if (tier === 'conversation') {
+      openItems = openItems.filter(item => item.confidence_tier !== 'recap');
+    }
 
     if (openItems.length === 0) {
       return res.json({ success: true, pushed: 0, tasks: [], message: 'No open items to push' });

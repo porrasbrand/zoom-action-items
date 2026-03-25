@@ -359,6 +359,146 @@
       gap: 6px;
     }
 
+    /* Two-Tier Action Item Display */
+    .recap-section {
+      background: #1a2233;
+      border-left: 3px solid #4c9aff;
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .recap-section .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .recap-section .section-header h4 {
+      margin: 0;
+      font-size: 14px;
+      color: #f0f6fc;
+    }
+
+    .recap-section .recap-speaker {
+      font-size: 12px;
+      color: #4c9aff;
+      font-style: italic;
+    }
+
+    .recap-section .push-all-recap-btn {
+      margin-left: auto;
+      background: #238636;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .recap-section .push-all-recap-btn:hover {
+      background: #2ea043;
+    }
+
+    .conversation-section {
+      background: #161b22;
+      border-left: 3px solid #666;
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .conversation-section .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+
+    .conversation-section .section-header h4 {
+      margin: 0;
+      font-size: 14px;
+      color: #c9d1d9;
+    }
+
+    .conversation-section .section-hint {
+      font-size: 11px;
+      color: #8b949e;
+      flex: 1;
+    }
+
+    .conversation-section .expand-icon {
+      color: #8b949e;
+      transition: transform 0.2s;
+    }
+
+    .conversation-section .expand-icon.collapsed {
+      transform: rotate(-90deg);
+    }
+
+    .conversation-section .items-list {
+      opacity: 0.9;
+    }
+
+    .conversation-section .items-list.collapsed {
+      display: none;
+    }
+
+    .conversation-section .action-item {
+      opacity: 0.85;
+    }
+
+    .conversation-section .action-item .item-title {
+      font-size: 13px;
+    }
+
+    .promote-btn {
+      background: #30363d;
+      color: #8b949e;
+      border: 1px solid #484f58;
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-size: 10px;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    .promote-btn:hover {
+      background: #4c9aff33;
+      border-color: #4c9aff;
+      color: #4c9aff;
+    }
+
+    .no-recap-note {
+      background: #161b22;
+      border-left: 3px solid #d29922;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      color: #d29922;
+      border-radius: 4px;
+    }
+
+    .tier-stats {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      color: #8b949e;
+      margin-bottom: 12px;
+    }
+
+    .tier-stats .recap-stat {
+      color: #4c9aff;
+    }
+
+    .tier-stats .convo-stat {
+      color: #8b949e;
+    }
+
     .action-btn {
       padding: 6px 10px;
       border: none;
@@ -2318,43 +2458,9 @@
           ` : ''}
 
           <div class="section">
-            <h3 style="display: flex; justify-content: space-between; align-items: center;">
-              <span>✅ Action Items (${action_items.length})</span>
-              ${(() => {
-                const openItems = action_items.filter(i => i.status === 'open' && !i.pushed_at);
-                return openItems.length > 0 ? `
-                  <button class="push-all-btn" onclick="showPushAllPanel(${meeting.id}, '${escapeHtml(meeting.client_id || '')}')">
-                    Push All to PH (${openItems.length})
-                  </button>
-                ` : '';
-              })()}
-            </h3>
-            <div class="push-all-panel" id="push-all-panel">
-              <h4>Push ${action_items.filter(i => i.status === 'open' && !i.pushed_at).length} action items to ProofHub</h4>
-              <div class="form-row">
-                <label>ProofHub Project</label>
-                <select id="push-all-project" onchange="loadTaskListsForPushAll(this.value)">
-                  <option value="">Loading projects...</option>
-                </select>
-              </div>
-              <div class="form-row">
-                <label>Task List</label>
-                <select id="push-all-tasklist">
-                  <option value="">Select a project first</option>
-                </select>
-              </div>
-              <p style="font-size: 12px; color: #8b949e; margin: 12px 0;">
-                Assignees will be auto-resolved from owner names in the meeting transcript.
-              </p>
-              <div class="form-actions">
-                <button class="push-confirm-btn" id="push-all-confirm-btn" onclick="pushAllToPH(${meeting.id})">Push All</button>
-                <button class="push-cancel-btn" onclick="hidePushAllPanel()">Cancel</button>
-              </div>
-            </div>
-            ${action_items.filter(i => i.source !== 'adversarial_added').length > 0
-              ? `<div class="action-items-list">${action_items.filter(i => i.source !== 'adversarial_added').map(i => renderActionItem(i, meeting)).join('')}</div>`
-              : '<div class="empty-state">No action items extracted from this meeting.</div>'
-            }
+            <h3>✅ Action Items (${action_items.length})</h3>
+
+            ${renderTieredActionItems(action_items, meeting)}
             <button class="add-manual-btn" onclick="showManualItemForm(${meeting.id})">+ Add Manual Item</button>
             <div class="manual-item-form" id="manual-item-form-${meeting.id}">
               <div class="form-row">
@@ -2422,8 +2528,139 @@
       `;
     }
 
+    // Render two-tier action items display
+    function renderTieredActionItems(action_items, meeting) {
+      const recapItems = action_items.filter(i => i.confidence_tier === 'recap' && i.source !== 'adversarial_added');
+      const convoItems = action_items.filter(i => (i.confidence_tier !== 'recap' || !i.confidence_tier) && i.source !== 'adversarial_added');
+      const hasRecap = meeting.recap_detected === 1;
+
+      if (!hasRecap) {
+        // No recap detected - show flat list with note
+        return `
+          <div class="no-recap-note">
+            ⚠️ No end-of-call recap detected — all items from AI analysis
+          </div>
+          <div class="push-all-panel" id="push-all-panel">
+            <h4>Push ${action_items.filter(i => i.status === 'open' && !i.pushed_at).length} action items to ProofHub</h4>
+            <div class="form-row">
+              <label>ProofHub Project</label>
+              <select id="push-all-project" onchange="loadTaskListsForPushAll(this.value)">
+                <option value="">Loading projects...</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Task List</label>
+              <select id="push-all-tasklist">
+                <option value="">Select a project first</option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button class="push-confirm-btn" onclick="pushAllToPH(${meeting.id})">Push All</button>
+              <button class="push-cancel-btn" onclick="hidePushAllPanel()">Cancel</button>
+            </div>
+          </div>
+          ${action_items.length > 0
+            ? `<div class="action-items-list">${action_items.filter(i => i.source !== 'adversarial_added').map(i => renderActionItem(i, meeting)).join('')}</div>`
+            : '<div class="empty-state">No action items extracted from this meeting.</div>'
+          }
+        `;
+      }
+
+      // Has recap - show two tiers
+      const recapOpen = recapItems.filter(i => i.status === 'open' && !i.pushed_at);
+      const convoCollapsed = convoItems.length > 3;
+
+      return `
+        <div class="tier-stats">
+          <span class="recap-stat">📋 ${recapItems.length} from recap</span>
+          <span class="convo-stat">💬 ${convoItems.length} from conversation</span>
+        </div>
+
+        <!-- Recap Section -->
+        <div class="recap-section" id="recap-items">
+          <div class="section-header recap-header">
+            <span class="section-icon">📋</span>
+            <h4>Action Items from Recap (${recapItems.length})</h4>
+            <span class="recap-speaker">${escapeHtml(meeting.recap_speaker || 'Leader')}'s end-of-call summary</span>
+            ${recapOpen.length > 0 ? `
+              <button class="push-all-recap-btn" onclick="showPushAllPanel(${meeting.id}, '${escapeHtml(meeting.client_id || '')}', 'recap')">
+                Push All to PH (${recapOpen.length})
+              </button>
+            ` : ''}
+          </div>
+          <div class="push-all-panel" id="push-all-panel">
+            <h4>Push recap items to ProofHub</h4>
+            <div class="form-row">
+              <label>ProofHub Project</label>
+              <select id="push-all-project" onchange="loadTaskListsForPushAll(this.value)">
+                <option value="">Loading projects...</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Task List</label>
+              <select id="push-all-tasklist">
+                <option value="">Select a project first</option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button class="push-confirm-btn" onclick="pushAllToPH(${meeting.id}, 'recap')">Push All Recap</button>
+              <button class="push-cancel-btn" onclick="hidePushAllPanel()">Cancel</button>
+            </div>
+          </div>
+          <div class="items-list action-items-list">
+            ${recapItems.length > 0
+              ? recapItems.map(i => renderActionItem(i, meeting)).join('')
+              : '<div class="empty-state">No recap items found.</div>'
+            }
+          </div>
+        </div>
+
+        <!-- Conversation Section -->
+        ${convoItems.length > 0 ? `
+          <div class="conversation-section" id="conversation-items">
+            <div class="section-header conversation-header" onclick="toggleConversationItems()">
+              <span class="section-icon">💬</span>
+              <h4>Additional from Conversation (${convoItems.length})</h4>
+              <span class="section-hint">AI-detected from full discussion — review and promote if needed</span>
+              <span class="expand-icon ${convoCollapsed ? 'collapsed' : ''}" id="convo-expand-icon">▼</span>
+            </div>
+            <div class="items-list action-items-list ${convoCollapsed ? 'collapsed' : ''}" id="conversation-items-list">
+              ${convoItems.map(i => renderActionItem(i, meeting, true)).join('')}
+            </div>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    // Toggle conversation items section
+    function toggleConversationItems() {
+      const list = document.getElementById('conversation-items-list');
+      const icon = document.getElementById('convo-expand-icon');
+      list.classList.toggle('collapsed');
+      icon.classList.toggle('collapsed');
+    }
+
+    // Promote a conversation item to recap tier
+    async function promoteToRecap(itemId) {
+      try {
+        const res = await fetch(`${API}/action-items/${itemId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ confidence_tier: 'recap' })
+        });
+        if (!res.ok) throw new Error('Failed to promote');
+        showToast('Item promoted to recap tier');
+        // Reload the meeting to refresh the display
+        if (window._currentMeeting) {
+          loadMeeting(window._currentMeeting.id);
+        }
+      } catch (err) {
+        showToast('Failed to promote item: ' + err.message, true);
+      }
+    }
+
     // Render action item with inline editing
-    function renderActionItem(item, meeting) {
+    function renderActionItem(item, meeting, showPromote = false) {
       const statusClass = item.status === 'complete' ? 'complete' :
                           item.status === 'rejected' ? 'rejected' : '';
       const priority = item.priority || 'medium';
@@ -2441,6 +2678,7 @@
               <div class="item-title inline-edit" onclick="startEdit(${item.id}, 'title', this)">${escapeHtml(item.title)}</div>
               ${isPushed ? `<span class="pushed-badge">Pushed</span>` : ''}
               ${item.ph_task_id ? `<a class="ph-link" href="https://breakthrough3x.proofhub.com/#tasks/${item.ph_task_id}" target="_blank">View in PH</a>` : ''}
+              ${showPromote ? `<button class="promote-btn" onclick="promoteToRecap(${item.id})">↑ Promote to Recap</button>` : ''}
             </div>
             <div class="item-desc ${item.description ? '' : 'empty'} inline-edit" onclick="startEdit(${item.id}, 'description', this)">
               ${item.description ? escapeHtml(item.description) : 'Click to add description...'}
@@ -2691,7 +2929,8 @@
     }
 
     // Show Push All panel
-    async function showPushAllPanel(meetingId, clientId) {
+    async function showPushAllPanel(meetingId, clientId, tier = null) {
+      currentPushTier = tier;
       const panel = document.getElementById('push-all-panel');
       panel.classList.add('visible');
 
@@ -2732,19 +2971,23 @@
         : '<option value="">No task lists found</option>';
     }
 
+    // Track current push tier
+    let currentPushTier = null;
+
     // Push all open items to ProofHub
-    async function pushAllToPH(meetingId) {
+    async function pushAllToPH(meetingId, tier = null) {
       const btn = document.getElementById('push-all-confirm-btn');
       btn.disabled = true;
       btn.textContent = 'Pushing...';
 
       const projectId = document.getElementById('push-all-project').value;
       const taskListId = document.getElementById('push-all-tasklist').value;
+      const pushTier = tier || currentPushTier;
 
       if (!projectId) {
         showToast('Please select a project', true);
         btn.disabled = false;
-        btn.textContent = 'Push All';
+        btn.textContent = pushTier === 'recap' ? 'Push All Recap' : 'Push All';
         return;
       }
 
@@ -2754,7 +2997,8 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             ph_project_id: projectId,
-            ph_task_list_id: taskListId || null
+            ph_task_list_id: taskListId || null,
+            tier: pushTier
           })
         });
 

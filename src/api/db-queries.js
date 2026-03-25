@@ -248,7 +248,8 @@ export function updateActionItem(id, updates) {
   const d = getDb();
   const allowedFields = [
     'title', 'description', 'owner_name', 'due_date', 'priority', 'status', 'category',
-    'transcript_excerpt', 'ph_project_id', 'ph_task_list_id', 'ph_assignee_id', 'ph_task_id'
+    'transcript_excerpt', 'ph_project_id', 'ph_task_list_id', 'ph_assignee_id', 'ph_task_id',
+    'confidence_tier'
   ];
   const sets = [];
   const params = [];
