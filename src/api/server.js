@@ -88,7 +88,10 @@ app.get(BASE_PATH + '/login', (req, res) => {
 
 // Start Google OAuth flow
 app.get(BASE_PATH + '/auth/google', (req, res) => {
+  const returnTo = req.query.return_to || '';
   const authUrl = getGoogleAuthURL();
+  // Store return_to in a cookie so callback can read it
+  if (returnTo) res.cookie('zoom_return_to', returnTo, { maxAge: 300000, path: '/zoom', sameSite: 'none', secure: true });
   res.redirect(authUrl);
 });
 
@@ -141,8 +144,11 @@ app.get(BASE_PATH + '/auth/callback', async (req, res) => {
 
     console.log(`[Auth] Login successful: ${email}`);
 
-    // Redirect to dashboard
-    res.redirect(BASE_PATH + '/');
+    // Redirect to return_to or dashboard
+    const returnTo = req.cookies?.zoom_return_to;
+    if (returnTo) res.clearCookie('zoom_return_to', { path: '/zoom' });
+    const redirectUrl = (returnTo && returnTo.startsWith('https://')) ? returnTo : BASE_PATH + '/';
+    res.redirect(redirectUrl);
   } catch (err) {
     console.error('[Auth] Callback error:', err);
     res.redirect(BASE_PATH + '/login?error=callback_failed');
