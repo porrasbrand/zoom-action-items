@@ -46,7 +46,7 @@ app.use(cookieParser());
 
 // CORS headers for development
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  const origin = req.headers.origin; const allowedOrigins = ['https://www.breakthrough3x.com', 'https://breakthrough3x.com', 'https://www.manuelporras.com']; if (allowedOrigins.includes(origin)) { res.header('Access-Control-Allow-Origin', origin); res.header('Access-Control-Allow-Credentials', 'true'); } else { res.header('Access-Control-Allow-Origin', '*'); }
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') {
@@ -133,8 +133,8 @@ app.get(BASE_PATH + '/auth/callback', async (req, res) => {
     // Set cookie
     res.cookie('zoom_session', sessionId, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production' || req.secure,
-      sameSite: 'lax',
+      secure: true, // was: process.env.NODE_ENV === 'production' || req.secure,
+      sameSite: 'none',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       path: '/zoom'
     });
