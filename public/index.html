@@ -473,6 +473,140 @@
       font-weight: 500;
     }
 
+    /* Conversation Block Transcript */
+    .transcript-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .transcript-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .highlight-toggle, .show-raw-toggle {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #c9d1d9;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .highlight-toggle:hover, .show-raw-toggle:hover {
+      background: #30363d;
+      border-color: #4c9aff;
+    }
+
+    .highlight-toggle.active {
+      background: #4c9aff33;
+      border-color: #4c9aff;
+      color: #4c9aff;
+    }
+
+    .transcript-block {
+      margin-bottom: 16px;
+      padding-left: 12px;
+      border-left: 3px solid transparent;
+    }
+
+    .speaker-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .speaker-name {
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .speaker-time {
+      color: #666;
+      font-size: 11px;
+      font-family: monospace;
+    }
+
+    .speaker-text {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #c9d1d9;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* Highlight styles */
+    .highlight-action {
+      background: rgba(76, 154, 255, 0.15);
+      border-bottom: 2px solid #4c9aff;
+      padding: 2px 0;
+      border-radius: 2px;
+    }
+
+    .highlight-decision {
+      background: rgba(204, 93, 232, 0.15);
+      border-bottom: 2px solid #cc5de8;
+      padding: 2px 0;
+      border-radius: 2px;
+    }
+
+    .highlight-tag {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 3px;
+      margin-left: 4px;
+      cursor: pointer;
+      vertical-align: super;
+      white-space: nowrap;
+    }
+
+    .action-tag {
+      background: #4c9aff33;
+      color: #4c9aff;
+    }
+
+    .action-tag:hover {
+      background: #4c9aff55;
+    }
+
+    .decision-tag {
+      background: #cc5de833;
+      color: #cc5de8;
+    }
+
+    .decision-tag:hover {
+      background: #cc5de855;
+    }
+
+    .flash-highlight {
+      animation: flash 1.5s ease-out;
+    }
+
+    @keyframes flash {
+      0% { background: #4c9aff44; }
+      100% { background: transparent; }
+    }
+
+    .raw-transcript {
+      display: none;
+    }
+
+    .raw-transcript.visible {
+      display: block;
+    }
+
+    .block-transcript {
+      display: block;
+    }
+
+    .block-transcript.hidden {
+      display: none;
+    }
+
     /* Toast */
     .toast-container {
       position: fixed;
@@ -2269,7 +2403,19 @@
           <div class="section">
             <h3 class="collapsible" onclick="toggleTranscript()">📜 Transcript</h3>
             <div class="transcript-content collapsed" id="transcriptContent">
-              ${renderTranscript(meeting.transcript_raw)}
+              <div class="transcript-header">
+                <span></span>
+                <div class="transcript-controls">
+                  <button class="highlight-toggle" id="highlightToggle-${meeting.id}" onclick="toggleHighlights(${meeting.id})">Show Highlights</button>
+                  <button class="show-raw-toggle" id="rawToggle-${meeting.id}" onclick="toggleRawTranscript(${meeting.id})">Show Raw</button>
+                </div>
+              </div>
+              <div class="block-transcript" id="blockTranscript-${meeting.id}">
+                ${renderTranscriptBlocks(meeting.transcript_raw, meeting.id)}
+              </div>
+              <div class="raw-transcript" id="rawTranscript-${meeting.id}">
+                ${renderTranscriptRaw(meeting.transcript_raw)}
+              </div>
             </div>
           </div>
         </div>
@@ -2772,8 +2918,190 @@
       `;
     }
 
-    // Render transcript
-    function renderTranscript(text) {
+    // Speaker color palette
+    const speakerColors = ['#4ecdc4', '#ff6b6b', '#4c9aff', '#ffd43b', '#51cf66', '#cc5de8', '#ff922b', '#20c997'];
+    const speakerColorMap = {};
+
+    // Get consistent color for a speaker
+    function getSpeakerColor(speaker) {
+      if (!speakerColorMap[speaker]) {
+        // Simple hash function for consistent color assignment
+        let hash = 0;
+        for (let i = 0; i < speaker.length; i++) {
+          hash = ((hash << 5) - hash) + speaker.charCodeAt(i);
+          hash = hash & hash;
+        }
+        speakerColorMap[speaker] = speakerColors[Math.abs(hash) % speakerColors.length];
+      }
+      return speakerColorMap[speaker];
+    }
+
+    // Parse VTT transcript lines into structured blocks
+    function parseTranscriptLines(text) {
+      if (!text) return [];
+
+      const lines = text.split('\n').filter(l => l.trim());
+      const blocks = [];
+      let currentBlock = null;
+
+      for (const line of lines) {
+        // Match VTT format: [HH:MM:SS.mmm] Speaker: text or [HH:MM:SS] Speaker: text
+        const vttMatch = line.match(/^\[(\d{2}):(\d{2}):(\d{2})(?:\.\d{3})?\]\s*([^:]+):\s*(.*)$/);
+        // Also match simple format: Speaker: text
+        const simpleMatch = line.match(/^([^:]+):\s*(.*)$/);
+
+        let speaker, text, timestamp;
+
+        if (vttMatch) {
+          const hours = parseInt(vttMatch[1]);
+          const mins = parseInt(vttMatch[2]);
+          const secs = parseInt(vttMatch[3]);
+          timestamp = hours > 0 ? `${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}` : `${mins}:${secs.toString().padStart(2, '0')}`;
+          speaker = vttMatch[4].trim();
+          text = vttMatch[5].trim();
+        } else if (simpleMatch) {
+          speaker = simpleMatch[1].trim();
+          text = simpleMatch[2].trim();
+          timestamp = null;
+        } else {
+          // Non-speaker line, append to current block if exists
+          if (currentBlock && line.trim()) {
+            currentBlock.text += ' ' + line.trim();
+          }
+          continue;
+        }
+
+        // If same speaker, merge into current block
+        if (currentBlock && currentBlock.speaker === speaker) {
+          currentBlock.text += ' ' + text;
+        } else {
+          // New speaker, start new block
+          if (currentBlock) {
+            blocks.push(currentBlock);
+          }
+          currentBlock = {
+            speaker,
+            timestamp,
+            text,
+            color: getSpeakerColor(speaker)
+          };
+        }
+      }
+
+      // Don't forget the last block
+      if (currentBlock) {
+        blocks.push(currentBlock);
+      }
+
+      return blocks;
+    }
+
+    // Format transcript as conversation blocks
+    function formatTranscriptBlocks(blocks, meetingId, highlightsEnabled = false) {
+      if (!blocks || blocks.length === 0) {
+        return '<div class="empty-state">No transcript available.</div>';
+      }
+
+      // Get action items and decisions for this meeting if highlights enabled
+      let actionItems = [];
+      let decisions = [];
+      if (highlightsEnabled && currentMeeting) {
+        actionItems = currentMeeting.actionItems || [];
+        decisions = currentMeeting.decisions || [];
+      }
+
+      return blocks.map((block, idx) => {
+        let textHtml = escapeHtml(block.text);
+
+        // Apply highlights if enabled
+        if (highlightsEnabled) {
+          textHtml = applyHighlightsToText(textHtml, block.text, actionItems, decisions);
+        }
+
+        return `
+          <div class="transcript-block" data-start="${block.timestamp || ''}" data-idx="${idx}">
+            <div class="speaker-header">
+              <span class="speaker-name" style="color: ${block.color}">${escapeHtml(block.speaker)}</span>
+              ${block.timestamp ? `<span class="speaker-time">${block.timestamp}</span>` : ''}
+            </div>
+            <div class="speaker-text">${textHtml}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Apply highlights to text based on action items and decisions
+    function applyHighlightsToText(escapedText, originalText, actionItems, decisions) {
+      let result = escapedText;
+      const lowerOriginal = originalText.toLowerCase();
+
+      // Track highlight ranges to avoid overlaps
+      const highlights = [];
+
+      // Find action item matches
+      for (const item of actionItems) {
+        if (!item.transcript_excerpt) continue;
+        const searchText = item.transcript_excerpt.substring(0, 60).toLowerCase();
+        const idx = lowerOriginal.indexOf(searchText);
+        if (idx !== -1) {
+          highlights.push({
+            start: idx,
+            length: Math.min(item.transcript_excerpt.length, originalText.length - idx),
+            type: 'action',
+            id: item.id,
+            label: (item.title || item.description || '').substring(0, 30)
+          });
+        }
+      }
+
+      // Find decision matches
+      for (const dec of decisions) {
+        const searchText = (dec.decision || dec.context || '').substring(0, 60).toLowerCase();
+        if (!searchText) continue;
+        const idx = lowerOriginal.indexOf(searchText);
+        if (idx !== -1) {
+          highlights.push({
+            start: idx,
+            length: Math.min((dec.decision || dec.context || '').length, originalText.length - idx),
+            type: 'decision',
+            id: dec.id,
+            label: (dec.decision || '').substring(0, 30)
+          });
+        }
+      }
+
+      // Sort by start position (reverse to apply from end)
+      highlights.sort((a, b) => b.start - a.start);
+
+      // Apply highlights (working backwards to preserve indices)
+      for (const h of highlights) {
+        const before = result.substring(0, h.start);
+        const highlighted = result.substring(h.start, h.start + h.length);
+        const after = result.substring(h.start + h.length);
+
+        const tagClass = h.type === 'action' ? 'action-tag' : 'decision-tag';
+        const highlightClass = h.type === 'action' ? 'highlight-action' : 'highlight-decision';
+        const icon = h.type === 'action' ? '📋' : '📌';
+        const label = h.type === 'action' ? `Action #${h.id}` : `Decision`;
+
+        result = before +
+          `<span class="${highlightClass}">${highlighted}<span class="${tagClass} highlight-tag" onclick="scrollToItem(${h.id}, '${h.type}')">${icon} ${label}</span></span>` +
+          after;
+      }
+
+      return result;
+    }
+
+    // Render transcript blocks (main entry point)
+    function renderTranscriptBlocks(text, meetingId) {
+      const blocks = parseTranscriptLines(text);
+      window.transcriptBlocks = window.transcriptBlocks || {};
+      window.transcriptBlocks[meetingId] = blocks;
+      return formatTranscriptBlocks(blocks, meetingId, false);
+    }
+
+    // Render raw transcript (for "Show Raw" view)
+    function renderTranscriptRaw(text) {
       if (!text) return '<div class="empty-state">No transcript available.</div>';
 
       // Simple line-by-line render with speaker detection
@@ -2785,6 +3113,58 @@
         }
         return `<div class="transcript-line">${escapeHtml(line)}</div>`;
       }).join('');
+    }
+
+    // Toggle highlights on/off
+    let highlightsEnabled = {};
+    function toggleHighlights(meetingId) {
+      highlightsEnabled[meetingId] = !highlightsEnabled[meetingId];
+      const btn = document.getElementById(`highlightToggle-${meetingId}`);
+      const blockEl = document.getElementById(`blockTranscript-${meetingId}`);
+
+      if (highlightsEnabled[meetingId]) {
+        btn.textContent = 'Hide Highlights';
+        btn.classList.add('active');
+      } else {
+        btn.textContent = 'Show Highlights';
+        btn.classList.remove('active');
+      }
+
+      // Re-render with highlights
+      const blocks = window.transcriptBlocks?.[meetingId] || [];
+      blockEl.innerHTML = formatTranscriptBlocks(blocks, meetingId, highlightsEnabled[meetingId]);
+    }
+
+    // Toggle between block and raw view
+    function toggleRawTranscript(meetingId) {
+      const blockEl = document.getElementById(`blockTranscript-${meetingId}`);
+      const rawEl = document.getElementById(`rawTranscript-${meetingId}`);
+      const btn = document.getElementById(`rawToggle-${meetingId}`);
+
+      if (rawEl.classList.contains('visible')) {
+        rawEl.classList.remove('visible');
+        blockEl.classList.remove('hidden');
+        btn.textContent = 'Show Raw';
+      } else {
+        rawEl.classList.add('visible');
+        blockEl.classList.add('hidden');
+        btn.textContent = 'Show Blocks';
+      }
+    }
+
+    // Scroll to action item or decision
+    function scrollToItem(itemId, type = 'action') {
+      const el = document.getElementById(`action-${itemId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('flash-highlight');
+        setTimeout(() => el.classList.remove('flash-highlight'), 1500);
+      }
+    }
+
+    // Legacy render transcript (kept for compatibility)
+    function renderTranscript(text) {
+      return renderTranscriptRaw(text);
     }
 
     // Render client assign dropdown
