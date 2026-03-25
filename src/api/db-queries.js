@@ -57,6 +57,7 @@ export function runMigrations() {
     { name: 'adversarial_run_at', type: 'TEXT' },
     { name: 'completeness_assessment', type: 'TEXT' },
     { name: 'coverage_analysis', type: 'TEXT' },
+    { name: 'spot_checked_at', type: 'TEXT' },
   ];
 
   for (const col of meetingsNewCols) {
@@ -537,4 +538,84 @@ export function updateMeetingCoverage(id, coverageAnalysis) {
   return d.prepare(`
     UPDATE meetings SET coverage_analysis = ?, updated_at = datetime('now') WHERE id = ?
   `).run(JSON.stringify(coverageAnalysis), id);
+}
+
+// ============ VALIDATION STATS ============
+
+export function getValidationStatsData(periodDays = null) {
+  const d = getDb();
+
+  let dateFilter = '';
+  if (periodDays) {
+    dateFilter = `AND m.start_time >= datetime('now', '-${periodDays} days')`;
+  }
+
+  // Meeting stats
+  const meetingStats = d.prepare(`
+    SELECT
+      COUNT(*) as total,
+      SUM(CASE WHEN confidence_signal IS NOT NULL AND confidence_signal != 'pending' THEN 1 ELSE 0 END) as validated,
+      SUM(CASE WHEN confidence_signal = 'green' THEN 1 ELSE 0 END) as green,
+      SUM(CASE WHEN confidence_signal = 'yellow' THEN 1 ELSE 0 END) as yellow,
+      SUM(CASE WHEN confidence_signal = 'red' THEN 1 ELSE 0 END) as red,
+      AVG(keyword_ratio) as avg_keyword_ratio
+    FROM meetings m
+    WHERE 1=1 ${dateFilter}
+  `).get();
+
+  // Action item stats
+  const itemStats = d.prepare(`
+    SELECT
+      COUNT(*) as total,
+      SUM(CASE WHEN ai.source = 'llm_extracted' OR ai.source IS NULL THEN 1 ELSE 0 END) as llm_extracted,
+      SUM(CASE WHEN ai.source = 'adversarial_added' THEN 1 ELSE 0 END) as adversarial_added,
+      SUM(CASE WHEN ai.source = 'manual_added' THEN 1 ELSE 0 END) as manual_added,
+      SUM(CASE WHEN ai.source = 'adversarial_added' AND ai.status = 'open' THEN 1 ELSE 0 END) as accepted_suggestions,
+      SUM(CASE WHEN ai.source = 'adversarial_added' AND ai.status = 'dismissed' THEN 1 ELSE 0 END) as dismissed_suggestions,
+      SUM(CASE WHEN ai.status = 'complete' THEN 1 ELSE 0 END) as completed,
+      SUM(CASE WHEN ai.status = 'rejected' THEN 1 ELSE 0 END) as rejected_as_hallucination
+    FROM action_items ai
+    JOIN meetings m ON ai.meeting_id = m.id
+    WHERE 1=1 ${dateFilter}
+  `).get();
+
+  return { meetingStats, itemStats };
+}
+
+export function getSpotCheckMeetings() {
+  const d = getDb();
+  return d.prepare(`
+    SELECT id, topic, client_name, start_time, confidence_signal
+    FROM meetings
+    WHERE spot_checked_at IS NULL
+      AND start_time >= datetime('now', '-7 days')
+      AND confidence_signal IS NOT NULL
+    ORDER BY RANDOM()
+    LIMIT 2
+  `).all();
+}
+
+export function markSpotChecked(id) {
+  const d = getDb();
+  return d.prepare(`
+    UPDATE meetings SET spot_checked_at = datetime('now') WHERE id = ?
+  `).run(id);
+}
+
+export function insertManualActionItem(meetingId, clientId, data) {
+  const d = getDb();
+  const result = d.prepare(`
+    INSERT INTO action_items (meeting_id, client_id, title, description, owner_name, due_date, priority, category, source, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, 'other', 'manual_added', 'open')
+  `).run(
+    meetingId,
+    clientId,
+    data.title,
+    data.description || null,
+    data.owner_name || null,
+    data.due_date || null,
+    data.priority || 'medium'
+  );
+
+  return d.prepare('SELECT * FROM action_items WHERE id = ?').get(result.lastInsertRowid);
 }

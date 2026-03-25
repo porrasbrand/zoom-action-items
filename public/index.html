@@ -1227,6 +1227,202 @@
     .numInputWrapper span { border-color: #333 !important; }
     .numInputWrapper:hover { background: transparent !important; }
     .flatpickr-input { background: #161b22 !important; color: #c9d1d9 !important; border: 1px solid #4c9aff !important; }
+
+    /* Validation Stats Section */
+    .validation-stats-section {
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+      padding: 16px 24px;
+      display: none;
+    }
+
+    .validation-stats-section.visible {
+      display: block;
+    }
+
+    .validation-stats-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #8b949e;
+      cursor: pointer;
+      padding: 8px 12px;
+      background: #21262d;
+      border-radius: 6px;
+      margin-left: auto;
+    }
+
+    .validation-stats-toggle:hover {
+      background: #30363d;
+    }
+
+    .accuracy-cards {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .accuracy-card {
+      background: #21262d;
+      padding: 14px 18px;
+      border-radius: 8px;
+      min-width: 140px;
+      text-align: center;
+    }
+
+    .accuracy-card .value {
+      font-size: 22px;
+      font-weight: 600;
+      color: #f0f6fc;
+    }
+
+    .accuracy-card .value.good { color: #3fb950; }
+    .accuracy-card .value.warning { color: #d29922; }
+    .accuracy-card .value.bad { color: #f85149; }
+
+    .accuracy-card .label {
+      font-size: 11px;
+      color: #8b949e;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .confidence-dist {
+      margin-top: 16px;
+    }
+
+    .confidence-dist-bar {
+      display: flex;
+      height: 24px;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .confidence-dist-bar .segment {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 500;
+      color: #0d1117;
+    }
+
+    .confidence-dist-bar .segment.green { background: #3fb950; }
+    .confidence-dist-bar .segment.yellow { background: #d29922; }
+    .confidence-dist-bar .segment.red { background: #f85149; }
+
+    .spot-check-reminder {
+      background: #d2992215;
+      border: 1px solid #d2992244;
+      border-radius: 8px;
+      padding: 14px;
+      margin-top: 16px;
+    }
+
+    .spot-check-reminder h5 {
+      color: #d29922;
+      font-size: 13px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .spot-check-meeting {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #21262d;
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+
+    .spot-check-meeting .meeting-info {
+      font-size: 13px;
+      color: #c9d1d9;
+      cursor: pointer;
+    }
+
+    .spot-check-meeting .meeting-info:hover {
+      color: #58a6ff;
+    }
+
+    .spot-check-btn {
+      background: #238636;
+      color: white;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .spot-check-btn:hover {
+      background: #2ea043;
+    }
+
+    .add-manual-btn {
+      background: transparent;
+      border: 1px dashed #30363d;
+      color: #8b949e;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 13px;
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .add-manual-btn:hover {
+      border-color: #58a6ff;
+      color: #58a6ff;
+    }
+
+    .manual-item-form {
+      background: #21262d;
+      border-radius: 6px;
+      padding: 16px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .manual-item-form.visible {
+      display: block;
+    }
+
+    .manual-item-form .form-row {
+      margin-bottom: 12px;
+    }
+
+    .manual-item-form label {
+      display: block;
+      font-size: 12px;
+      color: #8b949e;
+      margin-bottom: 4px;
+    }
+
+    .manual-item-form input,
+    .manual-item-form select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #30363d;
+      border-radius: 4px;
+      background: #0d1117;
+      color: #c9d1d9;
+      font-size: 13px;
+    }
+
+    .manual-item-form .form-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
     </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
@@ -1263,6 +1459,42 @@
           <div class="stat-value" id="statAvg">-</div>
           <div class="stat-label">Avg per Meeting</div>
         </div>
+        <div class="validation-stats-toggle" onclick="toggleValidationStats()">
+          <span>📊</span> Validation Stats
+        </div>
+      </div>
+    </div>
+
+    <div class="validation-stats-section" id="validationStatsSection">
+      <div class="accuracy-cards" id="accuracyCards">
+        <div class="accuracy-card">
+          <div class="value" id="hallucination-rate">-</div>
+          <div class="label">Hallucination Rate</div>
+        </div>
+        <div class="accuracy-card">
+          <div class="value" id="miss-rate">-</div>
+          <div class="label">Miss Rate</div>
+        </div>
+        <div class="accuracy-card">
+          <div class="value" id="suggestion-accept-rate">-</div>
+          <div class="label">Suggestion Accept Rate</div>
+        </div>
+        <div class="accuracy-card">
+          <div class="value" id="avg-items-per-meeting">-</div>
+          <div class="label">Avg Items/Meeting</div>
+        </div>
+      </div>
+      <div class="confidence-dist">
+        <div style="font-size: 12px; color: #8b949e; margin-bottom: 6px;">Confidence Distribution</div>
+        <div class="confidence-dist-bar" id="confidenceDistBar">
+          <div class="segment green" style="width: 0%"></div>
+          <div class="segment yellow" style="width: 0%"></div>
+          <div class="segment red" style="width: 0%"></div>
+        </div>
+      </div>
+      <div class="spot-check-reminder" id="spotCheckReminder">
+        <h5>📋 Spot-Check Reminder</h5>
+        <div id="spotCheckMeetings">Loading...</div>
       </div>
     </div>
 
@@ -1556,6 +1788,33 @@
               ? `<div class="action-items-list">${action_items.filter(i => i.source !== 'adversarial_added').map(i => renderActionItem(i, meeting)).join('')}</div>`
               : '<div class="empty-state">No action items extracted from this meeting.</div>'
             }
+            <button class="add-manual-btn" onclick="showManualItemForm(${meeting.id})">+ Add Manual Item</button>
+            <div class="manual-item-form" id="manual-item-form-${meeting.id}">
+              <div class="form-row">
+                <label>Title *</label>
+                <input type="text" id="manual-title-${meeting.id}" placeholder="Action item title...">
+              </div>
+              <div class="form-row">
+                <label>Owner</label>
+                <input type="text" id="manual-owner-${meeting.id}" placeholder="Assignee name" list="ownersList">
+              </div>
+              <div class="form-row">
+                <label>Due Date</label>
+                <input type="text" id="manual-due-${meeting.id}" placeholder="Select date...">
+              </div>
+              <div class="form-row">
+                <label>Priority</label>
+                <select id="manual-priority-${meeting.id}">
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+              <div class="form-actions">
+                <button class="push-confirm-btn" onclick="addManualItem(${meeting.id}, '${escapeHtml(meeting.client_id || '')}')">Add Item</button>
+                <button class="push-cancel-btn" onclick="hideManualItemForm(${meeting.id})">Cancel</button>
+              </div>
+            </div>
             ${renderSuggestedItemsSection(action_items.filter(i => i.source === 'adversarial_added'))}
           </div>
 
@@ -2460,6 +2719,160 @@
         clearTimeout(timeout);
         timeout = setTimeout(() => fn.apply(this, args), delay);
       };
+    }
+
+    // ============ Validation Stats Functions ============
+
+    // Toggle validation stats section
+    function toggleValidationStats() {
+      const section = document.getElementById('validationStatsSection');
+      section.classList.toggle('visible');
+      if (section.classList.contains('visible') && !section.dataset.loaded) {
+        section.dataset.loaded = 'true';
+        loadValidationStats();
+        loadSpotCheckMeetings();
+      }
+    }
+
+    // Load validation stats
+    async function loadValidationStats() {
+      try {
+        const res = await fetch(`${API}/validation/stats`);
+        const data = await res.json();
+
+        const accuracy = data.accuracy || {};
+        const dist = data.confidence_distribution || {};
+
+        // Update accuracy cards
+        const hallucinationEl = document.getElementById('hallucination-rate');
+        hallucinationEl.textContent = (accuracy.hallucination_rate || 0).toFixed(1) + '%';
+        hallucinationEl.className = 'value ' + (accuracy.hallucination_rate > 5 ? 'bad' : accuracy.hallucination_rate > 2 ? 'warning' : 'good');
+
+        const missEl = document.getElementById('miss-rate');
+        missEl.textContent = (accuracy.miss_rate || 0).toFixed(1) + '%';
+        missEl.className = 'value ' + (accuracy.miss_rate > 10 ? 'bad' : accuracy.miss_rate > 5 ? 'warning' : 'good');
+
+        const acceptEl = document.getElementById('suggestion-accept-rate');
+        acceptEl.textContent = (accuracy.suggestion_accept_rate || 0).toFixed(0) + '%';
+        acceptEl.className = 'value';
+
+        document.getElementById('avg-items-per-meeting').textContent = (accuracy.avg_items_per_meeting || 0).toFixed(1);
+
+        // Update confidence distribution bar
+        const bar = document.getElementById('confidenceDistBar');
+        const greenPct = dist.green || 0;
+        const yellowPct = dist.yellow || 0;
+        const redPct = dist.red || 0;
+
+        bar.innerHTML = `
+          <div class="segment green" style="width: ${greenPct}%">${greenPct > 10 ? greenPct + '%' : ''}</div>
+          <div class="segment yellow" style="width: ${yellowPct}%">${yellowPct > 10 ? yellowPct + '%' : ''}</div>
+          <div class="segment red" style="width: ${redPct}%">${redPct > 10 ? redPct + '%' : ''}</div>
+        `;
+      } catch (err) {
+        console.error('Failed to load validation stats:', err);
+      }
+    }
+
+    // Load spot-check meetings
+    async function loadSpotCheckMeetings() {
+      const container = document.getElementById('spotCheckMeetings');
+      try {
+        const res = await fetch(`${API}/validation/spot-check`);
+        const data = await res.json();
+        const meetings = data.meetings || [];
+
+        if (meetings.length === 0) {
+          container.innerHTML = '<div style="font-size: 12px; color: #3fb950;">All caught up! No meetings need spot-checking.</div>';
+          return;
+        }
+
+        container.innerHTML = meetings.map(m => `
+          <div class="spot-check-meeting">
+            <span class="meeting-info" onclick="loadMeetingDetail(${m.id})">
+              ${escapeHtml(formatShortDate(m.start_time))} - ${escapeHtml(m.topic?.slice(0, 40) || 'Untitled')}...
+            </span>
+            <button class="spot-check-btn" onclick="markSpotChecked(${m.id})">Mark Checked</button>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Failed to load spot-check meetings:', err);
+        container.innerHTML = '<div style="font-size: 12px; color: #f85149;">Failed to load spot-check meetings</div>';
+      }
+    }
+
+    // Mark meeting as spot-checked
+    async function markSpotChecked(meetingId) {
+      try {
+        const res = await fetch(`${API}/meetings/${meetingId}/spot-check`, { method: 'POST' });
+        if (!res.ok) throw new Error('Failed to mark as checked');
+        showToast('Meeting marked as spot-checked');
+        loadSpotCheckMeetings();
+      } catch (err) {
+        showToast('Failed to mark as spot-checked: ' + err.message, true);
+      }
+    }
+
+    // ============ Manual Item Functions ============
+
+    // Show manual item form
+    function showManualItemForm(meetingId) {
+      const form = document.getElementById(`manual-item-form-${meetingId}`);
+      form.classList.add('visible');
+      // Initialize flatpickr on the date input
+      const dateInput = document.getElementById(`manual-due-${meetingId}`);
+      if (dateInput && !dateInput._flatpickr) {
+        flatpickr(dateInput, { dateFormat: 'Y-m-d', theme: 'dark', allowInput: true });
+      }
+      document.getElementById(`manual-title-${meetingId}`).focus();
+    }
+
+    // Hide manual item form
+    function hideManualItemForm(meetingId) {
+      const form = document.getElementById(`manual-item-form-${meetingId}`);
+      form.classList.remove('visible');
+      // Clear form
+      document.getElementById(`manual-title-${meetingId}`).value = '';
+      document.getElementById(`manual-owner-${meetingId}`).value = '';
+      document.getElementById(`manual-due-${meetingId}`).value = '';
+      document.getElementById(`manual-priority-${meetingId}`).value = 'medium';
+    }
+
+    // Add manual item
+    async function addManualItem(meetingId, clientId) {
+      const title = document.getElementById(`manual-title-${meetingId}`).value.trim();
+      const ownerName = document.getElementById(`manual-owner-${meetingId}`).value.trim();
+      const dueDate = document.getElementById(`manual-due-${meetingId}`).value;
+      const priority = document.getElementById(`manual-priority-${meetingId}`).value;
+
+      if (!title) {
+        showToast('Title is required', true);
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API}/meetings/${meetingId}/action-items`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title,
+            owner_name: ownerName || null,
+            due_date: dueDate || null,
+            priority,
+            source: 'manual_added'
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to add item');
+
+        showToast('Manual item added');
+        hideManualItemForm(meetingId);
+        loadMeetingDetail(meetingId);
+        loadStats();
+      } catch (err) {
+        showToast('Failed to add item: ' + err.message, true);
+      }
     }
 
     // Init

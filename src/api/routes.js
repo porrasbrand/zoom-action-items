@@ -801,6 +801,132 @@ router.post('/action-items/:id/dismiss', (req, res) => {
 
 // ============ COVERAGE ANALYSIS ============
 
+// ============ VALIDATION STATS ============
+
+// GET /api/validation/stats - Get accuracy metrics
+router.get('/validation/stats', (req, res) => {
+  try {
+    const period = req.query.period;
+    let periodDays = null;
+    let periodLabel = 'all_time';
+
+    if (period === '7d') {
+      periodDays = 7;
+      periodLabel = 'last_7_days';
+    } else if (period === '30d') {
+      periodDays = 30;
+      periodLabel = 'last_30_days';
+    }
+
+    const { meetingStats, itemStats } = db.getValidationStatsData(periodDays);
+
+    // Calculate accuracy metrics
+    const llmExtracted = itemStats.llm_extracted || 0;
+    const rejected = itemStats.rejected_as_hallucination || 0;
+    const adversarial = itemStats.adversarial_added || 0;
+    const manual = itemStats.manual_added || 0;
+    const total = itemStats.total || 0;
+    const accepted = itemStats.accepted_suggestions || 0;
+    const dismissed = itemStats.dismissed_suggestions || 0;
+
+    const hallucinationRate = llmExtracted > 0 ? parseFloat((rejected / llmExtracted * 100).toFixed(1)) : 0;
+    const missRate = total > 0 ? parseFloat(((adversarial + manual) / total * 100).toFixed(1)) : 0;
+    const acceptRate = (accepted + dismissed) > 0 ? parseFloat((accepted / (accepted + dismissed) * 100).toFixed(1)) : 0;
+    const avgItems = meetingStats.total > 0 ? parseFloat((total / meetingStats.total).toFixed(1)) : 0;
+
+    const totalMeetings = meetingStats.total || 0;
+    const greenPct = totalMeetings > 0 ? Math.round((meetingStats.green || 0) / totalMeetings * 100) : 0;
+    const yellowPct = totalMeetings > 0 ? Math.round((meetingStats.yellow || 0) / totalMeetings * 100) : 0;
+    const redPct = totalMeetings > 0 ? Math.round((meetingStats.red || 0) / totalMeetings * 100) : 0;
+
+    res.json({
+      period: periodLabel,
+      meetings: {
+        total: meetingStats.total || 0,
+        validated: meetingStats.validated || 0,
+        green: meetingStats.green || 0,
+        yellow: meetingStats.yellow || 0,
+        red: meetingStats.red || 0
+      },
+      action_items: {
+        total,
+        llm_extracted: llmExtracted,
+        adversarial_added: adversarial,
+        manual_added: manual,
+        accepted_suggestions: accepted,
+        dismissed_suggestions: dismissed,
+        completed: itemStats.completed || 0,
+        rejected_as_hallucination: rejected
+      },
+      accuracy: {
+        hallucination_rate: hallucinationRate,
+        miss_rate: missRate,
+        suggestion_accept_rate: acceptRate,
+        avg_items_per_meeting: avgItems,
+        avg_keyword_ratio: parseFloat((meetingStats.avg_keyword_ratio || 0).toFixed(1))
+      },
+      confidence_distribution: {
+        green: greenPct,
+        yellow: yellowPct,
+        red: redPct
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/validation/spot-check - Get meetings needing spot-check
+router.get('/validation/spot-check', (req, res) => {
+  try {
+    const meetings = db.getSpotCheckMeetings();
+    res.json({ meetings });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/meetings/:id/spot-check - Mark meeting as spot-checked
+router.post('/meetings/:id/spot-check', (req, res) => {
+  try {
+    const meetingId = parseInt(req.params.id);
+    db.markSpotChecked(meetingId);
+    res.json({ success: true, message: 'Marked as spot-checked' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/meetings/:id/action-items - Add manual action item
+router.post('/meetings/:id/action-items', (req, res) => {
+  try {
+    const meetingId = parseInt(req.params.id);
+    const meeting = db.getMeetingById(meetingId);
+
+    if (!meeting) {
+      return res.status(404).json({ error: 'Meeting not found' });
+    }
+
+    const { title, owner_name, due_date, priority, description } = req.body;
+
+    if (!title) {
+      return res.status(400).json({ error: 'Title is required' });
+    }
+
+    const item = db.insertManualActionItem(meetingId, meeting.meeting?.client_id, {
+      title,
+      owner_name,
+      due_date,
+      priority,
+      description
+    });
+
+    res.json(item);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/meetings/:id/coverage - Get coverage analysis
 router.get('/meetings/:id/coverage', (req, res) => {
   try {
