@@ -98,7 +98,8 @@ export async function extractMeetingData({ transcript, topic, clientName, meetin
   console.log(`  Gemini: ${usage?.promptTokenCount || '?'} in / ${usage?.candidatesTokenCount || '?'} out tokens`);
 
   try {
-    return JSON.parse(text);
+    const parsed = JSON.parse(text);
+    return Array.isArray(parsed) ? parsed[0] : parsed;
   } catch {
     console.error('  Failed to parse Gemini JSON response, returning raw');
     return { raw: text, parseError: true, summary: 'Failed to parse AI response', action_items: [], decisions: [] };

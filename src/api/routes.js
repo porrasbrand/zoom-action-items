@@ -1014,18 +1014,21 @@ router.post('/meetings/:id/reextract', async (req, res) => {
       speakers,
     });
 
-    const actionCount = extraction.action_items?.length || 0;
-    const decisionCount = extraction.decisions?.length || 0;
+    // Unwrap array if Gemini returned [{...}] instead of {...}
+    const result = Array.isArray(extraction) ? extraction[0] : extraction;
+
+    const actionCount = result.action_items?.length || 0;
+    const decisionCount = result.decisions?.length || 0;
     console.log(`[Reextract] Extracted: ${actionCount} action items, ${decisionCount} decisions`);
 
     // Insert new action items
-    if (extraction.action_items?.length) {
-      db.insertReextractedItems(meetingId, meeting.client_id, extraction.action_items);
+    if (result.action_items?.length) {
+      db.insertReextractedItems(meetingId, meeting.client_id, result.action_items);
     }
 
     // Insert new decisions
-    if (extraction.decisions?.length) {
-      db.insertReextractedDecisions(meetingId, meeting.client_id, extraction.decisions);
+    if (result.decisions?.length) {
+      db.insertReextractedDecisions(meetingId, meeting.client_id, result.decisions);
     }
 
     // Update meeting with new extraction
