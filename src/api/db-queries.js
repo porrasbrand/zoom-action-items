@@ -24,22 +24,41 @@ function getDb() {
 export function runMigrations() {
   const d = getDb();
 
-  // Check which columns exist
-  const tableInfo = d.prepare("PRAGMA table_info(action_items)").all();
-  const existingColumns = new Set(tableInfo.map(c => c.name));
+  // Check action_items columns
+  const actionItemsInfo = d.prepare("PRAGMA table_info(action_items)").all();
+  const actionItemsCols = new Set(actionItemsInfo.map(c => c.name));
 
-  const newColumns = [
+  const actionItemsNewCols = [
     { name: 'transcript_excerpt', type: 'TEXT' },
     { name: 'ph_project_id', type: 'TEXT' },
     { name: 'ph_task_list_id', type: 'TEXT' },
     { name: 'ph_assignee_id', type: 'TEXT' },
     { name: 'pushed_at', type: 'TEXT' },
+    { name: 'source', type: "TEXT DEFAULT 'llm_extracted'" },
   ];
 
-  for (const col of newColumns) {
-    if (!existingColumns.has(col.name)) {
-      console.log(`[Migration] Adding column: ${col.name}`);
+  for (const col of actionItemsNewCols) {
+    if (!actionItemsCols.has(col.name)) {
+      console.log(`[Migration] Adding action_items column: ${col.name}`);
       d.exec(`ALTER TABLE action_items ADD COLUMN ${col.name} ${col.type}`);
+    }
+  }
+
+  // Check meetings columns
+  const meetingsInfo = d.prepare("PRAGMA table_info(meetings)").all();
+  const meetingsCols = new Set(meetingsInfo.map(c => c.name));
+
+  const meetingsNewCols = [
+    { name: 'validation_status', type: "TEXT DEFAULT 'pending'" },
+    { name: 'keyword_count', type: 'INTEGER DEFAULT 0' },
+    { name: 'keyword_ratio', type: 'REAL DEFAULT 0' },
+    { name: 'confidence_signal', type: "TEXT DEFAULT 'pending'" },
+  ];
+
+  for (const col of meetingsNewCols) {
+    if (!meetingsCols.has(col.name)) {
+      console.log(`[Migration] Adding meetings column: ${col.name}`);
+      d.exec(`ALTER TABLE meetings ADD COLUMN ${col.name} ${col.type}`);
     }
   }
 
@@ -82,6 +101,7 @@ export function getMeetings({ client_id, status, from, to, limit = 50, offset = 
     SELECT
       m.id, m.topic, m.client_id, m.client_name, m.start_time,
       m.duration_minutes, m.status, m.created_at,
+      m.confidence_signal, m.keyword_count, m.keyword_ratio, m.validation_status,
       (SELECT COUNT(*) FROM action_items WHERE meeting_id = m.id) as action_item_count,
       (SELECT COUNT(*) FROM decisions WHERE meeting_id = m.id) as decision_count
     FROM meetings m
@@ -400,4 +420,49 @@ export function getHealth() {
     last_processed: last?.created_at || null,
     last_meeting_date: last?.start_time || null,
   };
+}
+
+// ============ VALIDATION ============
+
+export function getMeetingForValidation(id) {
+  const d = getDb();
+  return d.prepare(`
+    SELECT id, transcript_raw, status, validation_status
+    FROM meetings WHERE id = ?
+  `).get(id);
+}
+
+export function getActionItemCountForMeeting(meetingId) {
+  const d = getDb();
+  const row = d.prepare('SELECT COUNT(*) as count FROM action_items WHERE meeting_id = ?').get(meetingId);
+  return row?.count || 0;
+}
+
+export function updateMeetingValidation(id, { keywordCount, keywordRatio, confidenceSignal, validationStatus }) {
+  const d = getDb();
+  return d.prepare(`
+    UPDATE meetings
+    SET keyword_count = ?, keyword_ratio = ?, confidence_signal = ?, validation_status = ?, updated_at = datetime('now')
+    WHERE id = ?
+  `).run(keywordCount, keywordRatio, confidenceSignal, validationStatus, id);
+}
+
+export function getPendingValidationMeetings() {
+  const d = getDb();
+  return d.prepare(`
+    SELECT id FROM meetings WHERE validation_status = 'pending' OR validation_status IS NULL
+  `).all();
+}
+
+export function getValidationStats() {
+  const d = getDb();
+  return d.prepare(`
+    SELECT
+      COUNT(*) as total,
+      SUM(CASE WHEN confidence_signal = 'green' THEN 1 ELSE 0 END) as green,
+      SUM(CASE WHEN confidence_signal = 'yellow' THEN 1 ELSE 0 END) as yellow,
+      SUM(CASE WHEN confidence_signal = 'red' THEN 1 ELSE 0 END) as red,
+      SUM(CASE WHEN confidence_signal = 'pending' OR confidence_signal IS NULL THEN 1 ELSE 0 END) as pending
+    FROM meetings
+  `).get();
 }

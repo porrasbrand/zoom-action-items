@@ -9,6 +9,8 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import * as proofhub from '../lib/proofhub-client.js';
 import { resolvePerson, getAllPeople } from '../lib/people-resolver.js';
+import { scanTranscript } from '../lib/keyword-scanner.js';
+import { calculateConfidence } from '../lib/confidence-calculator.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
@@ -506,6 +508,113 @@ router.post('/meetings/:id/push-all-ph', async (req, res) => {
       pushed: results.filter(r => r.success).length,
       tasks: results
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ VALIDATION ============
+
+// POST /api/meetings/:id/validate - Validate a single meeting
+router.post('/meetings/:id/validate', (req, res) => {
+  try {
+    const meetingId = parseInt(req.params.id);
+    const meeting = db.getMeetingForValidation(meetingId);
+
+    if (!meeting) {
+      return res.status(404).json({ error: 'Meeting not found' });
+    }
+
+    // Scan transcript for commitment phrases
+    const scanResult = scanTranscript(meeting.transcript_raw);
+
+    // Get action item count
+    const actionItemCount = db.getActionItemCountForMeeting(meetingId);
+
+    // Calculate confidence
+    const confidence = calculateConfidence(
+      scanResult,
+      actionItemCount,
+      meeting.transcript_raw,
+      meeting.status
+    );
+
+    // Update meeting with validation results
+    db.updateMeetingValidation(meetingId, {
+      keywordCount: scanResult.totalPhrases,
+      keywordRatio: confidence.ratio,
+      confidenceSignal: confidence.signal,
+      validationStatus: 'validated'
+    });
+
+    res.json({
+      meeting_id: meetingId,
+      signal: confidence.signal,
+      ratio: confidence.ratio,
+      reason: confidence.reason,
+      keywordCount: scanResult.totalPhrases,
+      itemCount: actionItemCount,
+      categories: scanResult.categories,
+      topPhrases: scanResult.commitmentPhrases.slice(0, 10)
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/validate-all - Validate all pending meetings
+router.post('/validate-all', (req, res) => {
+  try {
+    const pendingMeetings = db.getPendingValidationMeetings();
+    let green = 0, yellow = 0, red = 0, errors = 0;
+
+    for (const { id } of pendingMeetings) {
+      try {
+        const meeting = db.getMeetingForValidation(id);
+        if (!meeting) continue;
+
+        const scanResult = scanTranscript(meeting.transcript_raw);
+        const actionItemCount = db.getActionItemCountForMeeting(id);
+        const confidence = calculateConfidence(
+          scanResult,
+          actionItemCount,
+          meeting.transcript_raw,
+          meeting.status
+        );
+
+        db.updateMeetingValidation(id, {
+          keywordCount: scanResult.totalPhrases,
+          keywordRatio: confidence.ratio,
+          confidenceSignal: confidence.signal,
+          validationStatus: 'validated'
+        });
+
+        if (confidence.signal === 'green') green++;
+        else if (confidence.signal === 'yellow') yellow++;
+        else red++;
+      } catch (err) {
+        console.error(`Validation error for meeting ${id}:`, err.message);
+        errors++;
+      }
+    }
+
+    res.json({
+      validated: pendingMeetings.length - errors,
+      green,
+      yellow,
+      red,
+      errors
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/validation-stats - Get validation statistics
+router.get('/validation-stats', (req, res) => {
+  try {
+    const stats = db.getValidationStats();
+    res.json(stats);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
