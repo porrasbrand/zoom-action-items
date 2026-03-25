@@ -35,6 +35,7 @@ export function runMigrations() {
     { name: 'ph_assignee_id', type: 'TEXT' },
     { name: 'pushed_at', type: 'TEXT' },
     { name: 'source', type: "TEXT DEFAULT 'llm_extracted'" },
+    { name: 'confidence_tier', type: "TEXT DEFAULT 'conversation'" },
   ];
 
   for (const col of actionItemsNewCols) {
@@ -58,6 +59,10 @@ export function runMigrations() {
     { name: 'completeness_assessment', type: 'TEXT' },
     { name: 'coverage_analysis', type: 'TEXT' },
     { name: 'spot_checked_at', type: 'TEXT' },
+    { name: 'recap_detected', type: 'INTEGER DEFAULT 0' },
+    { name: 'recap_speaker', type: 'TEXT' },
+    { name: 'recap_start_line', type: 'INTEGER' },
+    { name: 'recap_item_count', type: 'INTEGER DEFAULT 0' },
   ];
 
   for (const col of meetingsNewCols) {
@@ -707,4 +712,76 @@ export function updateMeetingReextract(meetingId, aiExtraction) {
       updated_at = datetime('now')
     WHERE id = ?
   `).run(JSON.stringify(aiExtraction), meetingId);
+}
+
+// ============ RECAP/SUMMARY DETECTION ============
+
+// Insert recap-extracted action items
+export function insertRecapItems(meetingId, clientId, items) {
+  const d = getDb();
+  const stmt = d.prepare(`
+    INSERT INTO action_items (meeting_id, client_id, title, description, owner_name, due_date, priority, category, source, confidence_tier, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, 'other', 'recap_extracted', 'recap', 'open')
+  `);
+
+  const insertMany = d.transaction((items) => {
+    for (const item of items) {
+      stmt.run(
+        meetingId, clientId,
+        item.title,
+        item.description || null,
+        item.owner || null,
+        item.due_date || null,
+        item.priority || 'medium'
+      );
+    }
+  });
+
+  insertMany(items);
+  return items.length;
+}
+
+// Update meeting with recap detection results
+export function updateMeetingRecap(meetingId, { detected, speaker, startLine, itemCount }) {
+  const d = getDb();
+  return d.prepare(`
+    UPDATE meetings SET
+      recap_detected = ?,
+      recap_speaker = ?,
+      recap_start_line = ?,
+      recap_item_count = ?,
+      updated_at = datetime('now')
+    WHERE id = ?
+  `).run(detected ? 1 : 0, speaker || null, startLine || null, itemCount || 0, meetingId);
+}
+
+// Get all meetings for bulk summary extraction
+export function getMeetingsForSummaryExtraction() {
+  const d = getDb();
+  return d.prepare(`
+    SELECT id, topic, client_id, client_name, transcript_raw
+    FROM meetings
+    WHERE transcript_raw IS NOT NULL
+      AND LENGTH(transcript_raw) > 1000
+      AND (recap_detected IS NULL OR recap_detected = 0)
+    ORDER BY start_time DESC
+  `).all();
+}
+
+// Get recap item count for a meeting
+export function getRecapItemCount(meetingId) {
+  const d = getDb();
+  const row = d.prepare(`
+    SELECT COUNT(*) as count FROM action_items
+    WHERE meeting_id = ? AND confidence_tier = 'recap'
+  `).get(meetingId);
+  return row?.count || 0;
+}
+
+// Clear existing recap items before re-extraction
+export function clearRecapItems(meetingId) {
+  const d = getDb();
+  return d.prepare(`
+    DELETE FROM action_items WHERE meeting_id = ? AND confidence_tier = 'recap'
+  `).run(meetingId);
 }

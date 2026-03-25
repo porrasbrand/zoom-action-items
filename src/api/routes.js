@@ -15,6 +15,8 @@ import { verifyExtraction } from '../lib/adversarial-verifier.js';
 import { analyzeCoverage, classifyLines } from '../lib/coverage-analyzer.js';
 import { extractMeetingData } from '../lib/ai-extractor.js';
 import { parseVTT, extractSpeakers } from '../lib/vtt-parser.js';
+import { detectSummary } from '../lib/summary-detector.js';
+import { extractSummaryItems } from '../lib/summary-extractor.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
@@ -1074,6 +1076,189 @@ router.post('/meetings/:id/reextract', async (req, res) => {
     });
   } catch (err) {
     console.error('[Reextract] Error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ SUMMARY EXTRACTION ============
+
+// POST /api/meetings/:id/extract-summary - Detect and extract items from recap section
+router.post('/meetings/:id/extract-summary', async (req, res) => {
+  try {
+    const meetingId = parseInt(req.params.id);
+    const meeting = db.getMeetingForReextract(meetingId);
+
+    if (!meeting) {
+      return res.status(404).json({ error: 'Meeting not found' });
+    }
+
+    if (!meeting.transcript_raw) {
+      return res.status(400).json({ error: 'No transcript available' });
+    }
+
+    console.log(`[Summary Extract] Starting for meeting ${meetingId}: "${meeting.topic}"`);
+
+    // Detect summary section
+    const detection = detectSummary(meeting.transcript_raw);
+
+    if (!detection.detected) {
+      // Update meeting to mark no recap detected
+      db.updateMeetingRecap(meetingId, {
+        detected: false,
+        speaker: null,
+        startLine: null,
+        itemCount: 0
+      });
+
+      return res.json({
+        detected: false,
+        reason: detection.reason,
+        meeting_id: meetingId
+      });
+    }
+
+    console.log(`[Summary Extract] Detected recap at line ${detection.startLine}, speaker: ${detection.speaker}, confidence: ${detection.confidence}`);
+    console.log(`[Summary Extract] Summary text length: ${detection.summaryText.length} chars`);
+
+    // Clear any existing recap items
+    const cleared = db.clearRecapItems(meetingId);
+    if (cleared.changes > 0) {
+      console.log(`[Summary Extract] Cleared ${cleared.changes} existing recap items`);
+    }
+
+    // Extract items from summary section
+    const extraction = await extractSummaryItems(detection.summaryText, {
+      topic: meeting.topic,
+      clientName: meeting.client_name,
+      speaker: detection.speaker
+    });
+
+    const itemCount = extraction.items?.length || 0;
+    console.log(`[Summary Extract] Extracted ${itemCount} items from recap`);
+
+    // Insert recap items
+    if (extraction.items?.length) {
+      db.insertRecapItems(meetingId, meeting.client_id, extraction.items);
+    }
+
+    // Update meeting with recap detection results
+    db.updateMeetingRecap(meetingId, {
+      detected: true,
+      speaker: detection.speaker,
+      startLine: detection.startLine,
+      itemCount: itemCount
+    });
+
+    res.json({
+      detected: true,
+      speaker: detection.speaker,
+      confidence: detection.confidence,
+      start_line: detection.startLine,
+      line_count: detection.lineCount,
+      summary_length: detection.summaryText.length,
+      count: itemCount,
+      items: extraction.items,
+      tokens_in: extraction.tokensIn,
+      tokens_out: extraction.tokensOut,
+      meeting_id: meetingId
+    });
+  } catch (err) {
+    console.error('[Summary Extract] Error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/extract-summaries-all - Run summary extraction on all meetings
+router.post('/extract-summaries-all', async (req, res) => {
+  try {
+    const meetings = db.getMeetingsForSummaryExtraction();
+    console.log(`[Summary Extract All] Processing ${meetings.length} meetings`);
+
+    const results = {
+      total: meetings.length,
+      detected: 0,
+      not_detected: 0,
+      items_extracted: 0,
+      errors: 0,
+      meetings: []
+    };
+
+    for (const meeting of meetings) {
+      try {
+        console.log(`[Summary Extract All] Processing meeting ${meeting.id}: "${meeting.topic}"`);
+
+        // Detect summary
+        const detection = detectSummary(meeting.transcript_raw);
+
+        if (!detection.detected) {
+          db.updateMeetingRecap(meeting.id, {
+            detected: false,
+            speaker: null,
+            startLine: null,
+            itemCount: 0
+          });
+          results.not_detected++;
+          results.meetings.push({
+            id: meeting.id,
+            topic: meeting.topic,
+            detected: false,
+            reason: detection.reason
+          });
+          continue;
+        }
+
+        // Clear existing recap items
+        db.clearRecapItems(meeting.id);
+
+        // Extract from summary
+        const extraction = await extractSummaryItems(detection.summaryText, {
+          topic: meeting.topic,
+          clientName: meeting.client_name,
+          speaker: detection.speaker
+        });
+
+        const itemCount = extraction.items?.length || 0;
+
+        // Insert items
+        if (extraction.items?.length) {
+          db.insertRecapItems(meeting.id, meeting.client_id, extraction.items);
+        }
+
+        // Update meeting
+        db.updateMeetingRecap(meeting.id, {
+          detected: true,
+          speaker: detection.speaker,
+          startLine: detection.startLine,
+          itemCount: itemCount
+        });
+
+        results.detected++;
+        results.items_extracted += itemCount;
+        results.meetings.push({
+          id: meeting.id,
+          topic: meeting.topic,
+          detected: true,
+          speaker: detection.speaker,
+          items: itemCount
+        });
+
+        // Delay between Gemini calls
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      } catch (err) {
+        console.error(`[Summary Extract All] Error on meeting ${meeting.id}:`, err.message);
+        results.errors++;
+        results.meetings.push({
+          id: meeting.id,
+          topic: meeting.topic,
+          error: err.message
+        });
+      }
+    }
+
+    console.log(`[Summary Extract All] Complete. Detected: ${results.detected}, Items: ${results.items_extracted}`);
+    res.json(results);
+  } catch (err) {
+    console.error('[Summary Extract All] Error:', err);
     res.status(500).json({ error: err.message });
   }
 });
