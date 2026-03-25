@@ -940,6 +940,149 @@
       color: #c9d1d9;
     }
 
+    .verify-btn {
+      background: #1f6feb;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+
+    .verify-btn:hover {
+      background: #388bfd;
+    }
+
+    .verify-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Suggested items section */
+    .suggested-section {
+      background: #d2992215;
+      border: 1px solid #d2992244;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .suggested-section h4 {
+      color: #d29922;
+      font-size: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .suggested-item {
+      background: #21262d;
+      border-radius: 6px;
+      padding: 14px;
+      margin-bottom: 10px;
+      border-left: 4px solid #d29922;
+    }
+
+    .suggested-item.dismissed {
+      opacity: 0.5;
+      border-left-color: #8b949e;
+    }
+
+    .suggested-item.dismissed .item-title {
+      text-decoration: line-through;
+    }
+
+    .suggested-badge {
+      background: #d2992233;
+      color: #d29922;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .confidence-badge {
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .confidence-badge.HIGH {
+      background: #f8514922;
+      color: #f85149;
+    }
+
+    .confidence-badge.MEDIUM {
+      background: #d2992222;
+      color: #d29922;
+    }
+
+    .suggested-item .source-quote {
+      background: #161b22;
+      border-left: 3px solid #30363d;
+      padding: 8px 12px;
+      margin: 8px 0;
+      font-size: 12px;
+      color: #8b949e;
+      font-family: 'SF Mono', Monaco, monospace;
+      white-space: pre-wrap;
+    }
+
+    .suggested-item .reasoning {
+      font-size: 12px;
+      color: #8b949e;
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    .suggested-item .item-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .accept-btn {
+      background: #238636;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .accept-btn:hover {
+      background: #2ea043;
+    }
+
+    .dismiss-btn {
+      background: #30363d;
+      color: #8b949e;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .dismiss-btn:hover {
+      background: #484f58;
+    }
+
+    .suggested-count-badge {
+      background: #d29922;
+      color: #0d1117;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 600;
+      margin-left: 6px;
+    }
+
     /* Flatpickr dark theme overrides */
     .flatpickr-calendar { background: #1a1f2e !important; border: 1px solid #333 !important; box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important; }
     .flatpickr-day { color: #c9d1d9 !important; }
@@ -1161,11 +1304,12 @@
         const isUnmatched = !m.client_id || m.client_id === 'unmatched';
         const isActive = m.id === selectedMeetingId;
         const signal = m.confidence_signal || 'pending';
+        const suggestedCount = m.suggested_count || 0;
         return `
           <div class="meeting-card ${isUnmatched ? 'unmatched' : ''} ${isActive ? 'active' : ''}"
                onclick="loadMeetingDetail(${m.id})">
             <div class="date"><span class="confidence-dot ${signal}"></span>${escapeHtml(formatDate(m.start_time))}</div>
-            <div class="topic">${escapeHtml(m.topic || 'Untitled')}</div>
+            <div class="topic">${escapeHtml(m.topic || 'Untitled')}${suggestedCount > 0 ? `<span class="suggested-count-badge">+${suggestedCount}</span>` : ''}</div>
             <div class="meta">
               <span class="client ${isUnmatched ? 'unmatched' : ''}">
                 ${isUnmatched ? '⚠️ Unmatched' : escapeHtml(m.client_name)}
@@ -1233,7 +1377,7 @@
                 <span>👥 ${attendees.map(a => escapeHtml(a)).join(', ')}</span>
               </div>
             ` : ''}
-            ${renderConfidenceSignal(meeting, action_items.length)}
+            ${renderConfidenceSignal(meeting, action_items.filter(i => i.source !== 'adversarial_added').length, action_items.filter(i => i.source === 'adversarial_added' && i.status === 'suggested').length)}
           </div>
 
           ${summary ? `
@@ -1277,10 +1421,11 @@
                 <button class="push-cancel-btn" onclick="hidePushAllPanel()">Cancel</button>
               </div>
             </div>
-            ${action_items.length > 0
-              ? `<div class="action-items-list">${action_items.map(i => renderActionItem(i, meeting)).join('')}</div>`
+            ${action_items.filter(i => i.source !== 'adversarial_added').length > 0
+              ? `<div class="action-items-list">${action_items.filter(i => i.source !== 'adversarial_added').map(i => renderActionItem(i, meeting)).join('')}</div>`
               : '<div class="empty-state">No action items extracted from this meeting.</div>'
             }
+            ${renderSuggestedItemsSection(action_items.filter(i => i.source === 'adversarial_added'))}
           </div>
 
           <div class="section">
@@ -1837,18 +1982,24 @@
     }
 
     // Render confidence signal for meeting detail
-    function renderConfidenceSignal(meeting, itemCount) {
+    function renderConfidenceSignal(meeting, itemCount, suggestedCount = 0) {
       const signal = meeting.confidence_signal || 'pending';
       const ratio = meeting.keyword_ratio || 0;
       const keywordCount = meeting.keyword_count || 0;
+      const assessment = meeting.completeness_assessment;
+      const verified = meeting.adversarial_run_at;
 
       let icon, text;
       if (signal === 'green') {
         icon = '✅';
-        text = `${itemCount} action items — keywords align (ratio ${ratio.toFixed(1)}:1)`;
+        text = verified ? `Verified complete — ${itemCount} action items` : `${itemCount} action items — keywords align (ratio ${ratio.toFixed(1)}:1)`;
       } else if (signal === 'yellow') {
         icon = '⚠️';
-        text = `${itemCount} action items — ${keywordCount} commitment phrases (ratio ${ratio.toFixed(1)}:1) — review recommended`;
+        if (suggestedCount > 0) {
+          text = `${suggestedCount} possible missed items — review below`;
+        } else {
+          text = `${itemCount} action items — ${keywordCount} commitment phrases (ratio ${ratio.toFixed(1)}:1) — review recommended`;
+        }
       } else if (signal === 'red') {
         icon = '❌';
         text = `Extraction issue — ${keywordCount} commitment phrases, ${itemCount} items — manual review required`;
@@ -1861,6 +2012,7 @@
         <div class="confidence-signal ${signal}" style="margin-top: 12px;">
           <span>${icon} ${text}</span>
           <button class="validate-btn" onclick="validateMeeting(${meeting.id})">Re-validate</button>
+          <button class="verify-btn" onclick="verifyMeeting(${meeting.id})">${verified ? 'Re-verify' : 'Verify'}</button>
         </div>
       `;
     }
@@ -1879,6 +2031,110 @@
       } catch (err) {
         showToast('Validation failed: ' + err.message, true);
       }
+    }
+
+    // Verify a meeting (adversarial check)
+    async function verifyMeeting(meetingId) {
+      showToast('Running adversarial verification... (this may take 15-20 seconds)');
+      try {
+        const res = await fetch(`${API}/meetings/${meetingId}/verify`, { method: 'POST' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Verification failed');
+
+        if (data.suggested_count > 0) {
+          showToast(`Found ${data.suggested_count} possible missed items — review below`);
+        } else {
+          showToast(`Verified: ${data.completeness_assessment}`);
+        }
+        loadMeetings();
+        loadMeetingDetail(meetingId);
+      } catch (err) {
+        showToast('Verification failed: ' + err.message, true);
+      }
+    }
+
+    // Accept a suggested item
+    async function acceptSuggested(itemId) {
+      try {
+        const res = await fetch(`${API}/action-items/${itemId}/accept`, { method: 'POST' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Accept failed');
+
+        showToast('Item accepted');
+        loadMeetingDetail(selectedMeetingId);
+        loadStats();
+      } catch (err) {
+        showToast('Failed to accept: ' + err.message, true);
+      }
+    }
+
+    // Dismiss a suggested item
+    async function dismissSuggested(itemId) {
+      try {
+        const res = await fetch(`${API}/action-items/${itemId}/dismiss`, { method: 'POST' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Dismiss failed');
+
+        showToast('Item dismissed');
+        loadMeetingDetail(selectedMeetingId);
+      } catch (err) {
+        showToast('Failed to dismiss: ' + err.message, true);
+      }
+    }
+
+    // Render suggested items section
+    function renderSuggestedItemsSection(suggestedItems) {
+      if (!suggestedItems || suggestedItems.length === 0) {
+        return '';
+      }
+
+      const pendingItems = suggestedItems.filter(i => i.status === 'suggested');
+      const dismissedItems = suggestedItems.filter(i => i.status === 'dismissed');
+
+      return `
+        <div class="suggested-section">
+          <h4>🔍 AI Suggested Items (${pendingItems.length} pending${dismissedItems.length > 0 ? `, ${dismissedItems.length} dismissed` : ''})</h4>
+          ${pendingItems.map(renderSuggestedItem).join('')}
+          ${dismissedItems.length > 0 ? `
+            <details style="margin-top: 12px;">
+              <summary style="cursor: pointer; color: #8b949e; font-size: 12px;">Show ${dismissedItems.length} dismissed</summary>
+              ${dismissedItems.map(renderSuggestedItem).join('')}
+            </details>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    // Render suggested item
+    function renderSuggestedItem(item) {
+      const isDismissed = item.status === 'dismissed';
+
+      return `
+        <div class="suggested-item ${isDismissed ? 'dismissed' : ''}" id="suggested-${item.id}">
+          <div class="item-row">
+            <span class="suggested-badge">🔍 AI Suggested</span>
+            <span class="confidence-badge ${item.confidence || 'MEDIUM'}">${item.confidence || 'MEDIUM'}</span>
+          </div>
+          <div class="item-title" style="margin: 8px 0; font-size: 14px; color: #f0f6fc;">
+            ${escapeHtml(item.title)}
+          </div>
+          <div class="item-meta">
+            <span class="owner">👤 ${escapeHtml(item.owner_name || 'TBD')}</span>
+          </div>
+          ${item.transcript_excerpt ? `
+            <div class="source-quote">${escapeHtml(item.transcript_excerpt)}</div>
+          ` : ''}
+          ${item.description ? `
+            <div class="reasoning">💡 ${escapeHtml(item.description)}</div>
+          ` : ''}
+          ${!isDismissed ? `
+            <div class="item-actions">
+              <button class="accept-btn" onclick="acceptSuggested(${item.id})">Accept ✓</button>
+              <button class="dismiss-btn" onclick="dismissSuggested(${item.id})">Dismiss ✕</button>
+            </div>
+          ` : ''}
+        </div>
+      `;
     }
 
     // Complete action item

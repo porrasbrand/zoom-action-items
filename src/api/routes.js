@@ -11,6 +11,7 @@ import * as proofhub from '../lib/proofhub-client.js';
 import { resolvePerson, getAllPeople } from '../lib/people-resolver.js';
 import { scanTranscript } from '../lib/keyword-scanner.js';
 import { calculateConfidence } from '../lib/confidence-calculator.js';
+import { verifyExtraction } from '../lib/adversarial-verifier.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
@@ -615,6 +616,183 @@ router.get('/validation-stats', (req, res) => {
   try {
     const stats = db.getValidationStats();
     res.json(stats);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ ADVERSARIAL VERIFICATION ============
+
+// POST /api/meetings/:id/verify - Run adversarial verification
+router.post('/meetings/:id/verify', async (req, res) => {
+  try {
+    const meetingId = parseInt(req.params.id);
+    const data = db.getMeetingWithItems(meetingId);
+
+    if (!data) {
+      return res.status(404).json({ error: 'Meeting not found' });
+    }
+
+    const { meeting, items } = data;
+
+    if (!meeting.transcript_raw || meeting.transcript_raw.length < 500) {
+      return res.status(400).json({ error: 'Meeting has no transcript or transcript too short' });
+    }
+
+    console.log(`[Verify] Running adversarial verification for meeting ${meetingId}: "${meeting.topic}"`);
+
+    // Run adversarial verification
+    const result = await verifyExtraction(meeting.transcript_raw, items);
+
+    // Determine new confidence signal
+    let newSignal = meeting.confidence_signal || 'pending';
+    if (result.missed_items && result.missed_items.length > 0) {
+      // Downgrade to yellow if adversarial found items
+      if (newSignal === 'green') newSignal = 'yellow';
+    } else if (result.completeness_assessment === 'complete' && meeting.keyword_ratio <= 5) {
+      // Upgrade to green if verified complete and keywords align
+      newSignal = 'green';
+    }
+
+    // Store adversarial result
+    db.updateMeetingAdversarial(meetingId, {
+      adversarialResult: result,
+      completenessAssessment: result.completeness_assessment,
+      confidenceSignal: newSignal
+    });
+
+    // Create suggested action items for HIGH/MEDIUM confidence findings
+    let suggestedCount = 0;
+    for (const item of result.missed_items || []) {
+      db.insertSuggestedItem(meetingId, meeting.client_id, item);
+      suggestedCount++;
+    }
+
+    console.log(`[Verify] Found ${suggestedCount} suggested items, assessment: ${result.completeness_assessment}`);
+
+    res.json({
+      meeting_id: meetingId,
+      missed_items: result.missed_items || [],
+      completeness_assessment: result.completeness_assessment,
+      verification_notes: result.verification_notes,
+      suggested_count: suggestedCount,
+      new_confidence_signal: newSignal,
+      sections_with_possible_commitments: result.sections_with_possible_commitments || []
+    });
+  } catch (err) {
+    console.error('[Verify] Error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/verify-all - Run verification on all unverified meetings
+router.post('/verify-all', async (req, res) => {
+  try {
+    const meetings = db.getMeetingsForVerification();
+    const limit = parseInt(req.query.limit) || meetings.length;
+    const toProcess = meetings.slice(0, limit);
+
+    let verified = 0, complete = 0, incomplete = 0, errors = 0, totalSuggested = 0;
+
+    for (const { id } of toProcess) {
+      try {
+        const data = db.getMeetingWithItems(id);
+        if (!data) continue;
+
+        const { meeting, items } = data;
+        const result = await verifyExtraction(meeting.transcript_raw, items);
+
+        let newSignal = meeting.confidence_signal || 'pending';
+        if (result.missed_items && result.missed_items.length > 0) {
+          if (newSignal === 'green') newSignal = 'yellow';
+        } else if (result.completeness_assessment === 'complete' && meeting.keyword_ratio <= 5) {
+          newSignal = 'green';
+        }
+
+        db.updateMeetingAdversarial(id, {
+          adversarialResult: result,
+          completenessAssessment: result.completeness_assessment,
+          confidenceSignal: newSignal
+        });
+
+        for (const item of result.missed_items || []) {
+          db.insertSuggestedItem(id, meeting.client_id, item);
+          totalSuggested++;
+        }
+
+        verified++;
+        if (result.completeness_assessment === 'complete') complete++;
+        else incomplete++;
+
+        // Rate limit - 2 second delay
+        await new Promise(r => setTimeout(r, 2000));
+      } catch (err) {
+        console.error(`[Verify-all] Error for meeting ${id}:`, err.message);
+        errors++;
+      }
+    }
+
+    res.json({
+      verified,
+      complete,
+      incomplete,
+      errors,
+      total_suggested: totalSuggested
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/action-items/:id/accept - Accept a suggested item
+router.post('/action-items/:id/accept', (req, res) => {
+  try {
+    const itemId = parseInt(req.params.id);
+    const item = db.getActionItemById(itemId);
+
+    if (!item) {
+      return res.status(404).json({ error: 'Action item not found' });
+    }
+
+    if (item.status !== 'suggested') {
+      return res.status(400).json({ error: 'Item is not in suggested status' });
+    }
+
+    db.setActionItemStatus(itemId, 'open');
+    const updated = db.getActionItemById(itemId);
+
+    res.json({
+      success: true,
+      message: 'Item accepted and moved to open status',
+      item: updated
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/action-items/:id/dismiss - Dismiss a suggested item
+router.post('/action-items/:id/dismiss', (req, res) => {
+  try {
+    const itemId = parseInt(req.params.id);
+    const item = db.getActionItemById(itemId);
+
+    if (!item) {
+      return res.status(404).json({ error: 'Action item not found' });
+    }
+
+    if (item.status !== 'suggested') {
+      return res.status(400).json({ error: 'Item is not in suggested status' });
+    }
+
+    db.setActionItemStatus(itemId, 'dismissed');
+    const updated = db.getActionItemById(itemId);
+
+    res.json({
+      success: true,
+      message: 'Item dismissed',
+      item: updated
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

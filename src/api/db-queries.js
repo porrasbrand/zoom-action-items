@@ -53,6 +53,9 @@ export function runMigrations() {
     { name: 'keyword_count', type: 'INTEGER DEFAULT 0' },
     { name: 'keyword_ratio', type: 'REAL DEFAULT 0' },
     { name: 'confidence_signal', type: "TEXT DEFAULT 'pending'" },
+    { name: 'adversarial_result', type: 'TEXT' },
+    { name: 'adversarial_run_at', type: 'TEXT' },
+    { name: 'completeness_assessment', type: 'TEXT' },
   ];
 
   for (const col of meetingsNewCols) {
@@ -102,7 +105,9 @@ export function getMeetings({ client_id, status, from, to, limit = 50, offset = 
       m.id, m.topic, m.client_id, m.client_name, m.start_time,
       m.duration_minutes, m.status, m.created_at,
       m.confidence_signal, m.keyword_count, m.keyword_ratio, m.validation_status,
-      (SELECT COUNT(*) FROM action_items WHERE meeting_id = m.id) as action_item_count,
+      m.completeness_assessment, m.adversarial_run_at,
+      (SELECT COUNT(*) FROM action_items WHERE meeting_id = m.id AND source != 'adversarial_added') as action_item_count,
+      (SELECT COUNT(*) FROM action_items WHERE meeting_id = m.id AND source = 'adversarial_added' AND status = 'suggested') as suggested_count,
       (SELECT COUNT(*) FROM decisions WHERE meeting_id = m.id) as decision_count
     FROM meetings m
     ${whereClause}
@@ -465,4 +470,52 @@ export function getValidationStats() {
       SUM(CASE WHEN confidence_signal = 'pending' OR confidence_signal IS NULL THEN 1 ELSE 0 END) as pending
     FROM meetings
   `).get();
+}
+
+// ============ ADVERSARIAL VERIFICATION ============
+
+export function getMeetingWithItems(id) {
+  const d = getDb();
+  const meeting = d.prepare('SELECT * FROM meetings WHERE id = ?').get(id);
+  if (!meeting) return null;
+
+  const items = d.prepare('SELECT * FROM action_items WHERE meeting_id = ? AND source != ?').all(id, 'adversarial_added');
+  return { meeting, items };
+}
+
+export function updateMeetingAdversarial(id, { adversarialResult, completenessAssessment, confidenceSignal }) {
+  const d = getDb();
+  return d.prepare(`
+    UPDATE meetings
+    SET adversarial_result = ?, adversarial_run_at = datetime('now'), completeness_assessment = ?, confidence_signal = ?, updated_at = datetime('now')
+    WHERE id = ?
+  `).run(JSON.stringify(adversarialResult), completenessAssessment, confidenceSignal, id);
+}
+
+export function insertSuggestedItem(meetingId, clientId, item) {
+  const d = getDb();
+  return d.prepare(`
+    INSERT INTO action_items (meeting_id, client_id, title, description, owner_name, priority, category, transcript_excerpt, source, status)
+    VALUES (?, ?, ?, ?, ?, 'medium', 'other', ?, 'adversarial_added', 'suggested')
+  `).run(
+    meetingId,
+    clientId,
+    item.title,
+    item.reasoning || null,
+    item.owner || null,
+    item.source_quote || null
+  );
+}
+
+export function getSuggestedItemsCount(meetingId) {
+  const d = getDb();
+  const row = d.prepare('SELECT COUNT(*) as count FROM action_items WHERE meeting_id = ? AND status = ?').get(meetingId, 'suggested');
+  return row?.count || 0;
+}
+
+export function getMeetingsForVerification() {
+  const d = getDb();
+  return d.prepare(`
+    SELECT id FROM meetings WHERE adversarial_run_at IS NULL AND transcript_raw IS NOT NULL AND LENGTH(transcript_raw) > 500
+  `).all();
 }
