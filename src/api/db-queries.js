@@ -596,6 +596,21 @@ export function getSpotCheckMeetings() {
   `).all();
 }
 
+export function getMeetingCountsByWeek() {
+  const d = getDb();
+  // Get meetings grouped by week (Monday start) for last 8 weeks
+  return d.prepare(`
+    SELECT
+      date(start_time, 'weekday 0', '-6 days') as week_start,
+      date(start_time, 'weekday 0') as week_end,
+      COUNT(*) as count
+    FROM meetings
+    WHERE start_time >= date('now', '-56 days')
+    GROUP BY week_start
+    ORDER BY week_start DESC
+  `).all();
+}
+
 export function markSpotChecked(id) {
   const d = getDb();
   return d.prepare(`

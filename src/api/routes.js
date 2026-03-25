@@ -40,6 +40,17 @@ router.get('/meetings', (req, res) => {
   }
 });
 
+// GET /api/meetings/week-counts - Get meeting counts per week
+// IMPORTANT: This must be before /meetings/:id to avoid route conflict
+router.get('/meetings/week-counts', (req, res) => {
+  try {
+    const weeks = db.getMeetingCountsByWeek();
+    res.json(weeks);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/meetings/:id - Full meeting detail
 router.get('/meetings/:id', (req, res) => {
   try {

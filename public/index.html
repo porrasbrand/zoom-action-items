@@ -1485,6 +1485,145 @@
     .reextract-banner .dismiss-btn:hover {
       background: #21262d;
     }
+
+    /* Quick filter pills */
+    .filter-pills-container {
+      padding: 12px 16px;
+      border-bottom: 1px solid #30363d;
+    }
+
+    .filter-row.pills-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .filter-row.pills-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-row.pills-row .row-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: #6e7681;
+      width: 100%;
+      margin-bottom: 4px;
+    }
+
+    .filter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      background: #1a1f2e;
+      border: 1px solid #333;
+      color: #8b949e;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .filter-pill:hover {
+      border-color: #4c9aff;
+      color: #c9d1d9;
+    }
+
+    .filter-pill.active {
+      background: #4c9aff;
+      border-color: #4c9aff;
+      color: white;
+    }
+
+    .filter-pill .pill-count {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+
+    .filter-pill.active .pill-count {
+      opacity: 0.9;
+    }
+
+    /* Client pills - smaller */
+    .client-pills .filter-pill {
+      padding: 4px 10px;
+      font-size: 11px;
+    }
+
+    .client-pills .filter-pill.unmatched {
+      border-color: #ffa500;
+    }
+
+    .client-pills .filter-pill.unmatched.active {
+      background: #ffa500;
+      border-color: #ffa500;
+      color: #1a1500;
+    }
+
+    /* Signal pills - with colored borders */
+    .signal-pills .filter-pill {
+      padding: 4px 10px;
+      font-size: 11px;
+    }
+
+    .signal-pills .filter-pill.red {
+      border-color: #ff6b6b;
+    }
+    .signal-pills .filter-pill.red.active {
+      background: #ff6b6b;
+      border-color: #ff6b6b;
+      color: white;
+    }
+
+    .signal-pills .filter-pill.yellow {
+      border-color: #ffd43b;
+    }
+    .signal-pills .filter-pill.yellow.active {
+      background: #ffd43b;
+      border-color: #ffd43b;
+      color: #1a1500;
+    }
+
+    .signal-pills .filter-pill.green {
+      border-color: #51cf66;
+    }
+    .signal-pills .filter-pill.green.active {
+      background: #51cf66;
+      border-color: #51cf66;
+      color: #0a2e0a;
+    }
+
+    .signal-pills .filter-pill.suggestions {
+      border-color: #ffa500;
+    }
+    .signal-pills .filter-pill.suggestions.active {
+      background: #ffa500;
+      border-color: #ffa500;
+      color: #1a1500;
+    }
+
+    /* Search input in pills area */
+    .filter-search-row {
+      margin-top: 10px;
+    }
+
+    .filter-search-row input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      background: #21262d;
+      color: #c9d1d9;
+      font-size: 13px;
+    }
+
+    .filter-search-row input:focus {
+      outline: none;
+      border-color: #4c9aff;
+    }
     </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
@@ -1562,13 +1701,17 @@
 
     <div class="main">
       <div class="left-panel">
-        <div class="filters">
-          <div class="filter-row">
-            <select id="filterClient">
-              <option value="">All Clients</option>
-            </select>
+        <div class="filter-pills-container">
+          <div class="filter-row pills-row week-pills" id="weekPills">
+            <!-- Generated dynamically -->
           </div>
-          <div class="filter-row">
+          <div class="filter-row pills-row client-pills" id="clientPills">
+            <!-- Generated dynamically -->
+          </div>
+          <div class="filter-row pills-row signal-pills" id="signalPills">
+            <!-- Generated dynamically -->
+          </div>
+          <div class="filter-search-row">
             <input type="text" id="filterSearch" placeholder="Search by topic...">
           </div>
         </div>
@@ -1595,11 +1738,18 @@
       : '/zoom/api';
 
     let meetings = [];
+    let allMeetings = []; // All meetings for current week (for client-side filtering)
     let clients = [];
     let owners = [];
     let selectedMeetingId = null;
     let autoRefreshInterval = null;
     let currentEditField = null;
+
+    // Filter state
+    let selectedWeek = null; // { from, to, label }
+    let selectedClient = null; // client_id or null for "All"
+    let selectedSignal = null; // 'red', 'yellow', 'green', 'suggestions', or null
+    let weekCounts = {}; // { 'from-to': count }
 
     // ProofHub cache
     let phProjects = null;
@@ -1689,26 +1839,245 @@
     }
 
     // Load meetings
-    async function loadMeetings() {
-      const clientId = document.getElementById('filterClient').value;
+    // Generate week options for the last 6 weeks
+    function generateWeeks() {
+      const weeks = [];
+      const now = new Date();
+      // Find Monday of current week
+      const monday = new Date(now);
+      const day = monday.getDay();
+      const diff = day === 0 ? 6 : day - 1; // Adjust for Sunday
+      monday.setDate(monday.getDate() - diff);
+      monday.setHours(0, 0, 0, 0);
+
+      for (let i = 0; i < 6; i++) {
+        const weekStart = new Date(monday);
+        weekStart.setDate(weekStart.getDate() - (i * 7));
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekEnd.getDate() + 6);
+
+        const from = weekStart.toISOString().split('T')[0];
+        const to = weekEnd.toISOString().split('T')[0];
+
+        weeks.push({
+          label: i === 0 ? 'This Week' : formatWeekLabel(weekStart, weekEnd),
+          from,
+          to,
+          key: `${from}-${to}`
+        });
+      }
+      weeks.push({ label: 'All', from: null, to: null, key: 'all' });
+      return weeks;
+    }
+
+    function formatWeekLabel(start, end) {
+      const startMonth = start.toLocaleDateString('en-US', { month: 'short' });
+      const endMonth = end.toLocaleDateString('en-US', { month: 'short' });
+      const startDay = start.getDate();
+      const endDay = end.getDate();
+      if (startMonth === endMonth) {
+        return `${startMonth} ${startDay}-${endDay}`;
+      }
+      return `${startMonth} ${startDay} - ${endMonth} ${endDay}`;
+    }
+
+    // Render week pills
+    async function renderWeekPills() {
+      const container = document.getElementById('weekPills');
+      const weeks = generateWeeks();
+
+      // Load week counts
+      try {
+        const res = await fetch(`${API}/meetings/week-counts`);
+        const data = await res.json();
+        data.forEach(w => {
+          weekCounts[`${w.week_start}-${w.week_end}`] = w.count;
+        });
+      } catch (err) {
+        console.error('Failed to load week counts:', err);
+      }
+
+      // Set default selection from sessionStorage or "This Week"
+      const savedWeek = sessionStorage.getItem('selectedWeek');
+      if (savedWeek && savedWeek !== 'null') {
+        try {
+          selectedWeek = JSON.parse(savedWeek);
+        } catch {
+          selectedWeek = weeks[0];
+        }
+      } else {
+        selectedWeek = weeks[0];
+      }
+
+      container.innerHTML = weeks.map(w => {
+        const count = w.key === 'all' ? '' : (weekCounts[w.key] || 0);
+        const isActive = selectedWeek?.key === w.key;
+        return `
+          <div class="filter-pill ${isActive ? 'active' : ''}" data-week='${JSON.stringify(w)}' onclick="selectWeek(this)">
+            ${escapeHtml(w.label)}${count !== '' ? ` <span class="pill-count">(${count})</span>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Select a week
+    function selectWeek(el) {
+      const week = JSON.parse(el.dataset.week);
+      selectedWeek = week;
+      sessionStorage.setItem('selectedWeek', JSON.stringify(week));
+
+      // Update active state
+      document.querySelectorAll('#weekPills .filter-pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+
+      // Reset other filters when changing week
+      selectedClient = null;
+      selectedSignal = null;
+
+      loadMeetings();
+    }
+
+    // Render client pills based on loaded meetings
+    function renderClientPills() {
+      const container = document.getElementById('clientPills');
+
+      // Count meetings per client
+      const clientCounts = {};
+      allMeetings.forEach(m => {
+        const cid = m.client_id || 'unmatched';
+        const cname = m.client_name || 'Unmatched';
+        if (!clientCounts[cid]) {
+          clientCounts[cid] = { name: cname, count: 0 };
+        }
+        clientCounts[cid].count++;
+      });
+
+      // Sort: alphabetical, but Unmatched last
+      const sortedClients = Object.entries(clientCounts)
+        .sort((a, b) => {
+          if (a[0] === 'unmatched') return 1;
+          if (b[0] === 'unmatched') return -1;
+          return a[1].name.localeCompare(b[1].name);
+        });
+
+      let html = `<div class="filter-pill ${!selectedClient ? 'active' : ''}" data-client="" onclick="selectClient(this)">All</div>`;
+      sortedClients.forEach(([cid, info]) => {
+        const isUnmatched = cid === 'unmatched';
+        const isActive = selectedClient === cid;
+        html += `
+          <div class="filter-pill ${isActive ? 'active' : ''} ${isUnmatched ? 'unmatched' : ''}" data-client="${escapeHtml(cid)}" onclick="selectClient(this)">
+            ${escapeHtml(info.name)} <span class="pill-count">(${info.count})</span>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // Select a client
+    function selectClient(el) {
+      const cid = el.dataset.client;
+      selectedClient = cid || null;
+
+      // Update active state
+      document.querySelectorAll('#clientPills .filter-pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+
+      applyFilters();
+    }
+
+    // Render signal pills based on loaded meetings
+    function renderSignalPills() {
+      const container = document.getElementById('signalPills');
+
+      // Count by signal
+      let red = 0, yellow = 0, green = 0, suggestions = 0;
+      allMeetings.forEach(m => {
+        const sig = m.confidence_signal;
+        if (sig === 'red') red++;
+        else if (sig === 'yellow') yellow++;
+        else if (sig === 'green') green++;
+        if ((m.suggested_count || 0) > 0) suggestions++;
+      });
+
+      container.innerHTML = `
+        <div class="filter-pill red ${selectedSignal === 'red' ? 'active' : ''}" data-signal="red" onclick="selectSignal(this)">
+          🔴 Red <span class="pill-count">(${red})</span>
+        </div>
+        <div class="filter-pill yellow ${selectedSignal === 'yellow' ? 'active' : ''}" data-signal="yellow" onclick="selectSignal(this)">
+          🟡 Yellow <span class="pill-count">(${yellow})</span>
+        </div>
+        <div class="filter-pill green ${selectedSignal === 'green' ? 'active' : ''}" data-signal="green" onclick="selectSignal(this)">
+          🟢 Green <span class="pill-count">(${green})</span>
+        </div>
+        <div class="filter-pill suggestions ${selectedSignal === 'suggestions' ? 'active' : ''}" data-signal="suggestions" onclick="selectSignal(this)">
+          ⚠️ Suggestions <span class="pill-count">(${suggestions})</span>
+        </div>
+      `;
+    }
+
+    // Select/toggle a signal filter
+    function selectSignal(el) {
+      const sig = el.dataset.signal;
+      if (selectedSignal === sig) {
+        // Toggle off
+        selectedSignal = null;
+        el.classList.remove('active');
+      } else {
+        // Select this signal
+        selectedSignal = sig;
+        document.querySelectorAll('#signalPills .filter-pill').forEach(p => p.classList.remove('active'));
+        el.classList.add('active');
+      }
+
+      applyFilters();
+    }
+
+    // Apply client and signal filters to allMeetings
+    function applyFilters() {
       const search = document.getElementById('filterSearch').value.toLowerCase();
 
-      try {
-        let url = `${API}/meetings?limit=100&sort=desc`;
-        if (clientId) url += `&client_id=${clientId}`;
+      meetings = allMeetings.filter(m => {
+        // Client filter
+        if (selectedClient && (m.client_id || 'unmatched') !== selectedClient) return false;
 
-        const res = await fetch(url);
-        const data = await res.json();
-        meetings = data.meetings || [];
-
-        // Filter by search
-        if (search) {
-          meetings = meetings.filter(m =>
-            (m.topic || '').toLowerCase().includes(search)
-          );
+        // Signal filter
+        if (selectedSignal) {
+          if (selectedSignal === 'suggestions') {
+            if ((m.suggested_count || 0) === 0) return false;
+          } else if (m.confidence_signal !== selectedSignal) {
+            return false;
+          }
         }
 
-        renderMeetingList();
+        // Search filter
+        if (search && !(m.topic || '').toLowerCase().includes(search)) return false;
+
+        return true;
+      });
+
+      renderMeetingList();
+    }
+
+    async function loadMeetings() {
+      try {
+        const params = new URLSearchParams();
+        if (selectedWeek?.from) params.set('from', selectedWeek.from);
+        if (selectedWeek?.to) params.set('to', selectedWeek.to);
+        params.set('limit', '100');
+        params.set('sort', 'desc');
+
+        const res = await fetch(`${API}/meetings?${params}`);
+        const data = await res.json();
+        allMeetings = data.meetings || [];
+        meetings = [...allMeetings];
+
+        // Render client and signal pills based on loaded data
+        renderClientPills();
+        renderSignalPills();
+
+        // Apply any active filters
+        applyFilters();
       } catch (err) {
         console.error('Failed to load meetings:', err);
         document.getElementById('meetingList').innerHTML =
@@ -2837,9 +3206,8 @@
     });
 
     // Filter listeners
-    document.getElementById('filterClient').addEventListener('change', loadMeetings);
     document.getElementById('filterSearch').addEventListener('input',
-      debounce(loadMeetings, 300)
+      debounce(applyFilters, 300)
     );
 
     // Debounce helper
@@ -3010,7 +3378,8 @@
       await loadStats();
       await loadClients();
       await loadOwners();
-      await loadMeetings();
+      await renderWeekPills(); // Render week pills first (sets default week)
+      await loadMeetings(); // Then load meetings for selected week
 
       // Create owners datalist
       const datalist = document.createElement('datalist');
