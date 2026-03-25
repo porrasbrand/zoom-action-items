@@ -56,6 +56,7 @@ export function runMigrations() {
     { name: 'adversarial_result', type: 'TEXT' },
     { name: 'adversarial_run_at', type: 'TEXT' },
     { name: 'completeness_assessment', type: 'TEXT' },
+    { name: 'coverage_analysis', type: 'TEXT' },
   ];
 
   for (const col of meetingsNewCols) {
@@ -518,4 +519,22 @@ export function getMeetingsForVerification() {
   return d.prepare(`
     SELECT id FROM meetings WHERE adversarial_run_at IS NULL AND transcript_raw IS NOT NULL AND LENGTH(transcript_raw) > 500
   `).all();
+}
+
+// ============ COVERAGE ANALYSIS ============
+
+export function getMeetingForCoverage(id) {
+  const d = getDb();
+  const meeting = d.prepare('SELECT id, transcript_raw, coverage_analysis FROM meetings WHERE id = ?').get(id);
+  if (!meeting) return null;
+
+  const items = d.prepare('SELECT * FROM action_items WHERE meeting_id = ?').all(id);
+  return { meeting, items };
+}
+
+export function updateMeetingCoverage(id, coverageAnalysis) {
+  const d = getDb();
+  return d.prepare(`
+    UPDATE meetings SET coverage_analysis = ?, updated_at = datetime('now') WHERE id = ?
+  `).run(JSON.stringify(coverageAnalysis), id);
 }

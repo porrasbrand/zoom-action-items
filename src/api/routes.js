@@ -12,6 +12,7 @@ import { resolvePerson, getAllPeople } from '../lib/people-resolver.js';
 import { scanTranscript } from '../lib/keyword-scanner.js';
 import { calculateConfidence } from '../lib/confidence-calculator.js';
 import { verifyExtraction } from '../lib/adversarial-verifier.js';
+import { analyzeCoverage, classifyLines } from '../lib/coverage-analyzer.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
@@ -793,6 +794,50 @@ router.post('/action-items/:id/dismiss', (req, res) => {
       message: 'Item dismissed',
       item: updated
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ COVERAGE ANALYSIS ============
+
+// GET /api/meetings/:id/coverage - Get coverage analysis
+router.get('/meetings/:id/coverage', (req, res) => {
+  try {
+    const meetingId = parseInt(req.params.id);
+    const data = db.getMeetingForCoverage(meetingId);
+
+    if (!data) {
+      return res.status(404).json({ error: 'Meeting not found' });
+    }
+
+    const { meeting, items } = data;
+
+    // Check if we have cached analysis
+    if (meeting.coverage_analysis && !req.query.refresh) {
+      try {
+        const cached = JSON.parse(meeting.coverage_analysis);
+        return res.json(cached);
+      } catch {}
+    }
+
+    if (!meeting.transcript_raw || meeting.transcript_raw.length < 100) {
+      return res.status(400).json({ error: 'Meeting has no transcript' });
+    }
+
+    // Run keyword scan first
+    const keywordResults = scanTranscript(meeting.transcript_raw);
+
+    // Run coverage analysis
+    const analysis = analyzeCoverage(meeting.transcript_raw, items, keywordResults);
+
+    // Add line classifications for transcript highlighting
+    analysis.lineClassifications = classifyLines(meeting.transcript_raw, items, keywordResults);
+
+    // Cache the result
+    db.updateMeetingCoverage(meetingId, analysis);
+
+    res.json(analysis);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

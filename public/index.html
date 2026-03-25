@@ -1083,6 +1083,137 @@
       margin-left: 6px;
     }
 
+    /* Coverage visualization */
+    .validation-details {
+      background: #161b22;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .validation-details h4 {
+      font-size: 13px;
+      color: #8b949e;
+      margin-bottom: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .validation-details h4::before {
+      content: "▼";
+      font-size: 10px;
+      transition: transform 0.2s;
+    }
+
+    .validation-details.collapsed h4::before {
+      transform: rotate(-90deg);
+    }
+
+    .validation-details.collapsed .validation-content {
+      display: none;
+    }
+
+    .coverage-bar {
+      display: flex;
+      height: 20px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      background: #21262d;
+    }
+
+    .coverage-segment {
+      height: 100%;
+      transition: width 0.3s;
+    }
+
+    .coverage-segment.cited {
+      background: #3fb950;
+    }
+
+    .coverage-segment.flagged {
+      background: #d29922;
+    }
+
+    .coverage-segment.clean {
+      background: #30363d;
+    }
+
+    .coverage-stats {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      color: #8b949e;
+      margin-bottom: 16px;
+    }
+
+    .coverage-stats span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .coverage-stats .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .coverage-stats .dot.cited { background: #3fb950; }
+    .coverage-stats .dot.flagged { background: #d29922; }
+    .coverage-stats .dot.clean { background: #30363d; }
+
+    .gaps-list {
+      margin-top: 12px;
+    }
+
+    .gap-item {
+      background: #21262d;
+      border-left: 3px solid #d29922;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .gap-item .line-num {
+      color: #8b949e;
+      margin-right: 8px;
+    }
+
+    .gap-item .gap-text {
+      color: #c9d1d9;
+      font-family: 'SF Mono', Monaco, monospace;
+    }
+
+    .gap-item .gap-warning {
+      color: #d29922;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    /* Transcript highlighting */
+    .transcript-line.section-cited {
+      border-left: 3px solid #3fb950;
+      padding-left: 8px;
+      margin-left: -11px;
+    }
+
+    .transcript-line.section-flagged {
+      border-left: 3px solid #d29922;
+      padding-left: 8px;
+      margin-left: -11px;
+      background: #d2992210;
+    }
+
+    .transcript-line.section-clean {
+      border-left: 3px solid transparent;
+      padding-left: 8px;
+      margin-left: -11px;
+    }
+
     /* Flatpickr dark theme overrides */
     .flatpickr-calendar { background: #1a1f2e !important; border: 1px solid #333 !important; box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important; }
     .flatpickr-day { color: #c9d1d9 !important; }
@@ -1434,6 +1565,13 @@
               ? `<div class="decisions-list">${decisions.map(renderDecision).join('')}</div>`
               : '<div class="empty-state">No decisions recorded.</div>'
             }
+          </div>
+
+          <div class="validation-details collapsed" id="validationDetails">
+            <h4 onclick="toggleValidationDetails()">📊 Validation Details</h4>
+            <div class="validation-content" id="validationContent">
+              <div class="loading">Loading coverage analysis...</div>
+            </div>
           </div>
 
           <div class="section">
@@ -1979,6 +2117,90 @@
       const header = content.previousElementSibling;
       content.classList.toggle('collapsed');
       header.classList.toggle('collapsed');
+    }
+
+    // Toggle validation details
+    function toggleValidationDetails() {
+      const details = document.getElementById('validationDetails');
+      details.classList.toggle('collapsed');
+
+      // Load coverage on first expand
+      if (!details.classList.contains('collapsed') && !details.dataset.loaded) {
+        details.dataset.loaded = 'true';
+        loadCoverageAnalysis(selectedMeetingId);
+      }
+    }
+
+    // Load coverage analysis
+    async function loadCoverageAnalysis(meetingId) {
+      const content = document.getElementById('validationContent');
+      content.innerHTML = '<div class="loading">Loading coverage analysis...</div>';
+
+      try {
+        const res = await fetch(`${API}/meetings/${meetingId}/coverage`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to load coverage');
+
+        content.innerHTML = renderCoverageContent(data);
+
+        // Also update transcript with highlighting
+        updateTranscriptHighlighting(data.lineClassifications);
+      } catch (err) {
+        content.innerHTML = `<div class="empty-state">Failed to load coverage: ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    // Render coverage content
+    function renderCoverageContent(data) {
+      const stats = data.stats || {};
+      const gaps = data.gaps || [];
+
+      const citedWidth = stats.totalSections > 0 ? (stats.citedSections / stats.totalSections * 100) : 0;
+      const flaggedWidth = stats.totalSections > 0 ? (stats.flaggedSections / stats.totalSections * 100) : 0;
+      const cleanWidth = stats.totalSections > 0 ? (stats.cleanSections / stats.totalSections * 100) : 0;
+
+      return `
+        <div class="coverage-bar">
+          <div class="coverage-segment cited" style="width: ${citedWidth}%" title="Cited sections"></div>
+          <div class="coverage-segment flagged" style="width: ${flaggedWidth}%" title="Flagged sections (gaps)"></div>
+          <div class="coverage-segment clean" style="width: ${cleanWidth}%" title="Clean sections"></div>
+        </div>
+        <div class="coverage-stats">
+          <span><span class="dot cited"></span> ${stats.citedSections || 0} cited</span>
+          <span><span class="dot flagged"></span> ${stats.flaggedSections || 0} gaps</span>
+          <span><span class="dot clean"></span> ${stats.cleanSections || 0} clean</span>
+          <span style="margin-left: auto; font-weight: 500;">${stats.coveragePercent || 0}% coverage</span>
+        </div>
+        ${gaps.length > 0 ? `
+          <div class="gaps-list">
+            <div style="font-size: 12px; color: #8b949e; margin-bottom: 8px;">⚠️ Potential gaps (commitment phrases without action items):</div>
+            ${gaps.slice(0, 10).map(gap => `
+              <div class="gap-item">
+                <span class="line-num">Line ${gap.line}:</span>
+                <span class="gap-text">${escapeHtml(gap.text?.slice(0, 100) || '')}</span>
+                <div class="gap-warning">⚠️ "${escapeHtml(gap.phrase || '')}" — no action item extracted</div>
+              </div>
+            `).join('')}
+            ${gaps.length > 10 ? `<div style="font-size: 11px; color: #8b949e;">...and ${gaps.length - 10} more</div>` : ''}
+          </div>
+        ` : '<div style="font-size: 12px; color: #3fb950;">✅ No gaps found — all commitment phrases have associated action items</div>'}
+      `;
+    }
+
+    // Update transcript with line highlighting
+    function updateTranscriptHighlighting(lineClassifications) {
+      if (!lineClassifications || lineClassifications.length === 0) return;
+
+      const transcriptEl = document.getElementById('transcriptContent');
+      const lines = transcriptEl.querySelectorAll('.transcript-line');
+
+      lines.forEach((line, idx) => {
+        const classification = lineClassifications[idx];
+        if (classification) {
+          line.classList.remove('section-cited', 'section-flagged', 'section-clean');
+          line.classList.add(`section-${classification.type}`);
+        }
+      });
     }
 
     // Render confidence signal for meeting detail
