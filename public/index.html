@@ -2677,7 +2677,7 @@
             <div class="item-row">
               <div class="item-title inline-edit" onclick="startEdit(${item.id}, 'title', this)">${escapeHtml(item.title)}</div>
               ${isPushed ? `<span class="pushed-badge">Pushed</span>` : ''}
-              ${item.ph_task_id ? `<a class="ph-link" href="https://breakthrough3x.proofhub.com/#tasks/${item.ph_task_id}" target="_blank">View in PH</a>` : ''}
+              ${item.ph_task_id ? `<a class="ph-link" href="https://breakthrough3x.proofhub.com/ka/#/project/${item.ph_project_id}/todolists/${item.ph_task_list_id}/${item.ph_task_id}" target="_blank">View in PH</a>` : ''}
               ${showPromote ? `<button class="promote-btn" onclick="promoteToRecap(${item.id})">↑ Promote to Recap</button>` : ''}
             </div>
             <div class="item-desc ${item.description ? '' : 'empty'} inline-edit" onclick="startEdit(${item.id}, 'description', this)">
