@@ -204,7 +204,7 @@ async function main() {
       const meetingId = db.prepare(`
         INSERT INTO meetings (zoom_meeting_uuid, topic, client_id, client_name, start_time, duration_minutes, transcript_raw, status)
         VALUES (?, ?, ?, ?, ?, ?, ?, 'processing')
-      `).run(m.uuid, topic, clientId, clientName, m.start_time, m.duration ? Math.round(m.duration / 60) : null, transcriptText).lastInsertRowid;
+      `).run(m.uuid, topic, clientId, clientName, m.start_time, m.duration || null, transcriptText).lastInsertRowid;
 
       // Run Gemini extraction
       const model = genAI.getGenerativeModel({
