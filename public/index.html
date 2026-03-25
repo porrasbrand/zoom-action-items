@@ -2854,9 +2854,9 @@
         const resolved = await resolveOwner(ownerName);
         if (resolved?.ph_id) {
           assigneeSelect.value = resolved.ph_id;
-          resolvedInfo.textContent = `✓ Resolved "${ownerName}" → ${resolved.name}`;
+          resolvedInfo.innerHTML = `<span style="color:#51cf66">✓ ${escapeHtml(resolved.name)} (${escapeHtml(resolved.email)})</span>`;
         } else {
-          resolvedInfo.textContent = `⚠ Could not resolve "${ownerName}"`;
+          resolvedInfo.innerHTML = `<span style="color:#ffd43b">⚠ "${escapeHtml(ownerName)}" not a PH member — select team member</span>`;
         }
       }
     }

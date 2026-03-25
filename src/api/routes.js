@@ -310,12 +310,9 @@ router.get('/proofhub/projects/:id/task-lists', async (req, res) => {
 
 // GET /api/proofhub/people - List PH people with resolved names
 router.get('/proofhub/people', (req, res) => {
-  try {
-    const people = getAllPeople();
-    res.json({ people });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  // Use people resolver (has real names) instead of raw PH API (returns 'no name')
+  const people = getAllPeople();
+  res.json({ people });
 });
 
 // GET /api/proofhub/resolve-owner/:name - Resolve an owner name to PH user
