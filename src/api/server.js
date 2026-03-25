@@ -2,9 +2,11 @@
 /**
  * Zoom Dashboard API Server
  * Express server serving meeting data from SQLite.
+ * Now with Google OAuth authentication.
  */
 
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import dotenv from 'dotenv';
@@ -15,9 +17,23 @@ dotenv.config({ path: join(__dirname, '..', '..', '.env') });
 import routes from './routes.js';
 import { createWebhookHandler } from './webhook-handler.js';
 import { runMigrations } from './db-queries.js';
+import {
+  runAuthMigrations,
+  getGoogleAuthURL,
+  getGoogleTokens,
+  getGoogleUser,
+  isEmailWhitelisted,
+  updateLastLogin,
+  createSession,
+  validateSession,
+  deleteSession,
+  authMiddleware,
+  apiAuthMiddleware
+} from '../lib/auth.js';
 
 // Run DB migrations on startup
 runMigrations();
+runAuthMigrations();
 
 const PORT = process.env.DASHBOARD_PORT || 3875;
 const BASE_PATH = '/zoom';
@@ -26,6 +42,7 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(cookieParser());
 
 // CORS headers for development
 app.use((req, res, next) => {
@@ -44,9 +61,11 @@ app.use(`${BASE_PATH}/api`, (req, res, next) => {
   next();
 });
 
-// Mount API routes at /zoom/api/
+const publicPath = join(__dirname, '..', '..', 'public');
 
-// Zoom webhook endpoint
+// ============ PUBLIC ROUTES (no auth) ============
+
+// Zoom webhook endpoint - must be unauthenticated
 const webhookHandler = createWebhookHandler({
   secretToken: process.env.ZOOM_WEBHOOK_SECRET,
   onRecordingCompleted: async ({ meetingId, topic }) => {
@@ -61,20 +80,134 @@ const webhookHandler = createWebhookHandler({
   }
 });
 app.post(BASE_PATH + "/webhook", webhookHandler);
+
+// Login page
+app.get(BASE_PATH + '/login', (req, res) => {
+  res.sendFile(join(publicPath, 'login.html'));
+});
+
+// Start Google OAuth flow
+app.get(BASE_PATH + '/auth/google', (req, res) => {
+  const authUrl = getGoogleAuthURL();
+  res.redirect(authUrl);
+});
+
+// Google OAuth callback
+app.get(BASE_PATH + '/auth/callback', async (req, res) => {
+  try {
+    const { code, error } = req.query;
+
+    if (error) {
+      console.error('[Auth] OAuth error:', error);
+      return res.redirect(BASE_PATH + '/login?error=oauth_failed');
+    }
+
+    if (!code) {
+      return res.redirect(BASE_PATH + '/login?error=no_code');
+    }
+
+    // Exchange code for tokens
+    const tokens = await getGoogleTokens(code);
+
+    // Get user info
+    const googleUser = await getGoogleUser(tokens.access_token);
+    const email = googleUser.email.toLowerCase();
+    const name = googleUser.name || googleUser.email;
+
+    console.log(`[Auth] Login attempt: ${email}`);
+
+    // Check whitelist
+    const user = isEmailWhitelisted(email);
+
+    if (!user) {
+      console.log(`[Auth] Access denied for: ${email}`);
+      return res.redirect(BASE_PATH + `/login?error=access_denied&email=${encodeURIComponent(email)}`);
+    }
+
+    // Update last login
+    updateLastLogin(user.id);
+
+    // Create session
+    const sessionId = createSession(user.id, email, name);
+
+    // Set cookie
+    res.cookie('zoom_session', sessionId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production' || req.secure,
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      path: '/zoom'
+    });
+
+    console.log(`[Auth] Login successful: ${email}`);
+
+    // Redirect to dashboard
+    res.redirect(BASE_PATH + '/');
+  } catch (err) {
+    console.error('[Auth] Callback error:', err);
+    res.redirect(BASE_PATH + '/login?error=callback_failed');
+  }
+});
+
+// Logout
+app.get(BASE_PATH + '/auth/logout', (req, res) => {
+  const sessionId = req.cookies?.zoom_session;
+
+  if (sessionId) {
+    deleteSession(sessionId);
+  }
+
+  res.clearCookie('zoom_session', { path: '/zoom' });
+  res.redirect(BASE_PATH + '/login');
+});
+
+// Health check (unauthenticated)
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', service: 'zoom-dashboard' });
+});
+
+app.get(BASE_PATH + '/api/health', (req, res) => {
+  res.json({ status: 'ok', service: 'zoom-dashboard' });
+});
+
+// ============ PROTECTED ROUTES (require auth) ============
+
+// Get current user info (for frontend header)
+app.get(BASE_PATH + '/api/auth/me', apiAuthMiddleware, (req, res) => {
+  res.json({
+    authenticated: true,
+    user: req.user
+  });
+});
+
+// Apply auth middleware to all other API routes
+app.use(`${BASE_PATH}/api`, apiAuthMiddleware);
+
+// Mount API routes
 app.use(`${BASE_PATH}/api`, routes);
 
-// Serve static files from public/ at /zoom/
-const publicPath = join(__dirname, '..', '..', 'public');
-app.use(BASE_PATH, express.static(publicPath));
+// Serve static files (CSS, JS, images) without auth for login page to work
+// index: false prevents auto-serving index.html, letting authMiddleware handle /zoom/
+app.use(BASE_PATH, express.static(publicPath, { index: false }));
 
-// SPA fallback - serve index.html for all non-API /zoom routes
-// Express 5 uses different path syntax, use regex instead
+// Protected dashboard routes - require auth for index.html
+app.get(BASE_PATH + '/', authMiddleware, (req, res) => {
+  res.sendFile(join(publicPath, 'index.html'));
+});
+
+// SPA fallback - serve index.html for all non-API /zoom routes (protected)
 app.get(/^\/zoom(?:\/.*)?$/, (req, res, next) => {
-  // Skip if this is an API route
-  if (req.path.startsWith('/zoom/api')) {
+  // Skip if this is a public route
+  if (req.path === '/zoom/login' ||
+      req.path.startsWith('/zoom/auth/') ||
+      req.path.startsWith('/zoom/api/')) {
     return next();
   }
-  res.sendFile(join(publicPath, 'index.html'));
+
+  // Apply auth middleware
+  authMiddleware(req, res, () => {
+    res.sendFile(join(publicPath, 'index.html'));
+  });
 });
 
 // Root redirect to /zoom/
@@ -82,15 +215,11 @@ app.get('/', (req, res) => {
   res.redirect(BASE_PATH + '/');
 });
 
-// Health check at root level
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', service: 'zoom-dashboard' });
-});
-
 // Start server
 app.listen(PORT, () => {
   console.log(`[${new Date().toISOString()}] Zoom Dashboard API running on port ${PORT}`);
   console.log(`  Local:    http://localhost:${PORT}${BASE_PATH}/`);
   console.log(`  API:      http://localhost:${PORT}${BASE_PATH}/api/`);
+  console.log(`  Login:    http://localhost:${PORT}${BASE_PATH}/login`);
   console.log(`  Health:   http://localhost:${PORT}${BASE_PATH}/api/health`);
 });

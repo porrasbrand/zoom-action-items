@@ -58,6 +58,34 @@
       cursor: pointer;
     }
 
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: #8b949e;
+    }
+
+    .user-name {
+      color: #c9d1d9;
+    }
+
+    .logout-link {
+      color: #58a6ff;
+      text-decoration: none;
+      font-size: 12px;
+    }
+
+    .logout-link:hover {
+      text-decoration: underline;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
     .stats-bar {
       display: flex;
       gap: 16px;
@@ -1908,10 +1936,16 @@
     <div class="header">
       <div class="header-top">
         <h1>Zoom Meeting Notes</h1>
-        <label class="auto-refresh">
-          <input type="checkbox" id="autoRefresh">
-          Auto-refresh (60s)
-        </label>
+        <div class="header-right">
+          <div class="user-info" id="userInfo">
+            <span class="user-name" id="userName">Loading...</span>
+            <a href="/zoom/auth/logout" class="logout-link">Logout</a>
+          </div>
+          <label class="auto-refresh">
+            <input type="checkbox" id="autoRefresh">
+            Auto-refresh (60s)
+          </label>
+        </div>
       </div>
       <div class="stats-bar" id="statsBar">
         <div class="stat">
@@ -2010,6 +2044,27 @@
     const API = window.location.pathname.startsWith('/zoom')
       ? '/zoom/api'
       : '/zoom/api';
+
+    // Fetch and display current user info
+    async function loadUserInfo() {
+      try {
+        const res = await fetch(API + '/auth/me');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user) {
+            document.getElementById('userName').textContent = data.user.name || data.user.email;
+          }
+        } else if (res.status === 401) {
+          // Not authenticated - redirect to login
+          window.location.href = '/zoom/login';
+        }
+      } catch (err) {
+        console.error('Failed to load user info:', err);
+      }
+    }
+
+    // Load user info on page load
+    loadUserInfo();
 
     let meetings = [];
     let allMeetings = []; // All meetings for current week (for client-side filtering)
