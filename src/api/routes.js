@@ -4,6 +4,7 @@
 
 import { Router } from 'express';
 import * as db from './db-queries.js';
+import { getDatabase } from './db-queries.js';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
@@ -17,6 +18,17 @@ import { extractMeetingData } from '../lib/ai-extractor.js';
 import { parseVTT, extractSpeakers } from '../lib/vtt-parser.js';
 import { detectSummary } from '../lib/summary-detector.js';
 import { extractSummaryItems } from '../lib/summary-extractor.js';
+import {
+  getRoadmapForClient,
+  getActiveRoadmapItems,
+  getStaleItems,
+  getSnapshot,
+  getSnapshotsTimeline,
+  getRoadmapItemById,
+  updateRoadmapItem,
+  appendStatusHistory
+} from '../lib/roadmap-db.js';
+import { getTaxonomy } from '../lib/roadmap-processor.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
@@ -1261,6 +1273,142 @@ router.post('/extract-summaries-all', async (req, res) => {
     res.json(results);
   } catch (err) {
     console.error('[Summary Extract All] Error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ ROADMAP ============
+
+// GET /api/roadmap/taxonomy - Get task taxonomy
+router.get('/roadmap/taxonomy', (req, res) => {
+  try {
+    const taxonomy = getTaxonomy();
+    res.json(taxonomy);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/roadmap/:clientId - Full roadmap for client
+router.get('/roadmap/:clientId', (req, res) => {
+  try {
+    const items = getRoadmapForClient(getDatabase(), req.params.clientId);
+    res.json({ client_id: req.params.clientId, items, total: items.length });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/roadmap/:clientId/active - Active roadmap items (not done/dropped)
+router.get('/roadmap/:clientId/active', (req, res) => {
+  try {
+    const items = getActiveRoadmapItems(getDatabase(), req.params.clientId);
+    res.json({ client_id: req.params.clientId, items, total: items.length });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/roadmap/:clientId/stale - Stale items (not discussed in N+ meetings)
+router.get('/roadmap/:clientId/stale', (req, res) => {
+  try {
+    const threshold = parseInt(req.query.threshold) || 2;
+    const items = getStaleItems(getDatabase(), req.params.clientId, threshold);
+    res.json({ client_id: req.params.clientId, threshold, items, total: items.length });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/roadmap/:clientId/by-category - Roadmap grouped by category
+router.get('/roadmap/:clientId/by-category', (req, res) => {
+  try {
+    const items = getRoadmapForClient(getDatabase(), req.params.clientId);
+    const byCategory = {};
+    for (const item of items) {
+      if (!byCategory[item.category]) {
+        byCategory[item.category] = [];
+      }
+      byCategory[item.category].push(item);
+    }
+    res.json({ client_id: req.params.clientId, categories: byCategory, total: items.length });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/roadmap/:clientId/snapshot/:meetingId - Snapshot at specific meeting
+router.get('/roadmap/:clientId/snapshot/:meetingId', (req, res) => {
+  try {
+    const snapshot = getSnapshot(getDatabase(), req.params.clientId, parseInt(req.params.meetingId));
+    if (!snapshot) {
+      return res.status(404).json({ error: 'Snapshot not found' });
+    }
+    res.json(snapshot);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/roadmap/:clientId/timeline - Timeline of snapshots
+router.get('/roadmap/:clientId/timeline', (req, res) => {
+  try {
+    const snapshots = getSnapshotsTimeline(getDatabase(), req.params.clientId);
+    res.json({ client_id: req.params.clientId, snapshots, total: snapshots.length });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PUT /api/roadmap/items/:id - Update roadmap item
+router.put('/roadmap/items/:id', (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const item = getRoadmapItemById(getDatabase(), id);
+    if (!item) {
+      return res.status(404).json({ error: 'Roadmap item not found' });
+    }
+
+    const updated = updateRoadmapItem(getDatabase(), id, req.body);
+    if (!updated) {
+      return res.status(400).json({ error: 'No valid fields to update' });
+    }
+
+    const result = getRoadmapItemById(getDatabase(), id);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/roadmap/items/:id/status - Update status with history
+router.post('/roadmap/items/:id/status', (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { status, notes, meeting_id } = req.body;
+
+    if (!status) {
+      return res.status(400).json({ error: 'status is required' });
+    }
+
+    const item = getRoadmapItemById(getDatabase(), id);
+    if (!item) {
+      return res.status(404).json({ error: 'Roadmap item not found' });
+    }
+
+    // Update status
+    updateRoadmapItem(getDatabase(), id, { status, status_reason: notes });
+
+    // Append to history
+    appendStatusHistory(getDatabase(), id, {
+      meeting_id: meeting_id || null,
+      status,
+      notes: notes || `Status changed to ${status}`
+    });
+
+    const result = getRoadmapItemById(getDatabase(), id);
+    res.json({ success: true, item: result });
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });

@@ -20,6 +20,11 @@ function getDb() {
   return db;
 }
 
+// Export for roadmap-db.js functions
+export function getDatabase() {
+  return getDb();
+}
+
 // Run migrations on startup
 export function runMigrations() {
   const d = getDb();

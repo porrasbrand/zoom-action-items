@@ -5,6 +5,7 @@
 import Database from 'better-sqlite3';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { initRoadmapTables } from './roadmap-db.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DB_PATH = join(__dirname, '..', '..', 'data', 'zoom-action-items.db');
@@ -77,6 +78,9 @@ export function initialize() {
     CREATE INDEX IF NOT EXISTS idx_action_items_client ON action_items(client_id);
     CREATE INDEX IF NOT EXISTS idx_action_items_status ON action_items(status);
   `);
+
+  // Initialize roadmap tables
+  initRoadmapTables(d);
 }
 
 /**
@@ -84,7 +88,10 @@ export function initialize() {
  */
 export function meetingExists(zoomMeetingUuid) {
   const d = getDb();
-  const row = d.prepare('SELECT id FROM meetings WHERE zoom_meeting_uuid = ?').get(zoomMeetingUuid);
+  // Zoom UUIDs can have / or _ interchangeably - check both variations
+  const withUnderscore = zoomMeetingUuid.replace(/\//g, '_');
+  const withSlash = zoomMeetingUuid.replace(/_/g, '/');
+  const row = d.prepare('SELECT id FROM meetings WHERE zoom_meeting_uuid IN (?, ?, ?)').get(zoomMeetingUuid, withUnderscore, withSlash);
   return !!row;
 }
 
