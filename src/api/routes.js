@@ -29,6 +29,10 @@ import {
   appendStatusHistory
 } from '../lib/roadmap-db.js';
 import { getTaxonomy } from '../lib/roadmap-processor.js';
+import { collectPrepData } from '../lib/prep-collector.js';
+import { generateMeetingPrep } from '../lib/prep-generator.js';
+import { formatAsMarkdown, formatForSlack } from '../lib/prep-formatter.js';
+import { readdirSync, readFileSync as fsReadFileSync, existsSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
@@ -1408,6 +1412,146 @@ router.post('/roadmap/items/:id/status', (req, res) => {
 
     const result = getRoadmapItemById(getDatabase(), id);
     res.json({ success: true, item: result });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ MEETING PREP ============
+
+// GET /api/prep/:clientId - Generate fresh prep (returns JSON)
+router.get('/prep/:clientId', async (req, res) => {
+  try {
+    const prepData = await collectPrepData(getDatabase(), req.params.clientId);
+    const result = await generateMeetingPrep(prepData);
+    res.json(result.json);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/prep/:clientId/markdown - Generate fresh prep (returns Markdown)
+router.get('/prep/:clientId/markdown', async (req, res) => {
+  try {
+    const prepData = await collectPrepData(getDatabase(), req.params.clientId);
+    const result = await generateMeetingPrep(prepData);
+    const markdown = formatAsMarkdown(result.json);
+    res.type('text/plain').send(markdown);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/prep/:clientId/slack - Generate and post to Slack
+router.post('/prep/:clientId/slack', async (req, res) => {
+  try {
+    const clientId = req.params.clientId;
+
+    // Load client config
+    const configPath = join(__dirname, '..', 'config', 'clients.json');
+    const config = JSON.parse(readFileSync(configPath, 'utf-8'));
+    const client = config.clients.find(c => c.id === clientId);
+
+    if (!client) {
+      return res.status(404).json({ error: 'Client not found' });
+    }
+
+    if (!client.slack_channel_id) {
+      return res.status(400).json({ error: 'No Slack channel configured for this client' });
+    }
+
+    const prepData = await collectPrepData(getDatabase(), clientId);
+    const result = await generateMeetingPrep(prepData);
+    const slackMarkdown = formatForSlack(result.json);
+
+    // Post to Slack
+    const slackToken = process.env.SLACK_BOT_TOKEN;
+    if (!slackToken) {
+      return res.status(503).json({ error: 'SLACK_BOT_TOKEN not configured' });
+    }
+
+    const slackResponse = await fetch('https://slack.com/api/chat.postMessage', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${slackToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        channel: client.slack_channel_id,
+        text: `Meeting Prep: ${client.name}`,
+        blocks: [{
+          type: 'section',
+          text: { type: 'mrkdwn', text: slackMarkdown.substring(0, 3000) }
+        }]
+      })
+    });
+
+    const slackResult = await slackResponse.json();
+    if (!slackResult.ok) {
+      return res.status(500).json({ error: `Slack error: ${slackResult.error}` });
+    }
+
+    res.json({
+      success: true,
+      channel: client.slack_channel_id,
+      ts: slackResult.ts,
+      prep: result.json
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/prep/history/:clientId - List saved prep documents
+router.get('/prep/history/:clientId', (req, res) => {
+  try {
+    const prepsDir = join(__dirname, '..', '..', 'data', 'preps');
+    if (!existsSync(prepsDir)) {
+      return res.json({ preps: [] });
+    }
+
+    const files = readdirSync(prepsDir);
+    const clientPreps = files
+      .filter(f => f.startsWith(req.params.clientId) && f.endsWith('.json'))
+      .map(f => {
+        const dateMatch = f.match(/(\d{4}-\d{2}-\d{2})/);
+        return {
+          filename: f,
+          date: dateMatch ? dateMatch[1] : null,
+          json_path: `/api/prep/saved/${f}`,
+          md_path: `/api/prep/saved/${f.replace('.json', '.md')}`
+        };
+      })
+      .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+    res.json({ client_id: req.params.clientId, preps: clientPreps });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/prep/saved/:filename - Retrieve a saved prep document
+router.get('/prep/saved/:filename', (req, res) => {
+  try {
+    const prepsDir = join(__dirname, '..', '..', 'data', 'preps');
+    const filePath = join(prepsDir, req.params.filename);
+
+    // Security: ensure filename doesn't traverse directories
+    if (req.params.filename.includes('..') || req.params.filename.includes('/')) {
+      return res.status(400).json({ error: 'Invalid filename' });
+    }
+
+    if (!existsSync(filePath)) {
+      return res.status(404).json({ error: 'Prep document not found' });
+    }
+
+    const content = fsReadFileSync(filePath, 'utf-8');
+
+    if (req.params.filename.endsWith('.json')) {
+      res.json(JSON.parse(content));
+    } else {
+      res.type('text/plain').send(content);
+    }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
