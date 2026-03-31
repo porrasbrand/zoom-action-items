@@ -6119,11 +6119,35 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     async function buildAgenda() {
       if (!sharedClientId) return;
 
+      // Collect checked item IDs from the UI checkboxes
+      const checkedIds = [];
+      const checkedProposals = [];
+      document.querySelectorAll('.cockpit-item').forEach(itemEl => {
+        const cb = itemEl.querySelector('.cockpit-checkbox input[type="checkbox"]');
+        if (!cb || !cb.checked) return;
+
+        // Roadmap items have data-item-id on the parent div
+        const itemId = parseInt(itemEl.dataset.itemId);
+        if (itemId) checkedIds.push(itemId);
+
+        // Proposals have data-proposal-idx
+        const proposalIdx = itemEl.dataset.proposalIdx;
+        if (proposalIdx !== undefined) {
+          // Get title from the cockpit-title element
+          const titleEl = itemEl.querySelector('.cockpit-title');
+          if (titleEl) checkedProposals.push(titleEl.textContent.trim());
+        }
+      });
+
       const panel = document.getElementById('prepRightPanel');
-      panel.innerHTML = '<div class="prep-spinner"><div class="spinner-icon" aria-hidden="true">&#9881;</div><p>Building agenda...</p></div>';
+      panel.innerHTML = '<div class="prep-spinner"><div class="spinner-icon" aria-hidden="true">&#9881;</div><p>Building agenda from ' + checkedIds.length + ' selected items...</p></div>';
 
       try {
-        const res = await fetch(`${API}/cockpit/${sharedClientId}/agenda`, { method: 'POST' });
+        const res = await fetch(API + '/cockpit/' + sharedClientId + '/agenda', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ selected_item_ids: checkedIds, selected_proposals: checkedProposals })
+        });
         if (!res.ok) throw new Error('Failed to build agenda');
 
         const data = await res.json();

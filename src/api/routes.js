@@ -1747,17 +1747,30 @@ router.put('/cockpit/:clientId/selection', (req, res) => {
 router.post('/cockpit/:clientId/agenda', async (req, res) => {
   try {
     const database = getDatabase();
-    const today = new Date().toISOString().split('T')[0];
+    const { selected_item_ids, selected_proposals } = req.body || {};
 
-    // Get selected items
-    const selections = database.prepare(`
-      SELECT cs.roadmap_item_id, ri.title, ri.status, ri.category
-      FROM cockpit_selections cs
-      JOIN roadmap_items ri ON cs.roadmap_item_id = ri.id
-      WHERE cs.client_id = ? AND cs.selection_date = ? AND cs.selected = 1
-    `).all(req.params.clientId, today);
+    let selections;
 
-    if (selections.length === 0) {
+    if (selected_item_ids && selected_item_ids.length > 0) {
+      // Use IDs sent from the UI (primary path)
+      const placeholders = selected_item_ids.map(() => '?').join(',');
+      selections = database.prepare(`
+        SELECT id as roadmap_item_id, title, status, category, meetings_silent_count
+        FROM roadmap_items
+        WHERE id IN (${placeholders})
+      `).all(...selected_item_ids);
+    } else {
+      // Fallback: read from cockpit_selections DB
+      const today = new Date().toISOString().split('T')[0];
+      selections = database.prepare(`
+        SELECT cs.roadmap_item_id, ri.title, ri.status, ri.category, ri.meetings_silent_count
+        FROM cockpit_selections cs
+        JOIN roadmap_items ri ON cs.roadmap_item_id = ri.id
+        WHERE cs.client_id = ? AND cs.selection_date = ? AND cs.selected = 1
+      `).all(req.params.clientId, today);
+    }
+
+    if (selections.length === 0 && (!selected_proposals || selected_proposals.length === 0)) {
       return res.json({
         agenda: [],
         message: 'No items selected for agenda'
@@ -1804,6 +1817,22 @@ router.post('/cockpit/:clientId/agenda', async (req, res) => {
         items: stale.map(s => s.title)
       });
     }
+
+    // Add proposals if sent from UI
+    if (selected_proposals && selected_proposals.length > 0) {
+      agenda.push({
+        topic: 'Strategic Proposals',
+        minutes: Math.min(selected_proposals.length * 5, 15),
+        items: selected_proposals
+      });
+    }
+
+    // Always end with Next Steps
+    agenda.push({
+      topic: 'Next Steps & Action Items',
+      minutes: 5,
+      items: ['Confirm owners and deadlines for all discussed items']
+    });
 
     const totalMinutes = agenda.reduce((sum, a) => sum + a.minutes, 0);
 
