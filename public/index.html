@@ -3088,6 +3088,16 @@
   border-top: 1px solid #30363d;
 }
 
+.cockpit-ph-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+}
+.cockpit-ph-link:hover {
+  color: #58a6ff;
+  text-decoration-style: solid;
+}
 .cockpit-proposal-meta {
   font-size: 11px;
   color: #6e7681;
@@ -6117,7 +6127,8 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
           const phClass = phLink.ph_completed ? 'complete' : 'open';
           const phIcon = phLink.ph_completed ? '✅' : '🔄';
           const phStatus = phLink.ph_completed ? 'Complete' : (phLink.ph_progress ? phLink.ph_progress + '%' : 'Open');
-          phHtml = `<div class="cockpit-ph ${phClass}"><span class="cockpit-ph-icon">${phIcon}</span> PH: "${escapeHtml(phLink.ph_task_title || '')}" — ${phStatus}</div>`;
+          const phUrl = 'https://breakthrough3x.proofhub.com/#tasks/' + phLink.ph_task_id + '/project-' + (phLink.ph_project_id || '');
+          phHtml = `<div class="cockpit-ph ${phClass}"><span class="cockpit-ph-icon">${phIcon}</span> PH: <a href="${phUrl}" target="_blank" class="cockpit-ph-link">${escapeHtml(phLink.ph_task_title || 'View Task')}</a> — ${phStatus}</div>`;
         } else {
           phHtml = `<div class="cockpit-ph none"><span class="cockpit-ph-icon">📋</span> No PH task linked</div>`;
         }

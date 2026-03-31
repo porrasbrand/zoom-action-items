@@ -407,7 +407,7 @@ export function getAllPHLinksForClient(db, clientId) {
            l.ph_task_id, l.ph_task_title, l.match_method, l.match_confidence, l.match_reasoning,
            c.completed as ph_completed, c.completed_at as ph_completed_at,
            c.stage_name as ph_stage, c.percent_progress as ph_progress,
-           c.task_list_name as ph_list
+           c.task_list_name as ph_list, c.project_id as ph_project_id
     FROM roadmap_items ri
     LEFT JOIN roadmap_ph_links l ON ri.id = l.roadmap_item_id
     LEFT JOIN ph_task_cache c ON l.ph_task_id = c.ph_task_id

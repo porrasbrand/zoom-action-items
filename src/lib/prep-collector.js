@@ -239,6 +239,7 @@ export async function collectCockpitData(db, clientId) {
       ph_completed: link.ph_completed,
       ph_stage: link.ph_stage,
       ph_progress: link.ph_progress,
+      ph_project_id: link.ph_project_id || null,
       match_method: link.match_method,
       match_confidence: link.match_confidence
     };
