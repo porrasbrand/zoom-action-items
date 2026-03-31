@@ -1,0 +1,326 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "derived_from": "337 ProofHub tasks across 17 B3X client projects (2026-03-30)",
+    "method": "Gemini 2.0 Flash analysis + manual review",
+    "total_categories": 10,
+    "total_task_types": 35
+  },
+  "categories": [
+    {
+      "id": "paid-ads",
+      "name": "Paid Traffic & Advertising",
+      "description": "Google Ads, Bing Ads, META/Facebook ads, LSA campaigns, and ad performance optimization",
+      "task_types": [
+        {
+          "id": "google-ads-management",
+          "name": "Google Ads Campaign",
+          "description": "Setup, launch, and ongoing management of Google Search/Display campaigns",
+          "frequency": "high",
+          "clients_seen": ["pearce-hvac", "vision-flooring", "gs-home-services", "legendary-service", "echelon", "empower", "1st-choice"]
+        },
+        {
+          "id": "bing-ads-management",
+          "name": "Bing/Microsoft Ads Campaign",
+          "description": "Setup and management of Bing/Microsoft Ads campaigns",
+          "frequency": "medium",
+          "clients_seen": ["pearce-hvac", "vision-flooring", "gs-home-services", "london-flooring"]
+        },
+        {
+          "id": "meta-ads-management",
+          "name": "META/Facebook Ads Campaign",
+          "description": "Facebook and Instagram ad campaign management including retargeting",
+          "frequency": "high",
+          "clients_seen": ["empower", "jay-conner", "vision-flooring", "tom-ruwitch"]
+        },
+        {
+          "id": "lsa-management",
+          "name": "Local Service Ads (LSA)",
+          "description": "Google Local Service Ads setup, profile management, messaging",
+          "frequency": "medium",
+          "clients_seen": ["legendary-service", "empower", "gs-home-services"]
+        },
+        {
+          "id": "webinar-traffic",
+          "name": "Webinar Traffic Campaign",
+          "description": "Paid traffic campaigns specifically for webinar registrations",
+          "frequency": "high",
+          "clients_seen": ["prosper-group", "tom-ruwitch", "jay-conner", "jerry-levinson"]
+        },
+        {
+          "id": "campaign-optimization",
+          "name": "Campaign Optimization",
+          "description": "Budget adjustments, geo targeting, keyword changes, conversion setup",
+          "frequency": "medium",
+          "clients_seen": ["legendary-service", "vision-flooring", "gs-home-services"]
+        },
+        {
+          "id": "landing-page-creation",
+          "name": "PPC Landing Page",
+          "description": "Building landing pages specifically for paid ad campaigns",
+          "frequency": "high",
+          "clients_seen": ["gs-home-services", "pearce-hvac", "1st-choice", "echelon"]
+        }
+      ]
+    },
+    {
+      "id": "email-marketing",
+      "name": "Email Marketing & Copywriting",
+      "description": "Email sequences, content nurture emails, campaign copy, and email compliance",
+      "task_types": [
+        {
+          "id": "content-emails",
+          "name": "Weekly/Monthly Content Emails",
+          "description": "Recurring content nurture email sequences",
+          "frequency": "high",
+          "clients_seen": ["1st-choice", "legendary-service", "echelon"]
+        },
+        {
+          "id": "raise-hand-emails",
+          "name": "Raise-Hand Email Campaign",
+          "description": "Interest-gauging or offer-based engagement emails",
+          "frequency": "high",
+          "clients_seen": ["jay-conner", "vision-flooring", "london-flooring", "echelon"]
+        },
+        {
+          "id": "webinar-email-sequence",
+          "name": "Webinar Email Sequence",
+          "description": "Invitation, reminder, countdown, and post-event email sequences for webinars",
+          "frequency": "high",
+          "clients_seen": ["bearcat", "tom-ruwitch", "prosper-group"]
+        },
+        {
+          "id": "book-funnel-copy",
+          "name": "Book/Shipping Funnel Copy",
+          "description": "Copy and email sequences for free book + shipping campaigns",
+          "frequency": "medium",
+          "clients_seen": ["bearcat", "tom-ruwitch", "pearce-hvac"]
+        },
+        {
+          "id": "book-a-call-sequence",
+          "name": "Book-A-Call Email Sequence",
+          "description": "Email sequences to drive strategy/discovery call bookings",
+          "frequency": "medium",
+          "clients_seen": ["bearcat", "jerry-levinson"]
+        }
+      ]
+    },
+    {
+      "id": "website",
+      "name": "Website & Tech Infrastructure",
+      "description": "Website content updates, page creation, hosting, forms, tracking setup, and SEO",
+      "task_types": [
+        {
+          "id": "website-content-update",
+          "name": "Website Content Update",
+          "description": "Updating offers, dates, prices, images, or text on existing pages",
+          "frequency": "high",
+          "clients_seen": ["pearce-hvac", "vision-flooring", "echelon", "1st-choice", "legendary-service", "bearcat"]
+        },
+        {
+          "id": "website-page-creation",
+          "name": "New Website Page/Section",
+          "description": "Creating new service pages, sections, or site areas",
+          "frequency": "medium",
+          "clients_seen": ["bearcat", "prosper-group", "pearce-hvac"]
+        },
+        {
+          "id": "site-migration-hosting",
+          "name": "Site Migration/Hosting",
+          "description": "Moving websites to new hosting, DNS changes, backups",
+          "frequency": "low",
+          "clients_seen": ["1st-choice", "gs-home-services", "echelon"]
+        },
+        {
+          "id": "form-notification-config",
+          "name": "Form & Notification Config",
+          "description": "Form setup, CAPTCHA, adding email recipients, notification routing",
+          "frequency": "medium",
+          "clients_seen": ["bearcat", "legendary-service", "pearce-hvac", "vision-flooring"]
+        },
+        {
+          "id": "seo-optimization",
+          "name": "SEO Optimization",
+          "description": "On-page SEO, blog content, mobile optimization, Core Web Vitals",
+          "frequency": "low",
+          "clients_seen": ["legendary-service"]
+        }
+      ]
+    },
+    {
+      "id": "funnel-campaign",
+      "name": "Funnel & Campaign Infrastructure",
+      "description": "Full-stack campaign setup: webinar pages, OTO pages, book funnels, promo campaigns",
+      "task_types": [
+        {
+          "id": "webinar-page-setup",
+          "name": "Webinar Page Setup",
+          "description": "Creating registration, confirmation, replay, and OTO pages for webinars",
+          "frequency": "high",
+          "clients_seen": ["prosper-group", "bearcat", "tom-ruwitch"]
+        },
+        {
+          "id": "book-campaign-setup",
+          "name": "Book/Shipping Campaign Setup",
+          "description": "Full funnel build for free book + shipping offers (pages + emails + ads)",
+          "frequency": "medium",
+          "clients_seen": ["bearcat", "tom-ruwitch", "pearce-hvac"]
+        },
+        {
+          "id": "promo-campaign",
+          "name": "Seasonal/Promo Campaign",
+          "description": "Black Friday, seasonal offers, special promotions (full stack)",
+          "frequency": "medium",
+          "clients_seen": ["legendary-service", "empower"]
+        }
+      ]
+    },
+    {
+      "id": "call-tracking",
+      "name": "Call Tracking & Phone",
+      "description": "Tracking number setup, forwarding, spam filtering, call reporting",
+      "task_types": [
+        {
+          "id": "tracking-number-setup",
+          "name": "Tracking Number Setup",
+          "description": "New tracking numbers, forwarding configuration, GHL integration",
+          "frequency": "high",
+          "clients_seen": ["1st-choice", "legendary-service", "empower", "pearce-hvac"]
+        },
+        {
+          "id": "tracking-fix",
+          "name": "Tracking Number Fix",
+          "description": "Fixing forwarding issues, spam call filtering, number discrepancies",
+          "frequency": "medium",
+          "clients_seen": ["legendary-service", "1st-choice"]
+        },
+        {
+          "id": "call-reporting",
+          "name": "Call Reporting",
+          "description": "Weekly/monthly call reports, lead cross-checking for clients",
+          "frequency": "medium",
+          "clients_seen": ["pearce-hvac", "london-flooring", "legendary-service", "gs-home-services"]
+        }
+      ]
+    },
+    {
+      "id": "reporting",
+      "name": "Reporting & Analytics",
+      "description": "Performance reports, analytics setup, ROI tracking",
+      "task_types": [
+        {
+          "id": "monthly-report",
+          "name": "Monthly Performance Report",
+          "description": "Client-facing monthly campaign and traffic performance reports",
+          "frequency": "high",
+          "clients_seen": ["all-clients"]
+        },
+        {
+          "id": "analytics-tracking-setup",
+          "name": "Analytics/Tracking Setup",
+          "description": "GTM, GA4, pixels, enhanced conversions, Hubspot tracking",
+          "frequency": "medium",
+          "clients_seen": ["1st-choice", "legendary-service", "tom-ruwitch", "gs-home-services", "prosper-group"]
+        }
+      ]
+    },
+    {
+      "id": "crm-automation",
+      "name": "CRM & Automation (GHL)",
+      "description": "GoHighLevel CRM setup, workflows, email compliance, integrations, SMS",
+      "task_types": [
+        {
+          "id": "ghl-workflow",
+          "name": "GHL Workflow/Automation",
+          "description": "Building automations, triggers, and workflows in GoHighLevel",
+          "frequency": "medium",
+          "clients_seen": ["legendary-service", "echelon"]
+        },
+        {
+          "id": "ghl-email-compliance",
+          "name": "Email/SMS Compliance Setup",
+          "description": "A2P registration, email domain setup, postmaster tools, deliverability",
+          "frequency": "medium",
+          "clients_seen": ["legendary-service", "echelon", "bearcat", "jerry-levinson"]
+        },
+        {
+          "id": "integration-setup",
+          "name": "Platform Integration",
+          "description": "Connecting third-party tools: Next Door, ServiceTitan, LSA, etc.",
+          "frequency": "medium",
+          "clients_seen": ["legendary-service", "1st-choice", "gs-home-services"]
+        },
+        {
+          "id": "sms-campaign",
+          "name": "SMS/Text Campaign",
+          "description": "Text message blasts, EZTexting, GHL SMS campaigns",
+          "frequency": "medium",
+          "clients_seen": ["bearcat"]
+        }
+      ]
+    },
+    {
+      "id": "gbp",
+      "name": "Google Business Profile",
+      "description": "GBP listing management, products, posts, reviews",
+      "task_types": [
+        {
+          "id": "gbp-update",
+          "name": "GBP Profile Update",
+          "description": "Updating GBP products, services, posts, photos, info",
+          "frequency": "medium",
+          "clients_seen": ["legendary-service"]
+        },
+        {
+          "id": "review-management",
+          "name": "Review Management/Automation",
+          "description": "Review response automation, review solicitation setup",
+          "frequency": "low",
+          "clients_seen": ["legendary-service"]
+        }
+      ]
+    },
+    {
+      "id": "creative",
+      "name": "Video & Creative",
+      "description": "Video editing, graphic design, slides, print materials, branding",
+      "task_types": [
+        {
+          "id": "video-editing",
+          "name": "Video Editing",
+          "description": "Training videos, testimonials, ad videos, interviews",
+          "frequency": "medium",
+          "clients_seen": ["bearcat"]
+        },
+        {
+          "id": "graphic-design",
+          "name": "Graphic Design",
+          "description": "eCover, slides, branding, logos, presentation graphics",
+          "frequency": "medium",
+          "clients_seen": ["bearcat"]
+        }
+      ]
+    },
+    {
+      "id": "client-ops",
+      "name": "Client Operations",
+      "description": "Client onboarding, profiling, account setup, strategic planning",
+      "task_types": [
+        {
+          "id": "client-profiling",
+          "name": "Client Profiling/Onboarding",
+          "description": "Avatar development, AI personality creation, account setup",
+          "frequency": "low",
+          "clients_seen": ["1st-choice", "jay-conner"]
+        },
+        {
+          "id": "offer-development",
+          "name": "Offer Development",
+          "description": "Helping clients develop and approve marketing offers",
+          "frequency": "low",
+          "clients_seen": ["bearcat"]
+        }
+      ]
+    }
+  ]
+}

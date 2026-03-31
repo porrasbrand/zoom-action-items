@@ -1,0 +1,106 @@
+{
+  "status_report": {
+    "completed": [],
+    "in_progress": [
+      {
+        "title": "test title here",
+        "owner": "Amy",
+        "category": "website",
+        "eta": "2024-03-26"
+      },
+      {
+        "title": "Deliver April Content and Raise Hand Emails",
+        "owner": "Philip Mutrie",
+        "category": "email-marketing",
+        "eta": "2024-03-26"
+      },
+      {
+        "title": "Finalize 10-15% Budget Increase Recommendation",
+        "owner": "Philip Mutrie",
+        "category": "client-ops",
+        "eta": "2024-03-26"
+      },
+      {
+        "title": "Provide April content emails and April raise hand emails for review and approval",
+        "owner": "Philip Mutrie",
+        "category": "email-marketing",
+        "eta": null
+      }
+    ],
+    "needs_client_action": []
+  },
+  "accountability": {
+    "stale_items": [],
+    "b3x_overdue": [
+      {
+        "title": "Complete Q1/Q2 CEO Checklist and Blueprint",
+        "owner": "Ryan",
+        "since": "2024-03-26"
+      },
+      {
+        "title": "Cross-reference Call Reports",
+        "owner": "Ryan",
+        "since": "2024-03-26"
+      }
+    ],
+    "client_overdue": []
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "Review & Approve April Content Emails",
+      "reasoning": "April is quickly approaching. Approving the content emails will allow us to get them scheduled and sent out, ensuring consistent communication with GS Home Services' audience.",
+      "category": "email-marketing",
+      "task_type": "content-emails"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Website Performance Audit and Optimization Proposal",
+      "reasoning": "GS Home Services does not currently utilize our website services. With a strong performance in paid ads, improving the website user experience could significantly increase lead conversion rates.  This also ties into the current campaign expansion and budget increase initiatives.",
+      "category": "website",
+      "task_type": "website-audit"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Implement Dedicated Reporting Dashboard",
+      "reasoning": "GS Home Services does not currently utilize our reporting services. Given the successful sales period and the detailed ROI analysis already performed, a dedicated reporting dashboard would streamline data access and improve decision-making. This ties into the budget increase initiative.",
+      "category": "reporting",
+      "task_type": "reporting-setup"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Quick Wins: Review In-Progress Items & Client Action Items (Content Email Approval)",
+      "minutes": 10,
+      "notes": "Address any questions regarding email content. Ensure they are on track for review."
+    },
+    {
+      "topic": "Strategic Proposal: Website Performance Audit and Optimization Proposal & Dedicated Reporting Dashboard",
+      "minutes": 15,
+      "notes": "Present the benefits of our website and reporting services, focusing on increased conversion rates and streamlined data access."
+    },
+    {
+      "topic": "Next Steps & Action Items",
+      "minutes": 5,
+      "notes": "Assign owners and deadlines for all action items discussed during the meeting."
+    }
+  ],
+  "estimated_meeting_length_minutes": 30,
+  "meta": {
+    "client_id": "gs-home-services",
+    "client_name": "GS Home Services",
+    "generated_at": "2026-03-30T20:03:31.864Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-24T21:27:50Z",
+    "days_since_last_meeting": 5,
+    "meetings_analyzed": 2,
+    "roadmap_stats": {
+      "total": 12,
+      "done": 0,
+      "in_progress": 4,
+      "blocked": 0,
+      "agreed": 8,
+      "stale": 0
+    }
+  }
+}

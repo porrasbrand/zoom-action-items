@@ -1,0 +1,118 @@
+{
+  "status_report": {
+    "completed": [],
+    "in_progress": [],
+    "needs_client_action": [
+      {
+        "title": "Provide EverWebinar login",
+        "reason": "B3X needs access to set up the evergreen webinar funnel effectively.",
+        "since": "2026-03-20"
+      },
+      {
+        "title": "Decide on ad budget increase",
+        "reason": "B3X needs to know the approved budget to scale successful ad campaigns.",
+        "since": "2026-03-20"
+      },
+      {
+        "title": "Incorporate new webinar replay (updated version) into EverWebinar",
+        "reason": "B3X needs the updated webinar replay video to ensure the funnel content is current.",
+        "since": "2026-03-30"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [],
+    "b3x_overdue": [
+      {
+        "title": "Nudge Jared regarding Orlando paperwork",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-19"
+      },
+      {
+        "title": "Confirm webinar follow-up flow",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-20"
+      },
+      {
+        "title": "Invite 'friendlies' and check internal list",
+        "owner": "Kristen Luidhardt",
+        "since": "2026-03-20"
+      }
+    ],
+    "client_overdue": [
+      {
+        "title": "Provide EverWebinar login",
+        "action_needed": "Provide login details for EverWebinar.",
+        "since": "2026-03-20"
+      },
+      {
+        "title": "Decide on ad budget increase",
+        "action_needed": "Provide a decision on whether to increase the ad budget.",
+        "since": "2026-03-20"
+      }
+    ]
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "Review and Optimize High-Performing Ads",
+      "reasoning": "Based on the roadmap item to 'Look at the ads that are performing, and let's put The most emphasis on those. and cut out any fat that isn't working', focusing on the highest performing ads is a quick win to improve ROI.",
+      "category": "paid-ads",
+      "task_type": "campaign-optimization"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Evergreen Webinar Funnel Optimization",
+      "reasoning": "Given the transition to an evergreen model (as discussed in the 2026-03-24 meeting summary) and pending tasks related to EverWebinar setup (client action required), optimizing the funnel flow is crucial for lead generation.",
+      "category": "funnel-campaign",
+      "task_type": "funnel-optimization"
+    },
+    {
+      "priority": "LOW",
+      "title": "Website Audit and Optimization Proposal",
+      "reasoning": "Website is a significant service gap. A website audit is a valuable first step towards identifying conversion issues and developing a strategy for improvement that will support all other channels.",
+      "category": "website",
+      "task_type": "technical-seo"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Quick Wins: Ad Optimization Review",
+      "minutes": 10,
+      "notes": "Discuss progress on identifying top-performing ads and cutting underperforming ones. Review associated metrics."
+    },
+    {
+      "topic": "Evergreen Webinar Funnel Update",
+      "minutes": 10,
+      "notes": "Address client action items: EverWebinar login and updated webinar replay. Discuss follow-up flow setup."
+    },
+    {
+      "topic": "Strategic Proposal: Website Audit",
+      "minutes": 5,
+      "notes": "Present the value proposition and scope of a website audit, highlighting its impact on overall marketing performance."
+    },
+    {
+      "topic": "Next Steps & Action Items",
+      "minutes": 5,
+      "notes": "Summarize action items for both B3X and the client. Confirm deadlines."
+    }
+  ],
+  "estimated_meeting_length_minutes": 30,
+  "meta": {
+    "client_id": "prosper-group",
+    "client_name": "Prosper Group",
+    "generated_at": "2026-03-30T20:03:19.503Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-24T19:27:51Z",
+    "days_since_last_meeting": 6,
+    "meetings_analyzed": 2,
+    "roadmap_stats": {
+      "total": 10,
+      "done": 0,
+      "in_progress": 0,
+      "blocked": 0,
+      "agreed": 10,
+      "stale": 0
+    }
+  }
+}

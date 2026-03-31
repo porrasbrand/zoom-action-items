@@ -185,17 +185,9 @@ export async function postToSlack({ channelId, topic, clientName, meetingDate, e
  * Post an error/alert message to the alerts channel.
  */
 export async function postAlert(message) {
-  const client = getClient();
-  const channel = process.env.SLACK_ALERT_CHANNEL || 'zoom-pipeline-alerts';
-
-  try {
-    await client.chat.postMessage({
-      channel,
-      text: `:warning: *Zoom Pipeline Alert*\n${message}`,
-    });
-  } catch (err) {
-    console.error('Failed to post alert to Slack:', err.message);
-  }
+  // DISABLED: No Slack alerts until pipeline is fully ready
+  console.log('[Alert suppressed]', message);
+  return;
 }
 
 /**

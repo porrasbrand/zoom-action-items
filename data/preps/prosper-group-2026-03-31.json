@@ -1,0 +1,224 @@
+{
+  "status_report": {
+    "completed": [
+      {
+        "title": "Evaluate ad budget increase for final webinar push",
+        "date": "2026-03-20",
+        "category": "paid-ads"
+      },
+      {
+        "title": "Send final webinar invites to internal list and VIP friendlies",
+        "date": "2026-03-20",
+        "category": "email-marketing"
+      },
+      {
+        "title": "Optimize March 20 webinar ad spend by cutting non-performers",
+        "date": "2026-03-20",
+        "category": "paid-ads"
+      },
+      {
+        "title": "Set up Facebook Ads for March 20th",
+        "date": "2026-03-20",
+        "category": "paid-ads"
+      },
+      {
+        "title": "Provide Zoom links for March 20th",
+        "date": "2026-03-20",
+        "category": "funnel-campaign"
+      }
+    ],
+    "in_progress": [
+      {
+        "title": "Schedule VIP delivery email",
+        "owner": "Philip Mutrie",
+        "category": "email-marketing",
+        "eta": "2026-03-04 (Past Due)"
+      },
+      {
+        "title": "Finalize EverWebinar setup",
+        "owner": "Anthony R",
+        "category": "funnel-campaign",
+        "eta": "Immediate"
+      },
+      {
+        "title": "Update webinar slides with pricing visuals",
+        "owner": "Kurt Luidhardt",
+        "category": "funnel-campaign",
+        "eta": "2026-03-20 (Past Due)"
+      }
+    ],
+    "needs_client_action": [
+      {
+        "title": "Draft pre-event and post-event emails for dinner events",
+        "reason": "Kurt needs to provide copy for the upcoming coaching dinner events to ensure follow-up is automated.",
+        "since": "2026-03-14"
+      },
+      {
+        "title": "Collect member testimonials for April email campaign",
+        "reason": "B3X needs these assets to build the 'raise hand' campaign discussed in the last meeting.",
+        "since": "2026-03-24"
+      },
+      {
+        "title": "Plan May live webinar date and content freshening",
+        "reason": "Strategic planning for May is required to prevent a gap in the funnel after the April evergreen push.",
+        "since": "2026-03-24"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [
+      {
+        "title": "Implement HubSpot Permission Tag",
+        "agreed_date": "2026-03-31",
+        "silent_meetings": 3
+      },
+      {
+        "title": "Send promo scripts to Kurt and Kristen",
+        "agreed_date": "2026-03-31",
+        "silent_meetings": 3
+      },
+      {
+        "title": "Audit service-based clients for AC campaigns",
+        "agreed_date": "2026-03-31",
+        "silent_meetings": 2
+      },
+      {
+        "title": "Update implementation notes with new branding and footer CTA",
+        "agreed_date": "2026-03-31",
+        "silent_meetings": 2
+      },
+      {
+        "title": "Provide Impact Filter tool to Kurt and Kristen",
+        "agreed_date": "2026-03-31",
+        "silent_meetings": 2
+      }
+    ],
+    "b3x_overdue": [
+      {
+        "title": "Schedule VIP delivery email",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-04"
+      },
+      {
+        "title": "Nudge clients Jared and Jerry for Orlando event paperwork",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-19"
+      },
+      {
+        "title": "Audit service-based clients for AC campaigns",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-11"
+      }
+    ],
+    "client_overdue": [
+      {
+        "title": "Record 30-second promo reels",
+        "action_needed": "Kurt needs to record these for the creative team to edit. Blocked status.",
+        "since": "2026-03-04"
+      },
+      {
+        "title": "Draft pre-event and post-event emails",
+        "action_needed": "Kurt to provide copy for dinner events.",
+        "since": "2026-03-14"
+      }
+    ]
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "Finalize Evergreen Handoff",
+      "reasoning": "The March 20th live webinar is done. To maintain lead flow without manual live sessions, the EverWebinar setup and simulated chat must be bulletproofed this week.",
+      "category": "funnel-campaign",
+      "task_type": "webinar-page-setup"
+    },
+    {
+      "priority": "HIGH",
+      "title": "Activate April 'Raise Hand' Campaign",
+      "reasoning": "Industry data shows coaching leads respond well to 'low-friction' raising hand emails after a big event push. We need the testimonials and scripts to capitalize on the post-webinar buzz.",
+      "category": "email-marketing",
+      "task_type": "raise-hand-emails"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Facebook Learning Phase Stabilization",
+      "reasoning": "Last meeting noted rising costs and the need for a 'strategic review' of learning phases. This is critical as we shift from live bursts to consistent evergreen traffic.",
+      "category": "paid-ads",
+      "task_type": "campaign-optimization"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Win Wall: March 20th Recap",
+      "minutes": 5,
+      "notes": "Celebrate the successful webinar execution and ad performance optimization."
+    },
+    {
+      "topic": "Technical EverWebinar Review",
+      "minutes": 10,
+      "notes": "Confirm chat transcript timecodes and simulated features are ready for April launch."
+    },
+    {
+      "topic": "April Campaign Assets: Testimonials & Scripts",
+      "minutes": 10,
+      "notes": "Review the status of Kurt's reels and the testimonial collection needed for the 'raise hand' sequence."
+    },
+    {
+      "topic": "Roadmap Cleanup: Stale & Overdue Items",
+      "minutes": 5,
+      "notes": "Address the 5 stale items and clear the backlog of March 4th/11th tasks."
+    }
+  ],
+  "estimated_meeting_length_minutes": 30,
+  "projected_roadmap": [
+    {
+      "title": "Lead Magnet Landing Page Audit",
+      "why_now": "Since 'website' is a service gap and we are moving to evergreen, the current landing page performance will dictate the ROI of the new funnel.",
+      "category": "website",
+      "task_type": "form-notification-config",
+      "effort_b3x": "3hrs",
+      "effort_client": "Access to analytics",
+      "prerequisites": "Finalize EverWebinar setup",
+      "impact": "Higher conversion rate on evergreen traffic.",
+      "priority": "QUICK_WIN"
+    },
+    {
+      "title": "SMS Notification Layer for Evergreen Webinar",
+      "why_now": "Evergreen models typically see a drop in attendance compared to live. SMS reminders are the industry standard to fix this.",
+      "category": "funnel-campaign",
+      "task_type": "webinar-page-setup",
+      "effort_b3x": "5hrs setup",
+      "effort_client": "Twilio/SMS provider approval",
+      "prerequisites": "Finalize EverWebinar setup",
+      "impact": "20-30% increase in show-up rates for simulated sessions.",
+      "priority": "GROWTH"
+    },
+    {
+      "title": "Liberty Builders Network LinkedIn Authority Campaign",
+      "why_now": "The brand transition from FastPass is complete. Now we need to update the professional presence of the principals to match the new branding.",
+      "category": "paid-ads",
+      "task_type": "campaign-optimization",
+      "effort_b3x": "10hrs/month",
+      "effort_client": "Profile access and headshots",
+      "prerequisites": "None — can start immediately",
+      "impact": "Establishes long-term authority and organic reach for the coaching group.",
+      "priority": "STRATEGIC"
+    }
+  ],
+  "meta": {
+    "client_id": "prosper-group",
+    "client_name": "Prosper Group",
+    "generated_at": "2026-03-31T11:16:25.972Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-24T19:27:51Z",
+    "days_since_last_meeting": 6,
+    "meetings_analyzed": 4,
+    "roadmap_stats": {
+      "total": 23,
+      "done": 5,
+      "in_progress": 4,
+      "blocked": 1,
+      "agreed": 13,
+      "stale": 5
+    }
+  }
+}
