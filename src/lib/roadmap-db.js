@@ -300,7 +300,7 @@ export function getSnapshotsTimeline(db, clientId) {
            rs.items_in_progress, rs.items_blocked, rs.items_stale, rs.created_at, m.start_time as meeting_date, m.topic as meeting_topic
     FROM roadmap_snapshots rs LEFT JOIN meetings m ON rs.meeting_id = m.id
     WHERE rs.client_id = ?
-    ORDER BY rs.meeting_id ASC
+    ORDER BY m.start_time ASC
   `).all(clientId);
 }
 
