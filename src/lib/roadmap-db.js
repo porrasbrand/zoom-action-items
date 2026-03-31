@@ -72,6 +72,65 @@ export function initRoadmapTables(db) {
 
   db.exec(`CREATE INDEX IF NOT EXISTS idx_snapshots_client ON roadmap_snapshots(client_id)`);
   db.exec(`CREATE INDEX IF NOT EXISTS idx_snapshots_meeting ON roadmap_snapshots(meeting_id)`);
+
+  // Phase 14: ProofHub reconciliation tables
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS roadmap_ph_links (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      client_id TEXT NOT NULL,
+      roadmap_item_id INTEGER NOT NULL,
+      ph_task_id INTEGER NOT NULL,
+      ph_task_title TEXT,
+      match_method TEXT NOT NULL,
+      match_confidence REAL DEFAULT 0.8,
+      match_reasoning TEXT,
+      match_corrected INTEGER DEFAULT 0,
+      matched_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_by TEXT,
+      FOREIGN KEY (roadmap_item_id) REFERENCES roadmap_items(id) ON DELETE CASCADE
+    )
+  `);
+
+  db.exec(`CREATE INDEX IF NOT EXISTS idx_ph_links_roadmap ON roadmap_ph_links(roadmap_item_id)`);
+  db.exec(`CREATE INDEX IF NOT EXISTS idx_ph_links_ph ON roadmap_ph_links(ph_task_id)`);
+  db.exec(`CREATE INDEX IF NOT EXISTS idx_ph_links_client ON roadmap_ph_links(client_id)`);
+  db.exec(`CREATE INDEX IF NOT EXISTS idx_ph_links_ph_roadmap ON roadmap_ph_links(ph_task_id, roadmap_item_id)`);
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS ph_task_cache (
+      ph_task_id INTEGER PRIMARY KEY,
+      client_id TEXT NOT NULL,
+      project_id TEXT NOT NULL,
+      title TEXT,
+      completed INTEGER DEFAULT 0,
+      completed_at TEXT,
+      stage_name TEXT,
+      percent_progress INTEGER DEFAULT 0,
+      assigned_names TEXT,
+      task_list_name TEXT,
+      start_date TEXT,
+      due_date TEXT,
+      comments_count INTEGER DEFAULT 0,
+      last_synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  db.exec(`CREATE INDEX IF NOT EXISTS idx_ph_cache_client ON ph_task_cache(client_id)`);
+  db.exec(`CREATE INDEX IF NOT EXISTS idx_ph_cache_project ON ph_task_cache(project_id)`);
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS cockpit_selections (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      client_id TEXT NOT NULL,
+      roadmap_item_id INTEGER NOT NULL,
+      selected INTEGER DEFAULT 1,
+      selection_date TEXT NOT NULL,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(client_id, roadmap_item_id, selection_date)
+    )
+  `);
+
+  db.exec(`CREATE INDEX IF NOT EXISTS idx_cockpit_client_date ON cockpit_selections(client_id, selection_date)`);
 }
 
 /**

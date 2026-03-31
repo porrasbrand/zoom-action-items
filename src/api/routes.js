@@ -32,6 +32,10 @@ import { getTaxonomy } from '../lib/roadmap-processor.js';
 import { collectPrepData } from '../lib/prep-collector.js';
 import { generateMeetingPrep } from '../lib/prep-generator.js';
 import { formatAsMarkdown, formatForSlack, formatBrief } from '../lib/prep-formatter.js';
+import {
+  reconcileClient, refreshPHCache, getReconcileStatus,
+  getAllPHLinksForClient, manualLink, removeLink
+} from '../lib/ph-reconciler.js';
 import { readdirSync, readFileSync as fsReadFileSync, existsSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -1564,6 +1568,104 @@ router.get('/prep/saved/:filename', (req, res) => {
     } else {
       res.type('text/plain').send(content);
     }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ RECONCILIATION (Phase 14A) ============
+
+// POST /api/reconcile/:clientId - Run PH reconciliation
+router.post('/reconcile/:clientId', async (req, res) => {
+  try {
+    const { clientId } = req.params;
+    const configPath = join(__dirname, '..', 'config', 'clients.json');
+    const config = JSON.parse(readFileSync(configPath, 'utf-8'));
+    const client = config.clients.find(c => c.id === clientId);
+
+    if (!client) {
+      return res.status(404).json({ error: 'Client not found' });
+    }
+    if (!client.ph_project_id) {
+      return res.status(400).json({ error: 'Client has no ProofHub project configured' });
+    }
+
+    const database = getDatabase();
+    const result = await reconcileClient(database, clientId, client.ph_project_id);
+    res.json(result);
+  } catch (err) {
+    console.error('Reconciliation error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/reconcile/:clientId/status - Get reconciliation status
+router.get('/reconcile/:clientId/status', (req, res) => {
+  try {
+    const database = getDatabase();
+    const status = getReconcileStatus(database, req.params.clientId);
+    res.json(status);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/reconcile/:clientId/refresh - Refresh PH cache only
+router.post('/reconcile/:clientId/refresh', async (req, res) => {
+  try {
+    const { clientId } = req.params;
+    const configPath = join(__dirname, '..', 'config', 'clients.json');
+    const config = JSON.parse(readFileSync(configPath, 'utf-8'));
+    const client = config.clients.find(c => c.id === clientId);
+
+    if (!client) {
+      return res.status(404).json({ error: 'Client not found' });
+    }
+    if (!client.ph_project_id) {
+      return res.status(400).json({ error: 'Client has no ProofHub project configured' });
+    }
+
+    const database = getDatabase();
+    const count = await refreshPHCache(database, clientId, client.ph_project_id);
+    res.json({ cached_tasks: count });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/reconcile/:clientId/links - Get all PH links for client
+router.get('/reconcile/:clientId/links', (req, res) => {
+  try {
+    const database = getDatabase();
+    const links = getAllPHLinksForClient(database, req.params.clientId);
+    res.json({ links });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/reconcile/:clientId/link - Manual link
+router.post('/reconcile/:clientId/link', (req, res) => {
+  try {
+    const { roadmap_item_id, ph_task_id, ph_task_title } = req.body;
+    if (!roadmap_item_id || !ph_task_id) {
+      return res.status(400).json({ error: 'roadmap_item_id and ph_task_id required' });
+    }
+
+    const database = getDatabase();
+    manualLink(database, req.params.clientId, roadmap_item_id, ph_task_id, ph_task_title || '');
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE /api/reconcile/:clientId/link/:linkId - Remove link
+router.delete('/reconcile/:clientId/link/:linkId', (req, res) => {
+  try {
+    const database = getDatabase();
+    removeLink(database, parseInt(req.params.linkId));
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
