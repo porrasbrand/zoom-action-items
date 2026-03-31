@@ -190,8 +190,8 @@ ${JSON.stringify(roadmapSummary, null, 2)}
 TASK TAXONOMY (valid categories and types):
 ${buildTaxonomySummary()}
 
-MEETING TRANSCRIPT (first 15000 chars):
-${(meeting.transcript_raw || '').substring(0, 15000)}
+MEETING TRANSCRIPT:
+${(meeting.transcript_raw || '').substring(0, 200000)}
 
 MEETING ACTION ITEMS (already extracted):
 ${JSON.stringify(actionItemsSummary, null, 2)}
