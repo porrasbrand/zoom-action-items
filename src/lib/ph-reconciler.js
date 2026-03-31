@@ -512,7 +512,13 @@ export async function reconcileClient(db, clientId, phProjectId, options = {}) {
     }
   });
 
-  insertMany(allNewLinks);
+  // Validate: only insert links where roadmap_item_id actually exists
+  const validRoadmapIds = new Set(roadmapItems.map(r => r.id));
+  const validLinks = new Map([...allNewLinks].filter(([riId]) => validRoadmapIds.has(riId)));
+  if (validLinks.size < allNewLinks.size) {
+    console.log("[Reconciler] Skipped " + (allNewLinks.size - validLinks.size) + " links with invalid roadmap_item_ids");
+  }
+  insertMany(validLinks);
 
   const result = {
     total_roadmap: roadmapItems.length,
