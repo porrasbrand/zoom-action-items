@@ -177,6 +177,18 @@ SECTION 5 - PROJECTED ROADMAP (New items to propose to client):
 - Do NOT repeat items that are already active on the roadmap
 - Ground every proposal in data from the roadmap, service gaps, or meeting context — no generic filler
 
+SECTION 6 - TALKING POINTS:
+For each item in sections 1-5 that Phil might discuss with the client, generate a short conversational one-liner — exactly what Phil should SAY to introduce the topic naturally.
+Write as if Phil is speaking directly to the client in a warm, professional tone.
+
+Examples of good talking points:
+- For a completed item: "Great news — we got the Facebook Ads live for the 20th, and Richard optimized the spend mid-run"
+- For a blocker: "Kurt, quick question — do you have a timeline for the dinner email copy? We need it to schedule the promo"
+- For a stale item: "I want to flag something — the HubSpot permission tag has been on our list since March 3 but hasn't come up. Should we keep it or formally take it off the table?"
+- For a proposal: "Something I want to put on your radar — now that the evergreen funnel is taking shape, a quick website audit could really boost the conversion on all the traffic we're driving"
+
+Return as a JSON object keyed by item title.
+
 OUTPUT FORMAT: Return ONLY valid JSON matching this schema:
 {
   "status_report": {
@@ -208,7 +220,11 @@ OUTPUT FORMAT: Return ONLY valid JSON matching this schema:
       "impact": "...",
       "priority": "QUICK_WIN | GROWTH | STRATEGIC"
     }
-  ]
+  ],
+  "talking_points": {
+    "Item Title Here": "Great news — we completed this ahead of schedule...",
+    "Another Item Title": "Quick question — do you have a timeline for..."
+  }
 }`;
 
   try {

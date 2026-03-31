@@ -12,6 +12,7 @@ import {
   getStaleItems
 } from './roadmap-db.js';
 import { getTaxonomy } from './roadmap-processor.js';
+import { getAllPHLinksForClient, refreshPHCache } from './ph-reconciler.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -187,8 +188,73 @@ export async function collectPrepData(db, clientId) {
   };
 }
 
+/**
+ * Collect cockpit data (prep + PH links + selections).
+ * Used for the interactive Meeting Cockpit UI.
+ *
+ * @param {Database} db - better-sqlite3 database instance
+ * @param {string} clientId
+ * @returns {Object} cockpitData
+ */
+export async function collectCockpitData(db, clientId) {
+  const prepData = await collectPrepData(db, clientId);
+
+  // Get PH links for all roadmap items
+  const phLinks = getAllPHLinksForClient(db, clientId);
+
+  // Check if PH cache is stale (>1 hour) and refresh if needed
+  const client = getClientConfig(clientId);
+  if (client?.ph_project_id) {
+    const cacheAge = db.prepare(`
+      SELECT MIN((julianday('now') - julianday(last_synced_at)) * 24) as hours_old
+      FROM ph_task_cache WHERE client_id = ?
+    `).get(clientId);
+
+    if (!cacheAge?.hours_old || cacheAge.hours_old > 1) {
+      try {
+        await refreshPHCache(db, clientId, client.ph_project_id);
+      } catch (err) {
+        console.warn('[CockpitData] Failed to refresh PH cache:', err.message);
+      }
+    }
+  }
+
+  // Get today's selections
+  const today = new Date().toISOString().split('T')[0];
+  const selections = db.prepare(`
+    SELECT roadmap_item_id, selected
+    FROM cockpit_selections
+    WHERE client_id = ? AND selection_date = ?
+  `).all(clientId, today);
+
+  const selectionMap = {};
+  selections.forEach(s => { selectionMap[s.roadmap_item_id] = s.selected; });
+
+  // Create a map of PH links keyed by roadmap_item_id
+  const phLinkMap = {};
+  for (const link of phLinks) {
+    phLinkMap[link.roadmap_item_id] = {
+      ph_task_id: link.ph_task_id,
+      ph_task_title: link.ph_task_title,
+      ph_completed: link.ph_completed,
+      ph_stage: link.ph_stage,
+      ph_progress: link.ph_progress,
+      match_method: link.match_method,
+      match_confidence: link.match_confidence
+    };
+  }
+
+  return {
+    ...prepData,
+    ph_links: phLinkMap,
+    selections: selectionMap,
+    cockpit_generated_at: new Date().toISOString()
+  };
+}
+
 export default {
   collectPrepData,
+  collectCockpitData,
   getClientConfig,
   computeServiceGaps
 };

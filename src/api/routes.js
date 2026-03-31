@@ -29,7 +29,7 @@ import {
   appendStatusHistory
 } from '../lib/roadmap-db.js';
 import { getTaxonomy } from '../lib/roadmap-processor.js';
-import { collectPrepData } from '../lib/prep-collector.js';
+import { collectPrepData, collectCockpitData } from '../lib/prep-collector.js';
 import { generateMeetingPrep } from '../lib/prep-generator.js';
 import { formatAsMarkdown, formatForSlack, formatBrief } from '../lib/prep-formatter.js';
 import {
@@ -1666,6 +1666,126 @@ router.delete('/reconcile/:clientId/link/:linkId', (req, res) => {
     const database = getDatabase();
     removeLink(database, parseInt(req.params.linkId));
     res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ COCKPIT (Phase 14B) ============
+
+// GET /api/cockpit/:clientId - Get full cockpit data (prep + PH links + selections + talking points)
+router.get('/cockpit/:clientId', async (req, res) => {
+  try {
+    const database = getDatabase();
+    const cockpitData = await collectCockpitData(database, req.params.clientId);
+
+    // Generate prep with talking points
+    const result = await generateMeetingPrep(cockpitData);
+
+    res.json({
+      ...cockpitData,
+      prep: result.json,
+      talking_points: result.json.talking_points || {}
+    });
+  } catch (err) {
+    console.error('Cockpit error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PUT /api/cockpit/:clientId/selection - Save checkbox state
+router.put('/cockpit/:clientId/selection', (req, res) => {
+  try {
+    const { roadmap_item_id, selected } = req.body;
+    if (roadmap_item_id === undefined || selected === undefined) {
+      return res.status(400).json({ error: 'roadmap_item_id and selected required' });
+    }
+
+    const today = new Date().toISOString().split('T')[0];
+    const database = getDatabase();
+
+    database.prepare(`
+      INSERT INTO cockpit_selections (client_id, roadmap_item_id, selected, selection_date, updated_at)
+      VALUES (?, ?, ?, ?, datetime('now'))
+      ON CONFLICT(client_id, roadmap_item_id, selection_date)
+      DO UPDATE SET selected = excluded.selected, updated_at = datetime('now')
+    `).run(req.params.clientId, roadmap_item_id, selected ? 1 : 0, today);
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/cockpit/:clientId/agenda - Build personalized agenda from selections
+router.post('/cockpit/:clientId/agenda', async (req, res) => {
+  try {
+    const database = getDatabase();
+    const today = new Date().toISOString().split('T')[0];
+
+    // Get selected items
+    const selections = database.prepare(`
+      SELECT cs.roadmap_item_id, ri.title, ri.status, ri.category
+      FROM cockpit_selections cs
+      JOIN roadmap_items ri ON cs.roadmap_item_id = ri.id
+      WHERE cs.client_id = ? AND cs.selection_date = ? AND cs.selected = 1
+    `).all(req.params.clientId, today);
+
+    if (selections.length === 0) {
+      return res.json({
+        agenda: [],
+        message: 'No items selected for agenda'
+      });
+    }
+
+    // Group by type
+    const wins = selections.filter(s => s.status === 'done');
+    const blockers = selections.filter(s => s.status === 'blocked');
+    const stale = selections.filter(s => s.status === 'agreed');
+    const inProgress = selections.filter(s => s.status === 'in-progress');
+
+    // Build agenda
+    const agenda = [];
+
+    if (wins.length > 0) {
+      agenda.push({
+        topic: 'Wins to Report',
+        minutes: Math.min(wins.length * 2, 5),
+        items: wins.map(w => w.title)
+      });
+    }
+
+    if (inProgress.length > 0) {
+      agenda.push({
+        topic: 'In-Progress Updates',
+        minutes: Math.min(inProgress.length * 2, 8),
+        items: inProgress.map(i => i.title)
+      });
+    }
+
+    if (blockers.length > 0) {
+      agenda.push({
+        topic: 'Blockers - Need Answers',
+        minutes: Math.min(blockers.length * 3, 10),
+        items: blockers.map(b => b.title)
+      });
+    }
+
+    if (stale.length > 0) {
+      agenda.push({
+        topic: 'Stale Items - Must Address',
+        minutes: Math.min(stale.length * 2, 6),
+        items: stale.map(s => s.title)
+      });
+    }
+
+    const totalMinutes = agenda.reduce((sum, a) => sum + a.minutes, 0);
+
+    res.json({
+      agenda,
+      total_minutes: totalMinutes,
+      items_count: selections.length
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
