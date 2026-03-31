@@ -5916,23 +5916,35 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
 
     let cockpitData = null;
 
-    async function loadCockpit() {
+    // Client-side cockpit cache
+    let cockpitClientCache = {}; // clientId -> data
+
+    async function loadCockpit(forceRefresh) {
       if (!sharedClientId) return;
 
       const btn = document.getElementById('cockpitBtn');
       const panel = document.getElementById('prepRightPanel');
 
+      // If we have cached data and not forcing refresh, render instantly
+      if (!forceRefresh && cockpitClientCache[sharedClientId]) {
+        cockpitData = cockpitClientCache[sharedClientId];
+        renderCockpit(cockpitData);
+        return;
+      }
+
       btn.disabled = true;
-      btn.textContent = 'Loading cockpit...';
-      panel.innerHTML = '<div class="prep-spinner"><div class="spinner-icon" aria-hidden="true">&#9881;</div><p>Loading meeting cockpit...</p></div>';
+      btn.textContent = forceRefresh ? 'Regenerating...' : 'Loading cockpit...';
+      panel.innerHTML = '<div class="prep-spinner"><div class="spinner-icon" aria-hidden="true">&#9881;</div><p>' + (forceRefresh ? 'Regenerating talking points...' : 'Loading meeting cockpit...') + '</p></div>';
 
       try {
-        const res = await fetch(`${API}/cockpit/${sharedClientId}`);
+        const refreshParam = forceRefresh ? '?refresh=true' : '';
+        const res = await fetch(API + '/cockpit/' + sharedClientId + refreshParam);
         if (!res.ok) throw new Error('Failed to load cockpit');
 
         cockpitData = await res.json();
+        cockpitClientCache[sharedClientId] = cockpitData;
         renderCockpit(cockpitData);
-        showToast('Meeting cockpit loaded');
+        if (forceRefresh) showToast('Cockpit regenerated with fresh talking points');
       } catch (err) {
         panel.innerHTML = '<div class="prep-empty"><h3>Failed to load cockpit</h3><p>' + escapeHtml(err.message) + '</p></div>';
         showToast('Failed to load cockpit: ' + err.message, true);
@@ -5961,6 +5973,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
           <h2>Meeting Cockpit: ${escapeHtml(data.client?.name || sharedClientId)}</h2>
           <div class="cockpit-header-actions">
             <button class="cockpit-header-btn secondary" onclick="refreshPHStatus()">Refresh PH Status</button>
+            <button class="cockpit-header-btn secondary" onclick="loadCockpit(true)">Regenerate Talking Points</button>
             <button class="cockpit-header-btn primary" onclick="buildAgenda()">Build My Agenda</button>
           </div>
         </div>

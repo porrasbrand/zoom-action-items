@@ -1673,19 +1673,45 @@ router.delete('/reconcile/:clientId/link/:linkId', (req, res) => {
 
 // ============ COCKPIT (Phase 14B) ============
 
-// GET /api/cockpit/:clientId - Get full cockpit data (prep + PH links + selections + talking points)
+// Cockpit cache: store generated prep per client, reuse until explicitly refreshed
+const cockpitCache = new Map(); // clientId -> { data, generatedAt }
+const COCKPIT_CACHE_TTL = 4 * 60 * 60 * 1000; // 4 hours
+
+// GET /api/cockpit/:clientId - Get cockpit data (cached, no Gemini call on repeat visits)
 router.get('/cockpit/:clientId', async (req, res) => {
   try {
+    const clientId = req.params.clientId;
+    const forceRefresh = req.query.refresh === 'true';
     const database = getDatabase();
-    const cockpitData = await collectCockpitData(database, req.params.clientId);
+    const cockpitData = await collectCockpitData(database, clientId);
 
-    // Generate prep with talking points
-    const result = await generateMeetingPrep(cockpitData);
+    // Check cache
+    const cached = cockpitCache.get(clientId);
+    let prep, talkingPoints;
+
+    if (cached && !forceRefresh && (Date.now() - cached.generatedAt) < COCKPIT_CACHE_TTL) {
+      // Use cached prep and talking points
+      prep = cached.prep;
+      talkingPoints = cached.talkingPoints;
+    } else {
+      // Generate fresh (Gemini call)
+      const result = await generateMeetingPrep(cockpitData);
+      prep = result.json;
+      talkingPoints = result.json.talking_points || {};
+
+      // Cache it
+      cockpitCache.set(clientId, {
+        prep,
+        talkingPoints,
+        generatedAt: Date.now()
+      });
+    }
 
     res.json({
       ...cockpitData,
-      prep: result.json,
-      talking_points: result.json.talking_points || {}
+      prep,
+      talking_points: talkingPoints,
+      cached: !forceRefresh && cached && (Date.now() - cached.generatedAt) < COCKPIT_CACHE_TTL
     });
   } catch (err) {
     console.error('Cockpit error:', err);
