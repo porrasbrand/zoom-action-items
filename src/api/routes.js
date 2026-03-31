@@ -36,7 +36,7 @@ import {
   reconcileClient, refreshPHCache, getReconcileStatus,
   getAllPHLinksForClient, manualLink, removeLink
 } from '../lib/ph-reconciler.js';
-import { readdirSync, readFileSync as fsReadFileSync, existsSync } from 'fs';
+import { readdirSync, readFileSync as fsReadFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
@@ -1423,42 +1423,100 @@ router.post('/roadmap/items/:id/status', (req, res) => {
 
 // ============ MEETING PREP ============
 
-// GET /api/prep/:clientId - Generate fresh prep (returns JSON)
+// Helper: Get or generate prep (ONE Gemini call per day per client, shared across all buttons)
+const prepsDir = join(__dirname, '..', '..', 'data', 'preps');
+
+async function getOrGeneratePrep(clientId, forceRefresh = false) {
+  const today = new Date().toISOString().split('T')[0];
+
+  // Ensure preps directory exists
+  if (!existsSync(prepsDir)) {
+    mkdirSync(prepsDir, { recursive: true });
+  }
+
+  // Find existing prep for today
+  const files = existsSync(prepsDir) ? readdirSync(prepsDir) : [];
+  const todayFiles = files
+    .filter(f => f.startsWith(`${clientId}-${today}`) && f.endsWith('.json'))
+    .sort()
+    .reverse(); // Latest version first
+
+  // If exists and not forcing refresh, return cached
+  if (!forceRefresh && todayFiles.length > 0) {
+    const latestFile = todayFiles[0];
+    const content = fsReadFileSync(join(prepsDir, latestFile), 'utf-8');
+    const prep = JSON.parse(content);
+    return { prep, fromCache: true, filename: latestFile };
+  }
+
+  // Generate fresh prep
+  const database = getDatabase();
+  const prepData = await collectPrepData(database, clientId);
+  const result = await generateMeetingPrep(prepData);
+
+  // Determine version number
+  const existingVersions = todayFiles.map(f => {
+    const match = f.match(/-v(\d+)\.json$/);
+    return match ? parseInt(match[1]) : 1;
+  });
+  const nextVersion = existingVersions.length > 0 ? Math.max(...existingVersions) + 1 : 1;
+
+  // Save to disk
+  const filename = `${clientId}-${today}-v${nextVersion}.json`;
+  const filepath = join(prepsDir, filename);
+  writeFileSync(filepath, JSON.stringify(result.json, null, 2));
+
+  // Also save markdown version
+  const mdFilename = `${clientId}-${today}-v${nextVersion}.md`;
+  const mdFilepath = join(prepsDir, mdFilename);
+  writeFileSync(mdFilepath, formatAsMarkdown(result.json));
+
+  return { prep: result.json, fromCache: false, filename, version: nextVersion };
+}
+
+// GET /api/prep/:clientId - Get prep (cached or generate)
 router.get('/prep/:clientId', async (req, res) => {
   try {
-    const prepData = await collectPrepData(getDatabase(), req.params.clientId);
-    const result = await generateMeetingPrep(prepData);
-    res.json(result.json);
+    const { prep, fromCache, filename } = await getOrGeneratePrep(req.params.clientId, false);
+    res.json({ ...prep, _cached: fromCache, _filename: filename });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// GET /api/prep/:clientId/markdown - Generate fresh prep (returns Markdown)
+// GET /api/prep/:clientId/markdown - Get prep as Markdown (uses cached prep)
 router.get('/prep/:clientId/markdown', async (req, res) => {
   try {
-    const prepData = await collectPrepData(getDatabase(), req.params.clientId);
-    const result = await generateMeetingPrep(prepData);
-    const markdown = formatAsMarkdown(result.json);
+    const { prep } = await getOrGeneratePrep(req.params.clientId, false);
+    const markdown = formatAsMarkdown(prep);
     res.type('text/plain').send(markdown);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// GET /api/prep/:clientId/brief - Generate pre-huddle brief (returns text)
+// GET /api/prep/:clientId/brief - Get pre-huddle brief (uses cached prep, instant)
 router.get('/prep/:clientId/brief', async (req, res) => {
   try {
-    const prepData = await collectPrepData(getDatabase(), req.params.clientId);
-    const result = await generateMeetingPrep(prepData);
-    const brief = formatBrief(result.json);
+    const { prep } = await getOrGeneratePrep(req.params.clientId, false);
+    const brief = formatBrief(prep);
     res.type('text/plain').send(brief);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// POST /api/prep/:clientId/slack - Generate and post to Slack
+// GET /api/prep/:clientId/regenerate - Force regenerate prep (new version)
+router.get('/prep/:clientId/regenerate', async (req, res) => {
+  try {
+    const { prep, filename, version } = await getOrGeneratePrep(req.params.clientId, true);
+    res.json({ ...prep, _regenerated: true, _filename: filename, _version: version });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/prep/:clientId/slack - Post cached prep to Slack (uses cached, no Gemini call)
 router.post('/prep/:clientId/slack', async (req, res) => {
   try {
     const clientId = req.params.clientId;
@@ -1476,9 +1534,9 @@ router.post('/prep/:clientId/slack', async (req, res) => {
       return res.status(400).json({ error: 'No Slack channel configured for this client' });
     }
 
-    const prepData = await collectPrepData(getDatabase(), clientId);
-    const result = await generateMeetingPrep(prepData);
-    const slackMarkdown = formatForSlack(result.json);
+    // Use cached prep (or generate if none exists today)
+    const { prep } = await getOrGeneratePrep(clientId, false);
+    const slackMarkdown = formatForSlack(prep);
 
     // Post to Slack
     const slackToken = process.env.SLACK_BOT_TOKEN;
@@ -1511,7 +1569,7 @@ router.post('/prep/:clientId/slack', async (req, res) => {
       success: true,
       channel: client.slack_channel_id,
       ts: slackResult.ts,
-      prep: result.json
+      prep
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1673,45 +1731,23 @@ router.delete('/reconcile/:clientId/link/:linkId', (req, res) => {
 
 // ============ COCKPIT (Phase 14B) ============
 
-// Cockpit cache: store generated prep per client, reuse until explicitly refreshed
-const cockpitCache = new Map(); // clientId -> { data, generatedAt }
-const COCKPIT_CACHE_TTL = 4 * 60 * 60 * 1000; // 4 hours
-
-// GET /api/cockpit/:clientId - Get cockpit data (cached, no Gemini call on repeat visits)
+// GET /api/cockpit/:clientId - Get cockpit data (uses unified disk cache, instant after first gen)
 router.get('/cockpit/:clientId', async (req, res) => {
   try {
     const clientId = req.params.clientId;
-    const forceRefresh = req.query.refresh === 'true';
     const database = getDatabase();
+
+    // Get cockpit data (roadmap, PH links, selections)
     const cockpitData = await collectCockpitData(database, clientId);
 
-    // Check cache
-    const cached = cockpitCache.get(clientId);
-    let prep, talkingPoints;
-
-    if (cached && !forceRefresh && (Date.now() - cached.generatedAt) < COCKPIT_CACHE_TTL) {
-      // Use cached prep and talking points
-      prep = cached.prep;
-      talkingPoints = cached.talkingPoints;
-    } else {
-      // Generate fresh (Gemini call)
-      const result = await generateMeetingPrep(cockpitData);
-      prep = result.json;
-      talkingPoints = result.json.talking_points || {};
-
-      // Cache it
-      cockpitCache.set(clientId, {
-        prep,
-        talkingPoints,
-        generatedAt: Date.now()
-      });
-    }
+    // Get prep from unified disk cache (no Gemini call if already generated today)
+    const { prep, fromCache } = await getOrGeneratePrep(clientId, false);
 
     res.json({
       ...cockpitData,
       prep,
-      talking_points: talkingPoints,
-      cached: !forceRefresh && cached && (Date.now() - cached.generatedAt) < COCKPIT_CACHE_TTL
+      talking_points: prep.talking_points || {},
+      _cached: fromCache
     });
   } catch (err) {
     console.error('Cockpit error:', err);

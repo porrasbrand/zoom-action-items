@@ -2456,6 +2456,35 @@
   cursor: not-allowed;
 }
 
+.prep-btn-group {
+  display: flex;
+  gap: 4px;
+}
+
+.prep-btn-group .prep-btn.generate {
+  flex: 1;
+  border-radius: 6px 0 0 6px;
+}
+
+.prep-btn-group .prep-btn.regenerate {
+  width: 36px;
+  padding: 10px 0;
+  border-radius: 0 6px 6px 0;
+  background: #1a7f37;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.prep-btn-group .prep-btn.regenerate:hover:not(:disabled) {
+  background: #238636;
+}
+
+.prep-btn-group .prep-btn.regenerate:disabled {
+  background: #21262d;
+  color: #484f58;
+}
+
 .prep-btn.slack {
   background: #21262d;
   color: #c9d1d9;
@@ -3331,9 +3360,14 @@
           <select id="prepClientSelect" onchange="onPrepClientChange(this.value)">
             <option value="">Select a client...</option>
           </select>
-          <button class="prep-btn generate" id="generatePrepBtn" onclick="generatePrep()" disabled>
-            Generate Fresh Prep
-          </button>
+          <div class="prep-btn-group">
+            <button class="prep-btn generate" id="generatePrepBtn" onclick="generatePrep()" disabled>
+              Load Prep
+            </button>
+            <button class="prep-btn regenerate" id="regeneratePrepBtn" onclick="regeneratePrep()" disabled title="Regenerate (new AI call)">
+              ↻
+            </button>
+          </div>
           <button class="prep-btn slack" id="postSlackBtn" onclick="postPrepToSlack()" disabled>
             Post to Slack
           </button>
@@ -5480,6 +5514,7 @@
           document.getElementById('prepClientSelect').value = sharedClientId;
           // Enable buttons when client is already selected
           document.getElementById('generatePrepBtn').disabled = false;
+          document.getElementById('regeneratePrepBtn').disabled = false;
           document.getElementById('generateBriefBtn').disabled = false;
           document.getElementById('cockpitBtn').disabled = false;
           document.getElementById('postSlackBtn').disabled = false;
@@ -5885,6 +5920,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     function onPrepClientChange(clientId) {
       sharedClientId = clientId || null;
       document.getElementById('generatePrepBtn').disabled = !clientId;
+      document.getElementById('regeneratePrepBtn').disabled = !clientId;
       document.getElementById('generateBriefBtn').disabled = !clientId;
       document.getElementById('cockpitBtn').disabled = !clientId;
       document.getElementById('postSlackBtn').disabled = !clientId;
@@ -5912,28 +5948,55 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       const panel = document.getElementById('prepRightPanel');
 
       btn.disabled = true;
-      btn.textContent = 'Generating prep...';
-      panel.innerHTML = '<div class="prep-spinner"><div class="spinner-icon" aria-hidden="true">&#9881;</div><p>Generating meeting prep via AI...<br>This may take 5-10 seconds</p></div>';
+      btn.textContent = 'Loading...';
+      panel.innerHTML = '<div class="prep-spinner"><div class="spinner-icon" aria-hidden="true">&#9881;</div><p>Loading meeting prep...</p></div>';
 
       try {
         const res = await fetch(`${API}/prep/${sharedClientId}`, { signal: prepAbortController.signal });
-        if (!res.ok) throw new Error('Failed to generate prep');
+        if (!res.ok) throw new Error('Failed to load prep');
 
         const data = await res.json();
         currentPrepData = data;
         renderPrepDocument(data);
-        showToast('Meeting prep generated');
+
+        if (data._cached) {
+          showToast('Loaded today\'s prep (instant)');
+        } else {
+          showToast('Meeting prep generated');
+        }
 
         // Refresh history
         loadPrepHistory(sharedClientId);
       } catch (err) {
-        if (err.name === 'AbortError') return; // User navigated away, ignore
-        panel.innerHTML = '<div class="prep-empty"><h3>Failed to generate prep</h3><p>' + escapeHtml(err.message) + '</p></div>';
-        showToast('Failed to generate prep: ' + err.message, true);
+        if (err.name === 'AbortError') return;
+        panel.innerHTML = '<div class="prep-empty"><h3>Failed to load prep</h3><p>' + escapeHtml(err.message) + '</p></div>';
+        showToast('Failed to load prep: ' + err.message, true);
       } finally {
         prepAbortController = null;
         btn.disabled = false;
-        btn.textContent = 'Generate Fresh Prep';
+        btn.textContent = 'Load Prep';
+      }
+    }
+
+    async function regeneratePrep() {
+      if (!sharedClientId) return;
+
+      const panel = document.getElementById('prepRightPanel');
+      panel.innerHTML = '<div class="prep-spinner"><div class="spinner-icon" aria-hidden="true">&#9881;</div><p>Regenerating meeting prep via AI...<br>This may take 10-15 seconds</p></div>';
+
+      try {
+        const res = await fetch(`${API}/prep/${sharedClientId}/regenerate`);
+        if (!res.ok) throw new Error('Failed to regenerate');
+
+        const data = await res.json();
+        currentPrepData = data;
+        renderPrepDocument(data);
+        showToast('New prep version generated (v' + (data._version || '?') + ')');
+
+        loadPrepHistory(sharedClientId);
+      } catch (err) {
+        panel.innerHTML = '<div class="prep-empty"><h3>Failed to regenerate</h3><p>' + escapeHtml(err.message) + '</p></div>';
+        showToast('Failed to regenerate: ' + err.message, true);
       }
     }
 
