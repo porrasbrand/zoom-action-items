@@ -3061,16 +3061,19 @@
         const data = await res.json();
         clients = data.clients || [];
 
+        // Populate filterClient if it exists (legacy)
         const select = document.getElementById('filterClient');
-        select.innerHTML = '<option value="">All Clients</option>';
-        clients.forEach(c => {
-          if (c.total_meetings > 0) {
-            const opt = document.createElement('option');
-            opt.value = c.id;
-            opt.textContent = `${escapeHtml(c.name)} (${c.total_meetings})`;
-            select.appendChild(opt);
-          }
-        });
+        if (select) {
+          select.innerHTML = '<option value="">All Clients</option>';
+          clients.forEach(c => {
+            if (c.total_meetings > 0) {
+              const opt = document.createElement('option');
+              opt.value = c.id;
+              opt.textContent = `${escapeHtml(c.name)} (${c.total_meetings})`;
+              select.appendChild(opt);
+            }
+          });
+        }
       } catch (err) {
         console.error('Failed to load clients:', err);
       }
@@ -5072,18 +5075,31 @@
         populatePrepClientDropdown();
         if (sharedClientId) {
           document.getElementById('prepClientSelect').value = sharedClientId;
+          // Enable buttons when client is already selected
+          document.getElementById('generatePrepBtn').disabled = false;
+          document.getElementById('postSlackBtn').disabled = false;
           loadPrepHistory(sharedClientId);
         }
       }
     }
 
-    // Handle hash on page load
+    // Handle hash on page load and hash changes
     function initTabFromHash() {
       const hash = window.location.hash.replace('#', '');
       if (hash === 'roadmap' || hash === 'prep') {
         switchTab(hash);
       }
     }
+
+    // Listen for hash changes (back/forward navigation)
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash === 'roadmap' || hash === 'prep') {
+        switchTab(hash);
+      } else if (!hash) {
+        switchTab('meetings');
+      }
+    });
 
     // ============ ROADMAP FUNCTIONS ============
 
