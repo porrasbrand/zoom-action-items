@@ -3098,6 +3098,18 @@
   color: #58a6ff;
   text-decoration-style: solid;
 }
+.cockpit-ph-scope {
+  font-size: 11px;
+  color: #8b949e;
+  margin-top: 2px;
+  font-style: italic;
+  line-height: 1.4;
+}
+.cockpit-ph-deliverables {
+  font-size: 10px;
+  color: #6e7681;
+  margin-top: 2px;
+}
 .cockpit-proposal-meta {
   font-size: 11px;
   color: #6e7681;
@@ -6129,6 +6141,13 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
           const phStatus = phLink.ph_completed ? 'Complete' : (phLink.ph_progress ? phLink.ph_progress + '%' : 'Open');
           const phUrl = 'http://breakthrough3x.proofhub.com/bapplite/#app/todos/project-' + (phLink.ph_project_id || '') + '/list-' + (phLink.ph_task_list_id || '') + '/task-' + phLink.ph_task_id;
           phHtml = `<div class="cockpit-ph ${phClass}"><span class="cockpit-ph-icon">${phIcon}</span> PH: <a href="${phUrl}" target="_blank" class="cockpit-ph-link">${escapeHtml(phLink.ph_task_title || 'View Task')}</a> — ${phStatus}</div>`;
+          // Add scope summary if available (from deep reconciliation)
+          if (phLink.scope_summary) {
+            phHtml += `<div class="cockpit-ph-scope">${escapeHtml(phLink.scope_summary)}</div>`;
+          }
+          if (phLink.deliverables && phLink.deliverables.length > 0) {
+            phHtml += `<div class="cockpit-ph-deliverables">${phLink.deliverables.length} deliverables in this task</div>`;
+          }
         } else {
           phHtml = `<div class="cockpit-ph none"><span class="cockpit-ph-icon">📋</span> No PH task linked</div>`;
         }

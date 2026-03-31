@@ -8,6 +8,7 @@
  *   node src/ph-reconcile.js --status prosper-group            (show status only)
  */
 
+import 'dotenv/config';
 import { getDatabase } from './api/db-queries.js';
 import { reconcileClient, refreshPHCache, getReconcileStatus } from './lib/ph-reconciler.js';
 import fs from 'fs';
@@ -40,12 +41,14 @@ async function main() {
 ProofHub Reconciliation CLI
 
 Usage:
-  node src/ph-reconcile.js --client <client-id>        Run reconciliation
-  node src/ph-reconcile.js --client <client-id> --refresh   Refresh PH cache only
-  node src/ph-reconcile.js --status <client-id>        Show reconciliation status
+  node src/ph-reconcile.js --client <client-id>              Run reconciliation
+  node src/ph-reconcile.js --client <client-id> --deep       Run with deep sync (descriptions + comments + AI scope summaries)
+  node src/ph-reconcile.js --client <client-id> --refresh    Refresh PH cache only
+  node src/ph-reconcile.js --status <client-id>              Show reconciliation status
 
 Examples:
   node src/ph-reconcile.js --client prosper-group
+  node src/ph-reconcile.js --client prosper-group --deep
   node src/ph-reconcile.js --status prosper-group
 `);
     process.exit(0);
@@ -107,15 +110,19 @@ Examples:
   }
 
   // Full reconciliation
+  const deep = args.includes('--deep');
   try {
-    const result = await reconcileClient(db, clientId, client.ph_project_id);
+    const result = await reconcileClient(db, clientId, client.ph_project_id, { deep });
 
-    console.log(`\n✅ Reconciliation Complete\n`);
+    console.log(`\n✅ Reconciliation Complete${deep ? ' (Deep Mode)' : ''}\n`);
     console.log(`   Roadmap items:  ${result.total_roadmap}`);
     console.log(`   PH tasks:       ${result.total_ph}`);
     console.log(`   Linked:         ${result.linked}`);
     console.log(`   Unlinked:       ${result.unlinked}`);
     console.log(`   New links:      ${result.new_links}`);
+    if (deep) {
+      console.log(`   Scope summaries: ${result.scope_summaries || 0}`);
+    }
 
     if (result.links.length > 0) {
       console.log(`\n   New Matches:`);

@@ -1,0 +1,205 @@
+{
+  "status_report": {
+    "completed": [
+      {
+        "title": "Finalize Indoor Air Quality (IAQ) digital book",
+        "date": "2026-03-10",
+        "category": "email-marketing"
+      },
+      {
+        "title": "Review and approve March Raise-Hand emails",
+        "date": "2026-03-11",
+        "category": "email-marketing"
+      },
+      {
+        "title": "Update branding on IAQ landing pages",
+        "date": "2026-03-31",
+        "category": "website"
+      },
+      {
+        "title": "Tweak content emails for AC and IAQ focus",
+        "date": "2026-03-05",
+        "category": "email-marketing"
+      },
+      {
+        "title": "Capture and send localized truck photos",
+        "date": "2026-03-05",
+        "category": "creative"
+      }
+    ],
+    "in_progress": [
+      {
+        "title": "Switch ad focus from furnaces to AC",
+        "owner": "Philip Mutrie",
+        "category": "paid-ads",
+        "eta": "Immediate"
+      },
+      {
+        "title": "Create 5-email drip sequence for IAQ digital book",
+        "owner": "Philip Mutrie",
+        "category": "email-marketing",
+        "eta": "Week of March 31"
+      }
+    ],
+    "needs_client_action": [
+      {
+        "title": "Provide updated family and team photos",
+        "reason": "Required to personalize the IAQ landing pages and future email content to build local trust.",
+        "since": "2026-03-31"
+      },
+      {
+        "title": "Confirm availability for Orlando event",
+        "reason": "Logistics for the industry event need to be finalized; this has been pending for two weeks.",
+        "since": "2026-03-17"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [
+      {
+        "title": "Confirm availability for Orlando event",
+        "agreed_date": "2026-03-31",
+        "silent_meetings": 2
+      }
+    ],
+    "b3x_overdue": [
+      {
+        "title": "Service Titan integration for book funnel",
+        "owner": "Juan",
+        "since": "2026-03-18"
+      },
+      {
+        "title": "April Raise-Hand and Content Emails",
+        "owner": "Bill Soady",
+        "since": "2026-03-20"
+      },
+      {
+        "title": "Facebook Ad Campaign for IAQ Book",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-25"
+      }
+    ],
+    "client_overdue": [
+      {
+        "title": "Confirm availability for Orlando event",
+        "action_needed": "Jim to confirm schedule for event attendance",
+        "since": "2026-03-17"
+      }
+    ]
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "Activate Full Reporting & Analytics Service",
+      "reasoning": "We are currently trying to pull 'Service Titan lead correlation reports' manually. Activating our Reporting service will automate this data flow, allowing us to see exactly which Google Ads/Emails are turning into booked AC jobs as we enter peak season.",
+      "category": "reporting",
+      "task_type": "monthly-report"
+    },
+    {
+      "priority": "HIGH",
+      "title": "Execute $89 AC Tune-Up Landing Page Audit",
+      "reasoning": "Since the team just finalized the $89 dual offer in the last meeting, we need to ensure the conversion path on the website is frictionless before we ramp up the AC ad spend.",
+      "category": "website",
+      "task_type": "website-content-update"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "IAQ Funnel - Service Titan Automation Test",
+      "reasoning": "The IAQ book is done and branding is updated. The critical next step is ensuring the 'Service Titan integration' (currently overdue) is verified so leads don't get lost in the shuffle once Facebook Ads go live.",
+      "category": "crm-automation",
+      "task_type": "integration-setup"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Wins: IAQ Book Completion & AC Ad Pivot",
+      "minutes": 5,
+      "notes": "Highlight the completion of the digital book and the successful switch from furnace to AC focus."
+    },
+    {
+      "topic": "Accountability: Overdue Integrations & April Emails",
+      "minutes": 10,
+      "notes": "Address the 3 overdue B3X items and get Sarah/Jim's input on family photos."
+    },
+    {
+      "topic": "Proposal: Full-Funnel Reporting Implementation",
+      "minutes": 10,
+      "notes": "Discuss moving from manual reporting to an automated dashboard to track AC ROI."
+    },
+    {
+      "topic": "Logistics: Orlando Event & Next Steps",
+      "minutes": 5,
+      "notes": "Finalize the stale Orlando item and confirm action items."
+    }
+  ],
+  "estimated_meeting_length_minutes": 30,
+  "projected_roadmap": [
+    {
+      "title": "Website Conversion Rate Optimization (CRO) Audit",
+      "what": "A comprehensive review of the top 3 high-traffic landing pages ($89 Tune-up, IAQ Funnel, Homepage) to identify friction points. Deliverable includes a heat-map analysis and a list of 5-10 specific UI/UX fixes.",
+      "why_now": "Now that we've 'Updated branding on IAQ landing pages' and are 'Switching ad focus to AC,' we are driving more traffic than ever. A 1% increase in conversion rate during peak AC season could mean dozens of additional jobs.",
+      "category": "website",
+      "task_type": "website-content-update",
+      "effort_b3x": "5-hour audit in week 1; 3 hours to implement approved UI changes in week 2.",
+      "effort_client": "Review of the audit report and 15-minute approval call.",
+      "prerequisites": "None — can start immediately",
+      "impact": "Higher lead volume from existing ad spend and better ROI on the new IAQ funnel by removing technical hurdles for users.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "Jim, now that the IAQ funnel is ready and we're shifting the budget toward AC, I want to make sure the website is actually catching all that traffic. I’d like to run a quick CRO audit on our top pages to ensure there's nothing stopping a customer from booking. It's a low-effort move that usually pays for itself in just a few extra leads."
+    },
+    {
+      "title": "Service Titan ROI Dashboard Setup",
+      "what": "Integration of Service Titan revenue data with Google Ads and Email Marketing metrics. We will build a unified dashboard that shows 'Lead to Revenue' by source.",
+      "why_now": "In the last meeting, we discussed 'Service Titan lead correlation.' Doing this manually is slow. With the $89 promo live, you need to see exactly which emails are resulting in service calls vs. just clicks.",
+      "category": "reporting",
+      "task_type": "monthly-report",
+      "effort_b3x": "10 hours for technical API configuration and dashboard visualization design.",
+      "effort_client": "Providing API credentials and defining 'Key Success Metrics' (e.g., booked job vs. completed revenue).",
+      "prerequisites": "Service Titan integration for book funnel must be completed first.",
+      "impact": "Eliminates guesswork in the marketing budget. You'll know exactly how many dollars in AC repairs came from the IAQ book funnel.",
+      "priority": "GROWTH",
+      "pitch_script": "We’ve been talking about pulling these correlation reports manually, but I think it’s time we automate it. If we set up a full ROI dashboard, you can see in real-time which campaigns are actually putting techs in trucks. It takes the mystery out of the marketing spend just as we hit your busiest season."
+    },
+    {
+      "title": "SMS Follow-up Automation for IAQ Leads",
+      "what": "Implementation of a 2-step SMS sequence triggered immediately when someone downloads the IAQ book. Includes script writing and setup in the CRM/Service Titan environment.",
+      "why_now": "We are about to launch the 'Facebook Ad Campaign for IAQ Book.' Since these are top-of-funnel leads, an immediate text message follow-up has a 4x higher engagement rate than email alone, especially for HVAC repairs.",
+      "category": "crm-automation",
+      "task_type": "integration-setup",
+      "effort_b3x": "3 hours to draft scripts and configure the SMS trigger logic.",
+      "effort_client": "Review of the 2 short SMS scripts and approval of the 'from' phone number.",
+      "prerequisites": "Facebook Ad Campaign for IAQ Book must be finalized.",
+      "impact": "Significant increase in speed-to-lead. By engaging via SMS, we move the customer from 'reading a book' to 'requesting an IAQ audit' much faster.",
+      "priority": "STRATEGIC",
+      "pitch_script": "Once the Facebook ads go live for the book, those leads will be coming in hot. I’d like to add a quick SMS follow-up to that sequence. It’s a very natural way to ask if they have questions about their air quality right when they download the book, and it usually gets a much faster response than email."
+    }
+  ],
+  "talking_points": {
+    "Finalize Indoor Air Quality (IAQ) digital book": "Great news — the IAQ digital book is fully finalized and ready to serve as the anchor for our new lead funnel.",
+    "Switch ad focus from furnaces to AC": "We've officially pivoted the Google Ads spend from furnaces to AC to stay ahead of this warm front.",
+    "April Raise-Hand and Content Emails": "Bill and I are putting the finishing touches on the April emails; I'll need your quick sign-off on those by Thursday so we don't miss the first send date.",
+    "Service Titan integration for book funnel": "Juan is still smoothing out the Service Titan connection for the book funnel—we want to make sure those leads land directly in your dispatch software without a hitch.",
+    "Provide updated family and team photos": "Sarah, once you have those new family and truck photos ready, send them over—they're the 'secret sauce' for making those landing pages feel local and personal.",
+    "Confirm availability for Orlando event": "I wanted to flag the Orlando event again—have you had a chance to check your calendar? We want to make sure we get the early registration handled.",
+    "Website Conversion Rate Optimization (CRO) Audit": "Jim, now that the IAQ funnel is ready and we're shifting budget toward AC, I want to make sure the website is actually catching all that traffic with a quick CRO audit.",
+    "Service Titan ROI Dashboard Setup": "We’ve been talking about pulling correlation reports manually, but I think it’s time we automate it with a real-time ROI dashboard so you can see exactly which ads are booking jobs.",
+    "SMS Follow-up Automation for IAQ Leads": "Once the Facebook ads go live for the book, I'd like to add an automated SMS follow-up to catch those leads while they're still on their phones."
+  },
+  "meta": {
+    "client_id": "pearce-hvac",
+    "client_name": "Pearce HVAC",
+    "generated_at": "2026-03-31T14:20:30.092Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-17T18:14:36Z",
+    "days_since_last_meeting": 13,
+    "meetings_analyzed": 3,
+    "roadmap_stats": {
+      "total": 15,
+      "done": 5,
+      "in_progress": 2,
+      "blocked": 0,
+      "agreed": 8,
+      "stale": 1
+    }
+  }
+}

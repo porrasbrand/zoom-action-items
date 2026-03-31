@@ -233,6 +233,14 @@ export async function collectCockpitData(db, clientId) {
   // Create a map of PH links keyed by roadmap_item_id
   const phLinkMap = {};
   for (const link of phLinks) {
+    // Parse deliverables JSON if present
+    let deliverables = null;
+    if (link.ph_deliverables) {
+      try {
+        deliverables = JSON.parse(link.ph_deliverables);
+      } catch (e) { /* ignore parse errors */ }
+    }
+
     phLinkMap[link.roadmap_item_id] = {
       ph_task_id: link.ph_task_id,
       ph_task_title: link.ph_task_title,
@@ -242,7 +250,9 @@ export async function collectCockpitData(db, clientId) {
       ph_project_id: link.ph_project_id || null,
       ph_task_list_id: link.ph_task_list_id || null,
       match_method: link.match_method,
-      match_confidence: link.match_confidence
+      match_confidence: link.match_confidence,
+      scope_summary: link.ph_scope_summary || null,
+      deliverables: deliverables
     };
   }
 

@@ -108,12 +108,39 @@ export function initRoadmapTables(db) {
       percent_progress INTEGER DEFAULT 0,
       assigned_names TEXT,
       task_list_name TEXT,
+      task_list_id TEXT,
       start_date TEXT,
       due_date TEXT,
       comments_count INTEGER DEFAULT 0,
-      last_synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      last_synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      -- Phase 14 Deep Reconciliation columns
+      description_text TEXT,
+      comments_text TEXT,
+      scope_summary TEXT,
+      deliverables TEXT,
+      context_synced_at DATETIME
     )
   `);
+
+  // ALTER TABLE for existing databases (add deep recon columns if missing)
+  try {
+    db.exec(`ALTER TABLE ph_task_cache ADD COLUMN description_text TEXT`);
+  } catch (e) { /* column exists */ }
+  try {
+    db.exec(`ALTER TABLE ph_task_cache ADD COLUMN comments_text TEXT`);
+  } catch (e) { /* column exists */ }
+  try {
+    db.exec(`ALTER TABLE ph_task_cache ADD COLUMN scope_summary TEXT`);
+  } catch (e) { /* column exists */ }
+  try {
+    db.exec(`ALTER TABLE ph_task_cache ADD COLUMN deliverables TEXT`);
+  } catch (e) { /* column exists */ }
+  try {
+    db.exec(`ALTER TABLE ph_task_cache ADD COLUMN context_synced_at DATETIME`);
+  } catch (e) { /* column exists */ }
+  try {
+    db.exec(`ALTER TABLE ph_task_cache ADD COLUMN task_list_id TEXT`);
+  } catch (e) { /* column exists */ }
 
   db.exec(`CREATE INDEX IF NOT EXISTS idx_ph_cache_client ON ph_task_cache(client_id)`);
   db.exec(`CREATE INDEX IF NOT EXISTS idx_ph_cache_project ON ph_task_cache(project_id)`);

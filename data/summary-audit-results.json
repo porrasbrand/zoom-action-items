@@ -1,0 +1,985 @@
+{
+  "results": [
+    {
+      "meetingId": 35,
+      "topic": "Marie - Incontrera Consulting - Breakthrough Session",
+      "client": "Unmatched",
+      "duration": 57,
+      "danPresent": false,
+      "speakers": {
+        "Philip Mutrie": 342,
+        "Bill Soady": 24,
+        "Marie Incontrera": 103,
+        "Marie Grace LaFerrara": 104
+      },
+      "totalLines": 573,
+      "has_summary": true,
+      "summary_speaker": "Philip Mutrie",
+      "summary_starts_at": "00:56:32.020",
+      "summary_position_percent": 95,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Marie Incontrera to send offers (297 bestseller, book a call, free chapter) through to the team",
+        "Philip Mutrie's team to create a couple of raise hand emails based on the offers",
+        "Philip Mutrie's team to get the leads cleaned, prepped, and imported into GoHighLevel",
+        "Team to determine when the leads will be transitioned, cleaned, and imported to determine offer extension strategy"
+      ],
+      "action_items_count_in_summary": 4,
+      "other_speakers_respond": [
+        "Marie Grace LaFerrara: acknowledged",
+        "Marie Incontrera: confirmed"
+      ],
+      "confidence": 0.95,
+      "notes": "Philip Mutrie provides a recap of action items near the end of the meeting, prompted by a question from Marie Incontrera about lead generation. While not explicitly labeled a \"summary,\" it functions as one, detailing who is responsible for which tasks moving forward. It's interspersed with discussion."
+    },
+    {
+      "meetingId": 34,
+      "topic": "B3X Team & Leadership Huddle | 2 Part Huddle - Team & B3X",
+      "client": "B3X Team Leadership Huddle",
+      "duration": 77,
+      "danPresent": true,
+      "speakers": {
+        "Philip Mutrie": 89,
+        "Bill Soady": 30,
+        "Richard": 226,
+        "Manuel Porras": 25,
+        "Dan Kuschell": 341
+      },
+      "totalLines": 711,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "01:16:43.160",
+      "summary_position_percent": 94,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Ask Ashley for the last 4 messages that were sent for the PMA",
+        "Ask Ashley for a screenshot of where all these PMA messages are actually at for us and our team",
+        "Talk to Richard, Juan, and Manuel to get assistance with tasks"
+      ],
+      "action_items_count_in_summary": 3,
+      "other_speakers_respond": [
+        "Philip Mutrie: Yep."
+      ],
+      "confidence": 0.9,
+      "notes": "Dan Kuschell provides a recap of the issues discussed and action items near the end of the meeting, focusing on delegation and collaboration."
+    },
+    {
+      "meetingId": 33,
+      "topic": "Pearce HVAC | Breakthrough3x Huddle",
+      "client": "Pearce HVAC",
+      "duration": 28,
+      "danPresent": false,
+      "speakers": {
+        "Philip Mutrie": 156,
+        "Bill Soady": 27,
+        "offic": 103,
+        "AL-Jim pearce": 10
+      },
+      "totalLines": 296,
+      "has_summary": true,
+      "summary_speaker": "Philip Mutrie",
+      "summary_starts_at": "00:27:04.250",
+      "summary_position_percent": 90,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Double checking on the ad campaign for the book",
+        "Look out for welcome emails."
+      ],
+      "action_items_count_in_summary": 2,
+      "other_speakers_respond": [
+        "offic: confirmed",
+        "Bill Soady: Bye, guys, have a good day.",
+        "AL-Jim pearce: Sorry"
+      ],
+      "confidence": 0.8,
+      "notes": "Philip asks for ratings and takeaways, and then reviews the status of the book campaign at the end of the call, indirectly summarizing key discussion points and expectations."
+    },
+    {
+      "meetingId": 32,
+      "topic": "Prosper Group |  B3X Weekly Huddle",
+      "client": "Prosper Group",
+      "duration": 48,
+      "danPresent": true,
+      "speakers": {
+        "Philip Mutrie": 71,
+        "Anthony R": 29,
+        "Kurt": 4,
+        "Kristen Luidhardt": 88,
+        "Dan Kuschell": 259
+      },
+      "totalLines": 451,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "00:44:54.190",
+      "summary_position_percent": 90,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Ensure ads are set to turn off once the webinar starts on the 20th.",
+        "Review ads that are performing best.",
+        "Emphasize best performing ads and cut out underperforming ones to maximize the small budget.",
+        "Be ready to make changes to increase performance and be prepared for a potential budget increase.",
+        "Nudge Jerry on Thursday to send in paperwork for Orlando event.",
+        "Hype up what's coming for Orlando."
+      ],
+      "action_items_count_in_summary": 6,
+      "other_speakers_respond": [
+        "Philip Mutrie: No, I think that covers it.",
+        "Richard: acknowledged"
+      ],
+      "confidence": 0.9,
+      "notes": "Dan Kuschell provides a recap and action items related to ad performance and client communication. Philip Mutrie confirms the summary and Dan prompts for any additional items."
+    },
+    {
+      "meetingId": 31,
+      "topic": "London's Flooring Canada | Growth Huddle ",
+      "client": "London Flooring",
+      "duration": 43,
+      "danPresent": false,
+      "speakers": {
+        "Philip Mutrie": 227,
+        "Sarah Young": 9,
+        "Home": 248
+      },
+      "totalLines": 484,
+      "has_summary": true,
+      "summary_speaker": "Philip Mutrie",
+      "summary_starts_at": "00:41:50.480",
+      "summary_position_percent": 93,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [],
+      "action_items_count_in_summary": 0,
+      "other_speakers_respond": [
+        "Home: rating"
+      ],
+      "confidence": 0.7,
+      "notes": "Philip asks for a rating and \"greatest takeaway\", acting as a light form of recap at the very end of the call."
+    },
+    {
+      "meetingId": 30,
+      "topic": "GS Home Services/Amy/Ryan | Breakthrough3x Huddle",
+      "client": "GS Home Services",
+      "duration": 30,
+      "danPresent": false,
+      "speakers": {
+        "Philip Mutrie": 130,
+        "Sarah Young": 2,
+        "Ryan Phone": 72,
+        "Amy": 119
+      },
+      "totalLines": 323,
+      "has_summary": true,
+      "summary_speaker": "Philip Mutrie",
+      "summary_starts_at": "00:26:36.820",
+      "summary_position_percent": 90,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Go through the Q1 to Q2 CEO Checklist and Blueprint walkthrough video",
+        "Go through the CEO checklist and the blueprint",
+        "Download CEO checklist",
+        "Download Blueprint",
+        "Fill in the CEO checklist",
+        "Save the CEO checklist",
+        "Send the information back (CEO checklist)"
+      ],
+      "action_items_count_in_summary": 7,
+      "other_speakers_respond": [
+        "Amy: Alrighty. We'll work on that. Perfect.",
+        "Ryan Phone: Okay."
+      ],
+      "confidence": 0.95,
+      "notes": "The summary is delivered by Philip and includes multiple action items. It references a checklist and blueprint that Amy and Ryan are expected to complete. The summary is not a numbered list but a verbal recap of items discussed."
+    },
+    {
+      "meetingId": 29,
+      "topic": "Dr. Ramah Wagner ",
+      "client": "Unmatched",
+      "duration": 79,
+      "danPresent": false,
+      "speakers": {
+        "Philip Mutrie": 277,
+        "Bill Soady": 77,
+        "Dr Ramah Wagner": 301
+      },
+      "totalLines": 655,
+      "has_summary": true,
+      "summary_speaker": "Philip Mutrie",
+      "summary_starts_at": "01:12:14.450",
+      "summary_position_percent": 90,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "GCAL invitation out to you for Friday at 2 o'clock p.m.",
+        "focus on getting an LSA account open",
+        "license for chiropractic will be needed",
+        "your EIN, proof of… proof of business, we'll need that",
+        "video of you just taking your phone",
+        "customer service rep, along with an email address"
+      ],
+      "action_items_count_in_summary": 6,
+      "other_speakers_respond": [
+        "Dr. Ramah Wagner: Alright, awesome.",
+        "Dr. Ramah Wagner: I'm very excited. I think this was a great conversation. Awesome."
+      ],
+      "confidence": 0.9,
+      "notes": "Philip Mutrie provides a recap of action items and next steps towards the end of the meeting. The summary focuses on the LSA account setup and required documents and actions from Dr. Wagner."
+    },
+    {
+      "meetingId": 28,
+      "topic": "Empower Your Home | Breakthrough3x Huddle",
+      "client": "Empower",
+      "duration": 61,
+      "danPresent": true,
+      "speakers": {
+        "Dan Kuschell": 272,
+        "Philip Mutrie": 17,
+        "megantolley": 272
+      },
+      "totalLines": 561,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "00:56:30.280",
+      "summary_position_percent": 90,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Review the 800 numbers as well, and if those can be flipped, we'll let you know.",
+        "We'll review CallRail.",
+        "Review LSA, do a deeper dive on the data, and report the findings.",
+        "Remove all of Kern County."
+      ],
+      "action_items_count_in_summary": 4,
+      "other_speakers_respond": [
+        "Megan: Okay, cool."
+      ],
+      "confidence": 0.9,
+      "notes": "Dan provides a recap of action items from 00:56:30.280 - 00:56:53.280 and then further directions to Jacob and Manuel from 00:57:03.220 - 01:00:03.530."
+    },
+    {
+      "meetingId": 27,
+      "topic": "Conner Marketing | Breakthrough3x Growth Huddle",
+      "client": "Jay Conner / Conner Marketing",
+      "duration": 42,
+      "danPresent": true,
+      "speakers": {
+        "Dan Kuschell": 210,
+        "Jay Conner": 193
+      },
+      "totalLines": 403,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "00:40:02.090",
+      "summary_position_percent": 90,
+      "summary_style": "numbered_list",
+      "action_items_in_summary": [
+        "Jay's gonna record a voice broadcast today or tomorrow, and we need to get a voice broadcast out on March 20th, to just the people registered for the training.",
+        "We need to also program a text. It sounds like we're going to want to start that text, because it's going to go to the full list as a confirmation, hey, we're going live soon with our new training. That would go out on the 21st.",
+        "Phil and Bill, you guys handling the emailing, so one of the email campaigns that seemed to be a concern slash stressor a bit, if I heard it correctly yesterday, was related to this Private Money Academy messaging that goes out 3 times a week.",
+        "They have the next Private Money Academy going, on March 25th at 4 p.m. Eastern.",
+        "They need a Tuesday, Tuesday email in the afternoon. Of course, all… each of these will have the Zoom link. So there'd be an email Tuesday, an email in the afternoon, Wednesday in the morning.",
+        "15 minutes beforehand for the email on the 25th. So it would be next Tuesday, Wednesday, and on the 25th, 15 minutes before for an email, and then a text on the 25th.",
+        "15 minutes before this goes out to the PMA members, whatever that list or tag of people is, approximately 300 and change.",
+        "getting the post-event emails in place to run after the event that we're doing."
+      ],
+      "action_items_count_in_summary": 8,
+      "other_speakers_respond": [],
+      "confidence": 0.95,
+      "notes": "Dan Kuschell explicitly introduces a summary of action steps, lists them with numbers, and assigns responsibility. The summary comes at the end of the meeting. No confirmation from other speakers."
+    },
+    {
+      "meetingId": 26,
+      "topic": "Jerry Levinson PN | Breakthrough3x Huddle",
+      "client": "Jerry Levinson",
+      "duration": 117,
+      "danPresent": true,
+      "speakers": {
+        "Dan Kuschell": 631,
+        "Philip Mutrie": 25,
+        "Jerry Levinson": 408,
+        "Lizz Barnett": 60
+      },
+      "totalLines": 1124,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "01:54:42.380",
+      "summary_position_percent": 94,
+      "summary_style": "numbered_list",
+      "action_items_in_summary": [
+        "Traffic starts ideally on the 23rd for their April 11th training, which will be at 10.30 a.m. Eastern, Phil will get you the pages. They've allocated a modified budget, $3,000 for that training.",
+        "Look to build a remarketing campaign in a series of ads that primarily are their website visitors, internal lists, custom audiences, past downloads, etc, etc. Remarketing to book a call.",
+        "Send over the Expression of Interest sample to him and them.",
+        "Send over the lunch contact that T and our team has gotten for the Orlando event.",
+        "Be prepared for doing a post their post-event next week, just as I expect we want to be prepared to do something similar post our event."
+      ],
+      "action_items_count_in_summary": 5,
+      "other_speakers_respond": [
+        "Philip Mutrie: confirmed",
+        "Philip Mutrie: added implementation items"
+      ],
+      "confidence": 0.95,
+      "notes": "Dan delivers a summary as a numbered list of action items. Phil adds implementation items"
+    },
+    {
+      "meetingId": 8,
+      "topic": "Thomas E. Spall",
+      "client": "Unmatched",
+      "duration": 33,
+      "danPresent": false,
+      "speakers": {
+        "Philip Mutrie": 147,
+        "Thomas Spall": 124
+      },
+      "totalLines": 271,
+      "has_summary": true,
+      "summary_speaker": "Philip Mutrie",
+      "summary_starts_at": "00:32:36.820",
+      "summary_position_percent": 93,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Philip to send Thomas the Orlando event information and discount code",
+        "Philip to confirm availability of Dan for the meeting on Monday at 12 o'clock noon and include that information in the email",
+        "Philip to send Thomas the email addresses for the ad account"
+      ],
+      "action_items_count_in_summary": 3,
+      "other_speakers_respond": [
+        "Thomas Spall: Sounds good.",
+        "Thomas Spall: Okay."
+      ],
+      "confidence": 0.95,
+      "notes": "Philip gives a recap of the next steps and confirms the meeting time."
+    },
+    {
+      "meetingId": 25,
+      "topic": "BEC CFO | Breakthrough3x Huddle",
+      "client": "BEC CFO",
+      "duration": 75,
+      "danPresent": true,
+      "speakers": {
+        "Kaden Hackney": 22,
+        "Dan Kuschell": 440,
+        "Marcus Crigler": 96,
+        "Tony Brown": 12,
+        "Philip Mutrie": 4
+      },
+      "totalLines": 574,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "01:11:13.820",
+      "summary_position_percent": 96,
+      "summary_style": "numbered_list",
+      "action_items_in_summary": [
+        "Bill can write a series of two to three raise hand emails to their internal 300 to 400 person list",
+        "Come up with 3 headlines based on potential webinar topics",
+        "Set up the webinar in Zoom",
+        "Give them outlines for some video content, 2-minute clips that are education-based",
+        "Send over snippet for them on sample - here's a glance at our clients with 5 stars"
+      ],
+      "action_items_count_in_summary": 5,
+      "other_speakers_respond": [
+        "Phil Mutrie: All good."
+      ],
+      "confidence": 0.95,
+      "notes": "Dan Kuschell delivers a numbered list of action items near the very end of the meeting."
+    },
+    {
+      "meetingId": 24,
+      "topic": "Mike Anderson/Raider Flooring | Breakthrough3x Huddle ",
+      "client": "Raider Flooring",
+      "duration": 17,
+      "danPresent": false,
+      "speakers": {
+        "Bill Soady": 10,
+        "Philip Mutrie": 108,
+        "Mike Anderson": 72
+      },
+      "totalLines": 190,
+      "has_summary": true,
+      "summary_speaker": "Philip Mutrie",
+      "summary_starts_at": "00:15:37.770",
+      "summary_position_percent": 94,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Mike to send April offer to Philip and Bill in Slack today",
+        "Decision on moving forward to be made by next week",
+        "March raise hand emails are approved, scheduled, and programmed in CRM"
+      ],
+      "action_items_count_in_summary": 3,
+      "other_speakers_respond": [
+        "Mike Anderson: They'd like…"
+      ],
+      "confidence": 0.95,
+      "notes": "Philip provides a brief recap of action items at the end. He uses the phrase 'Just as a recap'. He confirms deadlines and deliverables."
+    },
+    {
+      "meetingId": 23,
+      "topic": "Shane/Vision Flooring AZ | Breakthrough3x Growth Huddle",
+      "client": "Vision Flooring AZ",
+      "duration": 50,
+      "danPresent": true,
+      "speakers": {
+        "Philip Mutrie": 36,
+        "Bill Soady": 13,
+        "Dan Kuschell": 257,
+        "Shane": 174
+      },
+      "totalLines": 480,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "00:41:05.240",
+      "summary_position_percent": 85,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Short clips for \"Best service we've had\" dot dot dot, 5 stars above it, the logo above it, the phone number and website below it.",
+        "\"Best upgrade we've done\" short clip.",
+        "\"Easy to work with\" short clip.",
+        "\"Best decision I've ever made\" short clip.",
+        "Create brandy version for four houses around you version",
+        "What can we do to get more hardwood?",
+        "Team to start working on the drafts of some Facebook concepts.",
+        "Another raise hand or two",
+        "Raise hand emails for April",
+        "Double verify daily blog posts.",
+        "Phil check if Richard started blog content for Vision Flooring"
+      ],
+      "action_items_count_in_summary": 11,
+      "other_speakers_respond": [
+        "Bill Soady: Okay.",
+        "Philip Mutrie: Yeah."
+      ],
+      "confidence": 0.95,
+      "notes": "Dan provides a detailed recap of action items near the end of the meeting, assigning tasks and clarifying deliverables. The recap is interspersed with conversation, but it clearly outlines the next steps."
+    },
+    {
+      "meetingId": 22,
+      "topic": "Legendary Service | Sean/Joe | Breakthrough3x",
+      "client": "Legendary Service",
+      "duration": 73,
+      "danPresent": true,
+      "speakers": {
+        "Bill Soady": 3,
+        "Philip Mutrie": 11,
+        "Dan Kuschell": 422,
+        "Sean Bucci": 124,
+        "Joseph Zimmer": 147,
+        "ReedCavi": 28
+      },
+      "totalLines": 735,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "01:09:43.279",
+      "summary_position_percent": 93,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Get new campaigns prepped",
+        "Make the adjustment on sump pump",
+        "Look at expanding the locations",
+        "Look at paring down any campaigns that are 550 or higher",
+        "Trim those off for now",
+        "Pull out the zip codes and make sure that the Wisconsin Northern, northern side with Wisconsin in it should be included",
+        "Match any zip codes that are missing in search that we do have in LSA, but combine both LSA to make sure we've got the coverage that they want."
+      ],
+      "action_items_count_in_summary": 7,
+      "other_speakers_respond": [
+        "Sean Bucci: Perfect"
+      ],
+      "confidence": 0.95,
+      "notes": "Dan provides a clear verbal recap of action items agreed upon, and assigns them to specific owners, so this qualifies as a recap section. Sean confirms at 01:10:02.270 that the summary is correct."
+    },
+    {
+      "meetingId": 21,
+      "topic": "Mike McVety | Breakthrough3x Growth Huddle",
+      "client": "Mike McVety",
+      "duration": 49,
+      "danPresent": false,
+      "speakers": {
+        "Philip Mutrie": 145,
+        "Michael McVety RED FORTRESS": 296,
+        "Bill Soady": 32
+      },
+      "totalLines": 473,
+      "has_summary": true,
+      "summary_speaker": "Philip Mutrie",
+      "summary_starts_at": "00:47:03.630",
+      "summary_position_percent": 99,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "March 24th Zoom session - Invitation emails and confirmation reminder emails are with client for review and approval. Email number one is already scheduled and programmed ready to go for today. Post emails are still required.",
+        "Phil will be sending the registrants, monitoring that, and we'll be sending them over the Ray-Z to get into, GoHighLevel.",
+        "April Raise Hand emails to be drafted and sent for client approval by Friday 3/27",
+        "Mike's interview will be performed on April 2nd, note that Michael may be late for that session"
+      ],
+      "action_items_count_in_summary": 4,
+      "other_speakers_respond": [
+        "Bill Soady: post emails amount",
+        "Bill Soady: Mention a replay?",
+        "Bill Soady: Leave on April 1st"
+      ],
+      "confidence": 0.95,
+      "notes": "Philip provides a clear recap of action items, followed by Bill's questions and clarifications."
+    },
+    {
+      "meetingId": 20,
+      "topic": "Tom Ruwitch | Breakthrough3x Huddle",
+      "client": "Tom Ruwitch",
+      "duration": 57,
+      "danPresent": true,
+      "speakers": {
+        "Philip Mutrie": 27,
+        "Sarah Young": 8,
+        "Dan Kuschell": 239,
+        "Tom Ruwitch": 239
+      },
+      "totalLines": 513,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "00:57:23.070",
+      "summary_position_percent": 97,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Webinar coming up in April"
+      ],
+      "action_items_count_in_summary": 1,
+      "other_speakers_respond": [
+        "Philip Mutrie: No, I believe we're good."
+      ],
+      "confidence": 0.9,
+      "notes": "Dan provides a brief list of action items for Phil toward the very end of the meeting."
+    },
+    {
+      "meetingId": 19,
+      "topic": "Brendan | 1st Choice | Breakthrough3x Huddle",
+      "client": "1st Choice",
+      "duration": 66,
+      "danPresent": true,
+      "speakers": {
+        "Philip Mutrie": 50,
+        "Sarah Young": 32,
+        "Dan Kuschell": 404,
+        "Cara McNiff": 22,
+        "LA Brendan 1st choice pro services": 119
+      },
+      "totalLines": 627,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "00:55:37.370",
+      "summary_position_percent": 94,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Phil and Bill or Sarah to do individual session recaps",
+        "Send Brian the info for Orlando"
+      ],
+      "action_items_count_in_summary": 2,
+      "other_speakers_respond": [
+        "Sarah: acknowledged",
+        "Phil: confirmed"
+      ],
+      "confidence": 0.9,
+      "notes": "Dan states he is going to do a recap to test it out ('I'm just going to do a recap at the end of the session of what are the action items needed'), then describes the overall aim is to create a summary recap after individual sessions. Action items are embedded within conversational wrap-up."
+    },
+    {
+      "meetingId": 18,
+      "topic": "Traffic Huddle ",
+      "client": "B3X Internal",
+      "duration": 77,
+      "danPresent": true,
+      "speakers": {
+        "Philip Mutrie": 44,
+        "Richard Osterude": 64,
+        "Alex Makarski": 119,
+        "Dan Kuschell": 382,
+        "Jacob Hastings": 51,
+        "Bill Soady": 20
+      },
+      "totalLines": 680,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "01:16:10.660",
+      "summary_position_percent": 93,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Dan will do better posting projects",
+        "Alex will send details about SimPanel"
+      ],
+      "action_items_count_in_summary": 2,
+      "other_speakers_respond": [
+        "Jacob: Appreciated that Dan",
+        "Alex: right now",
+        "Jacob: Yeah, we're gonna figure it out regardless"
+      ],
+      "confidence": 0.9,
+      "notes": "Dan provides a short recap including action items at the end, apologizing for issues and committing to improvement. He also acknowledges Alex sending the details to him."
+    },
+    {
+      "meetingId": 17,
+      "topic": "Andrew Williams/Echelon | Breakthrough3x Huddle",
+      "client": "Echelon",
+      "duration": 43,
+      "danPresent": false,
+      "speakers": {
+        "Philip Mutrie": 232,
+        "Andrew": 223
+      },
+      "totalLines": 455,
+      "has_summary": true,
+      "summary_speaker": "Philip Mutrie",
+      "summary_starts_at": "00:42:54.920",
+      "summary_position_percent": 93,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Andrew to send info about de-winterize home package"
+      ],
+      "action_items_count_in_summary": 1,
+      "other_speakers_respond": [
+        "Andrew: agreed"
+      ],
+      "confidence": 0.95,
+      "notes": "Philip provides a short recap and assigns an action item to Andrew."
+    },
+    {
+      "meetingId": 16,
+      "topic": "Glenn Millett <>  Dan Kuschell/Breakthrough3x",
+      "client": "Unmatched",
+      "duration": 79,
+      "danPresent": true,
+      "speakers": {
+        "Dan Kuschell": 405,
+        "Glenn Milliet": 330
+      },
+      "totalLines": 735,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "01:16:28.150",
+      "summary_position_percent": 92,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Dan will send Glenn a couple other resources to check out, to get him framed up for the event and some other tailored things.",
+        "Dan is going to get Glenn introduced to Rob Reuter at Gonzaga."
+      ],
+      "action_items_count_in_summary": 2,
+      "other_speakers_respond": [
+        "Glenn Milliet: Good"
+      ],
+      "confidence": 0.9,
+      "notes": "The identified summary is delivered near the end of the call, where Dan Kuschell outlines the next steps. He mentions sending resources and making an introduction. Glenn acknowledges these items."
+    },
+    {
+      "meetingId": 15,
+      "topic": "Steven Fischer | Dan K (Custom Plan)",
+      "client": "Unmatched",
+      "duration": 47,
+      "danPresent": true,
+      "speakers": {
+        "Steven Fischer": 141,
+        "Dan Kuschell": 287
+      },
+      "totalLines": 428,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "00:43:40.951",
+      "summary_position_percent": 92,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Go back to Kim's team and really try to drive that deep as you get things going",
+        "Dive into our resources",
+        "Stay in touch"
+      ],
+      "action_items_count_in_summary": 3,
+      "other_speakers_respond": [
+        "Steven Fischer: Appreciate it, Dan."
+      ],
+      "confidence": 0.9,
+      "notes": "Dan provides a recap of key points and action items before ending the call. The actions are not explicitly labeled, but they are clear directives."
+    },
+    {
+      "meetingId": 14,
+      "topic": "Dr. Ramah Wagner ",
+      "client": "Unmatched",
+      "duration": 51,
+      "danPresent": false,
+      "speakers": {
+        "Dr Ramah Wagner": 189,
+        "Philip Mutrie": 94
+      },
+      "totalLines": 283,
+      "has_summary": true,
+      "summary_speaker": "Philip Mutrie",
+      "summary_starts_at": "00:47:42.420",
+      "summary_position_percent": 86,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Team to assess and audit website to evaluate services and create optimizations",
+        "Optimize pages and create different landing pages for ads to test and increase conversion rates",
+        "Address why someone would say, \"I don't know what you're selling\""
+      ],
+      "action_items_count_in_summary": 3,
+      "other_speakers_respond": [
+        "Dr Ramah Wagner: Alright, sure."
+      ],
+      "confidence": 0.9,
+      "notes": "Philip verbally provides a recap of what his team will be doing regarding the website and landing pages. While not explicitly labeled a \"summary\", he outlines the key next steps, and what his team's focus will be. "
+    },
+    {
+      "meetingId": 13,
+      "topic": "Dan Kuschell's Personal Meeting Room",
+      "client": "Unmatched",
+      "duration": 50,
+      "danPresent": true,
+      "speakers": {
+        "Richard": 318,
+        "Dan Kuschell": 159
+      },
+      "totalLines": 477,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "00:44:56.700",
+      "summary_position_percent": 94,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Review everything we did today and give me a list for each client of the action items"
+      ],
+      "action_items_count_in_summary": 1,
+      "other_speakers_respond": [
+        "Richard: Oh, okay, great."
+      ],
+      "confidence": 0.8,
+      "notes": "Dan states what Phil should be doing at the end of each day, reviewing activity and listing action items. This section of the transcript contains elements of a summary and identifies a specific action item."
+    },
+    {
+      "meetingId": 12,
+      "topic": "Joaco | Dan K |  Video Set Up and Follow Up",
+      "client": "Unmatched",
+      "duration": 146,
+      "danPresent": true,
+      "speakers": {
+        "Dan Kuschell": 252,
+        "Joaco Malig": 709
+      },
+      "totalLines": 961,
+      "has_summary": true,
+      "summary_speaker": "Joaco Malig",
+      "summary_starts_at": "01:38:24.490",
+      "summary_position_percent": 94,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "See the vertical thing",
+        "Connect tomorrow or during the week to install things on OBS",
+        "Prioritize task",
+        "Dan Kuschell send the calendar"
+      ],
+      "action_items_count_in_summary": 4,
+      "other_speakers_respond": [],
+      "confidence": 0.9,
+      "notes": "Joaco is outlining the next steps at the end of the meeting. This constitutes a verbal recap with clear action items for both participants. Dan agrees with the proposed plan."
+    },
+    {
+      "meetingId": 11,
+      "topic": "Joaco | Dan",
+      "client": "Unmatched",
+      "duration": 78,
+      "danPresent": true,
+      "speakers": {
+        "Dan Kuschell": 241,
+        "Joaco Malig": 449
+      },
+      "totalLines": 690,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "01:12:40.890",
+      "summary_position_percent": 90,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [],
+      "action_items_count_in_summary": 0,
+      "other_speakers_respond": [],
+      "confidence": 0.95,
+      "notes": "Dan Kuschell prefaces a question by saying 'But just to recap what you shared, Joko, so…', then goes on to reiterate the key points and confirm his understanding."
+    },
+    {
+      "meetingId": 2,
+      "topic": "Thomas E. Spall",
+      "client": "Unmatched",
+      "duration": 74,
+      "danPresent": true,
+      "speakers": {
+        "Philip Mutrie": 57,
+        "Dan Kuschell": 370,
+        "Thomas Spall": 164
+      },
+      "totalLines": 591,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "01:02:37.200",
+      "summary_position_percent": 90,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Register for the event",
+        "Schedule a follow-up after the event",
+        "Develop a custom plan"
+      ],
+      "action_items_count_in_summary": 3,
+      "other_speakers_respond": [
+        "Thomas Spall: confirmed",
+        "Philip Mutrie: confirmed"
+      ],
+      "confidence": 0.95,
+      "notes": "Dan provides a summary of next steps and what will happen after the event. It is a verbal recap rather than a numbered list, but it does clearly outline the actions. He confirms with Thomas that he will send over the registration, then says they will schedule a follow-up and provide a custom plan. He also prompts Phil to confirm."
+    },
+    {
+      "meetingId": 6,
+      "topic": "Bearcat Coaching - Breakthrough Session",
+      "client": "Bearcat",
+      "duration": 42,
+      "danPresent": true,
+      "speakers": {
+        "Philip Mutrie": 8,
+        "Dan Kuschell": 230,
+        "Cathy Helin": 46,
+        "Gregg’s iPhonegre": 159
+      },
+      "totalLines": 443,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "00:41:20.150",
+      "summary_position_percent": 97,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Phil gets you all the updated data and facts",
+        "Review the new videos",
+        "Any editing that needs to be done",
+        "Set up the next ads that likely will go out next week",
+        "Set up a time where Cathy and Richard Bond can get together",
+        "Richard Bond will walk you through it"
+      ],
+      "action_items_count_in_summary": 6,
+      "other_speakers_respond": [
+        "Gregg: Awesome, I appreciate that",
+        "Cathy: Perfect. Great"
+      ],
+      "confidence": 0.9,
+      "notes": "Dan provides a quick recap of who is doing what to close out the meeting. Phil also contributes to the recap when he confirms his action items."
+    },
+    {
+      "meetingId": 10,
+      "topic": "Bearcat Coaching - Breakthrough Session",
+      "client": "Bearcat",
+      "duration": 42,
+      "danPresent": true,
+      "speakers": {
+        "Philip Mutrie": 8,
+        "Dan Kuschell": 230,
+        "Cathy Helin": 46,
+        "Gregg’s iPhonegre": 159
+      },
+      "totalLines": 443,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "00:41:20.150",
+      "summary_position_percent": 97,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Phil to provide updated data and facts",
+        "Review and edit videos",
+        "Set up next ads to go out next week",
+        "Philip Mutrie will record a video review of the agenda",
+        "Set up time for Kathy and Richard Bond to discuss ownership changeover"
+      ],
+      "action_items_count_in_summary": 5,
+      "other_speakers_respond": [
+        "Gregg: acknowledged",
+        "Kathy: confirmed",
+        "Philip: agreed"
+      ],
+      "confidence": 0.95,
+      "notes": "Dan Kuschell gives a brief recap of action items before ending the call. Philip also adds an action item."
+    },
+    {
+      "meetingId": 5,
+      "topic": "Will | Mikell (intro: Jason)  The Collective Genius | Dan/Breakthrough3x",
+      "client": "Unmatched",
+      "duration": 62,
+      "danPresent": true,
+      "speakers": {
+        "Mikell Parsch": 47,
+        "Dan Kuschell": 208,
+        "Jason Medley": 125,
+        "Wil Barton": 99
+      },
+      "totalLines": 479,
+      "has_summary": true,
+      "summary_speaker": "Mikell Parsch",
+      "summary_starts_at": "00:45:05.610",
+      "summary_position_percent": 86,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Jason to send avatar work to Dan",
+        "Will to give Dan access to backend stuff",
+        "Dan to provide information on processes",
+        "Share client work examples and references",
+        "Dan to send the link for the Florida event registration"
+      ],
+      "action_items_count_in_summary": 5,
+      "other_speakers_respond": [
+        "Dan Kuschell: Understood"
+      ],
+      "confidence": 0.9,
+      "notes": "Mikell delivers the summary of needed information to Dan and team. Several clear action items are mentioned, making this a solid summary section. Dan Kuschell offers an event invitation as a way to see their system."
+    },
+    {
+      "meetingId": 9,
+      "topic": "Will | Mikell (intro: Jason)  The Collective Genius | Dan/Breakthrough3x",
+      "client": "The Collective Genius",
+      "duration": 62,
+      "danPresent": true,
+      "speakers": {
+        "Mikell Parsch": 47,
+        "Dan Kuschell": 208,
+        "Jason Medley": 125,
+        "Wil Barton": 99
+      },
+      "totalLines": 479,
+      "has_summary": true,
+      "summary_speaker": "Mikell Parsch",
+      "summary_starts_at": "00:45:05.610",
+      "summary_position_percent": 85,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Jason Medley: Send avatar work previously ignored to Dan Kuschell.",
+        "Wil Barton: Give Dan Kuschell access to backend data.",
+        "Dan Kuschell: Document the process from client acquisition to onboarding to cadence."
+      ],
+      "action_items_count_in_summary": 3,
+      "other_speakers_respond": [],
+      "confidence": 0.9,
+      "notes": "Mikell provides an early summary of action items and next steps. Dan also provides additional detail."
+    },
+    {
+      "meetingId": 7,
+      "topic": "Dan Kuschell's Personal Meeting Room",
+      "client": "Unmatched",
+      "duration": 31,
+      "danPresent": true,
+      "speakers": {
+        "Dan Kuschell": 235
+      },
+      "totalLines": 235,
+      "has_summary": true,
+      "summary_speaker": "Dan Kuschell",
+      "summary_starts_at": "00:17:50.310",
+      "summary_position_percent": 90,
+      "summary_style": "verbal_recap",
+      "action_items_in_summary": [
+        "Send pre-work to review accounts ahead of time",
+        "Prepare solutions for next call",
+        "Set up leads innocent form campaign as soon as possible",
+        "Send case studies related to the type of Instantly campaigned for our appointment model",
+        "Set up a remarketing campaign to drive to book a consultation call to audiences and lookalikes as an instant lead ad campaign"
+      ],
+      "action_items_count_in_summary": 5,
+      "other_speakers_respond": [],
+      "confidence": 0.9,
+      "notes": "Dan reviews the accounts for the next call and asks for the leads campaign to be made ASAP. Then he asks Richard to set up a remarketing campaign."
+    }
+  ],
+  "analysis": {
+    "danPresent": 22,
+    "danAbsent": 10,
+    "danWithSummary": 22,
+    "noDanWithSummary": 10
+  }
+}

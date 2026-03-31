@@ -11,6 +11,192 @@
 import * as proofhub from './proofhub-client.js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+// ============ DEEP SYNC HELPERS ============
+
+/**
+ * Strip HTML tags → clean text.
+ * (Gemini fix: added <p>, <li>, numeric entity handlers)
+ */
+function stripHtml(html) {
+  return (html || '')
+    .replace(/<phmention[^>]*>([^<]*)<\/phmention>/g, '$1')  // Extract @mention names
+    .replace(/<\/p>/g, '\n\n')                                 // (Gemini fix) <p> → paragraph break
+    .replace(/<li[^>]*>/g, '• ')                               // (Gemini fix) <li> → bullet
+    .replace(/<\/li>/g, '\n')                                  // (Gemini fix) </li> → newline
+    .replace(/<br\s*\/?>/g, '\n')
+    .replace(/<\/div>/g, '\n')
+    .replace(/<[^>]+>/g, '')                                   // Strip remaining tags
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(n))   // (Gemini fix) numeric entities &#39;
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCharCode(parseInt(n, 16)))  // (Gemini fix) hex entities
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&shy;/g, '')
+    .replace(/&quot;/g, '"')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
+/**
+ * Sanitize text to remove credentials before storing or sending to AI.
+ * CRITICAL: PH descriptions contain real passwords, API keys, login URLs.
+ * (Gemini review: this is BLOCKING — must not store or send credentials)
+ */
+function sanitizeForAI(text) {
+  return (text || '')
+    // Password patterns (Password: xxx, pwd: xxx, pass: xxx)
+    .replace(/password[:\s=]+\S+/gi, '[PASSWORD REDACTED]')
+    .replace(/pwd[:\s=]+\S+/gi, '[PASSWORD REDACTED]')
+    // URL credentials (https://user:pass@host)
+    .replace(/https?:\/\/[^:\s]+:[^@\s]+@/gi, 'https://[CREDENTIALS]@')
+    // API keys and tokens (long alphanumeric strings 40+ chars)
+    .replace(/[a-zA-Z0-9_-]{40,}/g, '[TOKEN_REDACTED]')
+    // Bearer tokens
+    .replace(/Bearer\s+\S+/gi, 'Bearer [REDACTED]')
+    // Common credential field patterns
+    .replace(/api[_-]?key[:\s=]+\S+/gi, '[API_KEY REDACTED]')
+    .replace(/secret[:\s=]+\S+/gi, '[SECRET REDACTED]')
+    // Login URL patterns followed by credentials
+    .replace(/(login\s*URL[:\s]+\S+[\s\S]{0,50}?)(Username[:\s]+\S+[\s\S]{0,50}?Password[:\s]+\S+)/gi, '$1[LOGIN CREDENTIALS REDACTED]');
+}
+
+/**
+ * Pull description + comments for a PH task, strip HTML, store clean text.
+ * Runs ONCE per task at deep reconciliation time.
+ */
+async function deepSyncTask(db, task, projectId, index, total) {
+  console.log(`[DeepSync] ${index + 1}/${total}: ${(task.title || '').substring(0, 50)}...`);
+
+  // 1. Clean description HTML → plain text → sanitize credentials
+  const descRaw = stripHtml(task.description || '');
+  const descText = sanitizeForAI(descRaw);
+
+  // 2. Pull comments
+  let commentsText = '';
+  try {
+    const comments = await proofhub.getTaskComments(projectId, task._taskListId, task.id);
+    commentsText = (comments || []).map(c => {
+      const body = sanitizeForAI(stripHtml(c.description || c.content || ''));
+      const date = (c.created_at || '').substring(0, 10);
+      return `[${date}] ${body}`;
+    }).join('\n');
+  } catch (err) {
+    console.warn(`  Failed to fetch comments for task ${task.id}: ${err.message}`);
+  }
+
+  // 3. Store sanitized text in cache (NEVER store raw credentials)
+  db.prepare(`
+    UPDATE ph_task_cache
+    SET description_text = ?, comments_text = ?, context_synced_at = datetime('now')
+    WHERE ph_task_id = ?
+  `).run(descText, commentsText, task.id);
+
+  return { descText, commentsText };
+}
+
+/**
+ * Generate scope summaries for all PH tasks in one batch.
+ * Runs ONCE at deep reconciliation time.
+ * (Gemini fix: chunking at 20 tasks, retry on failure, credential warning in prompt)
+ */
+const SCOPE_CHUNK_SIZE = 20;
+
+async function generateScopeSummaries(db, clientId) {
+  const tasks = db.prepare(`
+    SELECT ph_task_id, title, description_text, comments_text, completed
+    FROM ph_task_cache
+    WHERE client_id = ? AND description_text IS NOT NULL AND scope_summary IS NULL
+  `).all(clientId);
+
+  if (tasks.length === 0) {
+    console.log('[Reconciler] No tasks need scope summaries');
+    return 0;
+  }
+
+  if (!process.env.GOOGLE_API_KEY) {
+    console.log('[Reconciler] Skipping scope summaries (no GOOGLE_API_KEY)');
+    return 0;
+  }
+
+  const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+
+  // (Gemini fix: chunk into batches of 20)
+  const chunks = [];
+  for (let i = 0; i < tasks.length; i += SCOPE_CHUNK_SIZE) {
+    chunks.push(tasks.slice(i, i + SCOPE_CHUNK_SIZE));
+  }
+
+  const stmt = db.prepare('UPDATE ph_task_cache SET scope_summary = ?, deliverables = ? WHERE ph_task_id = ?');
+  let totalSummarized = 0;
+
+  for (let ci = 0; ci < chunks.length; ci++) {
+    const chunk = chunks[ci];
+    console.log(`[Reconciler] Generating scope summaries batch ${ci + 1}/${chunks.length} (${chunk.length} tasks)...`);
+
+    const prompt = `For each ProofHub task below, generate:
+1. scope_summary: 1-2 sentences describing what this task actually involves (the real deliverables, not just the title)
+2. deliverables: JSON array of specific work items within this task
+
+IMPORTANT: If you see any credentials, passwords, API keys, or login URLs in the descriptions, DO NOT include them in the scope_summary or deliverables. Focus ONLY on the work deliverables.
+
+TASKS:
+${chunk.map(t => `
+--- TASK ${t.ph_task_id}: "${t.title}" (${t.completed ? 'DONE' : 'OPEN'}) ---
+DESCRIPTION:
+${(t.description_text || '').substring(0, 2000)}
+
+COMMENTS:
+${(t.comments_text || '').substring(0, 1000)}
+`).join('\n')}
+
+Return ONLY valid JSON array:
+[
+  {
+    "ph_task_id": 123,
+    "scope_summary": "Update VIP delivery page with new webinar replay and notes PDF, then create two new VIP upgrade pages with workshop videos.",
+    "deliverables": ["Update VIP replay video", "Replace notes PDF download", "Create /vip-upgrade-one", "Create /vip-upgrade-two"]
+  }
+]`;
+
+    // (Gemini fix: retry once on failure)
+    let result;
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        result = await model.generateContent(prompt);
+        break;
+      } catch (err) {
+        console.warn(`  Gemini attempt ${attempt}/2 failed: ${err.message}`);
+        if (attempt === 2) {
+          console.error('  Skipping this batch');
+          continue;
+        }
+        await new Promise(r => setTimeout(r, 2000));
+      }
+    }
+
+    if (!result) continue;
+
+    try {
+      const text = result.response.text().trim();
+      const jsonMatch = text.match(/\[[\s\S]*\]/);
+      if (!jsonMatch) continue;
+
+      const summaries = JSON.parse(jsonMatch[0]);
+      for (const s of summaries) {
+        stmt.run(s.scope_summary, JSON.stringify(s.deliverables || []), s.ph_task_id);
+        totalSummarized++;
+      }
+    } catch (err) {
+      console.error('  Failed to parse scope summaries:', err.message);
+    }
+  }
+
+  console.log(`[Reconciler] Generated scope summaries for ${totalSummarized}/${tasks.length} tasks`);
+  return totalSummarized;
+}
+
 // ============ LAYER 1: KEYWORD MATCHING ============
 
 /**
@@ -243,15 +429,28 @@ async function retryWithBackoff(fn, maxRetries = 3, baseDelay = 2000) {
  * @param {Database} db - better-sqlite3 instance
  * @param {string} clientId
  * @param {string} phProjectId - ProofHub project ID
- * @returns {Object} { total_roadmap, total_ph, linked, unlinked, new_links, links: [] }
+ * @param {Object} options - { deep: boolean } - if true, run deep sync
+ * @returns {Object} { total_roadmap, total_ph, linked, unlinked, new_links, links: [], scope_summaries: n }
  */
-export async function reconcileClient(db, clientId, phProjectId) {
-  console.log(`[Reconciler] Starting reconciliation for ${clientId} (project: ${phProjectId})`);
+export async function reconcileClient(db, clientId, phProjectId, options = {}) {
+  const { deep = false } = options;
+  console.log(`[Reconciler] Starting reconciliation for ${clientId} (project: ${phProjectId})${deep ? ' [DEEP MODE]' : ''}`);
 
   // 1. Pull PH tasks with retry
   const phTasks = await retryWithBackoff(() => proofhub.getAllProjectTasks(phProjectId));
   console.log(`[Reconciler] Fetched ${phTasks.length} PH tasks`);
   cachePHTasks(db, clientId, phProjectId, phTasks);
+
+  // 1b. Deep sync: pull description + comments for each task (if --deep)
+  let scopeSummariesGenerated = 0;
+  if (deep && phTasks.length > 0) {
+    console.log(`[Reconciler] Running deep sync for ${phTasks.length} tasks...`);
+    for (let i = 0; i < phTasks.length; i++) {
+      await deepSyncTask(db, phTasks[i], phProjectId, i, phTasks.length);
+    }
+    // Generate scope summaries in batch
+    scopeSummariesGenerated = await generateScopeSummaries(db, clientId);
+  }
 
   // 2. Get roadmap items
   const roadmapItems = db.prepare('SELECT * FROM roadmap_items WHERE client_id = ?').all(clientId);
@@ -321,6 +520,7 @@ export async function reconcileClient(db, clientId, phProjectId) {
     linked: alreadyLinked.size + allNewLinks.size,
     unlinked: unlinkedItems.length - allNewLinks.size,
     new_links: allNewLinks.size,
+    scope_summaries: scopeSummariesGenerated,
     links: [...allNewLinks.entries()].map(([riId, m]) => ({
       roadmap_item_id: riId,
       ph_task_id: m.phTaskId,
@@ -408,7 +608,8 @@ export function getAllPHLinksForClient(db, clientId) {
            l.ph_task_id, l.ph_task_title, l.match_method, l.match_confidence, l.match_reasoning,
            c.completed as ph_completed, c.completed_at as ph_completed_at,
            c.stage_name as ph_stage, c.percent_progress as ph_progress,
-           c.task_list_name as ph_list, c.task_list_id as ph_task_list_id, c.project_id as ph_project_id
+           c.task_list_name as ph_list, c.task_list_id as ph_task_list_id, c.project_id as ph_project_id,
+           c.scope_summary as ph_scope_summary, c.deliverables as ph_deliverables
     FROM roadmap_items ri
     LEFT JOIN roadmap_ph_links l ON ri.id = l.roadmap_item_id
     LEFT JOIN ph_task_cache c ON l.ph_task_id = c.ph_task_id

@@ -161,6 +161,13 @@ export async function getPeople() {
   return request('GET', '/people');
 }
 
+/**
+ * Get comments for a task
+ */
+export async function getTaskComments(projectId, taskListId, taskId) {
+  return request('GET', `/projects/${projectId}/todolists/${taskListId}/tasks/${taskId}/comments`);
+}
+
 export default {
   isProofhubConfigured,
   clearCache,
@@ -170,5 +177,6 @@ export default {
   getAllProjectTasks,
   createTask,
   getTask,
-  getPeople
+  getPeople,
+  getTaskComments
 };

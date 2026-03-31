@@ -1,0 +1,205 @@
+{
+  "status_report": {
+    "completed": [
+      {
+        "title": "Establish Weekly Performance Reporting",
+        "date": "2026-03-17",
+        "category": "reporting"
+      },
+      {
+        "title": "Increase March Google Ads budget to $4,000",
+        "date": "2026-03-05",
+        "category": "paid-ads"
+      },
+      {
+        "title": "Finalize hiring of Admin Assistant",
+        "date": "2026-03-31",
+        "category": "client-ops"
+      },
+      {
+        "title": "Onboard new hire to Slack and GCAL",
+        "date": "2026-03-31",
+        "category": "client-ops"
+      }
+    ],
+    "in_progress": [
+      {
+        "title": "Update March Raise Hand emails with urgency hook",
+        "owner": "Philip Mutrie",
+        "category": "email-marketing",
+        "eta": "ASAP (Overdue from 2026-03-12)"
+      },
+      {
+        "title": "Follow up with JB on FloorZap marketing activation",
+        "owner": "Philip Mutrie",
+        "category": "funnel-campaign",
+        "eta": "Next Meeting"
+      },
+      {
+        "title": "Produce Connection Campaign Videos",
+        "owner": "Home (Client)",
+        "category": "creative",
+        "eta": "TBD"
+      },
+      {
+        "title": "Launch Shower Conversion Meta Ads Campaign",
+        "owner": "Lisa (Client)",
+        "category": "paid-ads",
+        "eta": "TBD"
+      }
+    ],
+    "needs_client_action": [
+      {
+        "title": "Produce Connection Campaign Videos",
+        "reason": "Need these video assets to move forward with the social strategy.",
+        "since": "2026-03-17"
+      },
+      {
+        "title": "Complete Q1/Q2 CAO Checklist and Blueprint",
+        "reason": "Critical for Jerry to complete this to align on the strategy for the upcoming quarter.",
+        "since": "2026-03-17"
+      },
+      {
+        "title": "Obtain Hosting ETA from Isaac for FloorZap",
+        "reason": "Technical hurdle blocking the email-marketing integration.",
+        "since": "2026-03-10"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [],
+    "b3x_overdue": [
+      {
+        "title": "Update March Raise Hand emails with urgency hook",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-12"
+      }
+    ],
+    "client_overdue": [
+      {
+        "title": "Obtain Hosting ETA from Isaac for FloorZap",
+        "action_needed": "Jerry needs to ping Isaac for the timeline to resolve the hosting bottleneck.",
+        "since": "2026-03-10"
+      }
+    ]
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "Mitigate Lead Volume Dip",
+      "reasoning": "Performance reports from March 17 indicated a dip due to algorithm changes. We need to pivot creative or landing page strategy immediately.",
+      "category": "paid-ads",
+      "task_type": "google-ads-management"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Bridge the Website Service Gap",
+      "reasoning": "Technical hurdles with FloorZap and hosting suggest that London Flooring's current tech infrastructure is holding back marketing performance.",
+      "category": "website",
+      "task_type": "website-dev"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Operational Hand-off to Lisa/Shannon",
+      "reasoning": "With Jerry traveling frequently, we need to finalize the workflow with the new hires to ensure project momentum doesn't stall.",
+      "category": "client-ops",
+      "task_type": "client-profiling"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Quick Wins & Wins of the Week",
+      "minutes": 5,
+      "notes": "Confirming $4k budget deployment and onboarding of the new admin assistant."
+    },
+    {
+      "topic": "Action Item Cleanup (The 'Jerry' Items)",
+      "minutes": 10,
+      "notes": "Finalizing the FloorZap hosting ETA and the Q1/Q2 Blueprint."
+    },
+    {
+      "topic": "Creative & Campaign Launch Status",
+      "minutes": 15,
+      "notes": "Checking progress on Connection Videos and the Meta Shower Campaign with Lisa."
+    },
+    {
+      "topic": "Strategic Pitch: Landing Page UX/Speed Audit",
+      "minutes": 10,
+      "notes": "Pitching an audit to fix the recent lead volume dip by improving conversion rates."
+    },
+    {
+      "topic": "Recap & Next Steps",
+      "minutes": 5,
+      "notes": "Define clear deadlines for the overdue Raise Hand emails and Video assets."
+    }
+  ],
+  "estimated_meeting_length_minutes": 45,
+  "projected_roadmap": [
+    {
+      "title": "Lead-Conversion Landing Page Audit",
+      "what": "A comprehensive analysis of the existing destination pages for Google Ads. We will evaluate mobile responsiveness, page load speed, and call-to-action (CTA) clarity to identify why lead volume dipped despite the budget increase.",
+      "why_now": "The March 17th meeting noted a dip in lead volume attributed to Google's algorithm. Since the Google Ads budget is now $4,000, we must ensure every click has the highest chance of converting by fixing the destination environment.",
+      "category": "paid-ads",
+      "task_type": "ad-optimization",
+      "effort_b3x": "3-hour audit of current ad landing pages followed by a 1-hour presentation of findings and recommended fixes.",
+      "effort_client": "Review the audit report and provide access to the current website CMS for potential implementation of fixes.",
+      "prerequisites": "None — can start immediately to salvage March/April performance.",
+      "impact": "Higher conversion rates (CVR) and lower cost-per-lead (CPL) by reducing bounce rates from traffic we've already paid for.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "Jerry, we've increased the Google Ads budget to $4,000, but as we discussed in the performance review, we're seeing a dip in lead volume. I'd like to run a 'Conversion Audit' on our landing pages to make sure the traffic we're buying isn't hitting any friction points. It's the fastest way to get that lead volume back up without spending more on ads."
+    },
+    {
+      "title": "Google Business Profile (GBP) Local Expansion",
+      "what": "Optimization of the London Flooring GBP, including photo updates, geo-tagged image uploads, and setting up a recurring 'Update' posting schedule to improve local map rankings.",
+      "why_now": "Home services are heavily driven by local map searches. With Jerry introducing Lisa and Shannon to help with management, they can easily provide the 'on-the-ground' photos we need to dominate local search results.",
+      "category": "seo",
+      "task_type": "local-seo",
+      "effort_b3x": "2 hours to audit current profile, then 1 hour/month to manage postings and local optimizations.",
+      "effort_client": "Shannon to provide 5-10 project photos per week and Lisa to respond to reviews using our templates.",
+      "prerequisites": "None — can start immediately.",
+      "impact": "Increased organic phone calls and 'Get Directions' requests, providing a secondary lead source to supplement Paid Ads.",
+      "priority": "GROWTH",
+      "pitch_script": "Now that Lisa and Shannon are on board to help with management, we have a great opportunity to boost our local map presence. I'd like to start a Local SEO project to get us ranking higher in the Google Map Pack. If the team can send us project photos, we'll handle the technical optimization to drive more organic calls."
+    },
+    {
+      "title": "High-Performance Website Migration & FloorZap Sync",
+      "what": "A complete rebuild of the London Flooring website on a high-speed framework, specifically designed to integrate seamlessly with the FloorZap API and CRM.",
+      "why_now": "We are currently hitting technical hurdles with FloorZap hosting and marketing activation. Instead of patching an old system, a modern website (currently an inactive service gap) would solve the integration issues and provide a faster user experience.",
+      "category": "website",
+      "task_type": "website-dev",
+      "effort_b3x": "40-60 hours over 8 weeks for design, development, and API integration.",
+      "effort_client": "Approval of site architecture and collaboration with Isaac for the technical hand-off of FloorZap credentials.",
+      "prerequisites": "Clarify Hosting ETA with Isaac and obtain FloorZap marketing activation status.",
+      "impact": "Eliminates technical bottlenecks, improves SEO, and provides a professional brand image that matches the quality of London Flooring's work.",
+      "priority": "STRATEGIC",
+      "pitch_script": "Jerry, it feels like we're constantly fighting technical hurdles with the current hosting and FloorZap integration. To really scale this year, I think it's time we move London Flooring to a high-performance website that 'just works' with your CRM. It would turn our website from a tech headache into a lead-generation machine."
+    }
+  ],
+  "talking_points": {
+    "Establish Weekly Performance Reporting": "Great news — we've finalized the weekly performance reporting structure so you'll have full visibility on where every dollar is going.",
+    "Increase March Google Ads budget to $4,000": "The budget increase to $4,000 is fully live, and we're monitoring it closely to ensure we're hitting the right search terms.",
+    "Update March Raise Hand emails with urgency hook": "Jerry, I'm running a bit behind on the Raise Hand email updates, but I'll have that urgency hook ready for your review by tomorrow EOD.",
+    "Produce Connection Campaign Videos": "Lisa, how are we coming along with those Connection Campaign videos? We're ready to plug those into the social strategy as soon as they're shot.",
+    "Obtain Hosting ETA from Isaac for FloorZap": "Jerry, any word from Isaac on the hosting timeline? That's the last piece of the puzzle we need to get the FloorZap email automation live.",
+    "Lead-Conversion Landing Page Audit": "Since we're seeing a slight dip in lead volume despite the higher budget, I want to audit the landing pages to make sure we're converting as many of those clicks as possible.",
+    "Google Business Profile (GBP) Local Expansion": "Now that Shannon is helping with the admin side, I'd love to have her send us project photos so we can boost your rankings in the local Google Map Pack.",
+    "High-Performance Website Migration & FloorZap Sync": "I've noticed we're spending a lot of time troubleshooting tech and hosting. It might be time to discuss a more robust website setup that integrates natively with FloorZap to save us all the headache."
+  },
+  "meta": {
+    "client_id": "london-flooring",
+    "client_name": "London Flooring",
+    "generated_at": "2026-03-31T14:35:20.563Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-24T20:39:50Z",
+    "days_since_last_meeting": 6,
+    "meetings_analyzed": 4,
+    "roadmap_stats": {
+      "total": 12,
+      "done": 4,
+      "in_progress": 4,
+      "blocked": 0,
+      "agreed": 4,
+      "stale": 0
+    }
+  }
+}
