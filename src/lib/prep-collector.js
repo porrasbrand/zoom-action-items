@@ -240,6 +240,7 @@ export async function collectCockpitData(db, clientId) {
       ph_stage: link.ph_stage,
       ph_progress: link.ph_progress,
       ph_project_id: link.ph_project_id || null,
+      ph_task_list_id: link.ph_task_list_id || null,
       match_method: link.match_method,
       match_confidence: link.match_confidence
     };

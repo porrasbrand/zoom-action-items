@@ -342,9 +342,9 @@ function cachePHTasks(db, clientId, projectId, phTasks) {
   const stmt = db.prepare(`
     INSERT OR REPLACE INTO ph_task_cache
     (ph_task_id, client_id, project_id, title, completed, completed_at, stage_name,
-     percent_progress, assigned_names, task_list_name, start_date, due_date,
+     percent_progress, assigned_names, task_list_name, task_list_id, start_date, due_date,
      comments_count, last_synced_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
   `);
 
   const insertAll = db.transaction((tasks) => {
@@ -360,6 +360,7 @@ function cachePHTasks(db, clientId, projectId, phTasks) {
         t.percent_progress || 0,
         JSON.stringify(t.assigned || []),
         t._taskListTitle || t.list?.name || null,
+        String(t._taskListId || t.list?.id || ''),
         t.start_date || null,
         t.due_date || null,
         t.comments || 0
@@ -407,7 +408,7 @@ export function getAllPHLinksForClient(db, clientId) {
            l.ph_task_id, l.ph_task_title, l.match_method, l.match_confidence, l.match_reasoning,
            c.completed as ph_completed, c.completed_at as ph_completed_at,
            c.stage_name as ph_stage, c.percent_progress as ph_progress,
-           c.task_list_name as ph_list, c.project_id as ph_project_id
+           c.task_list_name as ph_list, c.task_list_id as ph_task_list_id, c.project_id as ph_project_id
     FROM roadmap_items ri
     LEFT JOIN roadmap_ph_links l ON ri.id = l.roadmap_item_id
     LEFT JOIN ph_task_cache c ON l.ph_task_id = c.ph_task_id
