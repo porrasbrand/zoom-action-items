@@ -5435,7 +5435,7 @@
       let html = '<table class="timeline-table"><thead><tr>';
       html += '<th>Item</th>';
       parsed.forEach(s => {
-        const date = formatShortDate(s.created_at);
+        const date = formatShortDate(s.meeting_date || s.created_at);
         html += `<th>${date}</th>`;
       });
       html += '</tr></thead><tbody>';

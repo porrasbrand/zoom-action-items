@@ -296,11 +296,11 @@ export function getSnapshot(db, clientId, meetingId) {
  */
 export function getSnapshotsTimeline(db, clientId) {
   return db.prepare(`
-    SELECT id, client_id, meeting_id, items_total, items_done,
-           items_in_progress, items_blocked, items_stale, created_at
-    FROM roadmap_snapshots
-    WHERE client_id = ?
-    ORDER BY meeting_id ASC
+    SELECT rs.id, rs.client_id, rs.meeting_id, rs.snapshot_data, rs.items_total, rs.items_done,
+           rs.items_in_progress, rs.items_blocked, rs.items_stale, rs.created_at, m.start_time as meeting_date, m.topic as meeting_topic
+    FROM roadmap_snapshots rs LEFT JOIN meetings m ON rs.meeting_id = m.id
+    WHERE rs.client_id = ?
+    ORDER BY rs.meeting_id ASC
   `).all(clientId);
 }
 
