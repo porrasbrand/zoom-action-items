@@ -38,15 +38,42 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 /**
- * Call Gemini with a specific model
+ * Call Gemini with a specific model (with retry logic)
+ * Retries up to 3 times with 5-second backoff on 503/null errors
  */
-async function callGemini(modelId, prompt) {
+async function callGemini(modelId, prompt, maxRetries = 3) {
   const model = genAI.getGenerativeModel({ model: modelId });
-  const result = await model.generateContent(prompt);
-  return {
-    text: result.response.text().trim(),
-    usage: result.response.usageMetadata
-  };
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const result = await model.generateContent(prompt);
+      const text = result.response.text().trim();
+
+      // Check for null/empty response
+      if (!text) {
+        throw new Error('Empty response from model');
+      }
+
+      return {
+        text,
+        usage: result.response.usageMetadata
+      };
+    } catch (err) {
+      lastError = err;
+      const is503 = err.message?.includes('503') || err.status === 503;
+      const isRetryable = is503 || err.message?.includes('unavailable') || err.message?.includes('Empty response');
+
+      if (isRetryable && attempt < maxRetries) {
+        console.log(`    ⚠️ Retry ${attempt}/${maxRetries} after error: ${err.message?.substring(0, 50)}...`);
+        await sleep(5000); // 5-second backoff
+        continue;
+      }
+      throw err;
+    }
+  }
+
+  throw lastError;
 }
 
 /**

@@ -13,7 +13,7 @@
         "owner_name": "Philip Mutrie"
       },
       "raw_response": "```json\n{\n  \"category\": \"creative\",\n  \"task_type\": \"video-editing\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Philip Mutrie\"\n}\n```",
-      "latency_ms": 998,
+      "latency_ms": 995,
       "tokens_in": 692,
       "tokens_out": 52
     },
@@ -30,7 +30,7 @@
         "owner_name": "Anthony R"
       },
       "raw_response": "```json\n{\n  \"category\": \"funnel-campaign\",\n  \"task_type\": \"webinar-page-setup\",\n  \"owner_side\": \"client\",\n  \"owner_name\": \"Anthony R\"\n}\n```",
-      "latency_ms": 985,
+      "latency_ms": 642,
       "tokens_in": 691,
       "tokens_out": 55
     },
@@ -47,7 +47,7 @@
         "owner_name": "Philip Mutrie"
       },
       "raw_response": "```json\n{\n  \"category\": \"email-marketing\",\n  \"task_type\": \"webinar-email-sequence\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Philip Mutrie\"\n}\n```",
-      "latency_ms": 791,
+      "latency_ms": 839,
       "tokens_in": 693,
       "tokens_out": 57
     },
@@ -64,7 +64,7 @@
         "owner_name": "Kristen Luidhardt"
       },
       "raw_response": "```json\n{\n  \"category\": \"paid-ads\",\n  \"task_type\": \"campaign-optimization\",\n  \"owner_side\": \"client\",\n  \"owner_name\": \"Kristen Luidhardt\"\n}\n```",
-      "latency_ms": 724,
+      "latency_ms": 898,
       "tokens_in": 693,
       "tokens_out": 53
     },
@@ -75,15 +75,15 @@
       "meeting_id": 32,
       "model": "gemini-2.0-flash",
       "response": {
-        "category": "email-marketing",
-        "task_type": "raise-hand-emails",
-        "owner_side": "client",
+        "category": "funnel-campaign",
+        "task_type": "webinar-page-setup",
+        "owner_side": "b3x",
         "owner_name": "Kristen Luidhardt"
       },
-      "raw_response": "```json\n{\n  \"category\": \"email-marketing\",\n  \"task_type\": \"raise-hand-emails\",\n  \"owner_side\": \"client\",\n  \"owner_name\": \"Kristen Luidhardt\"\n}\n```",
-      "latency_ms": 736,
+      "raw_response": "```json\n{\n  \"category\": \"funnel-campaign\",\n  \"task_type\": \"webinar-page-setup\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Kristen Luidhardt\"\n}\n```",
+      "latency_ms": 788,
       "tokens_in": 697,
-      "tokens_out": 55
+      "tokens_out": 59
     },
     {
       "item_id": 296,
@@ -98,7 +98,7 @@
         "owner_name": "Philip Mutrie"
       },
       "raw_response": "```json\n{\n  \"category\": \"client-ops\",\n  \"task_type\": \"client-profiling\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Philip Mutrie\"\n}\n```",
-      "latency_ms": 850,
+      "latency_ms": 788,
       "tokens_in": 693,
       "tokens_out": 55
     },
@@ -115,7 +115,7 @@
         "owner_name": "Richard"
       },
       "raw_response": "```json\n{\n  \"category\": \"paid-ads\",\n  \"task_type\": \"webinar-traffic\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Richard\"\n}\n```",
-      "latency_ms": 832,
+      "latency_ms": 872,
       "tokens_in": 706,
       "tokens_out": 53
     },
@@ -132,7 +132,7 @@
         "owner_name": "Richard"
       },
       "raw_response": "```json\n{\n  \"category\": \"paid-ads\",\n  \"task_type\": \"campaign-optimization\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Richard\"\n}\n```",
-      "latency_ms": 788,
+      "latency_ms": 805,
       "tokens_in": 714,
       "tokens_out": 52
     },
@@ -146,12 +146,12 @@
         "category": "client-ops",
         "task_type": "client-profiling",
         "owner_side": "b3x",
-        "owner_name": null
+        "owner_name": "null"
       },
-      "raw_response": "```json\n{\n  \"category\": \"client-ops\",\n  \"task_type\": \"client-profiling\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": null\n}\n```",
-      "latency_ms": 621,
+      "raw_response": "```json\n{\n  \"category\": \"client-ops\",\n  \"task_type\": \"client-profiling\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"null\"\n}\n```",
+      "latency_ms": 756,
       "tokens_in": 703,
-      "tokens_out": 51
+      "tokens_out": 53
     },
     {
       "item_id": 424,
@@ -166,7 +166,7 @@
         "owner_name": "Anthony R"
       },
       "raw_response": "```json\n{\n  \"category\": \"creative\",\n  \"task_type\": \"video-editing\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Anthony R\"\n}\n```",
-      "latency_ms": 672,
+      "latency_ms": 747,
       "tokens_in": 692,
       "tokens_out": 51
     },
@@ -183,7 +183,7 @@
         "owner_name": "Philip Mutrie"
       },
       "raw_response": "```json\n{\n  \"category\": \"email-marketing\",\n  \"task_type\": \"content-emails\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Philip Mutrie\"\n}\n```",
-      "latency_ms": 733,
+      "latency_ms": 822,
       "tokens_in": 694,
       "tokens_out": 54
     },
@@ -200,7 +200,7 @@
         "owner_name": "Philip Mutrie"
       },
       "raw_response": "```json\n{\n  \"category\": \"funnel-campaign\",\n  \"task_type\": \"webinar-page-setup\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Philip Mutrie\"\n}\n```",
-      "latency_ms": 895,
+      "latency_ms": 881,
       "tokens_in": 695,
       "tokens_out": 58
     },
@@ -217,7 +217,7 @@
         "owner_name": "Anthony R"
       },
       "raw_response": "```json\n{\n  \"category\": \"funnel-campaign\",\n  \"task_type\": \"promo-campaign\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Anthony R\"\n}\n```",
-      "latency_ms": 731,
+      "latency_ms": 774,
       "tokens_in": 692,
       "tokens_out": 54
     },
@@ -234,7 +234,7 @@
         "owner_name": "Philip Mutrie"
       },
       "raw_response": "```json\n{\n  \"category\": \"email-marketing\",\n  \"task_type\": \"raise-hand-emails\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Philip Mutrie\"\n}\n```",
-      "latency_ms": 670,
+      "latency_ms": 767,
       "tokens_in": 695,
       "tokens_out": 56
     },
@@ -251,7 +251,7 @@
         "owner_name": "Anthony R"
       },
       "raw_response": "```json\n{\n  \"category\": \"paid-ads\",\n  \"task_type\": \"meta-ads-management\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Anthony R\"\n}\n```",
-      "latency_ms": 821,
+      "latency_ms": 784,
       "tokens_in": 693,
       "tokens_out": 55
     },
@@ -268,7 +268,7 @@
         "owner_name": "Philip Mutrie"
       },
       "raw_response": "```json\n{\n  \"category\": \"client-ops\",\n  \"task_type\": \"client-profiling\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Philip Mutrie\"\n}\n```",
-      "latency_ms": 877,
+      "latency_ms": 711,
       "tokens_in": 692,
       "tokens_out": 55
     },
@@ -281,13 +281,13 @@
       "response": {
         "category": "creative",
         "task_type": "video-editing",
-        "owner_side": "b3x",
+        "owner_side": "client",
         "owner_name": "Philip Mutrie"
       },
-      "raw_response": "{\n  \"category\": \"creative\",\n  \"task_type\": \"video-editing\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Philip Mutrie\"\n}",
-      "latency_ms": 3933,
+      "raw_response": "```json\n{\n  \"category\": \"creative\",\n  \"task_type\": \"video-editing\",\n  \"owner_side\": \"client\",\n  \"owner_name\": \"Philip Mutrie\"\n}\n```",
+      "latency_ms": 8484,
       "tokens_in": 693,
-      "tokens_out": 47
+      "tokens_out": 50
     },
     {
       "item_id": 292,
@@ -302,7 +302,7 @@
         "owner_name": "Anthony R"
       },
       "raw_response": "```json\n{\n  \"category\": \"crm-automation\",\n  \"task_type\": \"integration-setup\",\n  \"owner_side\": \"client\",\n  \"owner_name\": \"Anthony R\"\n}\n```",
-      "latency_ms": 8933,
+      "latency_ms": 7618,
       "tokens_in": 692,
       "tokens_out": 51
     },
@@ -318,10 +318,10 @@
         "owner_side": "client",
         "owner_name": "Philip Mutrie"
       },
-      "raw_response": "```json\n{\n  \"category\": \"email-marketing\",\n  \"task_type\": \"webinar-email-sequence\",\n  \"owner_side\": \"client\",\n  \"owner_name\": \"Philip Mutrie\"\n}\n```",
-      "latency_ms": 5570,
+      "raw_response": "{\n  \"category\": \"email-marketing\",\n  \"task_type\": \"webinar-email-sequence\",\n  \"owner_side\": \"client\",\n  \"owner_name\": \"Philip Mutrie\"\n}",
+      "latency_ms": 3711,
       "tokens_in": 694,
-      "tokens_out": 55
+      "tokens_out": 50
     },
     {
       "item_id": 294,
@@ -336,7 +336,7 @@
         "owner_name": "Kristen Luidhardt"
       },
       "raw_response": "{\n  \"category\": \"paid-ads\",\n  \"task_type\": \"campaign-optimization\",\n  \"owner_side\": \"client\",\n  \"owner_name\": \"Kristen Luidhardt\"\n}",
-      "latency_ms": 2874,
+      "latency_ms": 2862,
       "tokens_in": 694,
       "tokens_out": 48
     },
@@ -347,15 +347,15 @@
       "meeting_id": 32,
       "model": "gemini-3-flash-preview",
       "response": {
-        "category": "funnel-campaign",
-        "task_type": "promo-campaign",
+        "category": "email-marketing",
+        "task_type": "content-emails",
         "owner_side": "client",
         "owner_name": "Kristen Luidhardt"
       },
-      "raw_response": "{\n  \"category\": \"funnel-campaign\",\n  \"task_type\": \"promo-campaign\",\n  \"owner_side\": \"client\",\n  \"owner_name\": \"Kristen Luidhardt\"\n}",
-      "latency_ms": 7216,
+      "raw_response": "```json\n{\n  \"category\": \"email-marketing\",\n  \"task_type\": \"content-emails\",\n  \"owner_side\": \"client\",\n  \"owner_name\": \"Kristen Luidhardt\"\n}\n```",
+      "latency_ms": 12917,
       "tokens_in": 698,
-      "tokens_out": 49
+      "tokens_out": 53
     },
     {
       "item_id": 296,
@@ -366,13 +366,13 @@
       "response": {
         "category": "client-ops",
         "task_type": "client-profiling",
-        "owner_side": "client",
+        "owner_side": "b3x",
         "owner_name": "Philip Mutrie"
       },
-      "raw_response": "{\n  \"category\": \"client-ops\",\n  \"task_type\": \"client-profiling\",\n  \"owner_side\": \"client\",\n  \"owner_name\": \"Philip Mutrie\"\n}",
-      "latency_ms": 4535,
+      "raw_response": "{\n  \"category\": \"client-ops\",\n  \"task_type\": \"client-profiling\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Philip Mutrie\"\n}",
+      "latency_ms": 3934,
       "tokens_in": 694,
-      "tokens_out": 48
+      "tokens_out": 50
     },
     {
       "item_id": 396,
@@ -386,10 +386,10 @@
         "owner_side": "b3x",
         "owner_name": "Richard"
       },
-      "raw_response": "```json\n{\n  \"category\": \"paid-ads\",\n  \"task_type\": \"webinar-traffic\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Richard\"\n}\n```",
-      "latency_ms": 6524,
+      "raw_response": "{\n  \"category\": \"paid-ads\",\n  \"task_type\": \"webinar-traffic\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Richard\"\n}",
+      "latency_ms": 3549,
       "tokens_in": 707,
-      "tokens_out": 53
+      "tokens_out": 48
     },
     {
       "item_id": 397,
@@ -404,7 +404,7 @@
         "owner_name": "Richard"
       },
       "raw_response": "{\n  \"category\": \"paid-ads\",\n  \"task_type\": \"campaign-optimization\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Richard\"\n}",
-      "latency_ms": 2652,
+      "latency_ms": 2751,
       "tokens_in": 715,
       "tokens_out": 47
     },
@@ -420,10 +420,10 @@
         "owner_side": "b3x",
         "owner_name": "Bill"
       },
-      "raw_response": "```json\n{\n  \"category\": \"client-ops\",\n  \"task_type\": \"client-profiling\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Bill\"\n}\n```",
-      "latency_ms": 5312,
+      "raw_response": "{\n  \"category\": \"client-ops\",\n  \"task_type\": \"client-profiling\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Bill\"\n}",
+      "latency_ms": 3760,
       "tokens_in": 704,
-      "tokens_out": 53
+      "tokens_out": 48
     },
     {
       "item_id": 424,
@@ -438,7 +438,7 @@
         "owner_name": "Anthony R"
       },
       "raw_response": "{\n  \"category\": \"creative\",\n  \"task_type\": \"video-editing\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Anthony R\"\n}",
-      "latency_ms": 2690,
+      "latency_ms": 3051,
       "tokens_in": 693,
       "tokens_out": 46
     },
@@ -449,15 +449,15 @@
       "meeting_id": 41,
       "model": "gemini-3-flash-preview",
       "response": {
-        "category": "funnel-campaign",
-        "task_type": "webinar-page-setup",
-        "owner_side": "client",
+        "category": "email-marketing",
+        "task_type": "webinar-email-sequence",
+        "owner_side": "b3x",
         "owner_name": "Philip Mutrie"
       },
-      "raw_response": "{\n  \"category\": \"funnel-campaign\",\n  \"task_type\": \"webinar-page-setup\",\n  \"owner_side\": \"client\",\n  \"owner_name\": \"Philip Mutrie\"\n}",
-      "latency_ms": 8372,
+      "raw_response": "```json\n{\n  \"category\": \"email-marketing\",\n  \"task_type\": \"webinar-email-sequence\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Philip Mutrie\"\n}\n```",
+      "latency_ms": 10577,
       "tokens_in": 695,
-      "tokens_out": 51
+      "tokens_out": 57
     },
     {
       "item_id": 426,
@@ -472,7 +472,7 @@
         "owner_name": "Philip Mutrie"
       },
       "raw_response": "{\n  \"category\": \"funnel-campaign\",\n  \"task_type\": \"webinar-page-setup\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Philip Mutrie\"\n}",
-      "latency_ms": 5601,
+      "latency_ms": 5352,
       "tokens_in": 696,
       "tokens_out": 53
     },
@@ -489,7 +489,7 @@
         "owner_name": "Anthony R"
       },
       "raw_response": "{\n  \"category\": \"funnel-campaign\",\n  \"task_type\": \"promo-campaign\",\n  \"owner_side\": \"client\",\n  \"owner_name\": \"Anthony R\"\n}",
-      "latency_ms": 6994,
+      "latency_ms": 10537,
       "tokens_in": 693,
       "tokens_out": 47
     },
@@ -506,7 +506,7 @@
         "owner_name": "Philip Mutrie"
       },
       "raw_response": "{\n  \"category\": \"email-marketing\",\n  \"task_type\": \"raise-hand-emails\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Philip Mutrie\"\n}",
-      "latency_ms": 3574,
+      "latency_ms": 3580,
       "tokens_in": 696,
       "tokens_out": 51
     },
@@ -523,7 +523,7 @@
         "owner_name": "Anthony R"
       },
       "raw_response": "{\n  \"category\": \"paid-ads\",\n  \"task_type\": \"meta-ads-management\",\n  \"owner_side\": \"b3x\",\n  \"owner_name\": \"Anthony R\"\n}",
-      "latency_ms": 3954,
+      "latency_ms": 3827,
       "tokens_in": 694,
       "tokens_out": 50
     },
@@ -539,10 +539,10 @@
         "owner_side": "client",
         "owner_name": "Philip Mutrie"
       },
-      "raw_response": "```json\n{\n  \"category\": \"website\",\n  \"task_type\": \"form-notification-config\",\n  \"owner_side\": \"client\",\n  \"owner_name\": \"Philip Mutrie\"\n}\n```",
-      "latency_ms": 9125,
+      "raw_response": "{\n  \"category\": \"website\",\n  \"task_type\": \"form-notification-config\",\n  \"owner_side\": \"client\",\n  \"owner_name\": \"Philip Mutrie\"\n}",
+      "latency_ms": 5680,
       "tokens_in": 693,
-      "tokens_out": 52
+      "tokens_out": 47
     }
   ],
   "roadmap": [
@@ -566,7 +566,7 @@
           },
           {
             "roadmap_item_id": 3,
-            "was_discussed": false,
+            "was_discussed": true,
             "new_status": "unchanged",
             "status_evidence": null,
             "new_details": null
@@ -616,27 +616,167 @@
         ],
         "new_items": [
           {
-            "title": "Update EverWebinar with new webinar recording",
+            "title": "Incorporate updated webinar recording into Evergreen funnel",
             "category": "funnel-campaign",
             "task_type": "webinar-page-setup",
-            "owner_side": "client",
+            "owner_side": "b3x",
             "owner_name": "Anthony R",
             "due_date": null,
-            "description": "Anthony will update EverWebinar with the newly edited webinar recording for evergreen purposes.",
-            "transcript_evidence": "And then I will cut a new version. I will provide it to you, but I will also update the file I used when I set up EverWebinar and stuff, as well, with that updated version, so…"
+            "description": "Anthony to update the EverWebinar file with the updated recording.",
+            "transcript_evidence": "And then I will cut a new version. I will provide it to you, but I will also update the file I used when I set up EverWebinar and stuff, as well, with that updated version, so…\n\t\t\t\t\tIn theory, you won't have anything to do, but I'll make sure you have a copy of it as well, just so that everybody's got what they need."
+          },
+          {
+            "title": "Provide new chat transcript",
+            "category": "funnel-campaign",
+            "task_type": "webinar-page-setup",
+            "owner_side": "b3x",
+            "owner_name": "Anthony R",
+            "due_date": null,
+            "description": "Anthony to provide a new chat transcript with the updated webinar recording.",
+            "transcript_evidence": "But, I guess I'll give you a new chat transcript with the new replay. they, You'll still have the timecode issue, but you'll have a new chapter on trip, so I'll get you that."
           }
         ]
       },
-      "raw_response": "```json\n{\n  \"existing_items_update\": [\n    {\n      \"roadmap_item_id\": 1,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 2,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 3,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 4,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 5,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 6,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 7,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 8,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 9,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    }\n  ],\n  \"new_items\": [\n    {\n      \"title\": \"Update EverWebinar with new webinar recording\",\n      \"category\": \"funnel-campaign\",\n      \"task_type\": \"webinar-page-setup\",\n      \"owner_side\": \"client\",\n      \"owner_name\": \"Anthony R\",\n      \"due_date\": null,\n      \"description\": \"Anthony will update EverWebinar with the newly edited webinar recording for evergreen purposes.\",\n      \"transcript_evidence\": \"And then I will cut a new version. I will provide it to you, but I will also update the file I used when I set up EverWebinar and stuff, as well, with that updated version, so…\"\n    }\n  ]\n}\n```",
-      "latency_ms": 4228,
+      "raw_response": "```json\n{\n  \"existing_items_update\": [\n    {\n      \"roadmap_item_id\": 1,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 2,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 3,\n      \"was_discussed\": true,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 4,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 5,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 6,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 7,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 8,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 9,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    }\n  ],\n  \"new_items\": [\n    {\n      \"title\": \"Incorporate updated webinar recording into Evergreen funnel\",\n      \"category\": \"funnel-campaign\",\n      \"task_type\": \"webinar-page-setup\",\n      \"owner_side\": \"b3x\",\n      \"owner_name\": \"Anthony R\",\n      \"due_date\": null,\n      \"description\": \"Anthony to update the EverWebinar file with the updated recording.\",\n      \"transcript_evidence\": \"And then I will cut a new version. I will provide it to you, but I will also update the file I used when I set up EverWebinar and stuff, as well, with that updated version, so…\\n\\t\\t\\t\\t\\tIn theory, you won't have anything to do, but I'll make sure you have a copy of it as well, just so that everybody's got what they need.\"\n    },\n    {\n      \"title\": \"Provide new chat transcript\",\n      \"category\": \"funnel-campaign\",\n      \"task_type\": \"webinar-page-setup\",\n      \"owner_side\": \"b3x\",\n      \"owner_name\": \"Anthony R\",\n      \"due_date\": null,\n      \"description\": \"Anthony to provide a new chat transcript with the updated webinar recording.\",\n      \"transcript_evidence\": \"But, I guess I'll give you a new chat transcript with the new replay. they, You'll still have the timecode issue, but you'll have a new chapter on trip, so I'll get you that.\"\n    }\n  ]\n}\n```",
+      "latency_ms": 5657,
       "tokens_in": 8116,
-      "tokens_out": 679
+      "tokens_out": 879
     },
     {
       "model": "gemini-3-flash-preview",
-      "response": null,
-      "error": "[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent: [503 Service Unavailable] The service is currently unavailable.",
-      "latency_ms": 37
+      "response": {
+        "existing_items_update": [
+          {
+            "roadmap_item_id": 1,
+            "was_discussed": true,
+            "new_status": "in-progress",
+            "status_evidence": "Anthony R: 'I can do that today, and send that over for the updated version of the recording... I will also update the file I used when I set up EverWebinar.'",
+            "new_details": "Anthony is editing a new version of the webinar recording for both the replay and the evergreen setup."
+          },
+          {
+            "roadmap_item_id": 2,
+            "was_discussed": true,
+            "new_status": "done",
+            "status_evidence": "Anthony R: 'I will also update the file I used when I set up EverWebinar and stuff, as well, with that updated version.'",
+            "new_details": "Anthony is already active in the EverWebinar setup, confirming access is no longer an issue."
+          },
+          {
+            "roadmap_item_id": 3,
+            "was_discussed": true,
+            "new_status": "in-progress",
+            "status_evidence": "Philip Mutrie: 'we'll bridge it into this, to the sequence now, so it's just a matter of getting that, getting that replay on the page and... and getting it, and, and getting it deployed.'",
+            "new_details": "The follow-up flow is specifically for the VIP upgrade delivery, which includes the replay and notes."
+          },
+          {
+            "roadmap_item_id": 4,
+            "was_discussed": false,
+            "new_status": "unchanged",
+            "status_evidence": null,
+            "new_details": null
+          },
+          {
+            "roadmap_item_id": 5,
+            "was_discussed": false,
+            "new_status": "unchanged",
+            "status_evidence": null,
+            "new_details": null
+          },
+          {
+            "roadmap_item_id": 6,
+            "was_discussed": false,
+            "new_status": "unchanged",
+            "status_evidence": null,
+            "new_details": null
+          },
+          {
+            "roadmap_item_id": 7,
+            "was_discussed": true,
+            "new_status": "done",
+            "status_evidence": "Kristen Luidhardt: 'since it was on Friday, I'm eager to get it...'",
+            "new_details": "The webinar referenced (March 20th) has already occurred."
+          },
+          {
+            "roadmap_item_id": 8,
+            "was_discussed": false,
+            "new_status": "unchanged",
+            "status_evidence": null,
+            "new_details": null
+          },
+          {
+            "roadmap_item_id": 9,
+            "was_discussed": false,
+            "new_status": "unchanged",
+            "status_evidence": null,
+            "new_details": null
+          }
+        ],
+        "new_items": [
+          {
+            "title": "Deploy VIP delivery email and replay page",
+            "category": "email-marketing",
+            "task_type": "webinar-email-sequence",
+            "owner_side": "b3x",
+            "owner_name": "Philip Mutrie",
+            "due_date": "2026-03-25",
+            "description": "Create and deploy the page for VIP attendees to access the replay and notes, and trigger the delivery email.",
+            "transcript_evidence": "Philip Mutrie: 'the replay is actually for the VIP upgrade... That video will go on to that page, and then the delivery email gets sent out for that.'"
+          },
+          {
+            "title": "Consult programmer on EverWebinar chat features",
+            "category": "funnel-campaign",
+            "task_type": "webinar-page-setup",
+            "owner_side": "b3x",
+            "owner_name": "Philip Mutrie",
+            "due_date": "2026-03-25",
+            "description": "Discuss technical alignment of chat transcripts and timecodes within EverWebinar.",
+            "transcript_evidence": "Anthony R: 'let me know if you have questions about just the timestamps of the chat transcript. And that would be out of alignment with the time codes provided in the replay...'"
+          },
+          {
+            "title": "Collect member testimonials for April campaign",
+            "category": "client-ops",
+            "task_type": "offer-development",
+            "owner_side": "client",
+            "owner_name": "Anthony R",
+            "due_date": null,
+            "description": "Gathering success stories and testimonials to be used in the upcoming April marketing push.",
+            "transcript_evidence": "Action item extracted from meeting discussion: 'Collect member testimonials for April campaign'"
+          },
+          {
+            "title": "Draft April 'raise hand' email campaign",
+            "category": "email-marketing",
+            "task_type": "raise-hand-emails",
+            "owner_side": "b3x",
+            "owner_name": "Philip Mutrie",
+            "due_date": null,
+            "description": "Develop the copy and strategy for the 'raise hand' style campaign scheduled for April.",
+            "transcript_evidence": "Action item extracted from meeting discussion: 'Draft April 'raise hand' email campaign'"
+          },
+          {
+            "title": "Consult Clay on Facebook Ad learning phase",
+            "category": "paid-ads",
+            "task_type": "campaign-optimization",
+            "owner_side": "client",
+            "owner_name": "Anthony R",
+            "due_date": null,
+            "description": "Review current ad performance and learning phase status with the ads specialist.",
+            "transcript_evidence": "Action item extracted from meeting discussion: 'Consult Clay on Facebook Ad learning phase'"
+          },
+          {
+            "title": "Send Outlook email forwarding instructions",
+            "category": "crm-automation",
+            "task_type": "integration-setup",
+            "owner_side": "b3x",
+            "owner_name": "Philip Mutrie",
+            "due_date": "2026-03-25",
+            "description": "Provide the client with instructions on how to set up email forwarding in Outlook for CRM integration.",
+            "transcript_evidence": "Action item extracted from meeting discussion: 'Send Outlook email forwarding instructions'"
+          }
+        ]
+      },
+      "raw_response": "```json\n{\n  \"existing_items_update\": [\n    {\n      \"roadmap_item_id\": 1,\n      \"was_discussed\": true,\n      \"new_status\": \"in-progress\",\n      \"status_evidence\": \"Anthony R: 'I can do that today, and send that over for the updated version of the recording... I will also update the file I used when I set up EverWebinar.'\",\n      \"new_details\": \"Anthony is editing a new version of the webinar recording for both the replay and the evergreen setup.\"\n    },\n    {\n      \"roadmap_item_id\": 2,\n      \"was_discussed\": true,\n      \"new_status\": \"done\",\n      \"status_evidence\": \"Anthony R: 'I will also update the file I used when I set up EverWebinar and stuff, as well, with that updated version.'\",\n      \"new_details\": \"Anthony is already active in the EverWebinar setup, confirming access is no longer an issue.\"\n    },\n    {\n      \"roadmap_item_id\": 3,\n      \"was_discussed\": true,\n      \"new_status\": \"in-progress\",\n      \"status_evidence\": \"Philip Mutrie: 'we'll bridge it into this, to the sequence now, so it's just a matter of getting that, getting that replay on the page and... and getting it, and, and getting it deployed.'\",\n      \"new_details\": \"The follow-up flow is specifically for the VIP upgrade delivery, which includes the replay and notes.\"\n    },\n    {\n      \"roadmap_item_id\": 4,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 5,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 6,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 7,\n      \"was_discussed\": true,\n      \"new_status\": \"done\",\n      \"status_evidence\": \"Kristen Luidhardt: 'since it was on Friday, I'm eager to get it...'\",\n      \"new_details\": \"The webinar referenced (March 20th) has already occurred.\"\n    },\n    {\n      \"roadmap_item_id\": 8,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    },\n    {\n      \"roadmap_item_id\": 9,\n      \"was_discussed\": false,\n      \"new_status\": \"unchanged\",\n      \"status_evidence\": null,\n      \"new_details\": null\n    }\n  ],\n  \"new_items\": [\n    {\n      \"title\": \"Deploy VIP delivery email and replay page\",\n      \"category\": \"email-marketing\",\n      \"task_type\": \"webinar-email-sequence\",\n      \"owner_side\": \"b3x\",\n      \"owner_name\": \"Philip Mutrie\",\n      \"due_date\": \"2026-03-25\",\n      \"description\": \"Create and deploy the page for VIP attendees to access the replay and notes, and trigger the delivery email.\",\n      \"transcript_evidence\": \"Philip Mutrie: 'the replay is actually for the VIP upgrade... That video will go on to that page, and then the delivery email gets sent out for that.'\"\n    },\n    {\n      \"title\": \"Consult programmer on EverWebinar chat features\",\n      \"category\": \"funnel-campaign\",\n      \"task_type\": \"webinar-page-setup\",\n      \"owner_side\": \"b3x\",\n      \"owner_name\": \"Philip Mutrie\",\n      \"due_date\": \"2026-03-25\",\n      \"description\": \"Discuss technical alignment of chat transcripts and timecodes within EverWebinar.\",\n      \"transcript_evidence\": \"Anthony R: 'let me know if you have questions about just the timestamps of the chat transcript. And that would be out of alignment with the time codes provided in the replay...'\"\n    },\n    {\n      \"title\": \"Collect member testimonials for April campaign\",\n      \"category\": \"client-ops\",\n      \"task_type\": \"offer-development\",\n      \"owner_side\": \"client\",\n      \"owner_name\": \"Anthony R\",\n      \"due_date\": null,\n      \"description\": \"Gathering success stories and testimonials to be used in the upcoming April marketing push.\",\n      \"transcript_evidence\": \"Action item extracted from meeting discussion: 'Collect member testimonials for April campaign'\"\n    },\n    {\n      \"title\": \"Draft April 'raise hand' email campaign\",\n      \"category\": \"email-marketing\",\n      \"task_type\": \"raise-hand-emails\",\n      \"owner_side\": \"b3x\",\n      \"owner_name\": \"Philip Mutrie\",\n      \"due_date\": null,\n      \"description\": \"Develop the copy and strategy for the 'raise hand' style campaign scheduled for April.\",\n      \"transcript_evidence\": \"Action item extracted from meeting discussion: 'Draft April 'raise hand' email campaign'\"\n    },\n    {\n      \"title\": \"Consult Clay on Facebook Ad learning phase\",\n      \"category\": \"paid-ads\",\n      \"task_type\": \"campaign-optimization\",\n      \"owner_side\": \"client\",\n      \"owner_name\": \"Anthony R\",\n      \"due_date\": null,\n      \"description\": \"Review current ad performance and learning phase status with the ads specialist.\",\n      \"transcript_evidence\": \"Action item extracted from meeting discussion: 'Consult Clay on Facebook Ad learning phase'\"\n    },\n    {\n      \"title\": \"Send Outlook email forwarding instructions\",\n      \"category\": \"crm-automation\",\n      \"task_type\": \"integration-setup\",\n      \"owner_side\": \"b3x\",\n      \"owner_name\": \"Philip Mutrie\",\n      \"due_date\": \"2026-03-25\",\n      \"description\": \"Provide the client with instructions on how to set up email forwarding in Outlook for CRM integration.\",\n      \"transcript_evidence\": \"Action item extracted from meeting discussion: 'Send Outlook email forwarding instructions'\"\n    }\n  ]\n}\n```",
+      "latency_ms": 23594,
+      "tokens_in": 8117,
+      "tokens_out": 1533
     }
   ],
   "prep": [
@@ -649,17 +789,17 @@
           "needs_client_action": [
             {
               "title": "Provide EverWebinar login",
-              "reason": "B3X needs this to set up the webinar page properly.",
+              "reason": "B3X needs access to EverWebinar to setup and optimize the webinar funnel. This is blocking progress on webinar-page-setup.",
               "since": "2026-03-20"
             },
             {
               "title": "Decide on ad budget increase",
-              "reason": "B3X is waiting for the client's decision before implementing potential changes to the ad campaigns.",
+              "reason": "B3X needs a decision on the ad budget to optimize campaign performance effectively. This is blocking progress on campaign-optimization.",
               "since": "2026-03-20"
             },
             {
               "title": "Incorporate new webinar replay (updated version) into EverWebinar",
-              "reason": "The updated webinar replay is needed to update EverWebinar for optimal funnel performance.",
+              "reason": "B3X needs the new replay incorporated into EverWebinar to ensure the most up-to-date content is being used. This is blocking progress on webinar-page-setup.",
               "since": "2026-03-30"
             }
           ]
@@ -686,12 +826,12 @@
           "client_overdue": [
             {
               "title": "Provide EverWebinar login",
-              "action_needed": "Provide the login details to Philip/B3X.",
+              "action_needed": "Provide login details to B3X team.",
               "since": "2026-03-20"
             },
             {
               "title": "Decide on ad budget increase",
-              "action_needed": "Communicate the decision regarding increasing the ad budget.",
+              "action_needed": "Inform B3X of decision on budget increase.",
               "since": "2026-03-20"
             }
           ]
@@ -699,75 +839,88 @@
         "strategic_direction": [
           {
             "priority": "HIGH",
-            "title": "Accelerate Webinar Traffic",
-            "reasoning": "The webinar is a central part of the current funnel campaign. Ensuring high registration and attendance will improve conversion rates and overall ROI of other active services like email marketing. Focus on the ads that are performing well and cut out the fat.",
+            "title": "Review and Optimize Top Performing Ads",
+            "reasoning": "The team is already planning to analyze and cut underperforming ads. Prioritizing this allows for a quick win by focusing budget on what's working and maximizing ROI. This aligns with the action item 'Look at the ads that are performing, and let's put The most emphasis on those. and cut out any fat that isn't working'.",
             "category": "paid-ads",
-            "task_type": "webinar-traffic"
+            "task_type": "campaign-optimization"
           },
           {
             "priority": "MEDIUM",
-            "title": "Optimize Webinar Follow-Up Email Sequence",
-            "reasoning": "A well-crafted follow-up sequence is crucial to nurturing leads generated from the webinar. Automating this will save the client time and increase conversions. Kristen is already tasked with confirmation of flow, so next step is optimization.",
-            "category": "email-marketing",
-            "task_type": "webinar-email-sequence"
-          },
-          {
-            "priority": "LOW",
-            "title": "Website Audit & Optimization Proposal",
-            "reasoning": "The Prosper Group website is an untapped asset. A website audit will identify areas for improvement in terms of SEO, user experience, and lead generation. This can lead to an upsell opportunity for website development and ongoing maintenance.",
+            "title": "Website Performance Audit & Recommendations",
+            "reasoning": "As Prosper Group scales their coaching business, a high-performing website is crucial for lead generation and customer retention. Offering a website audit will reveal areas for improvement and demonstrate B3X's expertise in full-funnel marketing. This could lead to an upsell of B3X's website services.",
             "category": "website",
             "task_type": "website-audit"
+          },
+          {
+            "priority": "MEDIUM",
+            "title": "Automated Email Sequence Optimization",
+            "reasoning": "With the webinar funnel in progress, it's vital to ensure the email follow-up sequence is optimized for conversions. Reviewing and refining the email sequence will help maximize the value of leads generated from the webinar and ensure leads are nurtured after the webinar replay is used.",
+            "category": "email-marketing",
+            "task_type": "email-sequence-optimization"
           }
         ],
         "suggested_agenda": [
           {
-            "topic": "Quick Wins: Review and confirm progress on webinar ad traffic and budget increase",
+            "topic": "Quick Wins: Ad Performance Review",
             "minutes": 5,
-            "notes": "Focus on positive momentum and immediate impact."
+            "notes": "Review top-performing ads, discuss budget allocation, and confirm ad cut-off after webinar starts."
           },
           {
-            "topic": "Accountability Check: Address overdue items (client and B3X)",
+            "topic": "Client Action Items: EverWebinar Login & Budget Decision",
             "minutes": 5,
-            "notes": "Clear ownership and deadlines are essential for progress."
+            "notes": "Remind client to provide EverWebinar login details and confirm decision on ad budget increase."
           },
           {
-            "topic": "Strategic Proposal: Discuss Webinar Email Follow-Up Sequence and Website Audit & Optimization Proposal",
+            "topic": "Strategic Proposal: Website Audit",
             "minutes": 15,
-            "notes": "Deep dive into proposed next steps and potential ROI."
+            "notes": "Present the value of a website audit to identify growth opportunities and potentially upsell website services."
           },
           {
-            "topic": "Next Steps: Align on action items and deadlines",
+            "topic": "Next Steps & Action Items",
             "minutes": 5,
-            "notes": "Ensure everyone is clear on their responsibilities."
+            "notes": "Outline clear next steps for both B3X and the client."
           }
         ],
         "estimated_meeting_length_minutes": 30
       },
-      "raw_response": "```json\n{\n  \"status_report\": {\n    \"completed\": [],\n    \"in_progress\": [],\n    \"needs_client_action\": [\n      {\n        \"title\": \"Provide EverWebinar login\",\n        \"reason\": \"B3X needs this to set up the webinar page properly.\",\n        \"since\": \"2026-03-20\"\n      },\n      {\n        \"title\": \"Decide on ad budget increase\",\n        \"reason\": \"B3X is waiting for the client's decision before implementing potential changes to the ad campaigns.\",\n        \"since\": \"2026-03-20\"\n      },\n       {\n        \"title\": \"Incorporate new webinar replay (updated version) into EverWebinar\",\n        \"reason\": \"The updated webinar replay is needed to update EverWebinar for optimal funnel performance.\",\n        \"since\": \"2026-03-30\"\n      }\n    ]\n  },\n  \"accountability\": {\n    \"stale_items\": [],\n    \"b3x_overdue\": [\n      {\n        \"title\": \"Nudge Jared regarding Orlando paperwork\",\n        \"owner\": \"Philip Mutrie\",\n        \"since\": \"2026-03-19\"\n      },\n      {\n        \"title\": \"Confirm webinar follow-up flow\",\n        \"owner\": \"Philip Mutrie\",\n        \"since\": \"2026-03-20\"\n      },\n      {\n        \"title\": \"Invite 'friendlies' and check internal list\",\n        \"owner\": \"Kristen Luidhardt\",\n        \"since\": \"2026-03-20\"\n      }\n    ],\n    \"client_overdue\": [\n      {\n        \"title\": \"Provide EverWebinar login\",\n        \"action_needed\": \"Provide the login details to Philip/B3X.\",\n        \"since\": \"2026-03-20\"\n      },\n      {\n        \"title\": \"Decide on ad budget increase\",\n        \"action_needed\": \"Communicate the decision regarding increasing the ad budget.\",\n        \"since\": \"2026-03-20\"\n      }\n    ]\n  },\n  \"strategic_direction\": [\n    {\n      \"priority\": \"HIGH\",\n      \"title\": \"Accelerate Webinar Traffic\",\n      \"reasoning\": \"The webinar is a central part of the current funnel campaign. Ensuring high registration and attendance will improve conversion rates and overall ROI of other active services like email marketing. Focus on the ads that are performing well and cut out the fat.\",\n      \"category\": \"paid-ads\",\n      \"task_type\": \"webinar-traffic\"\n    },\n    {\n      \"priority\": \"MEDIUM\",\n      \"title\": \"Optimize Webinar Follow-Up Email Sequence\",\n      \"reasoning\": \"A well-crafted follow-up sequence is crucial to nurturing leads generated from the webinar. Automating this will save the client time and increase conversions. Kristen is already tasked with confirmation of flow, so next step is optimization.\",\n      \"category\": \"email-marketing\",\n      \"task_type\": \"webinar-email-sequence\"\n    },\n    {\n      \"priority\": \"LOW\",\n      \"title\": \"Website Audit & Optimization Proposal\",\n      \"reasoning\": \"The Prosper Group website is an untapped asset. A website audit will identify areas for improvement in terms of SEO, user experience, and lead generation. This can lead to an upsell opportunity for website development and ongoing maintenance.\",\n      \"category\": \"website\",\n      \"task_type\": \"website-audit\"\n    }\n  ],\n  \"suggested_agenda\": [\n    {\n      \"topic\": \"Quick Wins: Review and confirm progress on webinar ad traffic and budget increase\",\n      \"minutes\": 5,\n      \"notes\": \"Focus on positive momentum and immediate impact.\"\n    },\n    {\n      \"topic\": \"Accountability Check: Address overdue items (client and B3X)\",\n      \"minutes\": 5,\n      \"notes\": \"Clear ownership and deadlines are essential for progress.\"\n    },\n    {\n      \"topic\": \"Strategic Proposal: Discuss Webinar Email Follow-Up Sequence and Website Audit & Optimization Proposal\",\n      \"minutes\": 15,\n      \"notes\": \"Deep dive into proposed next steps and potential ROI.\"\n    },\n    {\n      \"topic\": \"Next Steps: Align on action items and deadlines\",\n      \"minutes\": 5,\n      \"notes\": \"Ensure everyone is clear on their responsibilities.\"\n    }\n  ],\n  \"estimated_meeting_length_minutes\": 30\n}\n```",
-      "latency_ms": 6987,
+      "raw_response": "```json\n{\n  \"status_report\": {\n    \"completed\": [],\n    \"in_progress\": [],\n    \"needs_client_action\": [\n      {\n        \"title\": \"Provide EverWebinar login\",\n        \"reason\": \"B3X needs access to EverWebinar to setup and optimize the webinar funnel. This is blocking progress on webinar-page-setup.\",\n        \"since\": \"2026-03-20\"\n      },\n      {\n        \"title\": \"Decide on ad budget increase\",\n        \"reason\": \"B3X needs a decision on the ad budget to optimize campaign performance effectively. This is blocking progress on campaign-optimization.\",\n        \"since\": \"2026-03-20\"\n      },\n      {\n        \"title\": \"Incorporate new webinar replay (updated version) into EverWebinar\",\n        \"reason\": \"B3X needs the new replay incorporated into EverWebinar to ensure the most up-to-date content is being used. This is blocking progress on webinar-page-setup.\",\n        \"since\": \"2026-03-30\"\n      }\n    ]\n  },\n  \"accountability\": {\n    \"stale_items\": [],\n    \"b3x_overdue\": [\n      {\n        \"title\": \"Nudge Jared regarding Orlando paperwork\",\n        \"owner\": \"Philip Mutrie\",\n        \"since\": \"2026-03-19\"\n      },\n      {\n        \"title\": \"Confirm webinar follow-up flow\",\n        \"owner\": \"Philip Mutrie\",\n        \"since\": \"2026-03-20\"\n      },\n      {\n        \"title\": \"Invite 'friendlies' and check internal list\",\n        \"owner\": \"Kristen Luidhardt\",\n        \"since\": \"2026-03-20\"\n      }\n    ],\n    \"client_overdue\": [\n      {\n        \"title\": \"Provide EverWebinar login\",\n        \"action_needed\": \"Provide login details to B3X team.\",\n        \"since\": \"2026-03-20\"\n      },\n      {\n        \"title\": \"Decide on ad budget increase\",\n        \"action_needed\": \"Inform B3X of decision on budget increase.\",\n        \"since\": \"2026-03-20\"\n      }\n    ]\n  },\n  \"strategic_direction\": [\n    {\n      \"priority\": \"HIGH\",\n      \"title\": \"Review and Optimize Top Performing Ads\",\n      \"reasoning\": \"The team is already planning to analyze and cut underperforming ads. Prioritizing this allows for a quick win by focusing budget on what's working and maximizing ROI. This aligns with the action item 'Look at the ads that are performing, and let's put The most emphasis on those. and cut out any fat that isn't working'.\",\n      \"category\": \"paid-ads\",\n      \"task_type\": \"campaign-optimization\"\n    },\n    {\n      \"priority\": \"MEDIUM\",\n      \"title\": \"Website Performance Audit & Recommendations\",\n      \"reasoning\": \"As Prosper Group scales their coaching business, a high-performing website is crucial for lead generation and customer retention. Offering a website audit will reveal areas for improvement and demonstrate B3X's expertise in full-funnel marketing. This could lead to an upsell of B3X's website services.\",\n      \"category\": \"website\",\n      \"task_type\": \"website-audit\"\n    },\n    {\n      \"priority\": \"MEDIUM\",\n      \"title\": \"Automated Email Sequence Optimization\",\n      \"reasoning\": \"With the webinar funnel in progress, it's vital to ensure the email follow-up sequence is optimized for conversions. Reviewing and refining the email sequence will help maximize the value of leads generated from the webinar and ensure leads are nurtured after the webinar replay is used.\",\n      \"category\": \"email-marketing\",\n      \"task_type\": \"email-sequence-optimization\"\n    }\n  ],\n  \"suggested_agenda\": [\n    {\n      \"topic\": \"Quick Wins: Ad Performance Review\",\n      \"minutes\": 5,\n      \"notes\": \"Review top-performing ads, discuss budget allocation, and confirm ad cut-off after webinar starts.\"\n    },\n    {\n      \"topic\": \"Client Action Items: EverWebinar Login & Budget Decision\",\n      \"minutes\": 5,\n      \"notes\": \"Remind client to provide EverWebinar login details and confirm decision on ad budget increase.\"\n    },\n    {\n      \"topic\": \"Strategic Proposal: Website Audit\",\n      \"minutes\": 15,\n      \"notes\": \"Present the value of a website audit to identify growth opportunities and potentially upsell website services.\"\n    },\n    {\n      \"topic\": \"Next Steps & Action Items\",\n      \"minutes\": 5,\n      \"notes\": \"Outline clear next steps for both B3X and the client.\"\n    }\n  ],\n  \"estimated_meeting_length_minutes\": 30\n}\n```",
+      "latency_ms": 7123,
       "tokens_in": 2162,
-      "tokens_out": 1060
+      "tokens_out": 1158
     },
     {
       "model": "gemini-3-flash-preview",
       "response": {
         "status_report": {
           "completed": [],
-          "in_progress": [],
+          "in_progress": [
+            {
+              "title": "Check video usage and access",
+              "owner": "Philip Mutrie",
+              "category": "creative",
+              "eta": "TBD"
+            },
+            {
+              "title": "Ad performance optimization and budget 'fat' cutting",
+              "owner": "Richard",
+              "category": "paid-ads",
+              "eta": "Immediate"
+            }
+          ],
           "needs_client_action": [
             {
               "title": "Provide EverWebinar login",
-              "reason": "Critical blocker for funnel setup; overdue since March 20th.",
+              "reason": "Critical blocker for funnel setup and webinar page configuration.",
               "since": "2026-03-20"
             },
             {
               "title": "Decide on ad budget increase",
-              "reason": "Needed to scale the current campaign performance; overdue since March 20th.",
+              "reason": "Pending decision required to scale lead volume for the coaching program.",
               "since": "2026-03-20"
             },
             {
               "title": "Incorporate new webinar replay into EverWebinar",
-              "reason": "Ensures the funnel uses the most recent high-converting content.",
+              "reason": "Ensure the most recent and high-converting version is live for attendees.",
               "since": "2026-03-30"
             }
           ]
@@ -781,25 +934,25 @@
               "since": "2026-03-20"
             },
             {
-              "title": "Invite 'friendlies' and check internal list",
-              "owner": "Kristen Luidhardt",
-              "since": "2026-03-20"
-            },
-            {
               "title": "Nudge Jared regarding Orlando paperwork",
               "owner": "Philip Mutrie",
               "since": "2026-03-19"
+            },
+            {
+              "title": "Invite 'friendlies' and check internal list",
+              "owner": "Kristen Luidhardt",
+              "since": "2026-03-20"
             }
           ],
           "client_overdue": [
             {
-              "title": "Provide EverWebinar login",
-              "action_needed": "Anthony R to share credentials for webinar page setup.",
+              "title": "EverWebinar login credentials",
+              "action_needed": "Anthony R to provide access details",
               "since": "2026-03-20"
             },
             {
-              "title": "Decide on ad budget increase",
-              "action_needed": "Kristen Luidhardt to approve budget for campaign optimization.",
+              "title": "Budget increase decision",
+              "action_needed": "Kristen L to approve/deny scaling",
               "since": "2026-03-20"
             }
           ]
@@ -807,54 +960,54 @@
         "strategic_direction": [
           {
             "priority": "HIGH",
-            "title": "Transition to Evergreen Webinar Funnel",
-            "reasoning": "With the live webinar date (March 20th) passed, the focus should shift to a 24/7 evergreen model to maintain lead flow for the coaching business without manual intervention.",
+            "title": "Unblock Funnel Infrastructure",
+            "reasoning": "We have several 'Agreed' items tied to EverWebinar. Without the login and replay update, the email-marketing and funnel-campaign services are paralyzed. This is the top priority for the next 48 hours.",
             "category": "funnel-campaign",
             "task_type": "webinar-page-setup"
           },
           {
             "priority": "MEDIUM",
-            "title": "High-Ticket Website Tech Audit",
-            "reasoning": "Prosper Group currently lacks an active website service. A professional coaching site is essential for establishing authority and improving the conversion rate of paid traffic coming from ads.",
+            "title": "Coaching Landing Page Audit (Website Upsell)",
+            "reasoning": "Since 'website' is a service gap, proposing a dedicated landing page refresh or technical site audit makes sense now that ads are active. Higher conversion on the site will maximize the ROI of the proposed ad budget increase.",
             "category": "website",
-            "task_type": "technical-seo"
+            "task_type": "website-tech-infrastructure"
           },
           {
             "priority": "MEDIUM",
-            "title": "Video Creative Performance Analysis",
-            "reasoning": "Item 'Check video usage' is pending. Coaching success relies heavily on personal brand; identifying which video hooks are resonating will inform the next batch of ad creatives.",
-            "category": "creative",
-            "task_type": "video-editing"
+            "title": "Webinar-to-Email Retargeting Sequence",
+            "reasoning": "In the coaching industry, the sale often happens in the follow-up. Once the follow-up flow is confirmed, we should move toward a long-term 'indoctrination' sequence to nurture those who didn't book a call immediately.",
+            "category": "email-marketing",
+            "task_type": "webinar-email-sequence"
           }
         ],
         "suggested_agenda": [
           {
-            "topic": "Quick Wins: Webinar Replay & Technical Access",
+            "topic": "Quick Wins: Access & Paperwork",
             "minutes": 5,
-            "notes": "Address the EverWebinar login and replay upload to clear the current funnel bottleneck."
+            "notes": "Secure EverWebinar login and status update on Orlando paperwork nudge."
           },
           {
-            "topic": "Paid Ads: Budget & Performance Review",
+            "topic": "Ad Performance & Budget Scaling",
             "minutes": 10,
-            "notes": "Discuss the budget increase decision and Richard's analysis of 'fat cutting' on current ad sets."
+            "notes": "Discuss Richard's ad optimization findings and Kristen's decision on the budget increase."
           },
           {
-            "topic": "Main Discussion: Website & Tech Infrastructure",
-            "minutes": 15,
-            "notes": "Propose moving beyond funnels to a full website build to support long-term coaching authority."
-          },
-          {
-            "topic": "Accountability & Roadmap Reset",
+            "topic": "Funnel & Follow-up Finalization",
             "minutes": 10,
-            "notes": "Re-assign dates for the 10 'Agreed' items to ensure the 2026-03-20 overdue tasks are back on track."
+            "notes": "Review the email flow status and integration of the new webinar replay."
+          },
+          {
+            "topic": "Strategic Growth: Conversion Infrastructure",
+            "minutes": 5,
+            "notes": "Introduce the value of a website/landing page refresh to lower CPL (Lead-in for Website upsell)."
           }
         ],
-        "estimated_meeting_length_minutes": 40
+        "estimated_meeting_length_minutes": 30
       },
-      "raw_response": "{\n  \"status_report\": {\n    \"completed\": [],\n    \"in_progress\": [],\n    \"needs_client_action\": [\n      {\n        \"title\": \"Provide EverWebinar login\",\n        \"reason\": \"Critical blocker for funnel setup; overdue since March 20th.\",\n        \"since\": \"2026-03-20\"\n      },\n      {\n        \"title\": \"Decide on ad budget increase\",\n        \"reason\": \"Needed to scale the current campaign performance; overdue since March 20th.\",\n        \"since\": \"2026-03-20\"\n      },\n      {\n        \"title\": \"Incorporate new webinar replay into EverWebinar\",\n        \"reason\": \"Ensures the funnel uses the most recent high-converting content.\",\n        \"since\": \"2026-03-30\"\n      }\n    ]\n  },\n  \"accountability\": {\n    \"stale_items\": [],\n    \"b3x_overdue\": [\n      {\n        \"title\": \"Confirm webinar follow-up flow\",\n        \"owner\": \"Philip Mutrie\",\n        \"since\": \"2026-03-20\"\n      },\n      {\n        \"title\": \"Invite 'friendlies' and check internal list\",\n        \"owner\": \"Kristen Luidhardt\",\n        \"since\": \"2026-03-20\"\n      },\n      {\n        \"title\": \"Nudge Jared regarding Orlando paperwork\",\n        \"owner\": \"Philip Mutrie\",\n        \"since\": \"2026-03-19\"\n      }\n    ],\n    \"client_overdue\": [\n      {\n        \"title\": \"Provide EverWebinar login\",\n        \"action_needed\": \"Anthony R to share credentials for webinar page setup.\",\n        \"since\": \"2026-03-20\"\n      },\n      {\n        \"title\": \"Decide on ad budget increase\",\n        \"action_needed\": \"Kristen Luidhardt to approve budget for campaign optimization.\",\n        \"since\": \"2026-03-20\"\n      }\n    ]\n  },\n  \"strategic_direction\": [\n    {\n      \"priority\": \"HIGH\",\n      \"title\": \"Transition to Evergreen Webinar Funnel\",\n      \"reasoning\": \"With the live webinar date (March 20th) passed, the focus should shift to a 24/7 evergreen model to maintain lead flow for the coaching business without manual intervention.\",\n      \"category\": \"funnel-campaign\",\n      \"task_type\": \"webinar-page-setup\"\n    },\n    {\n      \"priority\": \"MEDIUM\",\n      \"title\": \"High-Ticket Website Tech Audit\",\n      \"reasoning\": \"Prosper Group currently lacks an active website service. A professional coaching site is essential for establishing authority and improving the conversion rate of paid traffic coming from ads.\",\n      \"category\": \"website\",\n      \"task_type\": \"technical-seo\"\n    },\n    {\n      \"priority\": \"MEDIUM\",\n      \"title\": \"Video Creative Performance Analysis\",\n      \"reasoning\": \"Item 'Check video usage' is pending. Coaching success relies heavily on personal brand; identifying which video hooks are resonating will inform the next batch of ad creatives.\",\n      \"category\": \"creative\",\n      \"task_type\": \"video-editing\"\n    }\n  ],\n  \"suggested_agenda\": [\n    {\n      \"topic\": \"Quick Wins: Webinar Replay & Technical Access\",\n      \"minutes\": 5,\n      \"notes\": \"Address the EverWebinar login and replay upload to clear the current funnel bottleneck.\"\n    },\n    {\n      \"topic\": \"Paid Ads: Budget & Performance Review\",\n      \"minutes\": 10,\n      \"notes\": \"Discuss the budget increase decision and Richard's analysis of 'fat cutting' on current ad sets.\"\n    },\n    {\n      \"topic\": \"Main Discussion: Website & Tech Infrastructure\",\n      \"minutes\": 15,\n      \"notes\": \"Propose moving beyond funnels to a full website build to support long-term coaching authority.\"\n    },\n    {\n      \"topic\": \"Accountability & Roadmap Reset\",\n      \"minutes\": 10,\n      \"notes\": \"Re-assign dates for the 10 'Agreed' items to ensure the 2026-03-20 overdue tasks are back on track.\"\n    }\n  ],\n  \"estimated_meeting_length_minutes\": 40\n}",
-      "latency_ms": 11303,
+      "raw_response": "{\n  \"status_report\": {\n    \"completed\": [],\n    \"in_progress\": [\n      {\n        \"title\": \"Check video usage and access\",\n        \"owner\": \"Philip Mutrie\",\n        \"category\": \"creative\",\n        \"eta\": \"TBD\"\n      },\n      {\n        \"title\": \"Ad performance optimization and budget 'fat' cutting\",\n        \"owner\": \"Richard\",\n        \"category\": \"paid-ads\",\n        \"eta\": \"Immediate\"\n      }\n    ],\n    \"needs_client_action\": [\n      {\n        \"title\": \"Provide EverWebinar login\",\n        \"reason\": \"Critical blocker for funnel setup and webinar page configuration.\",\n        \"since\": \"2026-03-20\"\n      },\n      {\n        \"title\": \"Decide on ad budget increase\",\n        \"reason\": \"Pending decision required to scale lead volume for the coaching program.\",\n        \"since\": \"2026-03-20\"\n      },\n      {\n        \"title\": \"Incorporate new webinar replay into EverWebinar\",\n        \"reason\": \"Ensure the most recent and high-converting version is live for attendees.\",\n        \"since\": \"2026-03-30\"\n      }\n    ]\n  },\n  \"accountability\": {\n    \"stale_items\": [],\n    \"b3x_overdue\": [\n      {\n        \"title\": \"Confirm webinar follow-up flow\",\n        \"owner\": \"Philip Mutrie\",\n        \"since\": \"2026-03-20\"\n      },\n      {\n        \"title\": \"Nudge Jared regarding Orlando paperwork\",\n        \"owner\": \"Philip Mutrie\",\n        \"since\": \"2026-03-19\"\n      },\n      {\n        \"title\": \"Invite 'friendlies' and check internal list\",\n        \"owner\": \"Kristen Luidhardt\",\n        \"since\": \"2026-03-20\"\n      }\n    ],\n    \"client_overdue\": [\n      {\n        \"title\": \"EverWebinar login credentials\",\n        \"action_needed\": \"Anthony R to provide access details\",\n        \"since\": \"2026-03-20\"\n      },\n      {\n        \"title\": \"Budget increase decision\",\n        \"action_needed\": \"Kristen L to approve/deny scaling\",\n        \"since\": \"2026-03-20\"\n      }\n    ]\n  },\n  \"strategic_direction\": [\n    {\n      \"priority\": \"HIGH\",\n      \"title\": \"Unblock Funnel Infrastructure\",\n      \"reasoning\": \"We have several 'Agreed' items tied to EverWebinar. Without the login and replay update, the email-marketing and funnel-campaign services are paralyzed. This is the top priority for the next 48 hours.\",\n      \"category\": \"funnel-campaign\",\n      \"task_type\": \"webinar-page-setup\"\n    },\n    {\n      \"priority\": \"MEDIUM\",\n      \"title\": \"Coaching Landing Page Audit (Website Upsell)\",\n      \"reasoning\": \"Since 'website' is a service gap, proposing a dedicated landing page refresh or technical site audit makes sense now that ads are active. Higher conversion on the site will maximize the ROI of the proposed ad budget increase.\",\n      \"category\": \"website\",\n      \"task_type\": \"website-tech-infrastructure\"\n    },\n    {\n      \"priority\": \"MEDIUM\",\n      \"title\": \"Webinar-to-Email Retargeting Sequence\",\n      \"reasoning\": \"In the coaching industry, the sale often happens in the follow-up. Once the follow-up flow is confirmed, we should move toward a long-term 'indoctrination' sequence to nurture those who didn't book a call immediately.\",\n      \"category\": \"email-marketing\",\n      \"task_type\": \"webinar-email-sequence\"\n    }\n  ],\n  \"suggested_agenda\": [\n    {\n      \"topic\": \"Quick Wins: Access & Paperwork\",\n      \"minutes\": 5,\n      \"notes\": \"Secure EverWebinar login and status update on Orlando paperwork nudge.\"\n    },\n    {\n      \"topic\": \"Ad Performance & Budget Scaling\",\n      \"minutes\": 10,\n      \"notes\": \"Discuss Richard's ad optimization findings and Kristen's decision on the budget increase.\"\n    },\n    {\n      \"topic\": \"Funnel & Follow-up Finalization\",\n      \"minutes\": 10,\n      \"notes\": \"Review the email flow status and integration of the new webinar replay.\"\n    },\n    {\n      \"topic\": \"Strategic Growth: Conversion Infrastructure\",\n      \"minutes\": 5,\n      \"notes\": \"Introduce the value of a website/landing page refresh to lower CPL (Lead-in for Website upsell).\"\n    }\n  ],\n  \"estimated_meeting_length_minutes\": 30\n}",
+      "latency_ms": 11224,
       "tokens_in": 2163,
-      "tokens_out": 1042
+      "tokens_out": 1145
     }
   ],
   "judges": {
@@ -872,60 +1025,64 @@
       "model_a_avg": 4,
       "model_b_avg": 3,
       "winner": "model_a",
-      "reasoning": "Model A is better because its category and task-type selections are generally more accurate. For example, Model B miscategorizes \"Provide EverWebinar login\" and \"Send Outlook email forwarding instructions\". Model A also handles the owner detection better, providing a more meaningful 'null' value rather than hallucinating a name. Finally, model A is also better in that it assumes the 'b3x' side when it is not specified, making it more accurate overall.",
-      "agreement_count": 12,
+      "reasoning": "Model A's category and task_type classifications are more accurate overall. Owner detection is also slightly better. For instance, Model B incorrectly categorized 'Provide EverWebinar login' as 'crm-automation' and changed many `owner_side` classifications. Model A, although not perfect, provides better task category selection and assignment of owners.",
+      "agreement_count": 8,
       "specific_differences": [
-        "Provide EverWebinar login: Model A - funnel-campaign, Model B - crm-automation",
-        "Invite 'friendlies' and check internal list: Model A - email-marketing task is 'raise-hand-emails', Model B - funnel-campaign and task is 'promo-campaign'",
-        "Nudge him to make sure, hey, noticed you hadn't sent in your paperwork: Model A owner_name = null, Model B owner_name = Bill",
-        "Deploy VIP delivery email and replay page: Model A - email-marketing and task_type 'content-emails', Model B - funnel-campaign and task_type 'webinar-page-setup', owner_side differs as well.",
-        "Send Outlook email forwarding instructions: Model A - client-ops, Model B - website"
+        "Model B categorized 'Provide EverWebinar login' as 'crm-automation', Model A categorized it as 'funnel-campaign'. Model A is better.",
+        "Model B classified the 1st task 'Check video usage and access' under client instead of b3x.",
+        "Model B classified task #3 'Confirm webinar follow-up flow' under client instead of b3x.",
+        "Model B classified the 5th task 'Invite friendlies' under email-marketing instead of funnel-campaign.",
+        "Model B classified the 9th task owner_name as Bill instead of Null.",
+        "Model B incorrectly classified 'Send Outlook email forwarding instructions' under 'website' instead of 'client-ops' and changed the 'task_type' and 'owner_side'.",
+        "Model B misclassified some owner sides, which Model A had correct"
       ]
     },
     "roadmap": {
       "model_a_scores": {
-        "detection": 1,
-        "status_accuracy": 5,
+        "detection": 2,
+        "status_accuracy": 3,
         "new_items": 4,
-        "evidence": 4
+        "evidence": 5
       },
       "model_b_scores": {
-        "detection": 1,
-        "status_accuracy": 1,
-        "new_items": 1,
-        "evidence": 1
+        "detection": 5,
+        "status_accuracy": 4,
+        "new_items": 5,
+        "evidence": 4
       },
       "model_a_avg": 3.5,
-      "model_b_avg": 1,
-      "winner": "model_a",
-      "reasoning": "Model A identified a new item correctly and provided good transcript evidence. Although it failed to detect any of the existing items being discussed, the status accuracy for existing items is high given it marks everything as unchanged. Model B simply returned null, which is a complete failure.",
+      "model_b_avg": 4.5,
+      "winner": "model_b",
+      "reasoning": "Model B demonstrates superior performance in detecting discussed items and deriving accurate status changes with supporting evidence. While both models identify new items effectively, Model B's classifications and overall accuracy in reflecting the meeting's outcomes are stronger.",
       "specific_differences": [
-        "Model A identified and extracted a new roadmap item while Model B provided null output.",
-        "Model A correctly marked all existing items as unchanged due to lack of discussion, while Model B provided a null response."
+        "Model B more accurately detects which existing roadmap items were discussed in the meeting.",
+        "Model B provides more granular status updates (e.g., 'in-progress', 'done') with relevant transcript evidence, while Model A mostly indicates 'unchanged'.",
+        "Model B extracts a greater number of new actionable items from the meeting transcript.",
+        "Model A fails to update roadmap item 10 although it is the basis of a new item",
+        "Model A extracts 2 updates related to incorporating the webinar reply, model B incorporates them as a VIP update for the webinar."
       ]
     },
     "prep": {
       "model_a_scores": {
         "completeness": 5,
-        "groundedness": 5,
+        "groundedness": 4,
         "strategic_value": 4,
         "actionability": 4
       },
       "model_b_scores": {
         "completeness": 5,
         "groundedness": 4,
-        "strategic_value": 5,
-        "actionability": 5
+        "strategic_value": 4,
+        "actionability": 4
       },
-      "model_a_avg": 4.5,
-      "model_b_avg": 4.75,
-      "winner": "model_b",
-      "reasoning": "Model B is slightly better than Model A because its recommendations and agenda are more specific and actionable. It directly assigns actions to specific individuals and frames the strategy around a shift to an evergreen webinar funnel, showing a deeper understanding of potential next steps. The agenda also dives deeper into specific items. While both models are complete and grounded, Model B has a better strategic perspective and provides actionable insights.",
+      "model_a_avg": 4.25,
+      "model_b_avg": 4.25,
+      "winner": "tie",
+      "reasoning": "Both models produce high-quality outputs that are comparable. They both present a complete status report, highlight strategic opportunities, and provide a suggested agenda. The actionability is high for both, making them effective meeting preparation tools.",
       "specific_differences": [
-        "Model B assigns owners to overdue tasks (e.g., 'Anthony R to share credentials') whereas Model A uses generic descriptions.",
-        "Model B suggests transitioning to an evergreen webinar funnel, a more proactive strategic direction compared to Model A's focus on simply accelerating webinar traffic.",
-        "Model B's agenda items are more detailed and actionable, like 'Paid Ads: Budget & Performance Review' referencing 'Richard's analysis of fat cutting' while Model A is more generic.",
-        "Model B's reasoning for strategic direction mentions specific pending items (e.g. video creative performance analysis) that Model A does not."
+        "Model B lists assignees of client overdue items, which could be slightly more actionable. Model B lists ETAs for In Progress items.",
+        "Model A's strategic proposal reasoning connects directly to a specific action item, making it slightly more grounded.",
+        "Model B's strategic item 'Unblock Funnel Infrastructure' is very direct and specific, indicating a clear, immediate priority."
       ]
     }
   }
