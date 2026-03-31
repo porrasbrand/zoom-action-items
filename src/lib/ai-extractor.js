@@ -88,7 +88,7 @@ export async function extractMeetingData({ transcript, topic, clientName, meetin
     .replace('{client_name}', clientName || 'Unknown')
     .replace('{meeting_date}', meetingDate || 'Unknown')
     .replace('{speakers}', speakers?.join(', ') || 'Unknown')
-    .replace('{transcript}', transcript.slice(0, 200_000)); // Gemini Flash 1M context - 200K chars covers all meetings
+    .replace('{transcript}', transcript); // Full transcript - Gemini Flash supports 1M token context
 
   const result = await gemini.generateContent(prompt);
   const response = result.response;

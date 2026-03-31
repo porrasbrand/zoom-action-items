@@ -191,7 +191,7 @@ TASK TAXONOMY (valid categories and types):
 ${buildTaxonomySummary()}
 
 MEETING TRANSCRIPT:
-${(meeting.transcript_raw || '').substring(0, 200000)}
+${meeting.transcript_raw || ''}
 
 MEETING ACTION ITEMS (already extracted):
 ${JSON.stringify(actionItemsSummary, null, 2)}
