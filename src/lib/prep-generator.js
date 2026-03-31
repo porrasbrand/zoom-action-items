@@ -163,16 +163,18 @@ SECTION 4 - SUGGESTED AGENDA:
 SECTION 5 - PROJECTED ROADMAP (New items to propose to client):
 - Based on completed work, service gaps, industry patterns, and meeting history, propose 3-5 SPECIFIC new roadmap items that B3X should pitch to the client in the next meeting.
 - These are NOT items already on the roadmap. They are NEW proposals.
-- Each item must be concrete enough that Phil can present it as: "Here's what we recommend we add to our plan."
-- For each proposed item:
+- Each item must be detailed enough that Phil can confidently pitch it without extra preparation.
+- For each proposed item, provide DETAILED paragraphs (not one-liners):
   - title: Clear, specific task name (not generic like "improve SEO")
-  - why_now: Connect to a specific trigger — a completed prerequisite, a seasonal opportunity, a service gap, or something the client mentioned in recent meetings
+  - what: 2-3 sentences describing exactly what this project involves — scope, deliverables, what gets built or done
+  - why_now: 2-3 sentences connecting to a specific trigger — a completed prerequisite, a seasonal opportunity, a service gap, or something from recent meetings. Reference specific roadmap items or meeting discussions by name.
   - category and task_type: From the taxonomy
-  - effort_b3x: Estimated B3X hours (e.g., "4hrs setup", "8hrs/month ongoing")
-  - effort_client: What the client needs to provide or approve
+  - effort_b3x: What B3X will do, estimated hours, timeline (e.g., "4-hour audit in week 1, then 2hrs to implement fixes in week 2")
+  - effort_client: What the client specifically needs to provide or approve — be concrete (e.g., "WordPress admin access and approval of the audit report before changes are made")
   - prerequisites: What must be done first (reference roadmap items by title if applicable), or "None — can start immediately"
-  - impact: Expected outcome in plain language
+  - impact: 2-3 sentences on expected business outcome — be specific about what improves (conversion rate, lead quality, brand consistency, etc.)
   - priority: QUICK_WIN (small effort, fast result) | GROWTH (medium effort, scaling) | STRATEGIC (larger effort, long-term positioning)
+  - pitch_script: The EXACT 3-4 sentences Phil should say to introduce this to the client. Write in Phil's voice — warm, professional, connecting to something the client cares about. Start with context they'll recognize, then the recommendation, then the ask.
 - Prioritize: QUICK_WINs first, then GROWTH, then STRATEGIC
 - Do NOT repeat items that are already active on the roadmap
 - Ground every proposal in data from the roadmap, service gaps, or meeting context — no generic filler
@@ -211,14 +213,16 @@ OUTPUT FORMAT: Return ONLY valid JSON matching this schema:
   "projected_roadmap": [
     {
       "title": "...",
-      "why_now": "...",
+      "what": "Detailed description of the project scope and deliverables...",
+      "why_now": "2-3 sentences connecting to a specific trigger...",
       "category": "...",
       "task_type": "...",
-      "effort_b3x": "...",
-      "effort_client": "...",
+      "effort_b3x": "Detailed B3X effort with hours and timeline...",
+      "effort_client": "Specific client requirements...",
       "prerequisites": "...",
-      "impact": "...",
-      "priority": "QUICK_WIN | GROWTH | STRATEGIC"
+      "impact": "2-3 sentences on expected business outcome...",
+      "priority": "QUICK_WIN | GROWTH | STRATEGIC",
+      "pitch_script": "The exact 3-4 sentences Phil should say to introduce this..."
     }
   ],
   "talking_points": {

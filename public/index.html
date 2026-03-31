@@ -3008,6 +3008,57 @@
   line-height: 1.5;
 }
 
+.proposal-expand-btn {
+  font-size: 11px;
+  color: #58a6ff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 8px;
+  padding: 2px 6px;
+}
+.proposal-expand-btn:hover {
+  text-decoration: underline;
+}
+.proposal-detail-card {
+  display: none;
+  margin-top: 10px;
+  padding: 14px;
+  background: #21262d;
+  border-radius: 6px;
+  border-left: 3px solid #58a6ff;
+}
+.cockpit-item.expanded .proposal-detail-card {
+  display: block;
+}
+.cockpit-item.expanded .proposal-expand-btn::after {
+  content: '';
+}
+.proposal-field {
+  font-size: 13px;
+  color: #c9d1d9;
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+.proposal-field:last-child {
+  margin-bottom: 0;
+}
+.proposal-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #8b949e;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 2px;
+}
+.proposal-field.muted {
+  font-size: 11px;
+  color: #6e7681;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #30363d;
+}
+
 .cockpit-proposal-meta {
   font-size: 11px;
   color: #6e7681;
@@ -6056,11 +6107,17 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
               <div class="cockpit-title">
                 <span class="priority-badge ${priorityClass}">${escapeHtml(p.priority || 'GROWTH')}</span>
                 ${escapeHtml(p.title)}
+                <button class="proposal-expand-btn" onclick="event.stopPropagation(); this.closest('.cockpit-item').classList.toggle('expanded')">Details ▾</button>
               </div>
-              <div class="cockpit-ph none"><span class="cockpit-ph-icon">💡</span> New proposal</div>
-              ${talkingPoint ? '<div class="cockpit-talking-point">"' + escapeHtml(talkingPoint) + '"</div>' : ''}
-              <div class="cockpit-proposal-meta">
-                B3X: ${escapeHtml(p.effort_b3x || 'TBD')} | Client: ${escapeHtml(p.effort_client || 'TBD')} | Impact: ${escapeHtml(p.impact || '')}
+              ${p.pitch_script ? '<div class="cockpit-talking-point">"' + escapeHtml(p.pitch_script) + '"</div>' : (talkingPoint ? '<div class="cockpit-talking-point">"' + escapeHtml(talkingPoint) + '"</div>' : '')}
+              <div class="proposal-detail-card">
+                ${p.what ? '<div class="proposal-field"><span class="proposal-label">WHAT:</span> ' + escapeHtml(p.what) + '</div>' : ''}
+                ${p.why_now ? '<div class="proposal-field"><span class="proposal-label">WHY NOW:</span> ' + escapeHtml(p.why_now) + '</div>' : ''}
+                <div class="proposal-field"><span class="proposal-label">B3X EFFORT:</span> ${escapeHtml(p.effort_b3x || 'TBD')}</div>
+                <div class="proposal-field"><span class="proposal-label">CLIENT NEEDS:</span> ${escapeHtml(p.effort_client || 'TBD')}</div>
+                <div class="proposal-field"><span class="proposal-label">PREREQUISITES:</span> ${escapeHtml(p.prerequisites || 'None')}</div>
+                <div class="proposal-field"><span class="proposal-label">EXPECTED IMPACT:</span> ${escapeHtml(p.impact || '')}</div>
+                <div class="proposal-field muted">${escapeHtml(p.category || '')}${p.task_type ? ' / ' + escapeHtml(p.task_type) : ''}</div>
               </div>
             </div>
           </div>
