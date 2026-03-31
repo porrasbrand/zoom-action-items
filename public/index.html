@@ -2804,6 +2804,268 @@
   background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
 }
 
+/* Cockpit button */
+.prep-btn.cockpit {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+}
+
+.prep-btn.cockpit:hover:not(:disabled) {
+  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+}
+
+/* Meeting Cockpit styles */
+.cockpit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #30363d;
+  background: #161b22;
+}
+
+.cockpit-header h2 {
+  font-size: 18px;
+  color: #f0f6fc;
+  margin: 0;
+}
+
+.cockpit-header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.cockpit-header-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+}
+
+.cockpit-header-btn.primary {
+  background: #238636;
+  color: #fff;
+}
+
+.cockpit-header-btn.primary:hover {
+  background: #2ea043;
+}
+
+.cockpit-header-btn.secondary {
+  background: #21262d;
+  color: #c9d1d9;
+  border: 1px solid #30363d;
+}
+
+.cockpit-header-btn.secondary:hover {
+  background: #30363d;
+}
+
+.cockpit-section {
+  border-bottom: 1px solid #21262d;
+}
+
+.cockpit-section-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  background: #0d1117;
+  cursor: pointer;
+  user-select: none;
+}
+
+.cockpit-section-header:hover {
+  background: #161b22;
+}
+
+.cockpit-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #8b949e;
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.cockpit-section-count {
+  font-size: 12px;
+  color: #6e7681;
+  margin-left: 8px;
+}
+
+.cockpit-section-toggle {
+  color: #484f58;
+  font-size: 11px;
+}
+
+.cockpit-section.collapsed .cockpit-section-body {
+  display: none;
+}
+
+.cockpit-section.collapsed .cockpit-section-toggle::after {
+  content: "▸";
+}
+
+.cockpit-section-toggle::after {
+  content: "▾";
+}
+
+.cockpit-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #21262d;
+  transition: opacity 0.2s;
+}
+
+.cockpit-item:last-child {
+  border-bottom: none;
+}
+
+.cockpit-item.skipped {
+  opacity: 0.35;
+}
+
+.cockpit-item.skipped:hover {
+  opacity: 0.7;
+}
+
+.cockpit-checkbox {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.cockpit-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #238636;
+}
+
+.cockpit-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.cockpit-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #f0f6fc;
+  margin-bottom: 4px;
+}
+
+.cockpit-status {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-left: 8px;
+}
+
+.cockpit-status.done { background: rgba(63,185,80,0.2); color: #3fb950; }
+.cockpit-status.in-progress { background: rgba(210,153,34,0.2); color: #d29922; }
+.cockpit-status.blocked { background: rgba(248,81,73,0.2); color: #f85149; }
+.cockpit-status.agreed { background: rgba(136,136,136,0.2); color: #8b949e; }
+.cockpit-status.stale { background: rgba(248,81,73,0.15); color: #f85149; }
+
+.cockpit-ph {
+  font-size: 12px;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cockpit-ph-icon {
+  font-size: 14px;
+}
+
+.cockpit-ph.complete { color: #3fb950; }
+.cockpit-ph.open { color: #d29922; }
+.cockpit-ph.none { color: #484f58; }
+
+.cockpit-ph-link-btn {
+  font-size: 11px;
+  color: #58a6ff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.cockpit-talking-point {
+  font-size: 12px;
+  color: #c9d1d9;
+  font-style: italic;
+  margin-top: 8px;
+  padding: 10px 14px;
+  background: #21262d;
+  border-left: 3px solid #58a6ff;
+  border-radius: 0 6px 6px 0;
+  line-height: 1.5;
+}
+
+.cockpit-proposal-meta {
+  font-size: 11px;
+  color: #6e7681;
+  margin-top: 6px;
+}
+
+/* Cockpit Agenda View */
+.cockpit-agenda {
+  padding: 20px;
+}
+
+.cockpit-agenda h3 {
+  font-size: 16px;
+  color: #f0f6fc;
+  margin-bottom: 16px;
+}
+
+.cockpit-agenda-section {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.cockpit-agenda-section h4 {
+  font-size: 14px;
+  color: #f0f6fc;
+  margin-bottom: 10px;
+}
+
+.cockpit-agenda-section .time {
+  font-size: 12px;
+  color: #58a6ff;
+  float: right;
+}
+
+.cockpit-agenda-section ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #c9d1d9;
+  font-size: 13px;
+}
+
+.cockpit-agenda-section li {
+  margin-bottom: 4px;
+}
+
+.cockpit-agenda-total {
+  text-align: right;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f0f6fc;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #30363d;
+}
+
 /* Prep loading spinner */
 .prep-spinner {
   text-align: center;
@@ -3026,6 +3288,9 @@
           </button>
           <button class="prep-btn brief" id="generateBriefBtn" onclick="generateBrief()" disabled>
             Pre-Huddle Brief
+          </button>
+          <button class="prep-btn cockpit" id="cockpitBtn" onclick="loadCockpit()" disabled>
+            Meeting Cockpit
           </button>
         </div>
         <div class="prep-history" id="prepHistoryPanel">
@@ -5165,6 +5430,7 @@
           // Enable buttons when client is already selected
           document.getElementById('generatePrepBtn').disabled = false;
           document.getElementById('generateBriefBtn').disabled = false;
+          document.getElementById('cockpitBtn').disabled = false;
           document.getElementById('postSlackBtn').disabled = false;
           loadPrepHistory(sharedClientId);
         }
@@ -5569,6 +5835,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       sharedClientId = clientId || null;
       document.getElementById('generatePrepBtn').disabled = !clientId;
       document.getElementById('generateBriefBtn').disabled = !clientId;
+      document.getElementById('cockpitBtn').disabled = !clientId;
       document.getElementById('postSlackBtn').disabled = !clientId;
 
       // Sync roadmap dropdown
@@ -5643,6 +5910,259 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         btn.disabled = false;
         btn.textContent = 'Pre-Huddle Brief';
       }
+    }
+
+    // ============ MEETING COCKPIT ============
+
+    let cockpitData = null;
+
+    async function loadCockpit() {
+      if (!sharedClientId) return;
+
+      const btn = document.getElementById('cockpitBtn');
+      const panel = document.getElementById('prepRightPanel');
+
+      btn.disabled = true;
+      btn.textContent = 'Loading cockpit...';
+      panel.innerHTML = '<div class="prep-spinner"><div class="spinner-icon" aria-hidden="true">&#9881;</div><p>Loading meeting cockpit...</p></div>';
+
+      try {
+        const res = await fetch(`${API}/cockpit/${sharedClientId}`);
+        if (!res.ok) throw new Error('Failed to load cockpit');
+
+        cockpitData = await res.json();
+        renderCockpit(cockpitData);
+        showToast('Meeting cockpit loaded');
+      } catch (err) {
+        panel.innerHTML = '<div class="prep-empty"><h3>Failed to load cockpit</h3><p>' + escapeHtml(err.message) + '</p></div>';
+        showToast('Failed to load cockpit: ' + err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Meeting Cockpit';
+      }
+    }
+
+    function renderCockpit(data) {
+      const panel = document.getElementById('prepRightPanel');
+      const roadmap = data.roadmap || {};
+      const phLinks = data.ph_links || {};
+      const selections = data.selections || {};
+      const talkingPoints = data.talking_points || data.prep?.talking_points || {};
+
+      // Group items
+      const wins = (roadmap.recently_completed || []).slice(0, 5);
+      const inProgress = (roadmap.active || []).filter(i => i.status === 'in-progress');
+      const blockers = roadmap.blocked || [];
+      const stale = roadmap.stale || [];
+      const proposals = data.prep?.projected_roadmap || [];
+
+      let html = `
+        <div class="cockpit-header">
+          <h2>Meeting Cockpit: ${escapeHtml(data.client?.name || sharedClientId)}</h2>
+          <div class="cockpit-header-actions">
+            <button class="cockpit-header-btn secondary" onclick="refreshPHStatus()">Refresh PH Status</button>
+            <button class="cockpit-header-btn primary" onclick="buildAgenda()">Build My Agenda</button>
+          </div>
+        </div>
+      `;
+
+      // Render each section
+      html += renderCockpitSection('Wins to Report', wins, phLinks, selections, talkingPoints, 'done');
+      html += renderCockpitSection('In Progress', inProgress, phLinks, selections, talkingPoints, 'in-progress');
+      html += renderCockpitSection('Blockers — Need Answers', blockers, phLinks, selections, talkingPoints, 'blocked');
+      html += renderCockpitSection('Stale — Must Address', stale, phLinks, selections, talkingPoints, 'stale');
+      html += renderCockpitProposals('Phil\'s Pitch — Proposals', proposals, talkingPoints);
+
+      panel.innerHTML = html;
+    }
+
+    function renderCockpitSection(title, items, phLinks, selections, talkingPoints, statusClass) {
+      if (!items || items.length === 0) return '';
+
+      const itemsHtml = items.map(item => {
+        const phLink = phLinks[item.id];
+        const isSelected = selections[item.id] !== undefined ? selections[item.id] : (statusClass === 'done' && phLink?.ph_completed ? 0 : 1);
+        const talkingPoint = talkingPoints[item.title] || '';
+        const skippedClass = isSelected ? '' : 'skipped';
+
+        let phHtml = '';
+        if (phLink) {
+          const phClass = phLink.ph_completed ? 'complete' : 'open';
+          const phIcon = phLink.ph_completed ? '✅' : '🔄';
+          const phStatus = phLink.ph_completed ? 'Complete' : (phLink.ph_progress ? phLink.ph_progress + '%' : 'Open');
+          phHtml = `<div class="cockpit-ph ${phClass}"><span class="cockpit-ph-icon">${phIcon}</span> PH: "${escapeHtml(phLink.ph_task_title || '')}" — ${phStatus}</div>`;
+        } else {
+          phHtml = `<div class="cockpit-ph none"><span class="cockpit-ph-icon">📋</span> No PH task linked</div>`;
+        }
+
+        return `
+          <div class="cockpit-item ${skippedClass}" data-item-id="${item.id}">
+            <div class="cockpit-checkbox">
+              <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleCockpitItem(${item.id}, this.checked)">
+            </div>
+            <div class="cockpit-body">
+              <div class="cockpit-title">
+                ${escapeHtml(item.title)}
+                <span class="cockpit-status ${statusClass}">${item.status}</span>
+                ${item.meetings_silent_count >= 2 ? '<span class="cockpit-status stale">STALE ' + item.meetings_silent_count + ' mtgs</span>' : ''}
+              </div>
+              ${phHtml}
+              ${isSelected && talkingPoint ? '<div class="cockpit-talking-point">"' + escapeHtml(talkingPoint) + '"</div>' : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="cockpit-section">
+          <div class="cockpit-section-header" onclick="this.parentElement.classList.toggle('collapsed')">
+            <span class="cockpit-section-title">${title}</span>
+            <span class="cockpit-section-count">(${items.length})</span>
+            <span class="cockpit-section-toggle"></span>
+          </div>
+          <div class="cockpit-section-body">
+            ${itemsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCockpitProposals(title, proposals, talkingPoints) {
+      if (!proposals || proposals.length === 0) return '';
+
+      const itemsHtml = proposals.map((p, idx) => {
+        const talkingPoint = talkingPoints[p.title] || '';
+        const priorityClass = (p.priority || 'growth').toLowerCase().replace('_', '-');
+
+        return `
+          <div class="cockpit-item" data-proposal-idx="${idx}">
+            <div class="cockpit-checkbox">
+              <input type="checkbox" checked>
+            </div>
+            <div class="cockpit-body">
+              <div class="cockpit-title">
+                <span class="priority-badge ${priorityClass}">${escapeHtml(p.priority || 'GROWTH')}</span>
+                ${escapeHtml(p.title)}
+              </div>
+              <div class="cockpit-ph none"><span class="cockpit-ph-icon">💡</span> New proposal</div>
+              ${talkingPoint ? '<div class="cockpit-talking-point">"' + escapeHtml(talkingPoint) + '"</div>' : ''}
+              <div class="cockpit-proposal-meta">
+                B3X: ${escapeHtml(p.effort_b3x || 'TBD')} | Client: ${escapeHtml(p.effort_client || 'TBD')} | Impact: ${escapeHtml(p.impact || '')}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="cockpit-section">
+          <div class="cockpit-section-header" onclick="this.parentElement.classList.toggle('collapsed')">
+            <span class="cockpit-section-title">${title}</span>
+            <span class="cockpit-section-count">(${proposals.length})</span>
+            <span class="cockpit-section-toggle"></span>
+          </div>
+          <div class="cockpit-section-body">
+            ${itemsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    async function toggleCockpitItem(itemId, selected) {
+      const itemEl = document.querySelector(`.cockpit-item[data-item-id="${itemId}"]`);
+      if (itemEl) {
+        itemEl.classList.toggle('skipped', !selected);
+        // Show/hide talking point
+        const tpEl = itemEl.querySelector('.cockpit-talking-point');
+        if (tpEl) tpEl.style.display = selected ? 'block' : 'none';
+      }
+
+      try {
+        await fetch(`${API}/cockpit/${sharedClientId}/selection`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ roadmap_item_id: itemId, selected: selected ? 1 : 0 })
+        });
+      } catch (err) {
+        console.error('Failed to save selection:', err);
+      }
+    }
+
+    async function refreshPHStatus() {
+      if (!sharedClientId) return;
+
+      showToast('Refreshing PH status...');
+
+      try {
+        await fetch(`${API}/reconcile/${sharedClientId}/refresh`, { method: 'POST' });
+        showToast('PH status refreshed');
+        // Reload cockpit to show updated status
+        loadCockpit();
+      } catch (err) {
+        showToast('Failed to refresh: ' + err.message, true);
+      }
+    }
+
+    async function buildAgenda() {
+      if (!sharedClientId) return;
+
+      const panel = document.getElementById('prepRightPanel');
+      panel.innerHTML = '<div class="prep-spinner"><div class="spinner-icon" aria-hidden="true">&#9881;</div><p>Building agenda...</p></div>';
+
+      try {
+        const res = await fetch(`${API}/cockpit/${sharedClientId}/agenda`, { method: 'POST' });
+        if (!res.ok) throw new Error('Failed to build agenda');
+
+        const data = await res.json();
+        renderAgendaView(data);
+      } catch (err) {
+        panel.innerHTML = '<div class="prep-empty"><h3>Failed to build agenda</h3><p>' + escapeHtml(err.message) + '</p></div>';
+      }
+    }
+
+    function renderAgendaView(data) {
+      const panel = document.getElementById('prepRightPanel');
+
+      if (!data.agenda || data.agenda.length === 0) {
+        panel.innerHTML = `
+          <div class="cockpit-header">
+            <h2>My Agenda</h2>
+            <div class="cockpit-header-actions">
+              <button class="cockpit-header-btn secondary" onclick="loadCockpit()">← Back to Cockpit</button>
+            </div>
+          </div>
+          <div class="prep-empty">
+            <h3>No items selected</h3>
+            <p>Go back and check items you want to discuss</p>
+          </div>
+        `;
+        return;
+      }
+
+      const sectionsHtml = data.agenda.map(section => `
+        <div class="cockpit-agenda-section">
+          <h4>${escapeHtml(section.topic)} <span class="time">${section.minutes} min</span></h4>
+          <ul>
+            ${section.items.map(item => '<li>' + escapeHtml(item) + '</li>').join('')}
+          </ul>
+        </div>
+      `).join('');
+
+      panel.innerHTML = `
+        <div class="cockpit-header">
+          <h2>My Agenda</h2>
+          <div class="cockpit-header-actions">
+            <button class="cockpit-header-btn secondary" onclick="loadCockpit()">← Back to Cockpit</button>
+          </div>
+        </div>
+        <div class="cockpit-agenda">
+          <h3>Topics to Cover</h3>
+          ${sectionsHtml}
+          <div class="cockpit-agenda-total">
+            Total: ${data.total_minutes} minutes (${data.items_count} items)
+          </div>
+        </div>
+      `;
     }
 
     async function postPrepToSlack() {
