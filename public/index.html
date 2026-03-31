@@ -6113,7 +6113,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         const skippedClass = isSelected ? '' : 'skipped';
 
         let phHtml = '';
-        if (phLink) {
+        if (phLink && phLink.ph_task_id) {
           const phClass = phLink.ph_completed ? 'complete' : 'open';
           const phIcon = phLink.ph_completed ? '✅' : '🔄';
           const phStatus = phLink.ph_completed ? 'Complete' : (phLink.ph_progress ? phLink.ph_progress + '%' : 'Open');
