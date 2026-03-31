@@ -2126,6 +2126,7 @@
   border-color: #484f58;
 }
 
+    .roadmap-card.done {      opacity: 0.4;      border-left: 3px solid #3fb950;    }    .roadmap-card.done:hover {      opacity: 0.75;    }    .roadmap-card.done .roadmap-card-title {      text-decoration: line-through;      color: #8b949e;    }
 .roadmap-card.stale {
   border-left: 3px solid #d29922;
 }
@@ -2365,6 +2366,7 @@
   white-space: nowrap;
 }
 
+    .timeline-table tr.row-done td {      opacity: 0.35;    }    .timeline-table tr.row-done:hover td {      opacity: 0.7;    }    .timeline-table tr.row-done td.timeline-item-title {      text-decoration: line-through;      font-style: italic;    }
 .timeline-table tr:hover td {
   background: #161b22;
 }
@@ -5274,7 +5276,7 @@
         const ownerClass = item.owner_side === 'b3x' ? 'owner-b3x' : 'owner-client';
 
         return `
-          <div class="roadmap-card ${isStale ? 'stale' : ''}" id="roadmap-card-${item.id}">
+          <div class="roadmap-card ${isStale ? 'stale' : ''} ${item.status === 'done' || item.status === 'dropped' ? 'done' : ''}" id="roadmap-card-${item.id}">
             <div class="roadmap-card-header">
               <div class="roadmap-card-badges">
                 <span class="category-badge" style="background: ${catColor}20; color: ${catColor};">${escapeHtml(item.category)}</span>
@@ -5440,8 +5442,7 @@
       });
       html += '</tr></thead><tbody>';
 
-      for (const [itemKey, { title, firstIdx }] of allItems) {
-        html += `<tr><td class="timeline-item-title">${escapeHtml(title)}</td>`;
+for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap = parsed[parsed.length - 1];        const _latestItem = _lastSnap?.items?.find(i => (i.id || i.title) === itemKey);        const _isDone = _latestItem && (_latestItem.status === "done" || _latestItem.status === "dropped");        html += `<tr class="${_isDone ? "row-done" : ""}"><td class="timeline-item-title">${escapeHtml(title)}</td>`;
         parsed.forEach((snap, idx) => {
           if (idx < firstIdx) {
             html += '<td>—</td>';
