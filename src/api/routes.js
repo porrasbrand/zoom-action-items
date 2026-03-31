@@ -31,7 +31,7 @@ import {
 import { getTaxonomy } from '../lib/roadmap-processor.js';
 import { collectPrepData } from '../lib/prep-collector.js';
 import { generateMeetingPrep } from '../lib/prep-generator.js';
-import { formatAsMarkdown, formatForSlack } from '../lib/prep-formatter.js';
+import { formatAsMarkdown, formatForSlack, formatBrief } from '../lib/prep-formatter.js';
 import { readdirSync, readFileSync as fsReadFileSync, existsSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -1437,6 +1437,18 @@ router.get('/prep/:clientId/markdown', async (req, res) => {
     const result = await generateMeetingPrep(prepData);
     const markdown = formatAsMarkdown(result.json);
     res.type('text/plain').send(markdown);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/prep/:clientId/brief - Generate pre-huddle brief (returns text)
+router.get('/prep/:clientId/brief', async (req, res) => {
+  try {
+    const prepData = await collectPrepData(getDatabase(), req.params.clientId);
+    const result = await generateMeetingPrep(prepData);
+    const brief = formatBrief(result.json);
+    res.type('text/plain').send(brief);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

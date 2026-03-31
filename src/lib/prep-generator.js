@@ -160,6 +160,23 @@ SECTION 4 - SUGGESTED AGENDA:
 - End with clear next steps
 - Estimate total meeting length
 
+SECTION 5 - PROJECTED ROADMAP (New items to propose to client):
+- Based on completed work, service gaps, industry patterns, and meeting history, propose 3-5 SPECIFIC new roadmap items that B3X should pitch to the client in the next meeting.
+- These are NOT items already on the roadmap. They are NEW proposals.
+- Each item must be concrete enough that Phil can present it as: "Here's what we recommend we add to our plan."
+- For each proposed item:
+  - title: Clear, specific task name (not generic like "improve SEO")
+  - why_now: Connect to a specific trigger — a completed prerequisite, a seasonal opportunity, a service gap, or something the client mentioned in recent meetings
+  - category and task_type: From the taxonomy
+  - effort_b3x: Estimated B3X hours (e.g., "4hrs setup", "8hrs/month ongoing")
+  - effort_client: What the client needs to provide or approve
+  - prerequisites: What must be done first (reference roadmap items by title if applicable), or "None — can start immediately"
+  - impact: Expected outcome in plain language
+  - priority: QUICK_WIN (small effort, fast result) | GROWTH (medium effort, scaling) | STRATEGIC (larger effort, long-term positioning)
+- Prioritize: QUICK_WINs first, then GROWTH, then STRATEGIC
+- Do NOT repeat items that are already active on the roadmap
+- Ground every proposal in data from the roadmap, service gaps, or meeting context — no generic filler
+
 OUTPUT FORMAT: Return ONLY valid JSON matching this schema:
 {
   "status_report": {
@@ -178,7 +195,20 @@ OUTPUT FORMAT: Return ONLY valid JSON matching this schema:
   "suggested_agenda": [
     {"topic": "...", "minutes": 5, "notes": "..."}
   ],
-  "estimated_meeting_length_minutes": 30
+  "estimated_meeting_length_minutes": 30,
+  "projected_roadmap": [
+    {
+      "title": "...",
+      "why_now": "...",
+      "category": "...",
+      "task_type": "...",
+      "effort_b3x": "...",
+      "effort_client": "...",
+      "prerequisites": "...",
+      "impact": "...",
+      "priority": "QUICK_WIN | GROWTH | STRATEGIC"
+    }
+  ]
 }`;
 
   try {
@@ -226,7 +256,7 @@ OUTPUT FORMAT: Return ONLY valid JSON matching this schema:
  * Default prep structure for fallback
  */
 function getDefaultPrep(prepData) {
-  const { client, roadmap, meetings } = prepData;
+  const { client, roadmap, meetings, service_gaps } = prepData;
 
   return {
     status_report: {
@@ -278,6 +308,17 @@ function getDefaultPrep(prepData) {
       { topic: 'Next steps', minutes: 5, notes: 'Agree on priorities' }
     ],
     estimated_meeting_length_minutes: 30,
+    projected_roadmap: (service_gaps || []).map(gap => ({
+      title: `Activate ${gap} service`,
+      why_now: `${gap} is available but not active for this client`,
+      category: gap,
+      task_type: 'general',
+      effort_b3x: 'TBD',
+      effort_client: 'Approval needed',
+      prerequisites: 'None',
+      impact: 'Expand marketing footprint',
+      priority: 'GROWTH'
+    })).slice(0, 3),
     meta: {
       client_id: client.id,
       client_name: client.name,

@@ -131,6 +131,28 @@ export function formatAsMarkdown(prep) {
   }
   lines.push('');
 
+  // Section 5: Projected Roadmap
+  lines.push('━━━ SECTION 5: PROJECTED ROADMAP (What to propose next) ━━━');
+  lines.push('');
+
+  const projected = prep.projected_roadmap || [];
+  if (projected.length > 0) {
+    for (let i = 0; i < projected.length; i++) {
+      const p = projected[i];
+      lines.push(`  ${i + 1}. [${p.priority}] ${p.title}`);
+      lines.push(`     Why now: ${p.why_now}`);
+      lines.push(`     B3X effort: ${p.effort_b3x}`);
+      lines.push(`     Client needs: ${p.effort_client}`);
+      lines.push(`     Prerequisites: ${p.prerequisites}`);
+      lines.push(`     Impact: ${p.impact}`);
+      lines.push(`     Category: ${p.category}/${p.task_type || 'general'}`);
+      lines.push('');
+    }
+  } else {
+    lines.push('  (No projected items generated)');
+    lines.push('');
+  }
+
   // Footer
   lines.push('═══════════════════════════════════════════════════════');
   lines.push(`Generated: ${new Date().toISOString()}`);
@@ -187,7 +209,73 @@ function sumMinutes(agenda) {
   return agenda.reduce((sum, item) => sum + (item.minutes || 0), 0);
 }
 
+/**
+ * Format prep as pre-huddle brief (short cheat sheet).
+ *
+ * @param {Object} prep - Prep JSON from generateMeetingPrep()
+ * @returns {string} Pre-huddle brief text
+ */
+export function formatBrief(prep) {
+  const meta = prep.meta || {};
+  const sr = prep.status_report || {};
+  const acc = prep.accountability || {};
+  const proj = prep.projected_roadmap || [];
+  const agenda = prep.suggested_agenda || [];
+
+  const lines = [];
+
+  // Header
+  lines.push(`${meta.client_name || 'Client'} — Pre-Huddle Brief`);
+  lines.push(`Date: ${new Date().toISOString().split('T')[0]}`);
+  lines.push(`Days since last meeting: ${meta.days_since_last_meeting || '?'}`);
+  lines.push('');
+
+  // Wins
+  const wins = sr.completed || [];
+  lines.push(`WINS TO REPORT: ${wins.length}`);
+  wins.forEach(w => lines.push(`  + ${w.title}`));
+  lines.push('');
+
+  // Blockers
+  const blockers = [...(sr.needs_client_action || [])];
+  lines.push(`BLOCKERS TO RAISE: ${blockers.length}`);
+  blockers.forEach(b => lines.push(`  ! ${b.title} (${b.reason})`));
+  lines.push('');
+
+  // Stale
+  const stale = acc.stale_items || [];
+  lines.push(`STALE — MUST ADDRESS: ${stale.length}`);
+  stale.forEach(s => lines.push(`  !! ${s.title} (silent ${s.silent_meetings} meetings)`));
+  lines.push('');
+
+  // B3X Overdue
+  const b3xOverdue = acc.b3x_overdue || [];
+  if (b3xOverdue.length > 0) {
+    lines.push(`B3X OVERDUE: ${b3xOverdue.length}`);
+    b3xOverdue.forEach(o => lines.push(`  > ${o.title} — ${o.owner}`));
+    lines.push('');
+  }
+
+  // Projected proposals (top 3)
+  const topProposals = proj.slice(0, 3);
+  if (topProposals.length > 0) {
+    lines.push(`PHIL'S PITCH:`);
+    topProposals.forEach(p => lines.push(`  >> [${p.priority}] ${p.title}`));
+    lines.push('');
+  }
+
+  // One-liner agenda summary
+  if (agenda.length > 0) {
+    const totalMin = prep.estimated_meeting_length_minutes || agenda.reduce((s, a) => s + (a.minutes || 0), 0);
+    lines.push(`AGENDA: ${agenda.length} items, ${totalMin} min`);
+    agenda.forEach(a => lines.push(`  ${a.minutes}m — ${a.topic}`));
+  }
+
+  return lines.join('\n');
+}
+
 export default {
   formatAsMarkdown,
-  formatForSlack
+  formatForSlack,
+  formatBrief
 };

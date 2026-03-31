@@ -2722,6 +2722,88 @@
   border-top: 1px solid #30363d;
 }
 
+/* Projected roadmap items */
+.projected-item {
+  background: #0d1117;
+  border: 1px solid #21262d;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.projected-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.priority-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.priority-badge.quick-win { background: rgba(63,185,80,0.2); color: #3fb950; }
+.priority-badge.growth { background: rgba(210,153,34,0.2); color: #d29922; }
+.priority-badge.strategic { background: rgba(136,46,224,0.2); color: #a371f7; }
+
+.projected-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #f0f6fc;
+}
+
+.projected-details {
+  font-size: 12px;
+  color: #8b949e;
+}
+
+.projected-row {
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.projected-row strong {
+  color: #c9d1d9;
+}
+
+.projected-category {
+  font-size: 10px;
+  color: #6e7681;
+  margin-top: 8px;
+}
+
+/* Pre-huddle brief */
+.prep-brief {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.prep-brief pre {
+  font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #c9d1d9;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+}
+
+/* Brief button */
+.prep-btn.brief {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.prep-btn.brief:hover:not(:disabled) {
+  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+}
+
 /* Prep loading spinner */
 .prep-spinner {
   text-align: center;
@@ -2941,6 +3023,9 @@
           </button>
           <button class="prep-btn slack" id="postSlackBtn" onclick="postPrepToSlack()" disabled>
             Post to Slack
+          </button>
+          <button class="prep-btn brief" id="generateBriefBtn" onclick="generateBrief()" disabled>
+            Pre-Huddle Brief
           </button>
         </div>
         <div class="prep-history" id="prepHistoryPanel">
@@ -5079,6 +5164,7 @@
           document.getElementById('prepClientSelect').value = sharedClientId;
           // Enable buttons when client is already selected
           document.getElementById('generatePrepBtn').disabled = false;
+          document.getElementById('generateBriefBtn').disabled = false;
           document.getElementById('postSlackBtn').disabled = false;
           loadPrepHistory(sharedClientId);
         }
@@ -5482,6 +5568,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     function onPrepClientChange(clientId) {
       sharedClientId = clientId || null;
       document.getElementById('generatePrepBtn').disabled = !clientId;
+      document.getElementById('generateBriefBtn').disabled = !clientId;
       document.getElementById('postSlackBtn').disabled = !clientId;
 
       // Sync roadmap dropdown
@@ -5529,6 +5616,32 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         prepAbortController = null;
         btn.disabled = false;
         btn.textContent = 'Generate Fresh Prep';
+      }
+    }
+
+    async function generateBrief() {
+      if (!sharedClientId) return;
+
+      const btn = document.getElementById('generateBriefBtn');
+      const panel = document.getElementById('prepRightPanel');
+
+      btn.disabled = true;
+      btn.textContent = 'Generating brief...';
+      panel.innerHTML = '<div class="prep-spinner"><div class="spinner-icon" aria-hidden="true">&#9881;</div><p>Generating pre-huddle brief...</p></div>';
+
+      try {
+        const res = await fetch(`${API}/prep/${sharedClientId}/brief`);
+        if (!res.ok) throw new Error('Failed to generate brief');
+
+        const text = await res.text();
+        panel.innerHTML = '<div class="prep-brief"><pre>' + escapeHtml(text) + '</pre></div>';
+        showToast('Pre-huddle brief generated');
+      } catch (err) {
+        panel.innerHTML = '<div class="prep-empty"><h3>Failed to generate brief</h3><p>' + escapeHtml(err.message) + '</p></div>';
+        showToast('Failed to generate brief: ' + err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Pre-Huddle Brief';
       }
     }
 
@@ -5693,6 +5806,31 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
               ${a.notes ? '<div class="agenda-notes">' + escapeHtml(a.notes) + '</div>' : ''}
             `).join('') : '<div style="color: #8b949e; font-size: 13px;">No agenda generated</div>'}
             ${agenda.length > 0 ? `<div class="agenda-total">Estimated: ${totalMin} minutes</div>` : ''}
+          </div>
+        </div>
+      `;
+
+      // Section 5: Projected Roadmap
+      const projected = prep.projected_roadmap || [];
+      html += `
+        <div class="prep-section">
+          <h3 onclick="this.parentElement.classList.toggle('collapsed')" aria-expanded="true">PROJECTED ROADMAP</h3>
+          <div class="prep-section-body">
+            ${projected.length > 0 ? projected.map((p, i) => `
+              <div class="projected-item">
+                <div class="projected-header">
+                  <span class="priority-badge ${(p.priority || 'growth').toLowerCase().replace('_', '-')}">${escapeHtml(p.priority || 'GROWTH')}</span>
+                  <span class="projected-title">${escapeHtml(p.title)}</span>
+                </div>
+                <div class="projected-details">
+                  <div class="projected-row"><strong>Why now:</strong> ${escapeHtml(p.why_now || '')}</div>
+                  <div class="projected-row"><strong>B3X effort:</strong> ${escapeHtml(p.effort_b3x || 'TBD')} | <strong>Client needs:</strong> ${escapeHtml(p.effort_client || 'TBD')}</div>
+                  <div class="projected-row"><strong>Prerequisites:</strong> ${escapeHtml(p.prerequisites || 'None')}</div>
+                  <div class="projected-row"><strong>Impact:</strong> ${escapeHtml(p.impact || '')}</div>
+                  <div class="projected-category">${escapeHtml(p.category || '')}${p.task_type ? ' / ' + escapeHtml(p.task_type) : ''}</div>
+                </div>
+              </div>
+            `).join('') : '<div style="color: #8b949e; font-size: 13px;">No projected items generated</div>'}
           </div>
         </div>
       `;
