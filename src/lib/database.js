@@ -204,3 +204,8 @@ export function getStats() {
     total: d.prepare('SELECT COUNT(*) as count FROM meetings').get().count,
   };
 }
+
+/**
+ * Get raw database connection (for external modules like auto-push)
+ */
+export { getDb };

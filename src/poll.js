@@ -22,9 +22,15 @@ import { matchClient, isInternalMeeting } from './lib/client-matcher.js';
 import { extractMeetingData } from './lib/ai-extractor.js';
 import { postToSlack, formatSlackMessage, postAlert, resolveChannel } from './lib/slack-publisher.js';
 import * as db from './lib/database.js';
+import { isProofhubConfigured } from './lib/proofhub-client.js';
 
 const DRY_RUN = process.argv.includes('--dry-run') || process.env.DRY_RUN === 'true';
+const NO_PUSH = process.argv.includes('--no-push');
 const LOOKBACK_HOURS = parseInt(process.env.LOOKBACK_HOURS || '24', 10);
+
+// Auto-push configuration
+const AUTO_PUSH_ENABLED = process.env.AUTO_PUSH_ENABLED === 'true' && !NO_PUSH;
+const PILOT_CLIENTS = (process.env.AUTO_PUSH_PILOT_CLIENTS || '').split(',').filter(Boolean);
 
 function log(msg) {
   const ts = new Date().toISOString();
@@ -37,6 +43,38 @@ function log(msg) {
     mkdirSync(logDir, { recursive: true });
     const logFile = join(logDir, `${ts.slice(0, 10)}.log`);
     appendFileSync(logFile, line + '\n');
+  } catch { /* ignore log write errors */ }
+}
+
+/**
+ * Log auto-push results to dedicated log file
+ */
+function logAutoPush(result, clientName) {
+  const ts = new Date().toISOString();
+
+  try {
+    const logDir = join(__dirname, '..', 'logs');
+    mkdirSync(logDir, { recursive: true });
+    const logFile = join(logDir, 'auto-push.log');
+
+    const lines = [
+      `[${ts}] Meeting #${result.meeting_id} (${clientName}): ${result.summary.pushed} pushed, ${result.summary.drafted} drafted, ${result.summary.skipped} skipped, ${result.summary.client_reminders} client_reminders`
+    ];
+
+    for (const item of result.pushed) {
+      lines.push(`[${ts}]   PUSHED: "${item.title.substring(0, 50)}" → PH task #${item.ph_task_id || 'N/A'} (${item.owner_name}, due ${item.deadline})`);
+    }
+    for (const item of result.drafted) {
+      lines.push(`[${ts}]   DRAFTED: "${item.title.substring(0, 50)}" → pending review (${item.reason})`);
+    }
+    for (const item of result.skipped) {
+      lines.push(`[${ts}]   SKIPPED: "${item.title.substring(0, 50)}" → ${item.reason}`);
+    }
+    for (const item of result.client_reminders) {
+      lines.push(`[${ts}]   CLIENT_REMINDER: "${item.owner_name}: ${item.title.substring(0, 50)}"`);
+    }
+
+    appendFileSync(logFile, lines.join('\n') + '\n');
   } catch { /* ignore log write errors */ }
 }
 
@@ -132,6 +170,54 @@ async function processMeeting(meeting) {
       });
       const fallbackNote = slackResult.usedFallback ? ' (used fallback)' : '';
       log(`  Posted to Slack: ${slackResult.channel} (${slackResult.routing})${fallbackNote}`);
+    }
+
+    // Auto-push to ProofHub (if enabled and configured)
+    if (AUTO_PUSH_ENABLED && isProofhubConfigured() && !DRY_RUN) {
+      try {
+        const { autoPushMeeting } = await import('./lib/auto-push.js');
+        const { sendAutoPushNotification, initAutoPushTables } = await import('./lib/auto-push-notifier.js');
+
+        // Ensure drafts table exists
+        initAutoPushTables(db.getDb());
+
+        const pushResult = await autoPushMeeting(db.getDb(), meetingId, {
+          dryRun: false,
+          pilotClients: PILOT_CLIENTS.length > 0 ? PILOT_CLIENTS : null
+        });
+
+        log(`  ProofHub auto-push: ${pushResult.summary.pushed} pushed, ${pushResult.summary.drafted} drafts, ${pushResult.summary.skipped} skipped`);
+        logAutoPush(pushResult, clientName);
+
+        // Send Slack notification about auto-push results
+        if (pushResult.summary.pushed > 0 || pushResult.summary.drafted > 0) {
+          const notifyResult = await sendAutoPushNotification(db.getDb(), pushResult, {
+            id: meetingId,
+            topic,
+            client_id: clientId,
+            start_time,
+            duration_minutes: duration,
+          });
+          if (notifyResult.success) {
+            log(`  Auto-push notification sent to ${notifyResult.channel}`);
+          }
+        }
+
+        // Log any alerts
+        if (pushResult.alerts?.length > 0) {
+          for (const alert of pushResult.alerts) {
+            log(`  ⚠️ Auto-push alert: ${alert.message || alert.type}`);
+            if (alert.type === 'missing_ph_project') {
+              await postAlert(`Missing ProofHub project for client: ${alert.client_id}`);
+            }
+          }
+        }
+      } catch (pushErr) {
+        log(`  ProofHub auto-push ERROR: ${pushErr.message}`);
+        // Don't fail the whole pipeline if PH push fails
+      }
+    } else if (AUTO_PUSH_ENABLED && !isProofhubConfigured()) {
+      log('  Auto-push: ProofHub not configured, skipping');
     }
 
     return { processed: true, clientName, actionCount, decisionCount };
