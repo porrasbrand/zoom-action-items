@@ -49,6 +49,19 @@ export function runAuthMigrations() {
     )
   `);
 
+  // Create api_tokens table for token-based auth
+  d.exec(`
+    CREATE TABLE IF NOT EXISTS api_tokens (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      token TEXT UNIQUE NOT NULL,
+      name TEXT,
+      email TEXT NOT NULL,
+      role TEXT DEFAULT 'user',
+      created_at TEXT DEFAULT (datetime('now')),
+      expires_at TEXT
+    )
+  `);
+
   // Insert initial whitelist (ignore if exists)
   const insertUser = d.prepare(`
     INSERT OR IGNORE INTO auth_users (email, name, role) VALUES (?, ?, ?)
@@ -196,6 +209,62 @@ export function cleanExpiredSessions() {
 }
 
 /**
+ * Validate API token and return user info if valid
+ */
+export function validateApiToken(token) {
+  if (!token) return null;
+
+  const d = getDb();
+  const tokenRecord = d.prepare(`
+    SELECT * FROM api_tokens
+    WHERE token = ?
+    AND (expires_at IS NULL OR expires_at > datetime('now'))
+  `).get(token);
+
+  if (!tokenRecord) return null;
+
+  return {
+    id: tokenRecord.id,
+    email: tokenRecord.email,
+    name: tokenRecord.name,
+    role: tokenRecord.role,
+    isApiToken: true
+  };
+}
+
+/**
+ * Create a new API token
+ */
+export function createApiToken(email, name, role = 'user', expiresAt = null) {
+  const d = getDb();
+  const token = crypto.randomBytes(32).toString('hex'); // 64-char hex
+
+  d.prepare(`
+    INSERT INTO api_tokens (token, name, email, role, expires_at)
+    VALUES (?, ?, ?, ?, ?)
+  `).run(token, name, email.toLowerCase(), role, expiresAt);
+
+  return token;
+}
+
+/**
+ * List all API tokens
+ */
+export function listApiTokens() {
+  const d = getDb();
+  return d.prepare('SELECT id, name, email, role, created_at, expires_at FROM api_tokens ORDER BY id').all();
+}
+
+/**
+ * Delete an API token
+ */
+export function deleteApiToken(tokenId) {
+  const d = getDb();
+  const result = d.prepare('DELETE FROM api_tokens WHERE id = ?').run(tokenId);
+  return result.changes > 0;
+}
+
+/**
  * Auth middleware - checks session cookie and validates
  */
 export function authMiddleware(req, res, next) {
@@ -227,8 +296,33 @@ export function authMiddleware(req, res, next) {
 
 /**
  * API auth middleware - returns 401 instead of redirect
+ * Supports: cookie session, Bearer token, or token query param
  */
 export function apiAuthMiddleware(req, res, next) {
+  // Check for Bearer token in Authorization header
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7);
+    const user = validateApiToken(token);
+    if (user) {
+      req.user = user;
+      return next();
+    }
+    return res.status(401).json({ error: 'Invalid or expired API token' });
+  }
+
+  // Check for token query parameter
+  const tokenParam = req.query.token;
+  if (tokenParam) {
+    const user = validateApiToken(tokenParam);
+    if (user) {
+      req.user = user;
+      return next();
+    }
+    return res.status(401).json({ error: 'Invalid or expired API token' });
+  }
+
+  // Fall back to cookie-based session
   const sessionId = req.cookies?.zoom_session;
 
   if (!sessionId) {
@@ -292,5 +386,9 @@ export default {
   apiAuthMiddleware,
   listUsers,
   addUser,
-  removeUser
+  removeUser,
+  validateApiToken,
+  createApiToken,
+  listApiTokens,
+  deleteApiToken
 };
