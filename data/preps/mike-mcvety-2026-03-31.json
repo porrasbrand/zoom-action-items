@@ -1,0 +1,184 @@
+{
+  "status_report": {
+    "completed": [
+      {
+        "title": "Provide March Zoom session topic",
+        "date": "2026-03-06",
+        "category": "funnel-campaign"
+      }
+    ],
+    "in_progress": [
+      {
+        "title": "Report client survey findings",
+        "owner": "B3X",
+        "category": "reporting",
+        "eta": "Next meeting"
+      }
+    ],
+    "needs_client_action": [
+      {
+        "title": "Interview Michael for internal feedback",
+        "reason": "Overdue task since March 12 to capture internal success stories for marketing.",
+        "since": "2026-03-12"
+      },
+      {
+        "title": "Fill out Q2 planning checklist",
+        "reason": "Necessary to align our strategy for the upcoming quarter.",
+        "since": "2026-03-31"
+      },
+      {
+        "title": "Prepare data and slides for March 24th Zoom session",
+        "reason": "Confirm if this session was completed or if assets are still needed for a recording/recap.",
+        "since": "2026-03-24"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [],
+    "b3x_overdue": [
+      {
+        "title": "Verify meeting time zones",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-12"
+      },
+      {
+        "title": "Sync webinar registrants with GoHighLevel",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-24"
+      },
+      {
+        "title": "Draft April Raise Hand emails",
+        "owner": "Bill Soady",
+        "since": "2026-03-27"
+      },
+      {
+        "title": "Create 3 post-webinar follow-up emails",
+        "owner": "Bill Soady",
+        "since": "2026-03-27"
+      }
+    ],
+    "client_overdue": [
+      {
+        "title": "Interview Michael for internal feedback",
+        "action_needed": "Complete the profiling interview.",
+        "since": "2026-03-12"
+      },
+      {
+        "title": "Create a Reddit account",
+        "action_needed": "Setup account for organic strategy discussed on March 5.",
+        "since": "2026-03-12"
+      }
+    ]
+  },
+  "strategic_direction": [
+    {
+      "priority": "QUICK_WIN",
+      "title": "Social Proof Amplification",
+      "reasoning": "With Red Fortress recently ranked #1 in Fort Myers, we need to move the 'Blog post regarding #1 property management ranking' from agreed to done and syndicate this across the new Reddit/LinkedIn channels.",
+      "category": "website",
+      "task_type": "website-content-update"
+    },
+    {
+      "priority": "GROWTH",
+      "title": "Formalize Email Marketing Service",
+      "reasoning": "We are currently drafting 'Raise Hand' and 'Webinar' emails as one-offs. Transitioning this to a full 'email-marketing' service will ensure consistent lead nurturing beyond single events.",
+      "category": "email-marketing",
+      "task_type": "raise-hand-emails"
+    },
+    {
+      "priority": "HIGH",
+      "title": "Paid Ads Performance Recovery",
+      "reasoning": "Last meeting noted rising lead costs due to Google algorithm changes. A formal audit and activation of the 'paid-ads' service can stabilize these costs before they hit industry benchmarks.",
+      "category": "paid-ads",
+      "task_type": "paid-traffic-audit"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Wins & Recognitions: #1 Property Management Ranking",
+      "minutes": 5,
+      "notes": "Celebrate the ranking and discuss how to leverage it for social proof."
+    },
+    {
+      "topic": "Roadmap Accountability & Overdue Items",
+      "minutes": 10,
+      "notes": "Address GHL sync, April emails, and the Reddit account setup."
+    },
+    {
+      "topic": "Strategic Focus: Stabilizing Ad Costs & Q2 Planning",
+      "minutes": 10,
+      "notes": "Discuss the rising lead costs and the Q2 planning checklist."
+    },
+    {
+      "topic": "New Proposals & Next Steps",
+      "minutes": 5,
+      "notes": "Review the proposed projects for the next month."
+    }
+  ],
+  "estimated_meeting_length_minutes": 30,
+  "projected_roadmap": [
+    {
+      "title": "Rank #1 Hero Case Study PDF",
+      "what": "Creation of a high-end downloadable case study detailing the methodology that led Red Fortress to the #1 spot in Fort Myers. Includes graphic design and lead capture setup.",
+      "why_now": "Capitalizes on the momentum of the recent property management ranking and provides a high-value 'lead magnet' for the upcoming April 'Raise Hand' emails.",
+      "category": "funnel-campaign",
+      "task_type": "lead-magnet-creation",
+      "effort_b3x": "4 hours for copywriting and 3 hours for design.",
+      "effort_client": "Provide any internal data or quotes that contributed to the ranking success.",
+      "prerequisites": "None — can start immediately",
+      "impact": "Increases trust and conversion rate for new leads by providing tangible proof of expertise.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "Mike, that #1 ranking is a huge badge of honor. I'd love to turn that into a formal case study PDF we can use as a lead magnet. It’ll give us something high-value to offer in the April emails and prove your authority right out of the gate."
+    },
+    {
+      "title": "Google Ads 'Efficiency' Audit & Re-optimization",
+      "what": "A deep-dive technical audit into the current ad account to combat rising CPCs. This involves search term scrubbing, landing page speed checks, and bid strategy adjustments.",
+      "why_now": "In our March 5th huddle, we noted lead costs were creeping up due to Google's algorithm changes. We need to nip this in the bud before it affects the overall ROI.",
+      "category": "paid-ads",
+      "task_type": "paid-traffic-audit",
+      "effort_b3x": "6 hours for the audit and implementation of immediate 'negative keyword' optimizations.",
+      "effort_client": "Brief review of the findings to ensure targeting remains aligned with high-quality lead criteria.",
+      "prerequisites": "None — can start immediately",
+      "impact": "Expected to lower the cost per lead (CPL) and improve lead quality by filtering out the 'bad leads' Mike mentioned tracking.",
+      "priority": "GROWTH",
+      "pitch_script": "We noticed in the last report that Google's changes are starting to push your lead costs up. I want to run a focused efficiency audit to clean up the traffic and pull those costs back down to your usual benchmarks."
+    },
+    {
+      "title": "Automated Webinar Evergreen Sequence",
+      "what": "Building an automated workflow in GoHighLevel that takes the recording of the March 24th Zoom session and turns it into a permanent 'on-demand' webinar funnel.",
+      "why_now": "You’ve already done the work for the March 24th session. By syncing this with GoHighLevel (which is currently an open task), we can turn that one-time event into a 24/7 lead generator.",
+      "category": "crm-automation",
+      "task_type": "ghl-workflow",
+      "effort_b3x": "5 hours to set up the automation, landing page, and email triggers.",
+      "effort_client": "Provide the final video recording of the Zoom session.",
+      "prerequisites": "Sync webinar registrants with GoHighLevel",
+      "impact": "Creates a scalable, passive source of leads and nurtures them without manual intervention.",
+      "priority": "STRATEGIC",
+      "pitch_script": "That property tax Zoom session was great content. Instead of it being a one-and-done, let's turn it into an evergreen funnel in GoHighLevel so it keeps generating leads for you while you're focused on the coaching."
+    }
+  ],
+  "talking_points": {
+    "Provide March Zoom session topic": "Great news, Mike—we got the March Zoom topic finalized and that's already checked off the list.",
+    "Interview Michael for internal feedback": "Mike, do you have a window this week for that internal feedback interview? I want to make sure we're capturing the 'secret sauce' behind your #1 ranking.",
+    "Draft April Raise Hand emails": "Bill is finishing up the April Raise Hand drafts; we'll have those over for your eyes shortly to stay ahead of the month.",
+    "Google Ads 'Efficiency' Audit & Re-optimization": "I'm keeping an eye on those rising Google costs we discussed—I'd like to do a quick efficiency audit to make sure we aren't overpaying for those leads.",
+    "Automated Webinar Evergreen Sequence": "Since you did the heavy lifting on the property tax session, I want to pitch turning that recording into an evergreen funnel so it works for you in the background."
+  },
+  "meta": {
+    "client_id": "mike-mcvety",
+    "client_name": "Mike McVety",
+    "generated_at": "2026-03-31T16:15:06.375Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-19T19:26:06Z",
+    "days_since_last_meeting": 11,
+    "meetings_analyzed": 2,
+    "roadmap_stats": {
+      "total": 14,
+      "done": 1,
+      "in_progress": 1,
+      "blocked": 0,
+      "agreed": 12,
+      "stale": 0
+    }
+  }
+}

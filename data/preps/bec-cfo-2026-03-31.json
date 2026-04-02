@@ -1,0 +1,197 @@
+{
+  "status_report": {
+    "completed": [
+      {
+        "title": "Set up Workshop Zoom Registration & Pick Date",
+        "date": "2026-03-20",
+        "category": "funnel-campaign"
+      },
+      {
+        "title": "Provide Sales Call Recording for Audit",
+        "date": "2026-03-31",
+        "category": "client-ops"
+      },
+      {
+        "title": "Gather remaining assets (Cloudflare, Calendly, RingCentral)",
+        "date": "2026-03-06",
+        "category": "client-ops"
+      },
+      {
+        "title": "Install Google Analytics code on website",
+        "date": "2026-03-31",
+        "category": "website"
+      }
+    ],
+    "in_progress": [
+      {
+        "title": "Build 'Strength in Numbers' Diagnostic Landing Page",
+        "owner": "Dan Kuschell",
+        "category": "website",
+        "eta": "2026-04-07"
+      },
+      {
+        "title": "Execute 'Peak Interest' Email Campaign",
+        "owner": "Dan Kuschell",
+        "category": "email-marketing",
+        "eta": "2026-04-15"
+      },
+      {
+        "title": "Develop Workshop Email/SMS/Voice Sequence",
+        "owner": "Bill Soady",
+        "category": "email-marketing",
+        "eta": "2026-04-02"
+      }
+    ],
+    "needs_client_action": [
+      {
+        "title": "Request cPanel admin access from Hook Creative",
+        "reason": "We cannot proceed with site-level optimizations or hosting migrations without these credentials.",
+        "since": "2026-03-06"
+      },
+      {
+        "title": "Finalize Messaging Framework (AssetX / Stuck to Freedom)",
+        "reason": "All upcoming creative, headers, and landing page copy depend on Marcus finalizing this core messaging.",
+        "since": "2026-03-16"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [
+      {
+        "title": "Request cPanel admin access from Hook Creative",
+        "agreed_date": "2026-03-31",
+        "silent_meetings": 2
+      }
+    ],
+    "b3x_overdue": [
+      {
+        "title": "Create Workshop Headlines and Banner Copy",
+        "owner": "Dan Kuschell",
+        "since": "2026-03-24"
+      }
+    ],
+    "client_overdue": [
+      {
+        "title": "Request cPanel admin access from Hook Creative",
+        "action_needed": "Marcus needs to follow up with Josh at Hook Creative for credentials.",
+        "since": "2026-03-06"
+      },
+      {
+        "title": "Finalize Messaging Framework (AssetX / Stuck to Freedom)",
+        "action_needed": "Marcus needs to provide final sign-off on the messaging pillars.",
+        "since": "2026-03-16"
+      }
+    ]
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "Webinar Post-Game: Lead Recovery Sequence",
+      "reasoning": "With the April 9th webinar date set and registration live, we need an automated 'Didn't Attend' and 'Attended/Didn't Book' sequence to maximize the ROI of the session.",
+      "category": "email-marketing",
+      "task_type": "webinar-email-sequence"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Paid Retargeting for Diagnostic Page",
+      "reasoning": "Since Google Analytics is now installed and the 'Strength in Numbers' landing page is in progress, we should trigger small-budget retargeting ads to keep BEC CFO top-of-mind for site visitors.",
+      "category": "paid-ads",
+      "task_type": "paid-traffic-setup"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Wins & Milestone Check",
+      "minutes": 5,
+      "notes": "Confirm Zoom setup and GA installation are complete."
+    },
+    {
+      "topic": "Critical Path: Messaging & Access",
+      "minutes": 10,
+      "notes": "Discuss the 'Stale' cPanel request and the Messaging Framework—these are bottlenecking the website and creative builds."
+    },
+    {
+      "topic": "Webinar Readiness (April 9th)",
+      "minutes": 10,
+      "notes": "Review status of Headlines, Banner Copy, and the Email/SMS sequences being built by Bill."
+    },
+    {
+      "topic": "Strategic Proposal: Paid Ad Pilot",
+      "minutes": 10,
+      "notes": "Pitch the Paid Ads service to support the new 'Strength in Numbers' landing page."
+    },
+    {
+      "topic": "Action Items & Wrap-up",
+      "minutes": 5,
+      "notes": "Confirm owners and dates for the next 7 days."
+    }
+  ],
+  "estimated_meeting_length_minutes": 40,
+  "projected_roadmap": [
+    {
+      "title": "Webinar Retargeting Ad Campaign",
+      "what": "Launch targeted Facebook/LinkedIn ads specifically reaching people who visited the webinar registration page but didn't sign up. Includes ad creative, copy, and technical pixel setup.",
+      "why_now": "The Zoom registration is live and the webinar is set for April 9th. We need to capture the 'fence-sitters' to ensure a high attendance rate. This bridges the current 'paid-ads' service gap.",
+      "category": "paid-ads",
+      "task_type": "paid-traffic-setup",
+      "effort_b3x": "5 hours: 2 for creative/copy, 2 for technical setup, 1 for optimization in week 1.",
+      "effort_client": "Budget approval ($500-$1,000 pilot) and creative assets approval.",
+      "prerequisites": "Finalize Workshop Headlines and Banner Copy.",
+      "impact": "Increases webinar registration rate by an estimated 15-20% by capturing lost traffic.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "Marcus, now that we have the April 9th date locked in and the registration page ready, I’d love to flip the switch on some simple retargeting ads. It's a low-cost way to make sure anyone who clicks but doesn't sign up gets a friendly nudge to come back. It’s the best way to protect our marketing spend and ensure that room is full."
+    },
+    {
+      "title": "Post-Webinar 'Scorecard' Nurture Automation",
+      "what": "A 5-part automated email series sent to webinar attendees who don't immediately book a diagnostic. The content will focus on the 'Strength in Numbers' concept, providing more value before the final call to action.",
+      "why_now": "We are currently building the 'Strength in Numbers' Diagnostic page. This sequence ensures that the momentum from the webinar isn't lost for those who aren't ready to buy on day one.",
+      "category": "email-marketing",
+      "task_type": "content-emails",
+      "effort_b3x": "8 hours: Copywriting for 5 emails, automation workflow setup in CRM.",
+      "effort_client": "Final sign-off on the 'Stuck to Freedom' messaging pillars used in the copy.",
+      "prerequisites": "Finalize Messaging Framework (AssetX / Stuck to Freedom).",
+      "impact": "Increases the long-term conversion rate of webinar leads into diagnostic consultations.",
+      "priority": "GROWTH",
+      "pitch_script": "After the webinar ends, we don't want to just go silent on those leads. I'm proposing we build out a 5-step automated follow-up that leans heavily into your 'Strength in Numbers' concept. It keeps the conversation going while you're busy running the business, essentially doing the 'selling' for you in the background."
+    },
+    {
+      "title": "Real Estate Investor 'Lead Magnet' PDF",
+      "what": "Creation of a high-value lead magnet (e.g., 'The 5 KPIs Every Real Estate Investor Needs to Scale') to drive top-of-funnel leads who aren't yet ready for a full webinar or diagnostic.",
+      "why_now": "The messaging framework is shifting toward Real Estate investors (from our March 26th summary). We need an entry-level asset to build the email list outside of the live event cycle.",
+      "category": "creative",
+      "task_type": "graphic-design",
+      "effort_b3x": "10 hours: Content outline, professional PDF design, and landing page integration.",
+      "effort_client": "30-minute interview with Dan or Phil to extract the '5 KPIs' expertise.",
+      "prerequisites": "None — can start immediately.",
+      "impact": "Establishes authority in the Real Estate niche and builds a database of pre-qualified leads for future email campaigns.",
+      "priority": "STRATEGIC",
+      "pitch_script": "We’re doing great work on the webinar, but I want to think about the people who aren't ready to commit to a 60-minute session yet. If we package your expertise into a quick '5 KPIs' guide for Real Estate investors, we can start capturing their contact info much earlier in the process. It's a huge asset for the 'Peak Interest' email campaign we discussed."
+    }
+  ],
+  "talking_points": {
+    "Set up Workshop Zoom Registration & Pick Date": "Great news—Kaden got the Zoom registration all set for April 9th, so the technical foundation for the workshop is ready to go.",
+    "Install Google Analytics code on website": "We also got Google Analytics live on the site, which is huge because we can now see exactly how people are interacting with the new landing pages.",
+    "Request cPanel admin access from Hook Creative": "Marcus, I want to flag the cPanel access request with Hook Creative. It's been on the list for a few weeks—should we send a fresh nudge to Josh to get those credentials so we don't get blocked on the site migration?",
+    "Finalize Messaging Framework (AssetX / Stuck to Freedom)": "Regarding the messaging framework—do you feel we're at a 100% sign-off on the 'Stuck to Freedom' language? We're ready to bake that into all the new headers and social assets once you give the word.",
+    "Create Workshop Headlines and Banner Copy": "Dan's finishing up the headlines and banner copy for the workshop right now—we should have those for your review by tomorrow to keep us on track for the April 9th push.",
+    "Webinar Retargeting Ad Campaign": "Now that we have the webinar date locked in, I’d love to flip the switch on some simple retargeting ads to make sure we're capturing every possible registration.",
+    "Post-Webinar 'Scorecard' Nurture Automation": "I'm thinking ahead to the day after the webinar—I'd like to build an automated follow-up sequence that keeps the 'Strength in Numbers' conversation going with anyone who doesn't book a call immediately."
+  },
+  "meta": {
+    "client_id": "bec-cfo",
+    "client_name": "BEC CFO",
+    "generated_at": "2026-03-31T15:48:47.998Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-26T15:33:51Z",
+    "days_since_last_meeting": 5,
+    "meetings_analyzed": 5,
+    "roadmap_stats": {
+      "total": 19,
+      "done": 5,
+      "in_progress": 7,
+      "blocked": 0,
+      "agreed": 7,
+      "stale": 1
+    }
+  }
+}

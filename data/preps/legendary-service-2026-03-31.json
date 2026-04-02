@@ -1,0 +1,203 @@
+{
+  "status_report": {
+    "completed": [
+      {
+        "title": "Compile website photo replacement list",
+        "date": "2026-03-31",
+        "category": "website"
+      },
+      {
+        "title": "Boost Google Search budget",
+        "date": "2026-03-31",
+        "category": "paid-ads"
+      },
+      {
+        "title": "Tweak 'Raise Hand' email campaign",
+        "date": "2026-03-31",
+        "category": "email-marketing"
+      }
+    ],
+    "in_progress": [
+      {
+        "title": "Launch AC Maintenance Google Ads campaign",
+        "owner": "Philip Mutrie",
+        "category": "paid-ads",
+        "eta": "Immediate"
+      },
+      {
+        "title": "Expand Google Ads geo-targeting into Southern Wisconsin",
+        "owner": "Bill Soady",
+        "category": "paid-ads",
+        "eta": "2026-04-05"
+      }
+    ],
+    "needs_client_action": [
+      {
+        "title": "Conduct recorded account audit and client education session",
+        "reason": "Joseph needs to lead this session to align on account goals and internal team education.",
+        "since": "2026-03-26"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [],
+    "b3x_overdue": [
+      {
+        "title": "Implement website sitemap",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-13"
+      },
+      {
+        "title": "Record Meta lead gen videos",
+        "owner": "Sean Bucci",
+        "since": "2026-03-06"
+      },
+      {
+        "title": "Troubleshoot phone routing loop",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-06"
+      },
+      {
+        "title": "Optimize campaigns by 'trimming fat' and throttling sump pumps",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-22"
+      },
+      {
+        "title": "Reconnect with Opportunity Knocks for direct mail",
+        "owner": "Dan Kuschell",
+        "since": "2026-03-19"
+      }
+    ],
+    "client_overdue": [
+      {
+        "title": "Conduct recorded account audit and client education session",
+        "action_needed": "Joseph Zimmer to schedule or complete the audit session.",
+        "since": "2026-03-26"
+      }
+    ]
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "Reporting & Budget Monitoring Implementation",
+      "reasoning": "The last meeting highlighted a major budget overage in Google Ads ($12,500 budget vs over-extended spend). Without an active 'reporting' service, these overages are reactive rather than proactive. Activating reporting will provide a daily safety net.",
+      "category": "reporting",
+      "task_type": "monthly-report"
+    },
+    {
+      "priority": "HIGH",
+      "title": "Seasonal Pivot: Cooling & Water Softeners",
+      "reasoning": "Sump pump demand is fading. With AC Maintenance ads pending, we need to finalize the launch and the Southern Wisconsin expansion to capture spring demand before peak summer heat hits.",
+      "category": "paid-ads",
+      "task_type": "google-ads-management"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Infrastructure Fixes (Phone & SEO)",
+      "reasoning": "The phone routing loop is a 'leaky bucket' issue—spending $12.5k on ads while calls are looping is inefficient. Additionally, the sitemap is a prerequisite for the local SEO growth discussed on March 5th.",
+      "category": "call-tracking",
+      "task_type": "tracking-fix"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Wins & Budget Correction",
+      "minutes": 5,
+      "notes": "Confirm Search budget boost and 'Raise Hand' email updates are live."
+    },
+    {
+      "topic": "Ads Pivot & WI Expansion",
+      "minutes": 10,
+      "notes": "Discuss the 'trimming fat' on sump pumps and the launch of AC Maintenance/Wisconsin targeting."
+    },
+    {
+      "topic": "Infrastructure: Phone Routing & Sitemap",
+      "minutes": 10,
+      "notes": "Resolve the phone loop issue and set a firm date for the sitemap implementation."
+    },
+    {
+      "topic": "Strategic Proposal: Real-Time Reporting",
+      "minutes": 10,
+      "notes": "Pitch the reporting service to prevent future budget surprises."
+    },
+    {
+      "topic": "Next Steps",
+      "minutes": 5,
+      "notes": "Summarize ownership of pending items for the coming week."
+    }
+  ],
+  "estimated_meeting_length_minutes": 40,
+  "projected_roadmap": [
+    {
+      "title": "Real-Time Ad Spend & Lead Dashboard",
+      "what": "Creation of a centralized Looker Studio dashboard connecting Google Ads, Meta Ads, and CallTrackingMetrics. This includes a 'Budget Pacer' visualization that alerts both B3X and Legendary Service if spending exceeds daily thresholds.",
+      "why_now": "Following the sump pump budget overage discussed on March 19th, it’s clear we need better visibility. We've scaled the budget to $12,500, and manually checking daily isn't as secure as an automated dashboard. This fills the current 'Reporting' service gap.",
+      "category": "reporting",
+      "task_type": "monthly-report",
+      "effort_b3x": "8 hours total: 4 hours for API connections and 4 hours for dashboard design and quality assurance.",
+      "effort_client": "1 hour to review the dashboard layout and confirm which KPIs matter most to Joseph and the team.",
+      "prerequisites": "None — can start immediately",
+      "impact": "Eliminates surprise overages and provides 24/7 transparency on cost-per-lead, allowing for faster decisions on which campaigns to throttle or boost.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "After our last chat about the sump pump budget overage, I want to make sure we’re never caught off guard again, especially now that we’re at a $12.5k monthly spend. I’m proposing we build out a real-time budget tracking dashboard. It’ll give us both a daily pulse on where every dollar is going, so we can pivot instantly rather than waiting for the weekly meeting."
+    },
+    {
+      "title": "Localized Landing Pages for Southern Wisconsin",
+      "what": "Design and development of two high-conversion landing pages specifically tailored for the Southern Wisconsin market, focusing on HVAC and Plumbing. These will feature local landmarks, local phone numbers, and Wisconsin-specific testimonials.",
+      "why_now": "We are currently expanding Google Ads geo-targeting into Southern Wisconsin (per our March 19 roadmap item). Driving that new traffic to a generic site rather than a localized page will hurt conversion rates and waste the increased budget.",
+      "category": "website",
+      "task_type": "website-content-update",
+      "effort_b3x": "12 hours: 4 hours copywriting/local research, 8 hours design and technical setup.",
+      "effort_client": "Provide any Wisconsin-specific customer testimonials or job site photos from that region.",
+      "prerequisites": "Expand Google Ads geo-targeting into Southern Wisconsin",
+      "impact": "Significantly higher conversion rate for WI-based traffic, leading to a lower overall Cost Per Lead for the new territory expansion.",
+      "priority": "GROWTH",
+      "pitch_script": "Now that we’re pushing into Southern Wisconsin, we need to make sure those folks feel like we’re their local neighbor, not an out-of-towner. I’d like to build out localized landing pages for that traffic. If they see local references and testimonials from their own backyard, they’re much more likely to pick up the phone."
+    },
+    {
+      "title": "Google Business Profile (GBP) 'Spring-Ready' Optimization",
+      "what": "A full audit and update of the GBP, including uploading 20+ new team/project photos from the recent photo list, updating 'Services' to prioritize AC Maintenance, and posting 4 weekly updates highlighting spring water softener specials.",
+      "why_now": "We just completed the 'website photo replacement list' item. Leveraging those photos on the GBP while we pivot the paid ads to AC Maintenance creates a consistent brand experience and boosts local organic rankings.",
+      "category": "gbp",
+      "task_type": "seo-optimization",
+      "effort_b3x": "4 hours to update services, upload photos, and schedule a month of posts.",
+      "effort_client": "Approve the photo selection from the list ReedCavi compiled.",
+      "prerequisites": "Compile website photo replacement list",
+      "impact": "Increased visibility in the Local Map Pack during the high-demand spring transition, leading to 'free' organic calls that supplement our paid efforts.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "Reed finished that photo list for the website, and they look great. I want to leverage those immediately on your Google Business Profile to freshen things up for spring. By updating your services and posts now, we can grab more of those organic AC maintenance calls before the summer rush hits."
+    }
+  ],
+  "talking_points": {
+    "Compile website photo replacement list": "Reed got that photo replacement list finished, so we're ready to start swapping those out to give the site a fresher look.",
+    "Boost Google Search budget": "We've officially bumped that search budget up to the $12,500 we discussed to ensure we have the runway for the spring push.",
+    "Tweak 'Raise Hand' email campaign": "The 'Raise Hand' email updates are live, so we should see better engagement from that database re-activation.",
+    "Implement website sitemap": "I need to apologize—we're behind on the sitemap implementation. I'll have that wrapped up by Friday to keep our SEO progress on track.",
+    "Record Meta lead gen videos": "Sean is still looking to get those Meta videos recorded; do you have a time next week where we can finalize those?",
+    "Troubleshoot phone routing loop": "I'm still digging into the phone routing loop issue—it's high priority for me because I want to make sure every ad dollar results in a connected call.",
+    "Launch AC Maintenance Google Ads campaign": "We're ready to flip the switch on the AC Maintenance campaigns to start filling the calendar for April.",
+    "Optimize campaigns by 'trimming fat' and throttling sump pumps": "We've pulled back on the sump pump spend as discussed so we don't repeat that overage from last week.",
+    "Expand Google Ads geo-targeting into Southern Wisconsin": "Bill is finalizing the targeting for Southern Wisconsin so we can start capturing those leads this week.",
+    "Conduct recorded account audit and client education session": "Joseph, when you have a moment, let's get that recorded account audit on the books so we can align the whole team.",
+    "Real-Time Ad Spend & Lead Dashboard": "After our last chat about the sump pump budget overage, I want to make sure we’re never caught off guard again; I’m proposing a real-time budget dashboard so we have 24/7 visibility.",
+    "Localized Landing Pages for Southern Wisconsin": "To make the most of our move into Wisconsin, I'd like to create some local landing pages so those homeowners feel like we're right down the street.",
+    "Google Business Profile (GBP) 'Spring-Ready' Optimization": "I want to take those new photos we listed and get them onto your Google profile immediately to help boost your local rankings for the spring season."
+  },
+  "meta": {
+    "client_id": "legendary-service",
+    "client_name": "Legendary Service",
+    "generated_at": "2026-03-31T16:14:28.388Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-19T18:28:00Z",
+    "days_since_last_meeting": 11,
+    "meetings_analyzed": 2,
+    "roadmap_stats": {
+      "total": 14,
+      "done": 3,
+      "in_progress": 0,
+      "blocked": 0,
+      "agreed": 10,
+      "stale": 0
+    }
+  }
+}

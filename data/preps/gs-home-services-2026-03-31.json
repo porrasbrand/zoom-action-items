@@ -1,0 +1,229 @@
+{
+  "status_report": {
+    "completed": [
+      {
+        "title": "Launch approved AC Ads headlines",
+        "date": "2026-03-31",
+        "category": "paid-ads"
+      },
+      {
+        "title": "Implement geographic expansion and budget increase",
+        "date": "2026-03-31",
+        "category": "paid-ads"
+      },
+      {
+        "title": "Pull CTR and Conversion Rate data",
+        "date": "2026-03-31",
+        "category": "reporting"
+      },
+      {
+        "title": "Review Call Report and Raise Hand campaign",
+        "date": "2026-03-31",
+        "category": "call-tracking"
+      },
+      {
+        "title": "Request budget recommendation for expansion",
+        "date": "2026-03-31",
+        "category": "client-ops"
+      }
+    ],
+    "in_progress": [
+      {
+        "title": "Prepare April Raise Hand emails for AC",
+        "owner": "Philip Mutrie",
+        "category": "email-marketing",
+        "eta": "2026-04-03"
+      }
+    ],
+    "needs_client_action": [
+      {
+        "title": "Setup tracking number for plumbing campaign",
+        "reason": "Crucial for attribution of the new plumbing service line launching this week.",
+        "since": "2026-03-25"
+      },
+      {
+        "title": "Review and approve April content emails",
+        "reason": "Emails need to be scheduled to hit the April 1st seasonal window.",
+        "since": "2026-03-27"
+      },
+      {
+        "title": "Complete Q1-Q2 CEO Checklist and Blueprint",
+        "reason": "Needed to align long-term strategy with GS Home Services' annual revenue goals.",
+        "since": "2026-03-24"
+      },
+      {
+        "title": "Cross-reference call lead reports for ROI tracking",
+        "reason": "To validate the $167K in March sales reported in the previous huddle.",
+        "since": "2026-03-24"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [
+      {
+        "title": "Notify intake team of new service areas",
+        "agreed_date": "2026-03-31",
+        "silent_meetings": 2
+      },
+      {
+        "title": "Finalize AC promotional offers with Hayden",
+        "agreed_date": "2026-03-31",
+        "silent_meetings": 2
+      },
+      {
+        "title": "Update email copy to remove 'flush' verbiage",
+        "agreed_date": "2026-03-31",
+        "silent_meetings": 2
+      }
+    ],
+    "b3x_overdue": [
+      {
+        "title": "Update email copy to remove 'flush' verbiage",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-10"
+      },
+      {
+        "title": "Recommend 10-15% Seasonal Budget Increase",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-31"
+      }
+    ],
+    "client_overdue": [
+      {
+        "title": "Notify intake team of new service areas",
+        "action_needed": "Ryan Phone to confirm CSRs are ready for Elk Grove/Modesto/Galt leads.",
+        "since": "2026-03-11"
+      },
+      {
+        "title": "Finalize AC promotional offers with Hayden",
+        "action_needed": "Ryan Phone to confirm the primary hook for April AC campaigns.",
+        "since": "2026-03-11"
+      },
+      {
+        "title": "Setup tracking number for plumbing campaign",
+        "action_needed": "Ryan Watson to provide DNI or static number for new landing page.",
+        "since": "2026-03-25"
+      }
+    ]
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "Unblock Plumbing Service Launch",
+      "reasoning": "The landing pages and drafts are ready, but without the tracking number and intake team notification, we risk wasting ad spend on unmonitored leads.",
+      "category": "paid-ads",
+      "task_type": "campaign-optimization"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Automate ROI Reporting Dashboard",
+      "reasoning": "The team is currently manually cross-referencing call reports. With $280K in weekly revenue, this manual process is a bottleneck. Activating the 'Reporting' service gap will save Ryan hours each week.",
+      "category": "reporting",
+      "task_type": "monthly-report"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "HVAC Seasonal Scaling (April/May)",
+      "reasoning": "Last meeting noted a planned 10-15% budget increase for warmer weather. We need to finalize the 'AC Tune-up' promo hooks now to capture the early surge.",
+      "category": "paid-ads",
+      "task_type": "google-ads-management"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "March Win Review: $167K Digital ROI & Expansion Progress",
+      "minutes": 5,
+      "notes": "Celebrate the successful geographic expansion and the strong revenue numbers."
+    },
+    {
+      "topic": "Critical Blockers: Plumbing Launch Readiness",
+      "minutes": 10,
+      "notes": "Secure the tracking number and confirm intake team is briefed on new areas."
+    },
+    {
+      "topic": "Seasonal HVAC Strategy: 15% Budget Increase & AC Offers",
+      "minutes": 10,
+      "notes": "Finalize the April promo offers and confirm the budget bump for warmer weeks ahead."
+    },
+    {
+      "topic": "Efficiency Upgrade: Transitioning to Automated Reporting",
+      "minutes": 5,
+      "notes": "Pitch the Reporting dashboard to eliminate the manual ROI cross-referencing."
+    },
+    {
+      "topic": "Review Next Steps & Action Items",
+      "minutes": 5,
+      "notes": "Assign owners to the remaining CEO checklist items."
+    }
+  ],
+  "estimated_meeting_length_minutes": 35,
+  "projected_roadmap": [
+    {
+      "title": "Automated Marketing-to-Sales ROI Dashboard",
+      "what": "Build a live Looker Studio or CRM-integrated dashboard that connects Paid Ads spend directly to closed revenue from your CRM. This eliminates manual cross-referencing of call reports.",
+      "why_now": "Currently, Ryan is manually cross-referencing reports for ROI tracking (as seen in recent tasks). With revenue hitting $280K/week, manual tracking is prone to error and consumes too much management time.",
+      "category": "reporting",
+      "task_type": "monthly-report",
+      "effort_b3x": "8-10 hours to build connections and visualize data; 1 hour monthly for maintenance.",
+      "effort_client": "Grant API access to CRM and provide 30 minutes to review data accuracy for the first week.",
+      "prerequisites": "Complete 'Cross-reference call lead reports' to verify manual baseline.",
+      "impact": "Provides real-time visibility into which campaigns (AC vs. Plumbing) are actually driving bankable revenue, not just leads.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "Ryan, you've been doing a ton of heavy lifting manually cross-referencing these call reports to find our ROI. Now that we're scaling to $280K weeks, I want to take that off your plate. If we build out an automated ROI dashboard, you'll be able to see exactly where every dollar is going in real-time without the spreadsheet headache. What do you think about us setting that up this week?"
+    },
+    {
+      "title": "Local Service Ads (LSA) Review & 'Messaging' Toggle Optimization",
+      "what": "A deep-dive audit of the LSA account to disable the 'messaging' feature as discussed in the last meeting, and optimize the 'Business Bio' for the new plumbing services.",
+      "why_now": "The March 24th meeting summary explicitly mentioned potentially disabling LSA messaging to improve lead quality. This is a direct follow-up to that strategic decision.",
+      "category": "paid-ads",
+      "task_type": "lsa-management",
+      "effort_b3x": "2 hours to audit settings, toggle off messaging, and update plumbing service categories.",
+      "effort_client": "Approval to disable messaging feature (aware that lead volume might dip slightly but quality will rise).",
+      "prerequisites": "None — can start immediately",
+      "impact": "Reduces the 'junk' lead volume that the intake team currently has to filter through, focusing their time on high-intent phone calls.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "We talked last time about how those LSA messages can sometimes be more noise than signal. I'd like to go ahead and toggle that off and give the whole LSA profile a tune-up specifically for the new plumbing launch. It’ll ensure your team is only answering high-quality calls instead of chasing tire-kickers in the chat."
+    },
+    {
+      "title": "Service Area 'Hyper-Local' SEO Landing Pages",
+      "what": "Creation of three dedicated SEO landing pages for Elk Grove, Modesto, and Galt. These pages will feature location-specific testimonials and service maps to boost organic rankings alongside our paid ads.",
+      "why_now": "We just successfully implemented the geographic expansion in Paid Ads. To maximize our presence in these new markets and lower our blended Customer Acquisition Cost (CAC), we need organic authority to match our ad spend.",
+      "category": "website",
+      "task_type": "website-content-update",
+      "effort_b3x": "4 hours per page (12 hours total) for copy, design, and SEO metadata setup.",
+      "effort_client": "Provide 3-5 photos of recent jobs or happy customers in those specific areas.",
+      "prerequisites": "None — can start immediately",
+      "impact": "Increases organic lead flow from new territories, reducing the long-term reliance on high-cost PPC clicks in competitive HVAC markets.",
+      "priority": "GROWTH",
+      "pitch_script": "Now that we're seeing good traction with the ads in Elk Grove and Modesto, I want to make sure we're not just 'renting' space there. If we build out some hyper-local pages for those areas, we can start winning those organic clicks too, which is going to bring our overall cost per lead down significantly as we head into the summer rush."
+    }
+  ],
+  "talking_points": {
+    "Launch approved AC Ads headlines": "Great news—we've got those new AC headlines live, just in time for the temperature shift we're seeing.",
+    "Implement geographic expansion and budget increase": "The expansion into Elk Grove and Modesto is officially rolled out and the budget is scaling as we planned.",
+    "Notify intake team of new service areas": "Ryan, quick check-in: has the intake team been briefed on the new service areas? We want to make sure they're ready to handle those Elk Grove calls coming in.",
+    "Finalize AC promotional offers with Hayden": "I want to make sure we don't lose momentum on the AC offers we discussed with Hayden—should we keep the current promotion or do you want to pivot for April?",
+    "Update email copy to remove 'flush' verbiage": "I'm still holding on that email copy update to remove the 'flush' wording—do we have the final replacement phrasing you'd like to use?",
+    "Setup tracking number for plumbing campaign": "Ryan Watson, do you have a timeline for that plumbing tracking number? We're ready to flip the switch on the landing page as soon as that's in place.",
+    "Automated Marketing-to-Sales ROI Dashboard": "Ryan, you've been doing a ton of heavy lifting manually cross-referencing these call reports to find our ROI. If we build out an automated ROI dashboard, you'll be able to see exactly where every dollar is going in real-time without the spreadsheet headache. What do you think?",
+    "Local Service Ads (LSA) Review & 'Messaging' Toggle Optimization": "We talked last time about how those LSA messages can sometimes be more noise than signal. I'd like to go ahead and toggle that off and give the profile a tune-up for the plumbing launch.",
+    "Service Area 'Hyper-Local' SEO Landing Pages": "Now that we're seeing good traction with ads in the new territories, I'd love to build some hyper-local pages to help us start winning those organic clicks too and bring our overall lead cost down."
+  },
+  "meta": {
+    "client_id": "gs-home-services",
+    "client_name": "GS Home Services",
+    "generated_at": "2026-03-31T15:31:47.754Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-24T21:27:50Z",
+    "days_since_last_meeting": 6,
+    "meetings_analyzed": 4,
+    "roadmap_stats": {
+      "total": 18,
+      "done": 5,
+      "in_progress": 1,
+      "blocked": 0,
+      "agreed": 12,
+      "stale": 3
+    }
+  }
+}

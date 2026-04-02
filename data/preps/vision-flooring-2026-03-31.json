@@ -1,0 +1,166 @@
+{
+  "status_report": {
+    "completed": [
+      {
+        "title": "Approve March 'raise hand' emails",
+        "date": "2026-03-10",
+        "category": "email-marketing"
+      },
+      {
+        "title": "Increase ad spend by 10%",
+        "date": "2026-03-19",
+        "category": "paid-ads"
+      }
+    ],
+    "in_progress": [
+      {
+        "title": "Script Facebook lead gen videos",
+        "owner": "Dan Kuschell",
+        "category": "paid-ads",
+        "eta": "Next 48 hours"
+      }
+    ],
+    "needs_client_action": [
+      {
+        "title": "Send dinner invitation link",
+        "reason": "Required for client profiling and networking event alignment.",
+        "since": "2026-03-31"
+      },
+      {
+        "title": "Dispute 12 incorrect LSA leads",
+        "reason": "Directly impacts ad spend efficiency and recovery of wasted budget.",
+        "since": "2026-03-31"
+      },
+      {
+        "title": "Contact direct mail provider for neighborhood targeting",
+        "reason": "Necessary to move forward with the localized offline marketing strategy.",
+        "since": "2026-03-31"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [],
+    "b3x_overdue": [
+      {
+        "title": "Revise yard sign designs with die-cut and brand variants",
+        "owner": "Bill Soady",
+        "since": "2026-03-23"
+      }
+    ],
+    "client_overdue": []
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "LSA Recovery & Lead Filtering",
+      "reasoning": "With 12 incorrect leads identified, immediate focus is on disputing these to reclaim budget and tightening the GBP/LSA settings to filter unqualified traffic, as discussed in the March 5th huddle.",
+      "category": "paid-ads",
+      "task_type": "lsa-management"
+    },
+    {
+      "priority": "GROWTH",
+      "title": "Launch Facebook Interruption Campaign",
+      "reasoning": "As Dan scripts the lead gen videos, this is the time to finalize the technical setup. Moving from purely search-based intent to social 'interruption' will capture prospects earlier in the flooring decision cycle.",
+      "category": "paid-ads",
+      "task_type": "meta-ads-management"
+    },
+    {
+      "priority": "STRATEGIC",
+      "title": "Omnichannel Direct Mail Integration",
+      "reasoning": "Integrating neighborhood-specific direct mail with the current yard sign and digital strategy creates a 'surround sound' effect in high-value AZ zip codes.",
+      "category": "client-ops",
+      "task_type": "client-profiling"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Wins & Performance Review",
+      "minutes": 5,
+      "notes": "Celebrate the 10% spend increase and the high sales volume ($500k month) mentioned in recent huddles."
+    },
+    {
+      "topic": "Operational Blockers (Yard Signs & LSA)",
+      "minutes": 10,
+      "notes": "Address the overdue yard sign designs and the 12 leads Shane needs to dispute."
+    },
+    {
+      "topic": "Growth Proposal: Call Tracking & Web CRO",
+      "minutes": 15,
+      "notes": "Discuss the 'Call Tracking' service gap to ensure we aren't losing leads between the click and the sale."
+    },
+    {
+      "topic": "Next Steps & Owners",
+      "minutes": 5,
+      "notes": "Confirm owners for the April email execution and the FB video scripting."
+    }
+  ],
+  "estimated_meeting_length_minutes": 35,
+  "projected_roadmap": [
+    {
+      "title": "Implement Dynamic Call Tracking (CallRail)",
+      "what": "Setup and integration of dynamic number insertion (DNI) on the website and landing pages. This includes creating unique tracking numbers for LSA, Google Ads, and Facebook to attribute every call to a specific keyword or ad.",
+      "why_now": "Currently, we have 12 incorrect LSA leads to dispute and a 'call-tracking' service gap. Without this, we are guessing which ads drove the $500k in sales and which are wasting money.",
+      "category": "call-tracking",
+      "task_type": "integration-setup",
+      "effort_b3x": "3 hours for technical setup and dashboard configuration.",
+      "effort_client": "Approval of $45/mo platform fee and brief access to the site header.",
+      "prerequisites": "None — can start immediately",
+      "impact": "Identifies the exact source of every lead, allowing us to cut waste on non-performing ads and double down on the high-ROI keywords.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "Shane, we’ve been talking about these 12 bad LSA leads, and it’s clear we need better visibility on what's actually ringing your phone. I want to get dynamic call tracking live this week. It’ll stop the guesswork and give us the data we need to fight those LSA disputes and scale the ads that are actually closing."
+    },
+    {
+      "title": "Landing Page 'Friction' Audit & Heatmapping",
+      "what": "Installation of heatmapping software (like Hotjar) on landing pages followed by a friction audit. We will analyze where users drop off before filling out the form or calling.",
+      "why_now": "We are already correcting 'years of experience' on landing pages and scripting new FB videos. Before we pump more traffic into these pages, we need to ensure the bucket isn't leaking.",
+      "category": "website",
+      "task_type": "website-content-update",
+      "effort_b3x": "2 hours to set up tracking; 3 hours for the audit and recommendation report.",
+      "effort_client": "Approval of the suggested UI/UX changes based on the data findings.",
+      "prerequisites": "Correct years of experience on landing pages",
+      "impact": "Increases conversion rate (CVR) by identifying and removing hurdles in the user journey, effectively lowering your cost-per-lead.",
+      "priority": "GROWTH",
+      "pitch_script": "Now that we’re updating the landing pages with the new messaging, I want to make sure they're working as hard as possible for you. I’m proposing a quick friction audit where we actually watch how users interact with the site. If we can bump that conversion rate by even 1%, it’s going to make that 10% spend increase feel much bigger."
+    },
+    {
+      "title": "Automated 'Review Request' SMS Workflow",
+      "what": "Creation of an automated text message sequence in ActiveCampaign or your CRM that triggers immediately after a job is marked 'done' to solicit Google reviews.",
+      "why_now": "Recent huddles emphasized optimizing the Google Business Profile. The fastest way to improve GBP ranking and trust is a steady stream of fresh 5-star reviews from the high volume of sales you're seeing.",
+      "category": "crm-automation",
+      "task_type": "integration-setup",
+      "effort_b3x": "4 hours to build the workflow and draft the SMS templates.",
+      "effort_client": "Access to your project management software (or manual status update process) to trigger the texts.",
+      "prerequisites": "Upload Willing and Able list to ActiveCampaign",
+      "impact": "Boosts local SEO rankings and increases 'click-to-call' volume by building social proof automatically.",
+      "priority": "STRATEGIC",
+      "pitch_script": "Shane, you mentioned $500k in sales recently—that's a lot of happy customers. We should be turning every one of those into a 5-star Google review automatically. Once we get that 'Willing and Able' list uploaded, I’d like to build an automated SMS trigger that asks for the review the moment the floor is dry. It’ll keep your GBP at the top of the map pack without you lifting a finger."
+    }
+  ],
+  "talking_points": {
+    "Approve March 'raise hand' emails": "Great news — Shane got those March 'raise hand' emails approved and out the door, which kept the momentum going early in the month.",
+    "Increase ad spend by 10%": "We successfully bumped the ad spend by 10% as planned to capitalize on that high sales volume we saw in the last report.",
+    "Revise yard sign designs with die-cut and brand variants": "Bill is finishing up those die-cut yard sign designs; I'll have those over to you by the end of the week so we can get them printed and out in the neighborhoods.",
+    "Dispute 12 incorrect LSA leads": "Shane, regarding those 12 incorrect LSA leads — have you had a chance to flag those in the portal yet? We want to make sure Google credits that budget back to you ASAP.",
+    "Script Facebook lead gen videos": "Dan is currently scripting the Facebook lead gen videos to make sure they have that 'disruption' feel we discussed for the new campaign.",
+    "Implement Dynamic Call Tracking (CallRail)": "Shane, I’m recommending we get dynamic call tracking live this week. It’s the missing piece to prove exactly which ads are driving your best sales and to help us fight those bunk LSA leads with data.",
+    "Landing Page 'Friction' Audit & Heatmapping": "While we're cleaning up the landing page copy, I want to run a quick audit to see exactly where people might be dropping off so we can maximize the ROI on our new ad spend.",
+    "Automated 'Review Request' SMS Workflow": "Since the business is rocking right now, let's automate your review collection. I want to set up a system that texts your customers for a Google review the second a job is finished."
+  },
+  "meta": {
+    "client_id": "vision-flooring",
+    "client_name": "Vision Flooring AZ",
+    "generated_at": "2026-03-31T16:16:03.323Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-19T16:43:44Z",
+    "days_since_last_meeting": 11,
+    "meetings_analyzed": 2,
+    "roadmap_stats": {
+      "total": 14,
+      "done": 2,
+      "in_progress": 1,
+      "blocked": 0,
+      "agreed": 11,
+      "stale": 0
+    }
+  }
+}

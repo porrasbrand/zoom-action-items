@@ -1,0 +1,181 @@
+{
+  "status_report": {
+    "completed": [
+      {
+        "title": "Grant administrator access for CallRail",
+        "date": "2026-03-31",
+        "category": "call-tracking"
+      },
+      {
+        "title": "Rebuild landing pages on Webflow",
+        "date": "2026-03-31",
+        "category": "website"
+      },
+      {
+        "title": "Fix Google Tag Manager tracking",
+        "date": "2026-03-04",
+        "category": "reporting"
+      }
+    ],
+    "in_progress": [
+      {
+        "title": "Update CallRail and LSA tracking numbers",
+        "owner": "Dan Kuschell",
+        "category": "call-tracking",
+        "eta": "OVERDUE (Due Mar 05)"
+      },
+      {
+        "title": "Review conversion tracking for Stockton ads",
+        "owner": "megantolley",
+        "category": "paid-ads",
+        "eta": "TBD"
+      }
+    ],
+    "needs_client_action": [
+      {
+        "title": "Lead Quality Feedback",
+        "reason": "We need Empower's feedback on whether the 'job seeker' call volume has decreased since the LSA copy updates.",
+        "since": "2026-03-18"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [],
+    "b3x_overdue": [
+      {
+        "title": "Update CallRail and LSA tracking numbers",
+        "owner": "Dan Kuschell",
+        "since": "2026-03-05"
+      },
+      {
+        "title": "Pause Phoenix HVAC ads and transfer budget to Fresno",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-05"
+      },
+      {
+        "title": "Perform LSA and CallRail lead quality audit",
+        "owner": "Manuel",
+        "since": "2026-03-27"
+      },
+      {
+        "title": "Exclude Kern County from Fresno LSA service area",
+        "owner": "Jacob",
+        "since": "2026-03-25"
+      }
+    ],
+    "client_overdue": []
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "Lead Quality Recalibration",
+      "reasoning": "The last meeting highlighted a major pain point: job seekers flooding the LSA lines. Now that landing pages are on Webflow and GTM is fixed, we must pivot from 'fixing tech' to 'filtering intent' to protect the ROAS.",
+      "category": "paid-ads",
+      "task_type": "campaign-optimization"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Transition to Performance Reporting",
+      "reasoning": "With tracking fixes (GTM/CallRail) completed, the prerequisite for a real-time dashboard is met. Moving them to a formal reporting service will reduce manual 'wonky data' discussions.",
+      "category": "reporting",
+      "task_type": "analytics-tracking-setup"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Summer HVAC Seasonality Push",
+      "reasoning": "In the home-services sector, April is the window to launch 'AC Tune-up' specials. Since Phoenix budget moved to Fresno, we should optimize Fresno for high-intent cooling keywords.",
+      "category": "paid-ads",
+      "task_type": "campaign-optimization"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Wins: Landing Page & Tracking Restoration",
+      "minutes": 5,
+      "notes": "Celebrate the successful Webflow migration and GTM tracking fixes."
+    },
+    {
+      "topic": "Operations: Tracking & Lead Quality Audit",
+      "minutes": 10,
+      "notes": "Review the LSA/CallRail audit results. Confirm if 'job seeker' calls have dropped."
+    },
+    {
+      "topic": "Strategic Proposal: Summer Readiness & Reporting",
+      "minutes": 10,
+      "notes": "Pitch the Reporting Dashboard and the Summer AC promo strategy."
+    },
+    {
+      "topic": "Roadmap Alignment & Next Steps",
+      "minutes": 5,
+      "notes": "Confirm owners for Fresno budget transfer and Kern County exclusion."
+    }
+  ],
+  "estimated_meeting_length_minutes": 30,
+  "projected_roadmap": [
+    {
+      "title": "Unified Marketing Performance Dashboard",
+      "what": "Creation of a real-time Looker Studio dashboard integrating Google Ads, LSA, and CallRail data. This provides a single source of truth for cost-per-lead and lead quality metrics.",
+      "why_now": "Now that we've fixed the Google Tag Manager tracking and resolved the Webflow landing page issues, we have clean data. It’s time to move away from 'wonky' manual data checks.",
+      "category": "reporting",
+      "task_type": "analytics-tracking-setup",
+      "effort_b3x": "6 hours for dashboard build and API integration in week 1.",
+      "effort_client": "15-minute review and approval of key metrics to be tracked.",
+      "prerequisites": "Fix Google Tag Manager tracking (Done)",
+      "impact": "Eliminates confusion over data discrepancies and allows the client to see their ROAS 24/7 without waiting for huddles.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "Now that we've stabilized the tracking and the new landing pages are live, I want to make sure you have total visibility. I'd like to set up a unified dashboard so you can see exactly where every lead is coming from in real-time, which will stop those 'wonky data' headaches we've been having."
+    },
+    {
+      "title": "HVAC 'Summer Surge' AC Campaign Launch",
+      "what": "Development of a specific 'Beat the Heat' seasonal campaign for the Fresno market, including ad copy focused on AC repair/replacement and updated landing page offers.",
+      "why_now": "With the Phoenix budget successfully transferred to Fresno and the HVAC staffing shortage addressed, we need to capitalize on the upcoming seasonal demand shift before competitors flood the market.",
+      "category": "paid-ads",
+      "task_type": "campaign-optimization",
+      "effort_b3x": "4 hours for keyword research and ad creative creation.",
+      "effort_client": "Approval of the 'AC Tune-up' special offer (e.g., $X off).",
+      "prerequisites": "Pause Phoenix HVAC ads and transfer budget to Fresno (Active)",
+      "impact": "Maximizes lead volume during the highest-revenue months for HVAC services.",
+      "priority": "GROWTH",
+      "pitch_script": "With the Fresno team ready to scale and summer right around the corner, we should launch a 'Summer Surge' campaign. We’ve already moved the budget over; now we just need to nail down a specific AC offer to capture that demand before the heat really hits."
+    },
+    {
+      "title": "LSA Lead Management Training & Automation",
+      "what": "A deep-dive workshop and setup of automated 'dispute' triggers for job-seeker calls in LSA, ensuring Empower gets credits back for non-lead calls.",
+      "why_now": "The March 18th meeting identified job seekers as a major drain on the LSA budget. Beyond just changing copy, we need a systematic way to recoup those costs.",
+      "category": "paid-ads",
+      "task_type": "lsa-management",
+      "effort_b3x": "2-hour training session + 2 hours setting up CallRail-to-LSA feedback loops.",
+      "effort_client": "1 hour for the office manager to join a training session on lead dispositioning.",
+      "prerequisites": "Update LSA profile copy to filter job seekers (Active)",
+      "impact": "Directly reduces wasted ad spend by reclaiming budget from unqualified calls.",
+      "priority": "STRATEGIC",
+      "pitch_script": "We’re working on filtering out those job seekers with the new ad copy, but I want to take it a step further. I’d like to show your team a quick system to dispute those calls within the platform so you actually get your money back from Google when those non-leads slip through."
+    }
+  ],
+  "talking_points": {
+    "Grant administrator access for CallRail": "Great news—Megan got the CallRail admin access sorted, which means we can now move much faster on those tracking updates without hitting bottlenecks.",
+    "Rebuild landing pages on Webflow": "The landing pages are officially live on Webflow! This is a huge win for our site speed and gives us much better control over the conversion layout.",
+    "Update CallRail and LSA tracking numbers": "Dan is finalizing the tracking number updates; we're making sure the LSAs and CallRail are talking to each other perfectly so no lead goes uncounted.",
+    "Lead Quality Feedback": "We've implemented the copy changes to filter out job seekers—have you noticed a change in the types of calls the team is fielding over the last week?",
+    "Unified Marketing Performance Dashboard": "I want to put something on your radar: now that our tracking is clean, we should move you into a real-time dashboard so you can see your lead costs at a glance.",
+    "Pause Phoenix HVAC ads and transfer budget to Fresno": "We're in the process of shifting that Phoenix budget over to Fresno to keep the momentum going where you have the staffing to support it.",
+    "HVAC 'Summer Surge' AC Campaign Launch": "Since summer is the 'go-time' for your industry, I’d like to start prepping a Fresno-specific AC push now so we're the first ones people see when their cooling fails."
+  },
+  "meta": {
+    "client_id": "empower",
+    "client_name": "Empower",
+    "generated_at": "2026-03-31T16:13:46.528Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-18T17:26:09Z",
+    "days_since_last_meeting": 12,
+    "meetings_analyzed": 2,
+    "roadmap_stats": {
+      "total": 11,
+      "done": 3,
+      "in_progress": 2,
+      "blocked": 0,
+      "agreed": 6,
+      "stale": 0
+    }
+  }
+}

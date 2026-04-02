@@ -1,0 +1,171 @@
+{
+  "status_report": {
+    "completed": [
+      {
+        "title": "Send performance numbers",
+        "date": "2026-03-06",
+        "category": "reporting"
+      },
+      {
+        "title": "Investigate Bing lead drop",
+        "date": "2026-03-06",
+        "category": "paid-ads"
+      }
+    ],
+    "in_progress": [
+      {
+        "title": "Record Meta ad videos",
+        "owner": "Brendan",
+        "category": "creative",
+        "eta": "TBD - Brendan currently recording"
+      }
+    ],
+    "needs_client_action": [
+      {
+        "title": "Gather before/after photos for Google Profile",
+        "reason": "Missing recent visual proof to boost GBP conversion as discussed on March 5th",
+        "since": "2026-03-05"
+      },
+      {
+        "title": "Review CEO Blueprint and Checklist",
+        "reason": "Operational alignment for Brendan as part of the recruitment/scaling strategy",
+        "since": "2026-03-19"
+      },
+      {
+        "title": "Execute video interview strategy at April Home Show",
+        "reason": "Critical content capture opportunity for brand trust",
+        "since": "Due 2026-04-10"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [],
+    "b3x_overdue": [
+      {
+        "title": "Add hiring P.S. to April content emails",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-20"
+      }
+    ],
+    "client_overdue": [
+      {
+        "title": "Gather before/after photos for Google Profile",
+        "action_needed": "Upload recent project photos to shared folder for Cara",
+        "since": "2026-03-05 (1 silent meeting)"
+      }
+    ]
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "Aggressive Pivot to Meta Lead Gen",
+      "reasoning": "Google and Bing costs are rising for HVAC. Since Brendan is currently recording video creative, we need to finalize the campaign structure now to launch immediately once videos are ready.",
+      "category": "paid-ads",
+      "task_type": "meta-ads-management"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "April Home Show Content Planning",
+      "reasoning": "The Home Show on April 10 is a goldmine for 'social proof' content. We need to ensure the video interview strategy is clear so the client captures usable footage for the Meta ads we're building.",
+      "category": "creative",
+      "task_type": "video-editing"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Recruitment Integration in CRM",
+      "reasoning": "The focus has shifted to hiring. Beyond the email P.S., we should ensure that any 'hiring' leads generated from the new content have a designated spot in the CRM to prevent lead leakage.",
+      "category": "crm-automation",
+      "task_type": "automated-workflow"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Wins & Creative Progress",
+      "minutes": 5,
+      "notes": "Review the status of Brendan's video recording and the completed Bing investigation."
+    },
+    {
+      "topic": "Accountability & Blockers",
+      "minutes": 5,
+      "notes": "Discuss the overdue email P.S. update and the GBP photos from Cara."
+    },
+    {
+      "topic": "Strategic Focus: Meta Ads & Home Show",
+      "minutes": 15,
+      "notes": "Finalize launch plan for Meta lead gen and provide a 'shot list' for the April 10th Home Show."
+    },
+    {
+      "topic": "Next Steps & Roadmap Update",
+      "minutes": 5,
+      "notes": "Confirm owners for new items and set deadlines for Home Show content delivery."
+    }
+  ],
+  "estimated_meeting_length_minutes": 30,
+  "projected_roadmap": [
+    {
+      "title": "Meta Ad-Specific Landing Page",
+      "what": "Creation of a high-converting, mobile-optimized landing page specifically for the Meta Lead Gen campaign. This includes lead capture forms that sync directly to the CRM and mirrors the ad messaging for HVAC installs.",
+      "why_now": "We are currently launching Meta ads (Set up Meta lead generation campaign), but the client has a 'website' service gap. Sending paid social traffic to a generic homepage will bleed budget; a dedicated landing page ensures we maximize the ROI of the new video ads.",
+      "category": "website",
+      "task_type": "conversion-optimization",
+      "effort_b3x": "5 hours: Wireframe, design, and technical integration with CRM.",
+      "effort_client": "1 hour: Review and approval of copy and design.",
+      "prerequisites": "Meta Lead Gen campaign structure finalized.",
+      "impact": "Expected to increase lead conversion rates by 20-30% compared to standard website traffic, ensuring the pivot from Bing/Google is profitable.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "Brendan, since we're pivoting budget to Meta and you're putting in the work to record those videos, I want to make sure that traffic actually converts. Instead of just sending them to the main site, I'd like to build a dedicated landing page specifically for these HVAC install leads so we don't waste a single click."
+    },
+    {
+      "title": "Automated Recruitment 'Quick-Apply' Workflow",
+      "what": "Building an automated sequence for the 'Hiring P.S.' mentioned in the March 19th meeting. When someone clicks the hiring link, they get an automated text/email with a basic screening questionnaire, and the team gets an internal notification.",
+      "why_now": "Recruitment was a major theme in the last huddle. We've already agreed to add the 'Hiring P.S.' to emails, but without an automated follow-up, the client will struggle to manage the influx of interest manually.",
+      "category": "crm-automation",
+      "task_type": "automated-workflow",
+      "effort_b3x": "3 hours: Workflow build, email/SMS template creation, and notification triggers.",
+      "effort_client": "30 mins: Providing the 3-5 'must-have' screening questions.",
+      "prerequisites": "Add hiring P.S. to April content emails.",
+      "impact": "Reduces time-to-hire by automating the initial screening phase and ensures no technician candidate falls through the cracks.",
+      "priority": "GROWTH",
+      "pitch_script": "We're starting to push the hiring message in our emails now, but I want to make sure the back-end is ready. I'm proposing we set up an automated 'Quick-Apply' workflow so when a tech shows interest, they get an immediate text to start the screening process while they're still hot."
+    },
+    {
+      "title": "Summer AC Tune-Up Campaign Launch",
+      "what": "A multi-channel campaign (Email + SMS + Meta) focused on 'Summer Readiness' AC tune-ups. This includes a 3-part email series and a targeted re-engagement list for customers who haven't had service in 12+ months.",
+      "why_now": "It's late March. In the home services industry, the window for pre-summer preventative maintenance is opening. We need to secure the schedule before the peak heat hits and the team is stuck in emergency-only mode.",
+      "category": "email-marketing",
+      "task_type": "campaign-setup",
+      "effort_b3x": "6 hours: Segmenting the CRM list, drafting 3 emails, and setting up the tracking numbers.",
+      "effort_client": "1 hour: Confirming the 'Early Bird' offer or discount.",
+      "prerequisites": "None — can start immediately.",
+      "impact": "Increases service volume in the pre-peak season, ensuring steady revenue and early customer acquisition before competitors start their summer push.",
+      "priority": "STRATEGIC",
+      "pitch_script": "It's already almost April, and you know how crazy it gets once the heat hits. I want to get ahead of the curve and launch a 'Summer Readiness' campaign now to fill your calendar with tune-ups before the emergency calls take over the schedule."
+    }
+  ],
+  "talking_points": {
+    "Record Meta ad videos": "Brendan, how's the video recording coming along for the Meta ads? I'm excited to see those scripts come to life.",
+    "Add hiring P.S. to April content emails": "I'm working on getting that hiring P.S. added to the April emails—it's a little behind our original March 20th target, so I'm prioritizing that for you today.",
+    "Gather before/after photos for Google Profile": "Cara, quick check-in—have you had a chance to grab those project photos for the Google Business Profile? It’s a huge trust builder for people finding you on Search.",
+    "Investigate Bing lead drop": "Good news on the Bing investigation—we've identified the drop and accounted for it in our performance numbers for March.",
+    "Meta Ad-Specific Landing Page": "Since we're moving budget into Meta, I'd like to build a specific landing page for those ads. It will make sure we’re turning as many of those clicks into actual leads as possible.",
+    "Execute video interview strategy at April Home Show": "With the Home Show coming up on the 10th, do you feel ready to grab those interviews, or should we do a quick 5-minute review of the 'shot list' today?",
+    "Review CEO Blueprint and Checklist": "Brendan, did you get a chance to look over that CEO Blueprint? I'd love to hear your thoughts on how that checklist fits your current workflow."
+  },
+  "meta": {
+    "client_id": "1st-choice",
+    "client_name": "1st Choice",
+    "generated_at": "2026-03-31T16:13:27.578Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-19T21:29:05Z",
+    "days_since_last_meeting": 11,
+    "meetings_analyzed": 2,
+    "roadmap_stats": {
+      "total": 9,
+      "done": 2,
+      "in_progress": 1,
+      "blocked": 0,
+      "agreed": 6,
+      "stale": 0
+    }
+  }
+}

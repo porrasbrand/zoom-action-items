@@ -1,0 +1,138 @@
+{
+  "status_report": {
+    "completed": [],
+    "in_progress": [
+      {
+        "title": "Research safe Google account ownership transfer",
+        "title_id": "google_transfer_research",
+        "owner": "Juan",
+        "category": "website",
+        "eta": "2026-04-03"
+      }
+    ],
+    "needs_client_action": [
+      {
+        "title": "Implement Meta lead quality verification process",
+        "reason": "Gregg needs to finalize the internal criteria for what constitutes a 'qualified lead' so Juan can set up the tracking filters.",
+        "since": "2026-03-31"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [],
+    "b3x_overdue": [],
+    "client_overdue": [
+      {
+        "title": "Implement Meta lead quality verification process",
+        "owner": "Gregg",
+        "since": "2026-03-31"
+      }
+    ]
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "Leverage CRM Automation for Recruitment",
+      "reasoning": "With the recent resignation of the office manager and a part-time staffer, the team is stretched thin. Activating the crm-automation service gap to handle initial applicant screening will protect Phil and the team's time while the 'Who Hire' pipeline is built.",
+      "category": "crm-automation",
+      "task_type": "crm-workflow-setup"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Spring AC Campaign Early-Bird Launch",
+      "reasoning": "Meeting notes from March 23rd discuss seasonal AC campaigns. Historically, HVAC coaching clients see the best lead costs when launching early-bird maintenance promos in early April before the summer heat spike.",
+      "category": "paid-ads",
+      "task_type": "google-ads-management"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Quick Wins: Google Ownership & Dispatcher Emails",
+      "minutes": 5,
+      "notes": "Brief update on Juan's research and the status of the April 1st email deployment."
+    },
+    {
+      "topic": "Staffing & Hiring Pipeline Update",
+      "minutes": 10,
+      "notes": "Review the 'Who Hire' pipeline progress and discuss the random bonus structure implementation mentioned in the last meeting."
+    },
+    {
+      "topic": "Strategic Proposal: Automation & Paid Traffic",
+      "minutes": 15,
+      "notes": "Present the plan to bridge service gaps (CRM & Ads) to handle the office manager transition more efficiently."
+    },
+    {
+      "topic": "Action Items & Accountability",
+      "minutes": 5,
+      "notes": "Confirm lead quality criteria from Gregg and set deadlines for AC campaign assets."
+    }
+  ],
+  "estimated_meeting_length_minutes": 35,
+  "projected_roadmap": [
+    {
+      "title": "Automated 'Emergency Hire' Screening Workflow",
+      "what": "Creation of an automated GoHighLevel (GHL) workflow that triggers when a candidate applies via 'Who Hire'. It includes an initial SMS screening questionnaire and an automated 'Culture Fit' video greeting from the owner.",
+      "why_now": "The office manager's resignation has created an administrative bottleneck. This project offloads the manual labor of the 'Setup recruiting pipeline' item currently on the roadmap.",
+      "category": "crm-automation",
+      "task_type": "crm-workflow-setup",
+      "effort_b3x": "6 hours: Workflow logic building (3hrs), SMS template copywriting (2hrs), and testing (1hr).",
+      "effort_client": "1 hour to record a 60-second culture video and approve the screening questions.",
+      "prerequisites": "Setup recruiting pipeline via Who Hire",
+      "impact": "Reduces manual HR administration by 70%, ensuring only qualified, culture-fit candidates reach the interview stage while the team is short-staffed.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "Gregg, I know losing your office manager has put a lot on your plate. To help you breathe, I want to automate the front end of your new hiring pipeline. We can set up a system that screens applicants via SMS and intro videos before they ever touch your calendar, so you only spend time on the top 5%."
+    },
+    {
+      "title": "HVAC Coaching Lead Magnet: 'The 48-Hour Staffing Recovery Plan'",
+      "what": "A high-value PDF guide and landing page designed to capture leads for the coaching business. It will outline the specific steps Bearcat took to manage their recent staffing transition.",
+      "why_now": "Bearcat is currently 'living' this problem. Using their real-time breakthrough on staffing as a lead magnet creates authentic, high-converting content for the coaching arm during a time when many HVAC owners are facing the same labor shortage.",
+      "category": "funnel-campaign",
+      "task_type": "funnel-build",
+      "effort_b3x": "10 hours: Landing page design (4hrs), Copywriting (4hrs), Ad creative setup (2hrs).",
+      "effort_client": "2 hours: A brain-dump session with Phil to extract the 'Bonus Structure' and 'Culture' tactics discussed on March 23rd.",
+      "prerequisites": "None — can start immediately",
+      "impact": "Establishes Bearcat as a 'in-the-trenches' coaching authority and populates the email list with high-intent HVAC owners.",
+      "priority": "GROWTH",
+      "pitch_script": "You guys are navigating this staffing transition brilliantly, and honestly, every other HVAC owner out there is terrified of this exact scenario. I want to package your 'breakthrough' into a lead magnet. It positions you as the authority who has the answers when things get tough, and it’s the perfect way to feed your funnel."
+    },
+    {
+      "title": "Google Ads 'Pre-Heat' Maintenance Blitz",
+      "what": "A targeted Search and Local Services Ads (LSA) campaign focused specifically on 'AC Tune-ups' and 'System Inspections' for Northern Services.",
+      "why_now": "The roadmap already has 'Launch seasonal AC marketing campaigns' as an agreed item. We need to define the specific ad spend and keywords now to beat the May competition price spikes.",
+      "category": "paid-ads",
+      "task_type": "google-ads-management",
+      "effort_b3x": "8 hours: Keyword research (2hrs), Ad copy creation (3hrs), Tracking/Conversion setup (3hrs).",
+      "effort_client": "Approval of the monthly ad budget and specific offer (e.g., $79 Tune-up).",
+      "prerequisites": "Launch seasonal AC marketing campaigns",
+      "impact": "Secures early-season revenue to offset hiring costs and ensures the new dispatcher has a steady stream of incoming calls to practice on.",
+      "priority": "STRATEGIC",
+      "pitch_script": "We have the seasonal AC campaigns on the roadmap, but I want to move fast on the 'Pre-Heat' maintenance blitz. If we get our Google Ads live in the next 10 days, we'll snag the early maintenance traffic at a much lower cost-per-click than when the heat wave actually hits in May."
+    }
+  ],
+  "talking_points": {
+    "Research safe Google account ownership transfer": "Juan is currently deep-diving into the safest way to split Northern Services and Bearcat Coaching on Google; we want to make sure we don't trigger any automated security flags that could pause your accounts.",
+    "Implement Meta lead quality verification process": "Gregg, once you have a moment to define what makes a 'perfect' lead versus a 'junk' lead, we're ready to bake those filters into your Meta tracking.",
+    "Incorporate dispatcher recruitment into email marketing": "We're on track to have the recruitment content included in the next email blast by tomorrow, April 1st, to help find that new dispatcher.",
+    "Setup recruiting pipeline via Who Hire": "Dan is moving forward with the 'Who Hire' setup; it's going to be the backbone of how we solve this current staffing gap.",
+    "Automated 'Emergency Hire' Screening Workflow": "Since you're running lean right now without an office manager, I'm proposing we automate the initial applicant screening so you aren't stuck reading every single resume manually.",
+    "HVAC Coaching Lead Magnet: 'The 48-Hour Staffing Recovery Plan'": "I'd love to turn your recent experience with the staffing transition into a coaching lead magnet—it's such a relatable pain point for your audience right now.",
+    "Google Ads 'Pre-Heat' Maintenance Blitz": "To support the new team members you're hiring, let's get the AC maintenance ads live early so we can fill the schedule before the summer rush begins."
+  },
+  "meta": {
+    "client_id": "bearcat",
+    "client_name": "Bearcat",
+    "generated_at": "2026-03-31T16:14:05.902Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-23T17:14:47Z",
+    "days_since_last_meeting": 7,
+    "meetings_analyzed": 2,
+    "roadmap_stats": {
+      "total": 6,
+      "done": 0,
+      "in_progress": 1,
+      "blocked": 0,
+      "agreed": 5,
+      "stale": 0
+    }
+  }
+}

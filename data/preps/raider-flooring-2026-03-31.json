@@ -1,0 +1,207 @@
+{
+  "status_report": {
+    "completed": [
+      {
+        "title": "Consult finance on Raider Flooring contract restructuring",
+        "date": "2026-03-31",
+        "category": "client-ops"
+      },
+      {
+        "title": "Provide April promotional offer",
+        "date": "2026-03-31",
+        "category": "client-ops"
+      },
+      {
+        "title": "Program March Raise Hand emails and SMS",
+        "date": "2026-03-31",
+        "category": "email-marketing"
+      },
+      {
+        "title": "Monitor Marie's webinar updates",
+        "date": "2026-03-31",
+        "category": "funnel-campaign"
+      }
+    ],
+    "in_progress": [
+      {
+        "title": "Write April Raise-Hand email campaign",
+        "owner": "Philip Mutrie",
+        "category": "email-marketing",
+        "eta": "Immediate"
+      },
+      {
+        "title": "Update Jay Connor's webinar dates",
+        "owner": "Philip Mutrie",
+        "category": "funnel-campaign",
+        "eta": "TBD"
+      }
+    ],
+    "needs_client_action": [
+      {
+        "title": "Finalize contract restructuring choice",
+        "reason": "Mike is evaluating a contract buyout vs. a reduced bi-weekly implementation fee to manage financial stress.",
+        "since": "2026-03-12"
+      },
+      {
+        "title": "Notify Tuesday clients of time zone changes",
+        "reason": "This task is assigned to the client side and is significantly overdue.",
+        "since": "2026-03-08"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [
+      {
+        "title": "Notify Tuesday clients of time zone changes",
+        "agreed_date": "2026-03-31",
+        "silent_meetings": 3
+      },
+      {
+        "title": "Stagger Tuesday client calls",
+        "agreed_date": "2026-03-31",
+        "silent_meetings": 2
+      },
+      {
+        "title": "Open GTM account for Jared Capps",
+        "agreed_date": "2026-03-31",
+        "silent_meetings": 2
+      },
+      {
+        "title": "Create Jerry Levinson 'Book a Call' page copy",
+        "agreed_date": "2026-03-31",
+        "silent_meetings": 2
+      }
+    ],
+    "b3x_overdue": [
+      {
+        "title": "Write April Raise-Hand email campaign",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-26"
+      },
+      {
+        "title": "Open GTM account for Jared Capps",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-05"
+      }
+    ],
+    "client_overdue": [
+      {
+        "title": "Notify Tuesday clients of time zone changes",
+        "action_needed": "Client needs to inform their internal Tuesday roster of the scheduling shift.",
+        "since": "2026-03-08"
+      }
+    ]
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "CRM Workflow Hard-Audit",
+      "reasoning": "After the recent text campaign scheduling error that caused client frustration, a full audit of all GHL automations is required to restore trust and ensure technical reliability before the April campaign drops.",
+      "category": "crm-automation",
+      "task_type": "ghl-workflow"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Call Tracking Implementation",
+      "reasoning": "Mike is preparing for radio ads. Without call tracking (a current service gap), he won't be able to distinguish between digital leads and radio leads, making his spend optimization impossible during this financial crunch.",
+      "category": "call-tracking",
+      "task_type": "tracking-setup"
+    },
+    {
+      "priority": "LOW",
+      "title": "Male-Centric Trust Creative Assets",
+      "reasoning": "The shift toward 'trust-based messaging for male decision-makers' requires specific creative shifts. We should align the April 'Raise Hand' emails with video testimonials from other male homeowners to hit this demographic.",
+      "category": "email-marketing",
+      "task_type": "raise-hand-emails"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Win Review & Campaign Recap",
+      "minutes": 5,
+      "notes": "Confirm the March Raise-Hand emails are complete and summarize the 'April Promotional Offer' status."
+    },
+    {
+      "topic": "Technical Resolution: SMS Workflow Audit",
+      "minutes": 10,
+      "notes": "Discuss the fix for the previous scheduling error and the 'triple-verify' process moving forward."
+    },
+    {
+      "topic": "Contract & April Strategy",
+      "minutes": 10,
+      "notes": "Finalize the decision on the buyout vs. reduced implementation fee and confirm the April 'Raise Hand' copy direction."
+    },
+    {
+      "topic": "Strategic Pitch: Call Tracking for Radio",
+      "minutes": 5,
+      "notes": "Connect the upcoming radio ads to the need for call tracking to measure ROI."
+    }
+  ],
+  "estimated_meeting_length_minutes": 30,
+  "projected_roadmap": [
+    {
+      "title": "Radio Campaign Attribution Setup",
+      "what": "Implementation of unique tracking phone numbers for upcoming radio advertisements and integration with GHL/reporting dashboard. This involves provisioning local numbers and setting up source-specific tags.",
+      "why_now": "Mike mentioned upcoming radio ads in the March 19th meeting. Without this, he cannot measure the ROI of his 'local community-based advertising' shift vs. our digital efforts.",
+      "category": "call-tracking",
+      "task_type": "tracking-setup",
+      "effort_b3x": "3 hours: 1hr to provision numbers and set up routing, 2hrs for dashboard configuration and testing.",
+      "effort_client": "Provide radio schedule and script details to align tracking numbers with specific airtimes.",
+      "prerequisites": "None — can start immediately",
+      "impact": "Provides clear data on which lead sources are driving phone calls, preventing the 'marketing in the dark' scenario Mike is currently fearing due to financial stress.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "Mike, since you’re gearing up for those radio spots, I want to make sure we aren't guessing which calls are coming from the airwaves versus our ads. I’d like to set up specific call tracking for the radio campaign so we can see exactly how many people are calling from those ads in real-time."
+    },
+    {
+      "title": "Google Business Profile Trust Audit",
+      "what": "A comprehensive review of the Raider Flooring GBP (formerly GMB), focusing on responding to recent reviews, updating photos to include 'male decision-maker' trust signals, and ensuring NAP consistency.",
+      "why_now": "The team agreed on a focus on 'trust-based messaging' for the April campaign. Your GBP is the first place male homeowners go to verify trust after seeing an ad or hearing a radio spot.",
+      "category": "client-ops",
+      "task_type": "client-profiling",
+      "effort_b3x": "4 hours to audit, respond to unanswered reviews, and optimize the business description and service list.",
+      "effort_client": "Provide 5-10 high-quality photos of recent projects and the team in action.",
+      "prerequisites": "None — can start immediately",
+      "impact": "Increases local SEO ranking and conversion rates from 'near me' searches, which aligns with the client’s desire for local community-based leads.",
+      "priority": "GROWTH",
+      "pitch_script": "We’re leaning heavily into trust-based messaging for April, and for home services, that trust starts on Google. I'd like to do a deep-dive audit of your Business Profile to make sure every review is handled and your local presence looks as professional as the work you do."
+    },
+    {
+      "title": "SMS Fail-Safe Protocol Implementation",
+      "what": "Creation of a formalized internal 'Pre-Flight Checklist' for all GHL automated text campaigns, including a 24-hour 'test-fire' to internal B3X phones before client-wide release.",
+      "why_now": "Directly addresses the 'significant scheduling error' from the March 27th meeting that caused client frustration. This codifies the fix into a permanent process.",
+      "category": "crm-automation",
+      "task_type": "ghl-workflow",
+      "effort_b3x": "2 hours to build the checklist and train the internal team on the new 'double-lock' verification process.",
+      "effort_client": "Approval of the new communication protocol.",
+      "prerequisites": "Audit and triple-verify text message scheduling workflows (Active Roadmap Item)",
+      "impact": "Eliminates the risk of future scheduling errors, protecting Mike's brand reputation and reducing administrative friction.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "Regarding that text campaign hiccup last week—I've developed a new 'Pre-Flight Checklist' for every automation we run. It’s a triple-verification step that ensures we’re the only ones seeing a test before it ever goes live to your customers, so we don't have another surprise like that again."
+    }
+  ],
+  "talking_points": {
+    "Consult finance on Raider Flooring contract restructuring": "We’ve worked with finance on the restructuring options we discussed—I’m ready to walk through which path makes the most sense for you right now.",
+    "Write April Raise-Hand email campaign": "I'm finalizing the April 'Raise Hand' copy today; we're focusing on that trust-based angle for the guys making the decisions that we talked about.",
+    "Finalize contract restructuring choice": "Mike, where are we leaning on the contract side? I want to make sure we have the right implementation fee locked in so we can keep the momentum going.",
+    "Radio Campaign Attribution Setup": "With the radio ads coming up, I'd like to get some tracking numbers in place so we can prove exactly how many calls those community ads are generating.",
+    "Notify Tuesday clients of time zone changes": "I noticed the time zone notification for your Tuesday clients is still pending—do you want me to help you draft that, or is that something you've already handled?",
+    "Audit and triple-verify text message scheduling workflows": "I’ve started a deep-dive audit of all our SMS workflows to ensure that scheduling error stays a one-time thing; I'm making sure our 'fail-safe' is airtight."
+  },
+  "meta": {
+    "client_id": "raider-flooring",
+    "client_name": "Raider Flooring",
+    "generated_at": "2026-03-31T16:15:27.045Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-27T13:58:56Z",
+    "days_since_last_meeting": 4,
+    "meetings_analyzed": 4,
+    "roadmap_stats": {
+      "total": 15,
+      "done": 5,
+      "in_progress": 2,
+      "blocked": 0,
+      "agreed": 8,
+      "stale": 6
+    }
+  }
+}

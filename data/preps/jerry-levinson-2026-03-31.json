@@ -1,0 +1,173 @@
+{
+  "status_report": {
+    "completed": [],
+    "in_progress": [
+      {
+        "title": "Refine and shuffle webinar slides",
+        "owner": "Jerry Levinson (B3X Support)",
+        "category": "funnel-campaign",
+        "eta": "Overdue (Was March 5)"
+      },
+      {
+        "title": "Research targeting for home improvement categories",
+        "owner": "Philip Mutrie",
+        "category": "paid-ads",
+        "eta": "In-Progress - pending niche expansion strategy"
+      }
+    ],
+    "needs_client_action": [
+      {
+        "title": "Create and Print Expression of Interest (EOI) Forms for Event",
+        "reason": "Crucial for 'selling from stage' framework discussed on March 18th; need these physical assets for the live event.",
+        "since": "2026-03-24"
+      },
+      {
+        "title": "Delegate Prosper tasks",
+        "reason": "Jerry's team needs to offload operational items so he can focus on high-value coaching.",
+        "since": "2026-03-05"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [],
+    "b3x_overdue": [
+      {
+        "title": "Add Orlando event P.S. to follow-up emails",
+        "owner": "Lizz Barnett",
+        "since": "2026-03-06"
+      },
+      {
+        "title": "Launch April 11th Webinar Traffic Campaign",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-23"
+      },
+      {
+        "title": "Develop and Implement Remarketing 'Book a Call' Campaign",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-30"
+      },
+      {
+        "title": "Draft Invitation and Post-Webinar Email Sequences",
+        "owner": "Lizz Barnett",
+        "since": "2026-03-23"
+      }
+    ],
+    "client_overdue": [
+      {
+        "title": "Create and Print Expression of Interest (EOI) Forms for Event",
+        "action_needed": "Jerry needs to finalize and print these for the upcoming live event to ensure lead capture.",
+        "since": "2026-03-24"
+      },
+      {
+        "title": "Delegate Prosper tasks",
+        "action_needed": "Handing off tasks to the Prosper team to free up Jerry's bandwidth.",
+        "since": "2026-03-05"
+      }
+    ]
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "Activation of Paid Ads Service Tier",
+      "reasoning": "We are already researching targeting and planning a traffic campaign for April 11th. Formally activating this service ensures dedicated budget management and reporting as Jerry scales from flooring to the broader home improvement niche.",
+      "category": "paid-ads",
+      "task_type": "meta-ads-management"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Post-Webinar 'High-Ticket' Funnel Expansion",
+      "reasoning": "With 78+ registrations recorded previously, we need to move beyond simple follow-ups. We should propose an automated 'application' funnel to pre-qualify coaching leads before they book a call with Jerry.",
+      "category": "funnel-campaign",
+      "task_type": "offer-development"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Event Readiness & EOI Forms",
+      "minutes": 5,
+      "notes": "Confirm physical forms are printed and Dan’s 'selling from stage' framework is ready."
+    },
+    {
+      "topic": "April 11th Webinar Prep",
+      "minutes": 10,
+      "notes": "Review status of traffic campaigns and slide refinements."
+    },
+    {
+      "topic": "Niche Expansion: Paid Ads Strategy",
+      "minutes": 10,
+      "notes": "Present new roadmap for home improvement categories and discuss formal Paid Ads activation."
+    },
+    {
+      "topic": "Next Steps & Deliverables",
+      "minutes": 5,
+      "notes": "Re-align on overdue email sequences and task delegation."
+    }
+  ],
+  "estimated_meeting_length_minutes": 30,
+  "projected_roadmap": [
+    {
+      "title": "SMS Registration Reminders for April 11th Webinar",
+      "what": "Implementation of a 3-part SMS sequence (24 hours before, 1 hour before, and 'Live Now') to maximize show-up rates for the webinar.",
+      "why_now": "With the 'Launch April 11th Webinar Traffic Campaign' active, we are driving traffic, but show-up rates are the bottleneck. SMS typically increases attendance by 15-20% compared to email alone.",
+      "category": "crm-automation",
+      "task_type": "automation-setup",
+      "effort_b3x": "3 hours to set up Twilio/GoHighLevel integration and draft copy.",
+      "effort_client": "Approve SMS copy and provide access to the preferred SMS provider.",
+      "prerequisites": "Launch April 11th Webinar Traffic Campaign",
+      "impact": "Higher show-up rates lead to more live conversions and better ROI on the paid traffic spend.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "Jerry, we're driving good traffic for the April 11th webinar, but the real win is getting them to actually show up. I'd like to add a quick SMS reminder sequence—it’s the fastest way to bump our attendance by 20% without spending more on ads."
+    },
+    {
+      "title": "Flooring to Home Improvement Bridge Campaign",
+      "what": "Creation of a lead magnet and landing page specifically targeting general home improvement contractors (Remodelers, HVAC, etc.) to test the expansion strategy discussed on March 18th.",
+      "why_now": "Since we are already researching targeting for these categories, we need a specific 'bridge' offer to see how well Jerry's flooring success translates to these new audiences before a full-scale launch.",
+      "category": "funnel-campaign",
+      "task_type": "webinar-page-setup",
+      "effort_b3x": "6 hours: Copywriting for the bridge offer, landing page build, and integration with the email list.",
+      "effort_client": "1-hour session to record a short bridge video or provide a specific case study outside of flooring.",
+      "prerequisites": "Research targeting for home improvement categories",
+      "impact": "Validates the niche expansion and provides data on cost-per-lead for non-flooring coaching clients.",
+      "priority": "GROWTH",
+      "pitch_script": "We've been talking about moving into broader home improvement niches. I want to build out a 'Bridge Campaign'—a landing page and lead magnet that specifically speaks to remodelers—so we can prove the concept and start building that list while we're running your flooring webinars."
+    },
+    {
+      "title": "Automated Coaching Application Funnel",
+      "what": "A multi-step survey/application form integrated into the 'Book a Call' flow to filter and qualify leads based on revenue and business size.",
+      "why_now": "As Jerry scales, his time becomes the scarcest resource. The 'Remarketing Book a Call Campaign' will increase volume, so we need a system to ensure he only talks to high-value prospects.",
+      "category": "crm-automation",
+      "task_type": "crm-workflow-setup",
+      "effort_b3x": "5 hours to build the logic, conditional tagging, and automated rejection/referral emails.",
+      "effort_client": "Define the 5-7 qualifying questions he wants every prospect to answer.",
+      "prerequisites": "Develop and Implement Remarketing 'Book a Call' Campaign",
+      "impact": "Increases the quality of sales calls, reduces time spent with unqualified leads, and elevates the perceived value of the coaching.",
+      "priority": "STRATEGIC",
+      "pitch_script": "As we scale the ads and more people start booking calls, we want to make sure you're only spending time with the most serious, high-revenue contractors. I'm proposing we build an automated application filter so by the time they get on your calendar, you already know they're a perfect fit for your high-ticket coaching."
+    }
+  ],
+  "talking_points": {
+    "Refine and shuffle webinar slides": "Jerry, how are those webinar slides coming along? We want to make sure the flow is tight before the April 11th run.",
+    "Create and Print Expression of Interest (EOI) Forms for Event": "Have you had a chance to get those Expression of Interest forms printed for the live event? Those are going to be the key to capturing those high-value leads Dan mentioned.",
+    "Research targeting for home improvement categories": "I've been digging into the targeting for the broader home improvement space—there's a massive audience here once we're ready to bridge over from flooring.",
+    "Launch April 11th Webinar Traffic Campaign": "I'm finalizing the traffic campaign for the 11th; I want to make sure Lizz has the email sequences ready to go so the handoff is seamless.",
+    "SMS Registration Reminders for April 11th Webinar": "Jerry, I want to add SMS reminders for the webinar—it's a small lift that usually increases the number of people who actually show up by a huge margin.",
+    "Automated Coaching Application Funnel": "Now that we're pushing for more 'Book a Call' conversions, I'd like to put an application filter in place to make sure every lead you talk to is qualified and ready to invest."
+  },
+  "meta": {
+    "client_id": "jerry-levinson",
+    "client_name": "Jerry Levinson",
+    "generated_at": "2026-03-31T16:14:47.315Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-18T21:39:28Z",
+    "days_since_last_meeting": 12,
+    "meetings_analyzed": 2,
+    "roadmap_stats": {
+      "total": 11,
+      "done": 0,
+      "in_progress": 2,
+      "blocked": 0,
+      "agreed": 9,
+      "stale": 0
+    }
+  }
+}

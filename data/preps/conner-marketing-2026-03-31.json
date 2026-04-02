@@ -1,0 +1,218 @@
+{
+  "status_report": {
+    "completed": [
+      {
+        "title": "Convert PDF offer document into PowerPoint slides",
+        "date": "2026-03-21",
+        "category": "creative"
+      },
+      {
+        "title": "Launch Facebook Ads for March 21st Virtual Event",
+        "date": "2026-03-10",
+        "category": "paid-ads"
+      },
+      {
+        "title": "Introduce Darrin and Jay to Ron for sales hiring",
+        "date": "2026-03-25",
+        "category": "client-ops"
+      }
+    ],
+    "in_progress": [
+      {
+        "title": "Configure Once-a-Day Evergreen Webinar automation",
+        "owner": "Philip Mutrie",
+        "category": "funnel-campaign",
+        "eta": "2026-04-01"
+      },
+      {
+        "title": "Create scripts for June Live Event promotion",
+        "owner": "Darrin Bentley",
+        "category": "funnel-campaign",
+        "eta": "2026-04-05"
+      },
+      {
+        "title": "Create transition documentation and videos for email/automation",
+        "owner": "Tyler Cook",
+        "category": "email-marketing",
+        "eta": "2026-03-31"
+      }
+    ],
+    "needs_client_action": [
+      {
+        "title": "Record Webinar VIP Bundle script video",
+        "reason": "This is the primary bottleneck for the $11 VIP upgrade funnel launch.",
+        "since": "2026-03-25"
+      },
+      {
+        "title": "Record automated Voice Broadcast for new leads",
+        "reason": "Crucial for the immediate engagement strategy discussed in the last two meetings.",
+        "since": "2026-03-11"
+      },
+      {
+        "title": "Schedule script role-playing with Tom Jacobson",
+        "reason": "Necessary to ensure the sales team is ready for the increased lead flow from the evergreen launch.",
+        "since": "2026-03-11"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [
+      {
+        "title": "Send email platform comparison to Jay",
+        "agreed_date": "2026-03-11",
+        "silent_meetings": 4
+      },
+      {
+        "title": "Populate Marketing Calendar for 3 months",
+        "agreed_date": "2026-03-11",
+        "silent_meetings": 4
+      },
+      {
+        "title": "Scale Script Facebook Campaign budget",
+        "agreed_date": "2026-03-11",
+        "silent_meetings": 2
+      }
+    ],
+    "b3x_overdue": [
+      {
+        "title": "Consult Tyler regarding GoHighLevel text throttling",
+        "owner": "Dan Kuschell",
+        "since": "2026-03-20"
+      },
+      {
+        "title": "Review Jay's webinar presentation draft",
+        "owner": "Dan Kuschell",
+        "since": "2026-03-20"
+      }
+    ],
+    "client_overdue": [
+      {
+        "title": "Personal phone follow-up with top script leads",
+        "action_needed": "Jay to report on outreach status",
+        "since": "2026-03-11"
+      },
+      {
+        "title": "Record Webinar VIP Bundle script video",
+        "action_needed": "Video recording for funnel",
+        "since": "2026-03-25"
+      }
+    ]
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "Solidify the $11 VIP Upgrade Funnel",
+      "reasoning": "With the Evergreen Webinar set for April 1st, the VIP upgrade is the key to offsetting ad spend. We have the slides done; we just need the video and page build to go live.",
+      "category": "funnel-campaign",
+      "task_type": "webinar-page-setup"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Operationalize Google/YouTube Ad Transition",
+      "reasoning": "The team agreed to shift budget from Facebook to Google/YouTube in the March 18th meeting. We need to move from 'Strategy' to 'Execution' to avoid a lead gap.",
+      "category": "paid-ads",
+      "task_type": "google-ads-management"
+    },
+    {
+      "priority": "LOW",
+      "title": "Email/SMS Governance & Throttling Setup",
+      "reasoning": "As we scale lead volume, Dan’s pending task on GHL throttling becomes a technical risk for deliverability.",
+      "category": "crm-automation",
+      "task_type": "ghl-workflow"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Wins: March Virtual Event & Creative Assets",
+      "minutes": 5,
+      "notes": "Celebrate the PDF-to-PPT conversion and the success of the recent ads."
+    },
+    {
+      "topic": "Critical Blockers: Evergreen Launch (April 1st)",
+      "minutes": 10,
+      "notes": "Address the VIP video recording and automated voice broadcast needs."
+    },
+    {
+      "topic": "Strategic Proposal: Google/YouTube Pivot & June Event",
+      "minutes": 15,
+      "notes": "Discuss the transition of ad spend and the start of the 'Funnel-Campaign' for June."
+    },
+    {
+      "topic": "Accountability & Stale Items",
+      "minutes": 10,
+      "notes": "Clean up the 4-week silent items (Email comparison and Marketing Calendar)."
+    },
+    {
+      "topic": "Next Steps & Action Items",
+      "minutes": 5,
+      "notes": "Confirm owners for the upcoming week."
+    }
+  ],
+  "estimated_meeting_length_minutes": 45,
+  "projected_roadmap": [
+    {
+      "title": "Evergreen 'Non-Attender' Retargeting Sequence",
+      "what": "Creation of a 3-part email and SMS sequence specifically for leads who register for the evergreen webinar but do not attend. This includes high-value 'cliffhanger' content to drive them back to a replay or a direct booking page.",
+      "why_now": "Since we are launching the Once-a-Day Evergreen Webinar on April 1st, we need to maximize every registration. Standard industry data shows 60% of registrants won't show up live; this recovers that lost traffic.",
+      "category": "email-marketing",
+      "task_type": "content-emails",
+      "effort_b3x": "3 hours: Writing copy for 3 emails and 2 SMS messages + setting up the GHL workflow triggers.",
+      "effort_client": "15 minutes: Review and approve copy.",
+      "prerequisites": "Configure Once-a-Day Evergreen Webinar automation",
+      "impact": "Expected 15-20% increase in total webinar views and a direct boost to lead conversion without increasing ad spend.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "Jay, now that we're moving to the evergreen model, we don't want any leads falling through the cracks. I want to build out a specific 'Recovery Sequence' for people who sign up but miss the session. It’s a low-effort move on our end that could easily reclaim 20% of your lost traffic."
+    },
+    {
+      "title": "YouTube Ad Creative 'Hook' Testing Lab",
+      "what": "Developing 3 distinct 30-second 'hook' variations for YouTube ads based on Jay's top-performing real estate scripts. This involves B3X providing scripts and Jay recording brief video intros to test against the current cold traffic audiences.",
+      "why_now": "In the 03-18 meeting, we discussed shifting spend to Google and YouTube. To succeed there, we can't just reuse Facebook videos; we need platform-specific hooks to stop the skip.",
+      "category": "paid-ads",
+      "task_type": "google-ads-management",
+      "effort_b3x": "5 hours: Scriptwriting hooks, setting up the A/B test in Google Ads, and performance monitoring.",
+      "effort_client": "45 minutes: Recording 3 short variations of the script hooks (30 seconds each).",
+      "prerequisites": "Strategy for Google and YouTube Ads transition",
+      "impact": "Lower Cost-Per-Click (CPC) on YouTube and better lead quality by pre-qualifying viewers in the first 5 seconds.",
+      "priority": "GROWTH",
+      "pitch_script": "Since we're pivoting budget to YouTube, we need to make sure your message hits hard in those first few seconds. I’d like to script three different 'hooks' for you to record. This will let us test what actually stops the skip and ensures we're not wasting that new budget."
+    },
+    {
+      "title": "VIP Buyer 'Ascension' CRM Dashboard",
+      "what": "A custom GoHighLevel dashboard tracking the journey from $7 Script Lead to $11 VIP to Live Event Attendee. Includes visual pipelines and conversion rate tracking at each stage for Ron and the new sales team.",
+      "why_now": "You're hiring a new 'star closer' and have multiple low-ticket offers live. Without a unified dashboard, it's difficult to see which leads are actually ready for a high-ticket follow-up call.",
+      "category": "crm-automation",
+      "task_type": "ghl-workflow",
+      "effort_b3x": "4 hours: Building custom fields, opportunity stages, and the dashboard visualization in GHL.",
+      "effort_client": "20 minutes: Walkthrough and feedback on the dashboard layout.",
+      "prerequisites": "None — can start immediately",
+      "impact": "Improved sales team efficiency and clear ROI visibility for every dollar spent on the $7 script ads.",
+      "priority": "STRATEGIC",
+      "pitch_script": "With Ron coming on board and the new sales hiring in progress, we need to give your team a 'cockpit' to see exactly where the money is. I'm proposing we build a custom dashboard that tracks every lead from that first $7 purchase all the way to the June event."
+    }
+  ],
+  "talking_points": {
+    "Convert PDF offer document into PowerPoint slides": "Great news, Jay — Ashley finished turning that PDF offer into the PowerPoint slides, so you’re all set for the webinar visuals.",
+    "Record Webinar VIP Bundle script video": "Jay, quick check-in on the VIP script video — we're aiming for that April 1st launch, so if you can get that recorded today or tomorrow, we’ll stay right on track.",
+    "Send email platform comparison to Jay": "I want to flag the email platform comparison we discussed a few weeks back — is that still a priority for you, or should we focus our energy strictly on the GHL transition for now?",
+    "Evergreen 'Non-Attender' Retargeting Sequence": "Something I want to put on your radar — now that the evergreen funnel is taking shape, adding a simple 'no-show' sequence could really boost the total views we get from the ads.",
+    "Scale Script Facebook Campaign budget": "We had 'Scaling the Script Campaign' on the list since the 11th; since those leads were performing so well, are you ready to pull the trigger on that budget increase?",
+    "Consult Tyler regarding GoHighLevel text throttling": "Dan, do you have an update on the GHL text throttling? We want to make sure we're clear on that before we ramp up the June event promos."
+  },
+  "meta": {
+    "client_id": "conner-marketing",
+    "client_name": "Jay Conner / Conner Marketing",
+    "generated_at": "2026-03-31T15:49:08.848Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-25T18:28:18Z",
+    "days_since_last_meeting": 5,
+    "meetings_analyzed": 5,
+    "roadmap_stats": {
+      "total": 25,
+      "done": 3,
+      "in_progress": 9,
+      "blocked": 0,
+      "agreed": 13,
+      "stale": 4
+    }
+  }
+}

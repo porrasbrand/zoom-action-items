@@ -1,0 +1,164 @@
+{
+  "status_report": {
+    "completed": [
+      {
+        "title": "Review and provide feedback on new pricing and naming",
+        "date": "2026-03-31",
+        "category": "client-ops"
+      },
+      {
+        "title": "Revisit top objections for the presentation",
+        "date": "2026-03-31",
+        "category": "client-ops"
+      }
+    ],
+    "in_progress": [
+      {
+        "title": "Update presentation with recap and 'yes' questions",
+        "owner": "Tom Ruwitch",
+        "category": "client-ops",
+        "eta": "Next meeting"
+      },
+      {
+        "title": "Develop 'Author's Light' snapshot for partnerships",
+        "owner": "Tom Ruwitch",
+        "category": "client-ops",
+        "eta": "TBD"
+      }
+    ],
+    "needs_client_action": [
+      {
+        "title": "Target Date: Next Webinar Event (April 16)",
+        "reason": "Final confirmation of funnel tech readiness and slide completion required for the April 16th date.",
+        "since": "2026-03-31"
+      },
+      {
+        "title": "Update Intro and Bio for Event Prep",
+        "reason": "Required for upcoming podcast guest spots and the Orlando event networking.",
+        "since": "2026-03-31"
+      },
+      {
+        "title": "Coordinate Podcast Guest Spots at Orlando Event",
+        "reason": "Tom needs to finalize which hosts he's connecting with to ensure we have the right tracking links ready.",
+        "since": "2026-03-31"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [],
+    "b3x_overdue": [
+      {
+        "title": "Provide video scripts for webinar lead gen ads",
+        "owner": "Dan Kuschell",
+        "since": "2026-03-31 (1 meeting silent)"
+      }
+    ],
+    "client_overdue": []
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "Creative/Video Asset Support for 'Implementum' Launch",
+      "reasoning": "Tom is rebranding to a 'Strategy, Tech, and Team' model. This requires high-authority visual assets to justify high-ticket pricing. Since 'creative' is a service gap, we should bridge this now to support the new Meta ads.",
+      "category": "creative",
+      "task_type": "video-production"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Post-Webinar High-Ticket Sales Sequence",
+      "reasoning": "With the April 16 webinar approaching, the email-marketing service should pivot from 'reminder' mode to 'consultation-close' mode to support the new Implementum offer structure.",
+      "category": "email-marketing",
+      "task_type": "sales-sequence-optimization"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Win Recap & Offer Refinement",
+      "minutes": 5,
+      "notes": "Confirm final pricing/naming feedback and the updated 'yes' questions in the deck."
+    },
+    {
+      "topic": "April 16 Webinar Readiness",
+      "minutes": 10,
+      "notes": "Review status of Meta carousel ads, video scripts, and registration page setup."
+    },
+    {
+      "topic": "Strategic Proposal: Implementum Visual Brand Kit",
+      "minutes": 10,
+      "notes": "Discuss bridging the 'creative' gap to professionalize the rebranding effort."
+    },
+    {
+      "topic": "Event & Partnership Prep",
+      "minutes": 5,
+      "notes": "Quick check on Orlando event prep and C-Suite Network snapshots."
+    }
+  ],
+  "estimated_meeting_length_minutes": 30,
+  "projected_roadmap": [
+    {
+      "title": "Implementum Visual Identity & Ad Creative Kit",
+      "what": "Creation of a unified visual brand kit for the 'Implementum' rebrand, including custom Meta ad templates, webinar slide themes, and a professional brand style guide.",
+      "why_now": "Now that we've finalized the naming and pricing structure (completed 03/31), we need the visual authority to match. Our Meta ads are launching soon, and generic creative will dampen the high-ticket perception.",
+      "category": "creative",
+      "task_type": "brand-identity",
+      "effort_b3x": "10-hour design sprint: 4 hours for template creation, 4 hours for brand guidelines, 2 hours for revisions.",
+      "effort_client": "1-hour brand discovery call and final approval of the visual direction.",
+      "prerequisites": "None — can start immediately based on the rebranding summary from 03/19.",
+      "impact": "Increases ad click-through rates and webinar registration quality by establishing a high-end 'consultancy' look vs. a 'solo-coach' look.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "Tom, the 'Implementum' concept is brilliant, and the pricing is right where it needs to be. To make sure the market treats this like the high-level system it is, I'd like to have our creative team build out a specific Visual Identity Kit. This will ensure your ads, slides, and partnership materials look like a unified $3M+ enterprise from day one."
+    },
+    {
+      "title": "Webinar Presentation 'High-Ticket' Polish",
+      "what": "A full audit and redesign of the existing webinar slides to incorporate the new 'Strategy, Tech, and Team' messaging and the 'yes' question framework.",
+      "why_now": "The roadmap item 'Update presentation with recap' is currently with Tom. B3X can take the heavy lifting here to ensure the transition from content to the 'Total System' consultation offer is seamless.",
+      "category": "funnel-campaign",
+      "task_type": "webinar-page-setup",
+      "effort_b3x": "6 hours of copywriting and slide design optimization.",
+      "effort_client": "Provide the current draft of the 'yes' questions and the updated offer bullet points.",
+      "prerequisites": "Update presentation with recap and 'yes' questions (in-progress).",
+      "impact": "Directly impacts the conversion rate from webinar attendee to consultation applicant.",
+      "priority": "GROWTH",
+      "pitch_script": "As you're working on those 'yes' questions for the deck, why don't we take that draft and give it a professional polish? We can align the visuals with the new Implementum branding and make sure the transition to the consultation offer feels like the only logical next step for your audience."
+    },
+    {
+      "title": "Direct-to-Consultation Meta Ad Campaign",
+      "what": "A new ad campaign specifically targeting high-intent leads to skip the webinar and book a 'Strategy Audit' directly, testing the appeal of the 90-day probation offer.",
+      "why_now": "We discussed the 90-day probation period and 10% buyout clause in the March 5th huddle. This is a powerful 'risk-reversal' that can be marketed directly to cold traffic, not just webinar attendees.",
+      "category": "paid-ads",
+      "task_type": "meta-ads-management",
+      "effort_b3x": "4 hours to set up targeting and copy; 2 hours/week for optimization.",
+      "effort_client": "Finalize the 'Total System' program details and ensure calendar availability for audits.",
+      "prerequisites": "Review and provide feedback on new pricing and naming (completed).",
+      "impact": "Shortens the sales cycle by capturing leads who are ready to buy without waiting for a webinar date.",
+      "priority": "STRATEGIC",
+      "pitch_script": "The 90-day probation period we discussed is a massive differentiator. Once the webinar is running, I'd love to test a direct-to-call ad campaign using that specific offer. It positions you as so confident in the 'Implementum' system that you're willing to put skin in the game immediately."
+    }
+  ],
+  "talking_points": {
+    "Review and provide feedback on new pricing and naming": "Great work on finalizing the 'Implementum' naming and pricing—it really clarifies the 'Strategy, Tech, and Team' value proposition.",
+    "Revisit top objections for the presentation": "I've integrated the objections we identified into the presentation flow to make sure we're tackling them before they even come up.",
+    "Provide video scripts for webinar lead gen ads": "Dan is finishing up those video scripts for the webinar ads; we want to make sure the hook aligns perfectly with the new rebranding.",
+    "Update presentation with recap and 'yes' questions": "How's the progress on the 'yes' questions for the deck? That's going to be the engine that drives the consultation bookings.",
+    "Implementum Visual Identity & Ad Creative Kit": "Tom, the 'Implementum' concept is brilliant. To make sure the market treats this like the high-level system it is, I'd like to have our creative team build out a specific Visual Identity Kit so your brand looks premium from day one.",
+    "Target Date: Next Webinar Event": "With April 16th around the corner, let's do a quick pulse check on the tech and the slides to make sure we're 100% ready to go.",
+    "Update Intro and Bio for Event Prep": "Do you have a draft of the new bio ready for the Orlando event? We want to make sure it leads with the new Implementum messaging."
+  },
+  "meta": {
+    "client_id": "tom-ruwitch",
+    "client_name": "Tom Ruwitch",
+    "generated_at": "2026-03-31T16:15:44.784Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-19T20:29:02Z",
+    "days_since_last_meeting": 11,
+    "meetings_analyzed": 3,
+    "roadmap_stats": {
+      "total": 10,
+      "done": 2,
+      "in_progress": 2,
+      "blocked": 0,
+      "agreed": 6,
+      "stale": 0
+    }
+  }
+}

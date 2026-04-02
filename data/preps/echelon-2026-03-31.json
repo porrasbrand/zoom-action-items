@@ -1,0 +1,208 @@
+{
+  "status_report": {
+    "completed": [
+      {
+        "title": "Check status of Connection Campaign FAQ videos",
+        "date": "2026-03-31",
+        "category": "creative"
+      },
+      {
+        "title": "Create flyer/visual for Daylight Super Savings promo",
+        "date": "2026-03-31",
+        "category": "creative"
+      },
+      {
+        "title": "Draft outbound call scripts",
+        "date": "2026-03-31",
+        "category": "call-tracking"
+      },
+      {
+        "title": "Record and upload Golden Ticket voice broadcast",
+        "date": "2026-03-16",
+        "category": "creative"
+      }
+    ],
+    "in_progress": [
+      {
+        "title": "Record and upload HVAC promo videos",
+        "owner": "Andrew",
+        "category": "creative",
+        "eta": "Next meeting"
+      },
+      {
+        "title": "Monitor GoHighLevel Conversations daily",
+        "owner": "Andrew",
+        "category": "crm-automation",
+        "eta": "Ongoing"
+      }
+    ],
+    "needs_client_action": [
+      {
+        "title": "Upload scripts for FAQ videos",
+        "reason": "B3X needs these to match the raw footage and begin editing the Connection Campaign videos.",
+        "since": "2026-03-31"
+      },
+      {
+        "title": "Develop de-winterize service package details",
+        "reason": "We cannot draft the 'Raise-Hand' email campaign until the specific deliverables of this package are defined.",
+        "since": "2026-03-23"
+      },
+      {
+        "title": "Update YouTube Channel Branding and Content",
+        "reason": "Andrew agreed to refresh this to support the video-heavy strategy we are implementing.",
+        "since": "2026-03-31"
+      }
+    ]
+  },
+  "accountability": {
+    "stale_items": [
+      {
+        "title": "Update Google Search Ads to Residential",
+        "agreed_date": "2026-03-31",
+        "silent_meetings": 3
+      }
+    ],
+    "b3x_overdue": [
+      {
+        "title": "Draft scripts for Daylight Super Savings (SMS & Voice)",
+        "owner": "Philip Mutrie",
+        "since": "2026-03-13"
+      },
+      {
+        "title": "Create GoHighLevel walkthrough video",
+        "owner": "Richard O",
+        "since": "2026-03-23"
+      }
+    ],
+    "client_overdue": [
+      {
+        "title": "Record Daylight Super Savings voice broadcast",
+        "action_needed": "Andrew needs to record the audio file for the deferred campaign.",
+        "since": "2026-03-16"
+      },
+      {
+        "title": "Develop de-winterize service package details",
+        "action_needed": "Define package scope (price, inclusions).",
+        "since": "2026-03-23"
+      }
+    ]
+  },
+  "strategic_direction": [
+    {
+      "priority": "HIGH",
+      "title": "Finalize 'De-Winterize' Campaign Offer",
+      "reasoning": "With the Golden Ticket campaign already yielding 12-15 calls, we need the next seasonal offer (De-winterizing) ready to launch as the weather shifts to maintain momentum.",
+      "category": "client-ops",
+      "task_type": "offer-development"
+    },
+    {
+      "priority": "HIGH",
+      "title": "Bridge Call Tracking Gap",
+      "reasoning": "The 'Golden Ticket' campaign proved we can generate high volume (15 calls). We are currently missing formal call tracking, making it hard to prove ROAS on Meta/Google spend.",
+      "category": "call-tracking",
+      "task_type": "tracking-number-setup"
+    },
+    {
+      "priority": "MEDIUM",
+      "title": "Video Asset Pipeline",
+      "reasoning": "Recent agreements focus heavily on video (FAQ Connection, Lighting Promo). We need a strict weekly cadence for Andrew to provide raw footage to ensure the B3X editing team isn't stalled.",
+      "category": "creative",
+      "task_type": "video-editing"
+    }
+  ],
+  "suggested_agenda": [
+    {
+      "topic": "Win Review: Golden Ticket Results",
+      "minutes": 5,
+      "notes": "Celebrate the 12-15 calls and 8 bookings; reinforce the 'win'."
+    },
+    {
+      "topic": "Creative Pipeline: FAQ & Lighting Scripts",
+      "minutes": 10,
+      "notes": "Confirm Andrew's timeline for scripts so Philip can start editing."
+    },
+    {
+      "topic": "Strategic Pitch: Call Tracking & Attribution",
+      "minutes": 10,
+      "notes": "Discuss bridging the service gap to better track 'Golden Ticket' and 'Lighting' leads."
+    },
+    {
+      "topic": "Review Stale/Overdue Items",
+      "minutes": 5,
+      "notes": "Address the Google Search Ads and Daylight Savings status."
+    },
+    {
+      "topic": "Next Steps & Action Items",
+      "minutes": 5,
+      "notes": "Confirm owners for the April Fool's launch tomorrow."
+    }
+  ],
+  "estimated_meeting_length_minutes": 35,
+  "projected_roadmap": [
+    {
+      "title": "Automated Google Review Request Workflow",
+      "what": "Creation of an automated GoHighLevel workflow that triggers a personalized review request via SMS and email immediately after a technician marks a maintenance job as completed.",
+      "why_now": "The Golden Ticket campaign just added 8+ new maintenance bookings. This is the perfect window to capitalize on these new customers to build social proof before the summer rush.",
+      "category": "crm-automation",
+      "task_type": "ghl-workflow",
+      "effort_b3x": "3 hours to build the logic, draft the SMS/Email templates, and test the trigger.",
+      "effort_client": "15 minutes to review/approve the messaging and ensure technicians are correctly updating job status in GHL.",
+      "prerequisites": "Tag Golden Ticket bookings for tracking (Andrew)",
+      "impact": "Expected to increase Google Review volume by 25-40% over the next quarter, improving local search rankings for HVAC keywords.",
+      "priority": "QUICK_WIN",
+      "pitch_script": "Andrew, the Golden Ticket campaign is crushing it with those 8 new bookings. I want to make sure we’re squeezing every bit of value out of those jobs by automating a review request. If we turn this on now, we can build a mountain of social proof before the peak AC season hits. What do you think about getting that live this week?"
+    },
+    {
+      "title": "Full-Service Call Tracking Implementation",
+      "what": "Integration of unique tracking numbers for Meta Ads, Google Ads, and Direct Mail (Golden Ticket) with full recording and source attribution pushed into the GoHighLevel CRM.",
+      "why_now": "You mentioned getting 12-15 calls from the Golden Ticket campaign, but we're currently relying on manual counting. With the Lighting Promo and April Fool's campaigns launching, we need precise data to see which ads are actually making the phone ring.",
+      "category": "call-tracking",
+      "task_type": "tracking-number-setup",
+      "effort_b3x": "5 hours to provision numbers, set up routing, and integrate with GHL reporting dashboards.",
+      "effort_client": "1 hour to review routing (who gets the call first) and approve the small monthly tracking number fee.",
+      "prerequisites": "None — can start immediately",
+      "impact": "Eliminates guesswork in marketing spend. We will know exactly how much each phone call costs from every specific campaign.",
+      "priority": "GROWTH",
+      "pitch_script": "We’re seeing great activity with 15 calls recently, but honestly, we’re flying a bit blind on exactly which ads are the winners. I’d like to officially activate Call Tracking so we can see which campaigns are driving the highest quality leads. It’ll make our weekly huddles much more data-driven and help us scale the 'Lighting Promo' faster."
+    },
+    {
+      "title": "HVAC 'Common Problem' Video Blog Series",
+      "what": "A structured content plan where Andrew records 60-second answers to top customer questions (e.g., 'Why is my AC leaking?'), which B3X then edits and optimizes for YouTube and the website.",
+      "why_now": "Since we've already agreed to 'Update YouTube Channel Branding' and 'Edit FAQ Connection Videos,' this is the natural next step to dominate local search through video SEO.",
+      "category": "website",
+      "task_type": "website-content-update",
+      "effort_b3x": "2 hours/month for keyword research + 4 hours/month for video editing and SEO optimization.",
+      "effort_client": "30 minutes a week to record raw video responses based on provided scripts.",
+      "prerequisites": "Upload scripts for FAQ videos (Andrew)",
+      "impact": "Builds long-term organic authority and trust, reducing the 'sales resistance' when a technician arrives at a home.",
+      "priority": "STRATEGIC",
+      "pitch_script": "Since you're already getting into the groove of recording those FAQ scripts, I want to turn that into a long-term asset. If we turn these into a 'Common Problems' series on your website and YouTube, we can start capturing people right when they're searching for help. It’s a great way to position Echelon as the local expert before they even call."
+    }
+  ],
+  "talking_points": {
+    "Check status of Connection Campaign FAQ videos": "Great news—we’ve cleared the deck on the FAQ video status and we're ready to roll once we have the scripts.",
+    "Upload scripts for FAQ videos": "Andrew, quick check on those FAQ scripts—do you think you can get those into the Drive today so the editors can start on the Connection Campaign?",
+    "Update Google Search Ads to Residential": "I want to flag the Google Search update—it’s been on the back burner for a few weeks, so I'm making it a priority for Philip to finalize that by Friday.",
+    "Develop de-winterize service package details": "To get the 'De-winterize' campaign out the door, we just need the final word from you on what’s included in that package and the price point.",
+    "Automated Google Review Request Workflow": "Since the Golden Ticket campaign is bringing in new maintenance clients, I’d love to trigger an automatic review request the moment the job is done—it’s an easy win for your local ranking.",
+    "Full-Service Call Tracking Implementation": "Now that we’re seeing 15+ calls coming in, I really think it’s time to flip the switch on Call Tracking so we can see exactly which ads are paying for themselves.",
+    "HVAC 'Common Problem' Video Blog Series": "Since we’re already working on YouTube branding, let’s look at a 'Common Problems' video series to really own the local authority spot for HVAC."
+  },
+  "meta": {
+    "client_id": "echelon",
+    "client_name": "Echelon",
+    "generated_at": "2026-03-31T16:13:08.535Z",
+    "b3x_lead": "Phil",
+    "last_meeting": "2026-03-30T16:02:19Z",
+    "days_since_last_meeting": 1,
+    "meetings_analyzed": 4,
+    "roadmap_stats": {
+      "total": 22,
+      "done": 6,
+      "in_progress": 2,
+      "blocked": 0,
+      "agreed": 11,
+      "stale": 1
+    }
+  }
+}
