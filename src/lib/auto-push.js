@@ -408,7 +408,7 @@ export async function autoPushMeeting(db, meetingId, options = {}) {
 
             // Store ph_task_id back on action_items
             db.prepare(
-              'UPDATE action_items SET ph_task_id = ?, pushed_at = datetime("now") WHERE id = ?'
+              "UPDATE action_items SET ph_task_id = ?, pushed_at = datetime('now') WHERE id = ?"
             ).run(createdTask.id, item.id);
 
             itemResult.ph_task_id = createdTask.id;
