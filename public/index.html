@@ -2895,6 +2895,46 @@
   border-bottom: 1px solid #21262d;
 }
 
+.cockpit-sop-guide {
+  background: linear-gradient(135deg, rgba(108,140,255,0.08), rgba(108,140,255,0.03));
+  border: 1px solid rgba(108,140,255,0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+.cockpit-sop-step {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6c8cff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+.cockpit-sop-script {
+  font-style: italic;
+  color: #c9d1d9;
+  line-height: 1.5;
+}
+.cockpit-sop-script em {
+  color: #8891a8;
+  font-style: normal;
+  font-size: 12px;
+}
+.cockpit-sop-guide.close-guide {
+  background: linear-gradient(135deg, rgba(74,222,128,0.08), rgba(74,222,128,0.03));
+  border-color: rgba(74,222,128,0.2);
+}
+.cockpit-sop-guide.close-guide .cockpit-sop-step {
+  color: #4ade80;
+}
+.cockpit-sop-guide.pitch-guide {
+  background: linear-gradient(135deg, rgba(250,204,21,0.08), rgba(250,204,21,0.03));
+  border-color: rgba(250,204,21,0.2);
+}
+.cockpit-sop-guide.pitch-guide .cockpit-sop-step {
+  color: #facc15;
+}
 .cockpit-section-header {
   display: flex;
   align-items: center;
@@ -6115,12 +6155,21 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         </div>
       `;
 
-      // Render each section
+      // Render SOP-guided cockpit flow
+      html += '<div class="cockpit-sop-guide"><div class="cockpit-sop-step">Step 1: Open the Meeting</div><div class="cockpit-sop-script">"Before we dive in, let me check in on what we discussed last time."<br><em>Go through the wins, blockers, and stale items below. Stale items MUST come up.</em></div></div>';
+
       html += renderCockpitSection('Wins to Report', wins, phLinks, selections, talkingPoints, 'done');
       html += renderCockpitSection('In Progress', inProgress, phLinks, selections, talkingPoints, 'in-progress');
       html += renderCockpitSection('Blockers — Need Answers', blockers, phLinks, selections, talkingPoints, 'blocked');
       html += renderCockpitSection('Stale — Must Address', stale, phLinks, selections, talkingPoints, 'stale');
+
+      html += '<div class="cockpit-sop-guide"><div class="cockpit-sop-step">Step 2: Client Updates</div><div class="cockpit-sop-script">"What\'s new on your end since last time?"<br><em>Listen. Take notes. Don\'t solve everything in real-time — capture it for action items.</em></div></div>';
+
+      html += '<div class="cockpit-sop-guide pitch-guide"><div class="cockpit-sop-step">Step 3: Your Updates + Pitch</div><div class="cockpit-sop-script">Share B3X updates from the data above. Translate metrics to business impact.<br><em>If time allows, pitch one proposal below.</em></div></div>';
+
       html += renderCockpitProposals('Phil\'s Pitch — Proposals', proposals, talkingPoints);
+
+      html += '<div class="cockpit-sop-guide close-guide"><div class="cockpit-sop-step">Step 4: Close the Meeting ✓</div><div class="cockpit-sop-script">"Let me recap what we\'ve agreed on today:"<br>Read back each item: <strong>what</strong>, <strong>who</strong>, <strong>by when</strong>.<br>"Does that cover everything?"<br><em>This is non-negotiable. Clear items → clear ProofHub tasks.</em></div></div>';
 
       panel.innerHTML = html;
     }
