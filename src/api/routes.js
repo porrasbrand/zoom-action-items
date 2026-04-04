@@ -38,6 +38,7 @@ import {
 } from '../lib/ph-reconciler.js';
 import { initDatabase as initMetricsDb, getMetrics, getStats as getMetricsStats, computeAllMetrics } from '../lib/session-metrics.js';
 import { getAllBaselines, getBaselines, recalculateAll as recalculateBaselines, initBaselinesTable } from '../lib/session-baselines.js';
+import { getScorecard, getClientTrend, getTeamStats, getFlags, getBenchmarks, getWeeklyDigest } from '../lib/session-queries.js';
 import { readdirSync, readFileSync as fsReadFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -1994,6 +1995,100 @@ router.post('/session/baselines/recalculate', (req, res) => {
       clients_with_baselines: result.clients.length,
       members_with_baselines: result.members.length
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ SESSION INTELLIGENCE (Phase 15D) ============
+
+// GET /api/session/:meetingId/scorecard - Complete scorecard for one meeting
+router.get('/session/:meetingId/scorecard', (req, res) => {
+  try {
+    const meetingId = parseInt(req.params.meetingId);
+    const metricsDb = initMetricsDb();
+    initBaselinesTable(metricsDb);
+    const scorecard = getScorecard(metricsDb, meetingId);
+    metricsDb.close();
+
+    if (!scorecard) {
+      return res.status(404).json({ error: 'Meeting not found' });
+    }
+    res.json(scorecard);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/session/client/:clientId/trend - Score trend for a client
+router.get('/session/client/:clientId/trend', (req, res) => {
+  try {
+    const clientId = req.params.clientId;
+    const limit = parseInt(req.query.limit) || 20;
+    const metricsDb = initMetricsDb();
+    initBaselinesTable(metricsDb);
+    const trend = getClientTrend(metricsDb, clientId, { limit });
+    metricsDb.close();
+
+    res.json(trend);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/session/team/:memberName/stats - Team member stats
+router.get('/session/team/:memberName/stats', (req, res) => {
+  try {
+    const memberName = req.params.memberName;
+    const metricsDb = initMetricsDb();
+    const stats = getTeamStats(metricsDb, memberName);
+    metricsDb.close();
+
+    res.json(stats);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/session/flags - Flagged meetings
+router.get('/session/flags', (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 50;
+    const metricsDb = initMetricsDb();
+    initBaselinesTable(metricsDb);
+    const flags = getFlags(metricsDb, { limit });
+    metricsDb.close();
+
+    res.json(flags);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/session/benchmarks - Agency-wide benchmarks
+router.get('/session/benchmarks', (req, res) => {
+  try {
+    const metricsDb = initMetricsDb();
+    initBaselinesTable(metricsDb);
+    const benchmarks = getBenchmarks(metricsDb);
+    metricsDb.close();
+
+    res.json(benchmarks);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/session/digest/weekly - Weekly digest
+router.get('/session/digest/weekly', (req, res) => {
+  try {
+    const weekStart = req.query.week || null;
+    const metricsDb = initMetricsDb();
+    initBaselinesTable(metricsDb);
+    const digest = getWeeklyDigest(metricsDb, weekStart);
+    metricsDb.close();
+
+    res.json(digest);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
