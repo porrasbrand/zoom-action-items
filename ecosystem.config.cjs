@@ -55,5 +55,32 @@ module.exports = {
 
       watch: false,
     },
+    // Session Intelligence Weekly Digest
+    // Disabled by default - enable when ready to auto-post to Slack
+    // To enable: pm2 start ecosystem.config.cjs --only session-digest
+    {
+      name: 'session-digest',
+      script: 'src/session-digest.js',
+      args: '--post-slack',
+
+      // Cron: Every Monday at 9am
+      cron_restart: '0 9 * * 1',
+
+      // Don't auto-restart after completion
+      autorestart: false,
+
+      // Logging
+      out_file: 'logs/session-digest-out.log',
+      error_file: 'logs/session-digest-error.log',
+      log_date_format: 'YYYY-MM-DD HH:mm:ss',
+      merge_logs: true,
+
+      // Environment
+      env: {
+        NODE_ENV: 'production',
+      },
+
+      watch: false,
+    },
   ],
 };
