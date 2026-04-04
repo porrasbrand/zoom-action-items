@@ -36,6 +36,7 @@ import {
   reconcileClient, refreshPHCache, getReconcileStatus,
   getAllPHLinksForClient, manualLink, removeLink
 } from '../lib/ph-reconciler.js';
+import { initDatabase as initMetricsDb, getMetrics, getStats as getMetricsStats, computeAllMetrics } from '../lib/session-metrics.js';
 import { readdirSync, readFileSync as fsReadFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -1877,6 +1878,69 @@ router.post('/cockpit/:clientId/agenda', async (req, res) => {
       total_minutes: totalMinutes,
       items_count: selections.length
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ SESSION METRICS (Phase 15A) ============
+
+// GET /api/session/:meetingId/metrics - Get session metrics for a meeting
+router.get('/session/:meetingId/metrics', (req, res) => {
+  try {
+    const meetingId = parseInt(req.params.meetingId);
+    const metricsDb = initMetricsDb();
+    const metrics = getMetrics(metricsDb, meetingId);
+    metricsDb.close();
+
+    if (!metrics) {
+      return res.status(404).json({ error: 'No metrics for this meeting' });
+    }
+    res.json(metrics);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/session/metrics/summary - Get aggregate metrics summary
+router.get('/session/metrics/summary', (req, res) => {
+  try {
+    const metricsDb = initMetricsDb();
+    const stats = getMetricsStats(metricsDb);
+    metricsDb.close();
+
+    res.json({
+      total_meetings: stats.total_meetings,
+      avg_action_items: parseFloat(stats.avg_action_items?.toFixed(1)) || 0,
+      avg_action_density: parseFloat(stats.avg_action_density?.toFixed(3)) || 0,
+      avg_due_date_rate: parseFloat(stats.avg_due_date_rate?.toFixed(0)) || 0,
+      avg_owner_assignment_rate: parseFloat(stats.avg_owner_assignment_rate?.toFixed(0)) || 0,
+      avg_b3x_speaking_ratio: parseFloat(stats.avg_b3x_speaking_ratio?.toFixed(0)) || 0,
+      meetings_with_stale_b3x: stats.meetings_with_stale_b3x || 0,
+      meeting_types: {
+        regular: stats.type_regular || 0,
+        internal: stats.type_internal || 0,
+        kickoff: stats.type_kickoff || 0,
+        'vip-session': stats.type_vip || 0
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/session/:meetingId/metrics/compute - Compute metrics for a specific meeting
+router.post('/session/:meetingId/metrics/compute', (req, res) => {
+  try {
+    const meetingId = parseInt(req.params.meetingId);
+    const metricsDb = initMetricsDb();
+    const metrics = computeAllMetrics(metricsDb, meetingId);
+    metricsDb.close();
+
+    if (!metrics) {
+      return res.status(404).json({ error: 'Meeting not found' });
+    }
+    res.json({ success: true, metrics });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
