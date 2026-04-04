@@ -3249,6 +3249,509 @@
   color: #d29922;
   margin-bottom: 16px;
 }
+
+/* ============ SESSION INTELLIGENCE STYLES ============ */
+
+.session-view {
+  padding: 20px;
+  overflow-y: auto;
+  height: calc(100vh - 180px);
+}
+
+.session-subnav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #30363d;
+}
+
+.session-nav-btn {
+  padding: 8px 16px;
+  border: 1px solid #30363d;
+  border-radius: 20px;
+  background: transparent;
+  color: #8b949e;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.session-nav-btn:hover {
+  background: #21262d;
+  color: #c9d1d9;
+}
+
+.session-nav-btn.active {
+  background: #238636;
+  border-color: #238636;
+  color: #fff;
+}
+
+.session-panel {
+  padding: 16px 0;
+}
+
+/* Score card */
+.session-score-card {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  background: #21262d;
+  padding: 24px 40px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.session-score-card .score-value {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.session-score-card .score-label {
+  font-size: 12px;
+  color: #8b949e;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+
+.score-green { color: #3fb950; }
+.score-yellow { color: #d29922; }
+.score-red { color: #f85149; }
+
+/* Health grid */
+.health-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.health-card {
+  background: #21262d;
+  border-radius: 8px;
+  padding: 16px;
+  border-left: 4px solid #30363d;
+}
+
+.health-card.green { border-left-color: #3fb950; }
+.health-card.yellow { border-left-color: #d29922; }
+.health-card.red { border-left-color: #f85149; }
+
+.health-card h4 {
+  font-size: 14px;
+  color: #f0f6fc;
+  margin-bottom: 8px;
+}
+
+.health-card .stats {
+  font-size: 12px;
+  color: #8b949e;
+}
+
+.health-card .score {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.trend-arrow {
+  font-size: 14px;
+  margin-left: 6px;
+}
+
+.trend-arrow.up { color: #3fb950; }
+.trend-arrow.down { color: #f85149; }
+.trend-arrow.stable { color: #8b949e; }
+
+/* Tier cards */
+.tier-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.tier-card {
+  background: #21262d;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.tier-card h4 {
+  font-size: 14px;
+  color: #f0f6fc;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #30363d;
+}
+
+.dimension-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 13px;
+}
+
+.dimension-name {
+  color: #8b949e;
+}
+
+.score-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.score-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #30363d;
+}
+
+.score-dot.filled { background: #58a6ff; }
+.score-dot.filled.green { background: #3fb950; }
+.score-dot.filled.yellow { background: #d29922; }
+.score-dot.filled.red { background: #f85149; }
+
+/* Coaching panel */
+.coaching-section {
+  margin-top: 24px;
+}
+
+.coaching-section h3 {
+  font-size: 16px;
+  color: #f0f6fc;
+  margin-bottom: 12px;
+}
+
+.coaching-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+.coaching-card {
+  background: #21262d;
+  border-radius: 8px;
+  padding: 14px;
+  border-left: 4px solid #30363d;
+}
+
+.coaching-card.win { border-left-color: #3fb950; }
+.coaching-card.improvement { border-left-color: #d29922; }
+.coaching-card.frustration { border-left-color: #f85149; }
+
+.coaching-card .title {
+  font-size: 13px;
+  color: #f0f6fc;
+  margin-bottom: 8px;
+}
+
+.coaching-card .quote {
+  font-size: 12px;
+  color: #8b949e;
+  font-style: italic;
+  padding: 8px;
+  background: #161b22;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.coaching-card .suggestion {
+  font-size: 12px;
+  color: #58a6ff;
+  margin-top: 8px;
+}
+
+/* Flag cards */
+.flags-summary {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.flag-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.flag-badge.critical {
+  background: rgba(248,81,73,0.15);
+  color: #f85149;
+}
+
+.flag-badge.warning {
+  background: rgba(210,153,34,0.15);
+  color: #d29922;
+}
+
+.flag-badge .count {
+  font-size: 24px;
+}
+
+.flag-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.flag-card {
+  background: #21262d;
+  border-radius: 8px;
+  padding: 16px;
+  border-left: 4px solid #30363d;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.flag-card:hover {
+  background: #30363d;
+}
+
+.flag-card.critical { border-left-color: #f85149; }
+.flag-card.warning { border-left-color: #d29922; }
+
+.flag-card .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.flag-card .topic {
+  font-size: 14px;
+  color: #f0f6fc;
+}
+
+.flag-card .composite {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.flag-card .meta {
+  font-size: 12px;
+  color: #8b949e;
+  margin-bottom: 8px;
+}
+
+.flag-card .reasons {
+  font-size: 12px;
+  color: #f85149;
+}
+
+.flag-card .reasons li {
+  margin-left: 16px;
+  margin-bottom: 4px;
+}
+
+/* Team cards */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.team-card {
+  background: #21262d;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.team-card h4 {
+  font-size: 16px;
+  color: #f0f6fc;
+  margin-bottom: 12px;
+}
+
+.team-card .stats {
+  font-size: 13px;
+  color: #8b949e;
+}
+
+.team-card .stats div {
+  margin-bottom: 6px;
+}
+
+.team-card .avg-bar {
+  height: 8px;
+  background: #30363d;
+  border-radius: 4px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.team-card .avg-bar .fill {
+  height: 100%;
+  background: #58a6ff;
+  border-radius: 4px;
+}
+
+.team-card .adjustment {
+  font-size: 11px;
+  color: #3fb950;
+  margin-top: 8px;
+}
+
+/* Trend chart */
+.trend-chart-container {
+  background: #21262d;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 16px;
+}
+
+.trend-chart-container h4 {
+  font-size: 14px;
+  color: #f0f6fc;
+  margin-bottom: 16px;
+}
+
+.trend-chart {
+  width: 100%;
+  height: 200px;
+}
+
+.trend-chart line.baseline {
+  stroke-dasharray: 4,4;
+}
+
+.trend-chart line.p25 { stroke: #f85149; }
+.trend-chart line.p50 { stroke: #d29922; }
+.trend-chart line.p75 { stroke: #3fb950; }
+
+.trend-chart circle {
+  fill: #58a6ff;
+  cursor: pointer;
+}
+
+.trend-chart circle:hover {
+  fill: #79c0ff;
+}
+
+/* Meeting selector */
+.session-controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.session-controls select {
+  padding: 8px 12px;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  background: #21262d;
+  color: #c9d1d9;
+  font-size: 14px;
+  min-width: 300px;
+}
+
+/* Metrics sidebar */
+.metrics-sidebar {
+  background: #21262d;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.metrics-sidebar h4 {
+  font-size: 14px;
+  color: #f0f6fc;
+  margin-bottom: 12px;
+}
+
+.metric-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 13px;
+  border-bottom: 1px solid #30363d;
+}
+
+.metric-row:last-child {
+  border-bottom: none;
+}
+
+.metric-name {
+  color: #8b949e;
+}
+
+.metric-value {
+  color: #f0f6fc;
+  font-weight: 500;
+}
+
+/* Win of the week */
+.win-of-week {
+  background: linear-gradient(135deg, #238636 0%, #1a7f37 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.win-of-week h4 {
+  font-size: 12px;
+  color: rgba(255,255,255,0.8);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.win-of-week .topic {
+  font-size: 16px;
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.win-of-week .score {
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.win-of-week .highlight {
+  font-size: 13px;
+  color: rgba(255,255,255,0.9);
+  margin-top: 12px;
+}
+
+/* Overview sections */
+.overview-section {
+  margin-bottom: 32px;
+}
+
+.overview-section h3 {
+  font-size: 16px;
+  color: #f0f6fc;
+  margin-bottom: 16px;
+}
+
+.overview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tier-cards {
+    grid-template-columns: 1fr;
+  }
+  .health-grid {
+    grid-template-columns: 1fr;
+  }
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+}
     </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
@@ -3335,6 +3838,7 @@
       <button class="tab-btn active" onclick="switchTab('meetings')" data-tab="meetings" role="tab" aria-selected="true" aria-controls="meetingsView">Meetings</button>
       <button class="tab-btn" onclick="switchTab('roadmap')" data-tab="roadmap" role="tab" aria-selected="false" aria-controls="roadmapView">Roadmap</button>
       <button class="tab-btn" onclick="switchTab('prep')" data-tab="prep" role="tab" aria-selected="false" aria-controls="prepView">Meeting Prep</button>
+      <button class="tab-btn" onclick="switchTab('session')" data-tab="session" role="tab" aria-selected="false" aria-controls="sessionView">Session Intelligence</button>
     </div>
 
     <div class="main tab-content active" id="meetingsView" role="tabpanel" aria-labelledby="tab-meetings">
@@ -3454,6 +3958,25 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Session Intelligence View -->
+  <div class="tab-content session-view" id="sessionView" role="tabpanel" aria-labelledby="tab-session">
+    <div class="session-subnav">
+      <button class="session-nav-btn active" onclick="switchSessionView('overview')">Overview</button>
+      <button class="session-nav-btn" onclick="switchSessionView('scorecard')">Meeting Scorecard</button>
+      <button class="session-nav-btn" onclick="switchSessionView('trends')">Client Trends</button>
+      <button class="session-nav-btn" onclick="switchSessionView('team')">Team Performance</button>
+      <button class="session-nav-btn" onclick="switchSessionView('flags')">Flags &amp; Alerts</button>
+    </div>
+
+    <div id="sessionOverview" class="session-panel">
+      <div class="loading">Loading session intelligence...</div>
+    </div>
+    <div id="sessionScorecard" class="session-panel" style="display:none;"></div>
+    <div id="sessionTrends" class="session-panel" style="display:none;"></div>
+    <div id="sessionTeam" class="session-panel" style="display:none;"></div>
+    <div id="sessionFlags" class="session-panel" style="display:none;"></div>
   </div>
 
   <div class="toast-container" id="toastContainer"></div>
@@ -5555,6 +6078,7 @@
       document.getElementById('meetingsView').classList.toggle('active', tab === 'meetings');
       document.getElementById('roadmapView').classList.toggle('active', tab === 'roadmap');
       document.getElementById('prepView').classList.toggle('active', tab === 'prep');
+      document.getElementById('sessionView').classList.toggle('active', tab === 'session');
 
       // Update stats bar visibility
       document.getElementById('statsBar').style.display = tab === 'meetings' ? 'flex' : 'none';
@@ -5582,13 +6106,15 @@
           document.getElementById('postSlackBtn').disabled = false;
           loadPrepHistory(sharedClientId);
         }
+      } else if (tab === 'session') {
+        loadSessionOverview();
       }
     }
 
     // Handle hash on page load and hash changes
     function initTabFromHash() {
       const hash = window.location.hash.replace('#', '');
-      if (hash === 'roadmap' || hash === 'prep') {
+      if (hash === 'roadmap' || hash === 'prep' || hash === 'session') {
         switchTab(hash);
       }
     }
@@ -5596,7 +6122,7 @@
     // Listen for hash changes (back/forward navigation)
     window.addEventListener('hashchange', () => {
       const hash = window.location.hash.replace('#', '');
-      if (hash === 'roadmap' || hash === 'prep') {
+      if (hash === 'roadmap' || hash === 'prep' || hash === 'session') {
         switchTab(hash);
       } else if (!hash) {
         switchTab('meetings');
@@ -6602,6 +7128,609 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
           ${items?.length > 0
             ? items.map(i => `<div class="prep-item ${cssClass}"><span class="item-title">${renderFn(i)}</span></div>`).join('')
             : '<div style="font-size: 12px; color: #6e7681; padding-left: 12px;">(none)</div>'}
+        </div>
+      `;
+    }
+
+    // ============ SESSION INTELLIGENCE ============
+
+    let currentSessionView = 'overview';
+    let sessionMeetings = []; // meetings with scores for dropdowns
+    let sessionClients = [];  // clients with scores for dropdowns
+
+    function switchSessionView(view) {
+      currentSessionView = view;
+
+      // Update sub-nav buttons
+      document.querySelectorAll('.session-nav-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase().includes(view) ||
+          (view === 'overview' && btn.textContent === 'Overview') ||
+          (view === 'scorecard' && btn.textContent === 'Meeting Scorecard') ||
+          (view === 'trends' && btn.textContent === 'Client Trends') ||
+          (view === 'team' && btn.textContent === 'Team Performance') ||
+          (view === 'flags' && btn.textContent.includes('Flags')));
+      });
+
+      // Show/hide panels
+      ['sessionOverview', 'sessionScorecard', 'sessionTrends', 'sessionTeam', 'sessionFlags'].forEach(id => {
+        const panel = document.getElementById(id);
+        panel.style.display = id === 'session' + view.charAt(0).toUpperCase() + view.slice(1) ? 'block' : 'none';
+      });
+
+      // Load data for the view
+      if (view === 'overview') loadSessionOverview();
+      else if (view === 'scorecard') loadSessionScorecard();
+      else if (view === 'trends') loadSessionTrends();
+      else if (view === 'team') loadSessionTeam();
+      else if (view === 'flags') loadSessionFlags();
+    }
+
+    function getScoreColor(score) {
+      if (score >= 3.5) return 'green';
+      if (score >= 2.5) return 'yellow';
+      return 'red';
+    }
+
+    function getThresholdColor(score, baselines) {
+      if (!baselines || !baselines.p75) return getScoreColor(score);
+      if (score >= baselines.p75) return 'green';
+      if (score >= baselines.p25) return 'yellow';
+      return 'red';
+    }
+
+    function renderScoreDots(score, color = null) {
+      const filled = Math.round(score);
+      const dots = [];
+      for (let i = 1; i <= 4; i++) {
+        const isFilled = i <= filled;
+        const colorClass = color || (isFilled ? getScoreColor(score) : '');
+        dots.push(`<span class="score-dot ${isFilled ? 'filled' : ''} ${colorClass}"></span>`);
+      }
+      return `<span class="score-dots">${dots.join('')}</span>`;
+    }
+
+    function getTrendArrow(trend) {
+      if (!trend || trend === 'stable') return '<span class="trend-arrow stable">→</span>';
+      if (trend === 'improving') return '<span class="trend-arrow up">↑</span>';
+      return '<span class="trend-arrow down">↓</span>';
+    }
+
+    async function loadSessionOverview() {
+      const panel = document.getElementById('sessionOverview');
+      panel.innerHTML = '<div class="loading">Loading session intelligence...</div>';
+
+      try {
+        const res = await fetch(API + '/session/benchmarks');
+        if (!res.ok) throw new Error('Failed to load benchmarks');
+        const data = await res.json();
+
+        // Also load flags for quick summary
+        const flagsRes = await fetch(API + '/session/flags');
+        const flagsData = flagsRes.ok ? await flagsRes.json() : { critical: [], warning: [] };
+
+        renderOverview(panel, data, flagsData);
+      } catch (err) {
+        panel.innerHTML = `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderOverview(panel, data, flagsData) {
+      const agency = data.agency || {};
+      const baselines = agency.composite || {};
+      const clients = data.clients || [];
+
+      // Calculate avg score across all clients
+      const avgScore = clients.length > 0
+        ? (clients.reduce((sum, c) => sum + (c.avg_composite || 0), 0) / clients.length).toFixed(2)
+        : 'N/A';
+      const scoreColor = typeof avgScore === 'number' ? getThresholdColor(parseFloat(avgScore), baselines) : '';
+
+      const criticalCount = flagsData.critical?.length || 0;
+      const warningCount = flagsData.warning?.length || 0;
+
+      let html = `
+        <div class="overview-header" style="display: flex; gap: 24px; margin-bottom: 24px;">
+          <div class="session-score-card">
+            <div class="score-value score-${scoreColor}">${avgScore}</div>
+            <div class="score-label">Agency Avg Score</div>
+            <div style="font-size: 11px; color: #6e7681; margin-top: 4px;">
+              P25: ${baselines.p25?.toFixed(2) || '—'} | P50: ${baselines.p50?.toFixed(2) || '—'} | P75: ${baselines.p75?.toFixed(2) || '—'}
+            </div>
+          </div>
+
+          <div class="flags-summary" onclick="switchSessionView('flags')" style="cursor: pointer;">
+            <div class="flag-badge critical">
+              <span class="count">${criticalCount}</span>
+              <span>Critical</span>
+            </div>
+            <div class="flag-badge warning">
+              <span class="count">${warningCount}</span>
+              <span>Warning</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="color: #f0f6fc; font-size: 16px; margin-bottom: 12px;">Client Health</h3>
+        <div class="health-grid">
+      `;
+
+      clients.sort((a, b) => (b.avg_composite || 0) - (a.avg_composite || 0));
+      clients.forEach(client => {
+        const color = getThresholdColor(client.avg_composite || 0, baselines);
+        const trend = getTrendArrow(client.trend);
+        html += `
+          <div class="health-card ${color}" onclick="switchSessionView('trends'); loadSessionTrends('${escapeHtml(client.client_id)}')">
+            <h4>${escapeHtml(client.client_name || client.client_id)}</h4>
+            <div class="stats">${client.meeting_count || 0} meetings scored</div>
+            <div class="score score-${color}">${(client.avg_composite || 0).toFixed(2)} ${trend}</div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      panel.innerHTML = html;
+    }
+
+    async function loadSessionScorecard(meetingId = null) {
+      const panel = document.getElementById('sessionScorecard');
+
+      // If no meeting selected, show selector
+      if (!meetingId && !panel.querySelector('.session-controls')) {
+        // First load: show controls + loading
+        panel.innerHTML = `
+          <div class="session-controls">
+            <select id="scorecardMeetingSelect" onchange="loadSessionScorecard(this.value)">
+              <option value="">Select a meeting...</option>
+            </select>
+          </div>
+          <div id="scorecardContent"><div class="loading">Loading meetings with scores...</div></div>
+        `;
+
+        // Load meetings with evaluations
+        try {
+          const res = await fetch(API + '/meetings?limit=100');
+          if (res.ok) {
+            const data = await res.json();
+            sessionMeetings = (data.meetings || []).filter(m => m.evaluation_stored_at);
+            const select = document.getElementById('scorecardMeetingSelect');
+            sessionMeetings.forEach(m => {
+              const opt = document.createElement('option');
+              opt.value = m.id;
+              opt.textContent = `${m.topic} (${new Date(m.start_time).toLocaleDateString()})`;
+              select.appendChild(opt);
+            });
+            document.getElementById('scorecardContent').innerHTML =
+              '<div style="color: #8b949e; text-align: center; padding: 40px;">Select a meeting to view its scorecard</div>';
+          }
+        } catch (err) {
+          document.getElementById('scorecardContent').innerHTML = `<div class="error">Error loading meetings: ${escapeHtml(err.message)}</div>`;
+        }
+        return;
+      }
+
+      // Load specific meeting scorecard
+      const contentEl = document.getElementById('scorecardContent') || panel;
+      contentEl.innerHTML = '<div class="loading">Loading scorecard...</div>';
+
+      try {
+        const res = await fetch(API + '/session/' + meetingId + '/scorecard');
+        if (!res.ok) throw new Error('Failed to load scorecard');
+        const data = await res.json();
+        renderScorecard(contentEl, data);
+      } catch (err) {
+        contentEl.innerHTML = `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderScorecard(panel, data) {
+      const scores = data.dimension_scores || {};
+      const composite = data.composite_score || 0;
+      const baselines = data.baselines?.composite || {};
+      const coaching = data.coaching || {};
+      const metrics = data.metrics || {};
+
+      const color = getThresholdColor(composite, baselines);
+
+      // Group dimensions by tier
+      const tiers = {
+        'Tier 1 - Foundation': ['professionalism', 'active_listening', 'respectfulness', 'pacing'],
+        'Tier 2 - Facilitation': ['action_clarity', 'meeting_structure', 'client_engagement', 'expectation_management'],
+        'Tier 3 - Strategic': ['strategic_guidance', 'proactive_recommendations', 'value_demonstration', 'client_education']
+      };
+
+      let html = `
+        <div style="display: flex; gap: 24px; margin-bottom: 24px;">
+          <div class="session-score-card">
+            <div class="score-value score-${color}">${composite.toFixed(2)}</div>
+            <div class="score-label">Composite Score</div>
+            <div style="font-size: 11px; color: #6e7681; margin-top: 4px;">
+              P25: ${baselines.p25?.toFixed(2) || '—'} | P50: ${baselines.p50?.toFixed(2) || '—'} | P75: ${baselines.p75?.toFixed(2) || '—'}
+            </div>
+          </div>
+
+          <div style="flex: 1; background: #21262d; border-radius: 8px; padding: 16px;">
+            <h4 style="color: #f0f6fc; font-size: 14px; margin-bottom: 8px;">Session Metrics</h4>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 12px; color: #8b949e;">
+              <div>Action Items: <strong style="color: #f0f6fc;">${metrics.action_item_count ?? '—'}</strong></div>
+              <div>Action Density: <strong style="color: #f0f6fc;">${metrics.action_density?.toFixed(3) ?? '—'}/min</strong></div>
+              <div>Due Date Rate: <strong style="color: #f0f6fc;">${metrics.due_date_rate?.toFixed(0) ?? '—'}%</strong></div>
+              <div>Owner Rate: <strong style="color: #f0f6fc;">${metrics.owner_assignment_rate?.toFixed(0) ?? '—'}%</strong></div>
+              <div>B3X Speaking: <strong style="color: #f0f6fc;">${metrics.b3x_speaking_ratio?.toFixed(0) ?? '—'}%</strong></div>
+              <div>Duration: <strong style="color: #f0f6fc;">${metrics.duration_minutes ?? '—'} min</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tier-cards">
+      `;
+
+      for (const [tierName, dimensions] of Object.entries(tiers)) {
+        html += `<div class="tier-card"><h4>${escapeHtml(tierName)}</h4>`;
+        dimensions.forEach(dim => {
+          const score = scores[dim] || 0;
+          const dimColor = getScoreColor(score);
+          const label = dim.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+          html += `
+            <div class="dimension-row">
+              <span class="dimension-name">${escapeHtml(label)}</span>
+              ${renderScoreDots(score, dimColor)}
+            </div>
+          `;
+        });
+        html += '</div>';
+      }
+
+      html += '</div>';
+
+      // Coaching section
+      if (coaching.wins?.length || coaching.improvements?.length || coaching.frustration_moments?.length) {
+        html += '<div class="coaching-section"><h3>Coaching Insights</h3>';
+
+        if (coaching.wins?.length) {
+          html += '<div class="coaching-cards">';
+          coaching.wins.forEach(w => {
+            html += `
+              <div class="coaching-card win">
+                <div class="title">${escapeHtml(w.description || w.moment || 'Win')}</div>
+                ${w.quote ? `<div class="quote">"${escapeHtml(w.quote)}"</div>` : ''}
+              </div>
+            `;
+          });
+          html += '</div>';
+        }
+
+        if (coaching.improvements?.length) {
+          html += '<h4 style="color: #d29922; margin: 16px 0 8px;">Areas for Improvement</h4><div class="coaching-cards">';
+          coaching.improvements.forEach(imp => {
+            html += `
+              <div class="coaching-card improvement">
+                <div class="title">${escapeHtml(imp.description || imp.area || 'Improvement')}</div>
+                ${imp.quote ? `<div class="quote">"${escapeHtml(imp.quote)}"</div>` : ''}
+                ${imp.suggestion ? `<div class="suggestion">💡 ${escapeHtml(imp.suggestion)}</div>` : ''}
+              </div>
+            `;
+          });
+          html += '</div>';
+        }
+
+        if (coaching.frustration_moments?.length) {
+          html += '<h4 style="color: #f85149; margin: 16px 0 8px;">Frustration Moments</h4><div class="coaching-cards">';
+          coaching.frustration_moments.forEach(f => {
+            html += `
+              <div class="coaching-card frustration">
+                <div class="title">${escapeHtml(f.speaker || 'Client')}: ${escapeHtml(f.description || '')}</div>
+                ${f.quote ? `<div class="quote">"${escapeHtml(f.quote)}"</div>` : ''}
+                ${f.recovered !== undefined ? `<span style="font-size: 11px; color: ${f.recovered ? '#3fb950' : '#f85149'};">${f.recovered ? '✓ Recovered' : '✗ Not recovered'}</span>` : ''}
+              </div>
+            `;
+          });
+          html += '</div>';
+        }
+
+        if (coaching.overall_notes) {
+          html += `
+            <div style="margin-top: 16px; padding: 12px; background: #161b22; border-radius: 6px; font-size: 13px; color: #8b949e;">
+              <strong style="color: #f0f6fc;">Coach's Notes:</strong> ${escapeHtml(coaching.overall_notes)}
+            </div>
+          `;
+        }
+
+        html += '</div>';
+      }
+
+      panel.innerHTML = html;
+    }
+
+    async function loadSessionTrends(clientId = null) {
+      const panel = document.getElementById('sessionTrends');
+
+      // If no client selected, show selector or comparison table
+      if (!clientId) {
+        panel.innerHTML = `
+          <div class="session-controls">
+            <select id="trendsClientSelect" onchange="loadSessionTrends(this.value)">
+              <option value="">Select a client...</option>
+            </select>
+          </div>
+          <div id="trendsContent"><div class="loading">Loading client data...</div></div>
+        `;
+
+        try {
+          const res = await fetch(API + '/session/benchmarks');
+          if (res.ok) {
+            const data = await res.json();
+            sessionClients = data.clients || [];
+            const select = document.getElementById('trendsClientSelect');
+            sessionClients.forEach(c => {
+              const opt = document.createElement('option');
+              opt.value = c.client_id;
+              opt.textContent = c.client_name || c.client_id;
+              select.appendChild(opt);
+            });
+
+            // Show comparison table
+            renderClientComparison(document.getElementById('trendsContent'), sessionClients, data.agency);
+          }
+        } catch (err) {
+          document.getElementById('trendsContent').innerHTML = `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
+        }
+        return;
+      }
+
+      // Load specific client trend
+      const contentEl = document.getElementById('trendsContent') || panel;
+      contentEl.innerHTML = '<div class="loading">Loading trend data...</div>';
+
+      try {
+        const res = await fetch(API + '/session/client/' + clientId + '/trend');
+        if (!res.ok) throw new Error('Failed to load trend');
+        const data = await res.json();
+        renderTrend(contentEl, data);
+      } catch (err) {
+        contentEl.innerHTML = `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderClientComparison(panel, clients, agency) {
+      const baselines = agency?.composite || {};
+
+      let html = `
+        <h3 style="color: #f0f6fc; font-size: 16px; margin-bottom: 12px;">Client Comparison</h3>
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+          <thead>
+            <tr style="border-bottom: 1px solid #30363d; color: #8b949e;">
+              <th style="text-align: left; padding: 8px;">Client</th>
+              <th style="text-align: center; padding: 8px;">Meetings</th>
+              <th style="text-align: center; padding: 8px;">Avg Score</th>
+              <th style="text-align: center; padding: 8px;">Trend</th>
+              <th style="text-align: center; padding: 8px;">vs P50</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      clients.sort((a, b) => (b.avg_composite || 0) - (a.avg_composite || 0));
+      clients.forEach(c => {
+        const score = c.avg_composite || 0;
+        const color = getThresholdColor(score, baselines);
+        const diff = baselines.p50 ? (score - baselines.p50).toFixed(2) : '—';
+        const diffColor = diff > 0 ? 'color: #3fb950' : diff < 0 ? 'color: #f85149' : '';
+
+        html += `
+          <tr style="border-bottom: 1px solid #21262d; cursor: pointer;" onclick="loadSessionTrends('${escapeHtml(c.client_id)}')">
+            <td style="padding: 10px; color: #f0f6fc;">${escapeHtml(c.client_name || c.client_id)}</td>
+            <td style="text-align: center; padding: 10px; color: #8b949e;">${c.meeting_count || 0}</td>
+            <td style="text-align: center; padding: 10px;"><span class="score-${color}">${score.toFixed(2)}</span></td>
+            <td style="text-align: center; padding: 10px;">${getTrendArrow(c.trend)}</td>
+            <td style="text-align: center; padding: 10px; ${diffColor}">${diff > 0 ? '+' : ''}${diff}</td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody></table>';
+      panel.innerHTML = html;
+    }
+
+    function renderTrend(panel, data) {
+      const trend = data.trend || [];
+      const baselines = data.baselines?.composite || {};
+      const stats = data.stats || {};
+
+      let html = `
+        <div style="display: flex; gap: 24px; margin-bottom: 24px;">
+          <div class="session-score-card">
+            <div class="score-value score-${getThresholdColor(stats.avg_composite || 0, baselines)}">${(stats.avg_composite || 0).toFixed(2)}</div>
+            <div class="score-label">Average Score</div>
+            <div style="margin-top: 8px;">${getTrendArrow(stats.trend_direction)} <span style="font-size: 12px; color: #8b949e;">${stats.trend_direction || 'stable'}</span></div>
+          </div>
+          <div style="flex: 1; background: #21262d; border-radius: 8px; padding: 16px;">
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; font-size: 13px;">
+              <div><span style="color: #8b949e;">Total Meetings:</span> <strong style="color: #f0f6fc;">${stats.meeting_count || 0}</strong></div>
+              <div><span style="color: #8b949e;">Best Score:</span> <strong style="color: #3fb950;">${stats.best_score?.toFixed(2) || '—'}</strong></div>
+              <div><span style="color: #8b949e;">Worst Score:</span> <strong style="color: #f85149;">${stats.worst_score?.toFixed(2) || '—'}</strong></div>
+              <div><span style="color: #8b949e;">Std Dev:</span> <strong style="color: #f0f6fc;">${stats.std_dev?.toFixed(2) || '—'}</strong></div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Render trend chart
+      if (trend.length > 1) {
+        html += '<div class="trend-chart-container"><h4>Score Trend</h4>';
+        html += renderTrendChart(trend, baselines);
+        html += '</div>';
+      } else {
+        html += '<div style="color: #8b949e; text-align: center; padding: 40px;">Not enough data points for trend chart</div>';
+      }
+
+      panel.innerHTML = html;
+    }
+
+    function renderTrendChart(dataPoints, baselines) {
+      const width = 600;
+      const height = 200;
+      const padding = { top: 20, right: 20, bottom: 30, left: 40 };
+      const chartWidth = width - padding.left - padding.right;
+      const chartHeight = height - padding.top - padding.bottom;
+
+      // Scale Y: 1-4
+      const yScale = (val) => padding.top + chartHeight - ((val - 1) / 3) * chartHeight;
+      // Scale X: evenly space points
+      const xScale = (i) => padding.left + (i / (dataPoints.length - 1)) * chartWidth;
+
+      let svg = `<svg class="trend-chart" viewBox="0 0 ${width} ${height}" style="width: 100%; height: auto;">`;
+
+      // Y axis labels
+      [1, 2, 3, 4].forEach(v => {
+        const y = yScale(v);
+        svg += `<text x="${padding.left - 8}" y="${y + 4}" fill="#8b949e" font-size="11" text-anchor="end">${v}</text>`;
+        svg += `<line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="#21262d" />`;
+      });
+
+      // Baseline lines
+      if (baselines.p25) svg += `<line class="baseline p25" x1="${padding.left}" y1="${yScale(baselines.p25)}" x2="${width - padding.right}" y2="${yScale(baselines.p25)}" stroke="#f85149" />`;
+      if (baselines.p50) svg += `<line class="baseline p50" x1="${padding.left}" y1="${yScale(baselines.p50)}" x2="${width - padding.right}" y2="${yScale(baselines.p50)}" stroke="#d29922" />`;
+      if (baselines.p75) svg += `<line class="baseline p75" x1="${padding.left}" y1="${yScale(baselines.p75)}" x2="${width - padding.right}" y2="${yScale(baselines.p75)}" stroke="#3fb950" />`;
+
+      // Data line
+      const pathPoints = dataPoints.map((d, i) => `${i === 0 ? 'M' : 'L'} ${xScale(i)} ${yScale(d.composite_score || 0)}`).join(' ');
+      svg += `<path d="${pathPoints}" fill="none" stroke="#58a6ff" stroke-width="2" />`;
+
+      // Data points
+      dataPoints.forEach((d, i) => {
+        const x = xScale(i);
+        const y = yScale(d.composite_score || 0);
+        svg += `<circle cx="${x}" cy="${y}" r="5" onclick="loadSessionScorecard(${d.meeting_id}); switchSessionView('scorecard'); document.getElementById('scorecardMeetingSelect').value='${d.meeting_id}';" />`;
+      });
+
+      svg += '</svg>';
+
+      // Legend
+      svg += `
+        <div style="display: flex; gap: 16px; margin-top: 8px; font-size: 11px; color: #8b949e;">
+          <span><span style="color: #f85149;">- -</span> P25</span>
+          <span><span style="color: #d29922;">- -</span> P50</span>
+          <span><span style="color: #3fb950;">- -</span> P75</span>
+        </div>
+      `;
+
+      return svg;
+    }
+
+    async function loadSessionTeam() {
+      const panel = document.getElementById('sessionTeam');
+      panel.innerHTML = '<div class="loading">Loading team performance...</div>';
+
+      try {
+        const res = await fetch(API + '/session/team');
+        if (!res.ok) throw new Error('Failed to load team stats');
+        const data = await res.json();
+        renderTeam(panel, data);
+      } catch (err) {
+        panel.innerHTML = `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderTeam(panel, data) {
+      const members = data.members || [];
+      const note = data.adjustment_note || 'Scores adjusted for client difficulty tier';
+
+      let html = `
+        <div style="margin-bottom: 16px; padding: 12px; background: #21262d; border-radius: 6px; font-size: 12px; color: #8b949e;">
+          ℹ️ ${escapeHtml(note)}
+        </div>
+        <div class="team-grid">
+      `;
+
+      members.sort((a, b) => (b.adjusted_avg || b.raw_avg || 0) - (a.adjusted_avg || a.raw_avg || 0));
+      members.forEach(m => {
+        const rawAvg = m.raw_avg || 0;
+        const adjAvg = m.adjusted_avg || rawAvg;
+        const adjustment = adjAvg - rawAvg;
+        const barWidth = (adjAvg / 4) * 100;
+
+        html += `
+          <div class="team-card">
+            <h4>${escapeHtml(m.member_name || m.member_id)}</h4>
+            <div class="stats">
+              <div>Meetings Led: <strong>${m.meeting_count || 0}</strong></div>
+              <div>Raw Avg: <strong class="score-${getScoreColor(rawAvg)}">${rawAvg.toFixed(2)}</strong></div>
+              <div>Adjusted Avg: <strong class="score-${getScoreColor(adjAvg)}">${adjAvg.toFixed(2)}</strong></div>
+            </div>
+            <div class="avg-bar"><div class="fill" style="width: ${barWidth}%;"></div></div>
+            ${adjustment !== 0 ? `<div class="adjustment">${adjustment > 0 ? '+' : ''}${adjustment.toFixed(2)} adjustment</div>` : ''}
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      panel.innerHTML = html;
+    }
+
+    async function loadSessionFlags() {
+      const panel = document.getElementById('sessionFlags');
+      panel.innerHTML = '<div class="loading">Loading flags...</div>';
+
+      try {
+        const res = await fetch(API + '/session/flags');
+        if (!res.ok) throw new Error('Failed to load flags');
+        const data = await res.json();
+        renderFlags(panel, data);
+      } catch (err) {
+        panel.innerHTML = `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderFlags(panel, data) {
+      const critical = data.critical || [];
+      const warning = data.warning || [];
+
+      let html = `
+        <div class="flags-summary">
+          <div class="flag-badge critical">
+            <span class="count">${critical.length}</span>
+            <span>Critical</span>
+          </div>
+          <div class="flag-badge warning">
+            <span class="count">${warning.length}</span>
+            <span>Warning</span>
+          </div>
+        </div>
+        <div class="flag-cards">
+      `;
+
+      // Critical first
+      critical.forEach(f => {
+        html += renderFlagCard(f, 'critical');
+      });
+
+      // Then warning
+      warning.forEach(f => {
+        html += renderFlagCard(f, 'warning');
+      });
+
+      if (critical.length === 0 && warning.length === 0) {
+        html += '<div style="color: #8b949e; text-align: center; padding: 40px;">No flags to display — all sessions are performing well!</div>';
+      }
+
+      html += '</div>';
+      panel.innerHTML = html;
+    }
+
+    function renderFlagCard(flag, severity) {
+      const reasons = flag.reasons || [];
+      return `
+        <div class="flag-card ${severity}" onclick="loadSessionScorecard(${flag.meeting_id}); switchSessionView('scorecard'); document.getElementById('scorecardMeetingSelect').value='${flag.meeting_id}';">
+          <div class="header">
+            <div>
+              <div class="topic">${escapeHtml(flag.topic || 'Meeting')}</div>
+              <div class="meta">${escapeHtml(flag.client_name || '')} • ${flag.meeting_date ? new Date(flag.meeting_date).toLocaleDateString() : ''}</div>
+            </div>
+            <div class="composite score-${getScoreColor(flag.composite_score || 0)}">${(flag.composite_score || 0).toFixed(2)}</div>
+          </div>
+          <ul class="reasons">
+            ${reasons.map(r => `<li>${escapeHtml(r)}</li>`).join('')}
+          </ul>
         </div>
       `;
     }
