@@ -37,6 +37,7 @@ import {
   getAllPHLinksForClient, manualLink, removeLink
 } from '../lib/ph-reconciler.js';
 import { initDatabase as initMetricsDb, getMetrics, getStats as getMetricsStats, computeAllMetrics } from '../lib/session-metrics.js';
+import { getAllBaselines, getBaselines, recalculateAll as recalculateBaselines, initBaselinesTable } from '../lib/session-baselines.js';
 import { readdirSync, readFileSync as fsReadFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -1941,6 +1942,58 @@ router.post('/session/:meetingId/metrics/compute', (req, res) => {
       return res.status(404).json({ error: 'Meeting not found' });
     }
     res.json({ success: true, metrics });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ SESSION BASELINES (Phase 15C) ============
+
+// GET /api/session/baselines - Get all baselines
+router.get('/session/baselines', (req, res) => {
+  try {
+    const metricsDb = initMetricsDb();
+    initBaselinesTable(metricsDb);
+    const baselines = getAllBaselines(metricsDb);
+    metricsDb.close();
+
+    res.json(baselines);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/session/baselines/:scope - Get baselines for a specific scope
+router.get('/session/baselines/:scope', (req, res) => {
+  try {
+    const scope = req.params.scope;
+    const metricsDb = initMetricsDb();
+    initBaselinesTable(metricsDb);
+    const baselines = getBaselines(metricsDb, scope);
+    metricsDb.close();
+
+    if (!baselines) {
+      return res.status(404).json({ error: `No baselines found for scope: ${scope}` });
+    }
+    res.json(baselines);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/session/baselines/recalculate - Recalculate all baselines
+router.post('/session/baselines/recalculate', (req, res) => {
+  try {
+    const metricsDb = initMetricsDb();
+    const result = recalculateBaselines(metricsDb);
+    metricsDb.close();
+
+    res.json({
+      success: true,
+      agency_meetings: result.agency?.sample_size || 0,
+      clients_with_baselines: result.clients.length,
+      members_with_baselines: result.members.length
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

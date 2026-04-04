@@ -5,20 +5,43 @@
  *   node src/session-metrics.js --backfill          # Process all meetings
  *   node src/session-metrics.js --meeting 42        # Process single meeting
  *   node src/session-metrics.js --stats             # Print aggregate stats
+ *   node src/session-metrics.js --baselines         # Compute all baselines
+ *   node src/session-metrics.js --baselines --client echelon  # Single client
  */
 
 import { initDatabase, computeAllMetrics, backfillAll, getStats, getMetrics } from './lib/session-metrics.js';
+import { recalculateAll, computeClientBaselines, computeAgencyBaselines, getBaselines } from './lib/session-baselines.js';
 
 function printUsage() {
   console.log(`
 Session Metrics CLI
 
 Usage:
-  node src/session-metrics.js --backfill          Process all meetings
-  node src/session-metrics.js --meeting <id>      Process single meeting
-  node src/session-metrics.js --stats             Print aggregate stats
-  node src/session-metrics.js --help              Show this help
+  node src/session-metrics.js --backfill              Process all meetings
+  node src/session-metrics.js --meeting <id>          Process single meeting
+  node src/session-metrics.js --stats                 Print aggregate stats
+  node src/session-metrics.js --baselines             Compute all baselines
+  node src/session-metrics.js --baselines --client X  Compute baselines for client X
+  node src/session-metrics.js --help                  Show this help
 `);
+}
+
+function printBaselines(baselines) {
+  if (!baselines || !baselines.dimensions) {
+    console.log('  No baselines computed');
+    return;
+  }
+
+  console.log(`Scope: ${baselines.scope} (${baselines.sample_size} meetings)`);
+  console.log('');
+  console.log('| Dimension | P25 | P50 | P75 | Mean |');
+  console.log('|-----------|-----|-----|-----|------|');
+
+  for (const [dim, stats] of Object.entries(baselines.dimensions)) {
+    if (stats.p25 != null) {
+      console.log(`| ${dim.padEnd(20)} | ${stats.p25.toFixed(2)} | ${stats.p50.toFixed(2)} | ${stats.p75.toFixed(2)} | ${stats.mean.toFixed(2)} |`);
+    }
+  }
 }
 
 function printStats(db) {
@@ -74,6 +97,34 @@ async function main() {
     }
   } else if (args.includes('--stats')) {
     printStats(db);
+  } else if (args.includes('--baselines')) {
+    const clientIdx = args.indexOf('--client');
+    if (clientIdx !== -1 && args[clientIdx + 1]) {
+      const clientId = args[clientIdx + 1];
+      console.log(`[SessionMetrics] Computing baselines for client: ${clientId}...`);
+      const result = computeClientBaselines(db, clientId);
+      if (result.insufficient) {
+        console.log(`  Insufficient data (${result.sample_size} meetings, need 3+)`);
+        console.log('  Falling back to agency baselines...');
+        const agency = computeAgencyBaselines(db);
+        printBaselines(agency);
+      } else {
+        printBaselines(result);
+      }
+    } else {
+      console.log('[SessionMetrics] Computing all baselines...');
+      const result = recalculateAll(db);
+      console.log('\n=== Baseline Computation Complete ===');
+      console.log(`Agency-wide: ${result.agency?.sample_size || 0} meetings`);
+      console.log(`Clients with baselines: ${result.clients.length}`);
+      console.log(`Members with baselines: ${result.members.length}`);
+
+      // Print agency baselines
+      if (result.agency && !result.agency.insufficient) {
+        console.log('\n=== Agency Baselines ===');
+        printBaselines(result.agency);
+      }
+    }
   } else {
     console.error('Unknown command. Use --help for usage.');
     process.exit(1);

@@ -12,6 +12,7 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { appendFileSync, mkdirSync } from 'fs';
+import { spawn } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: join(__dirname, '..', '.env'), override: true });
@@ -76,6 +77,47 @@ function logAutoPush(result, clientName) {
 
     appendFileSync(logFile, lines.join('\n') + '\n');
   } catch { /* ignore log write errors */ }
+}
+
+/**
+ * Trigger roadmap rebuild for a client after their meeting is processed.
+ * Runs async (fire-and-forget) so it doesn't block the main pipeline.
+ */
+function triggerRoadmapRebuild(clientId, clientName) {
+  try {
+    log(`  Triggering roadmap rebuild for ${clientName} (${clientId})...`);
+
+    const scriptPath = join(__dirname, 'roadmap-build.js');
+    const child = spawn('node', [scriptPath, '--client', clientId, '--rebuild'], {
+      cwd: join(__dirname, '..'),
+      stdio: 'pipe',
+      detached: false
+    });
+
+    // Capture output for logging
+    let output = '';
+    child.stdout.on('data', (data) => { output += data.toString(); });
+    child.stderr.on('data', (data) => { output += data.toString(); });
+
+    child.on('close', (code) => {
+      if (code === 0) {
+        // Extract summary from output
+        const summaryMatch = output.match(/Total items: (\d+)/);
+        const itemCount = summaryMatch ? summaryMatch[1] : '?';
+        log(`  Roadmap rebuild complete for ${clientName}: ${itemCount} items`);
+      } else {
+        log(`  Roadmap rebuild FAILED for ${clientName} (exit code ${code})`);
+      }
+    });
+
+    child.on('error', (err) => {
+      log(`  Roadmap rebuild ERROR for ${clientName}: ${err.message}`);
+    });
+
+  } catch (err) {
+    // Don't let roadmap rebuild failure crash the pipeline
+    log(`  Roadmap rebuild ERROR for ${clientName}: ${err.message}`);
+  }
 }
 
 async function processMeeting(meeting) {
@@ -218,6 +260,35 @@ async function processMeeting(meeting) {
       }
     } else if (AUTO_PUSH_ENABLED && !isProofhubConfigured()) {
       log('  Auto-push: ProofHub not configured, skipping');
+    }
+
+    // Trigger roadmap rebuild for this client (async, don't block pipeline)
+    if (clientId && clientId !== 'unmatched' && !DRY_RUN) {
+      triggerRoadmapRebuild(clientId, clientName);
+    }
+
+    // Session scoring (non-blocking)
+    // Step: Compute session metrics
+    try {
+      const { computeAllMetrics, initDatabase: initMetricsDb } = await import('./lib/session-metrics.js');
+      const metricsDb = initMetricsDb();
+      computeAllMetrics(metricsDb, meetingId);
+      metricsDb.close();
+      log(`  Session metrics computed for meeting ${meetingId}`);
+    } catch (err) {
+      log(`  Session metrics failed (non-blocking): ${err.message}`);
+    }
+
+    // Step: Run AI session evaluation
+    try {
+      const { evaluateMeeting, initDatabase: initEvalDb } = await import('./lib/session-evaluator.js');
+      const evalModel = process.env.SESSION_EVAL_MODEL || 'gemini-2.0-flash';
+      const evalDb = initEvalDb();
+      await evaluateMeeting(meetingId, { model: evalModel, db: evalDb });
+      evalDb.close();
+      log(`  Session evaluation computed for meeting ${meetingId}`);
+    } catch (err) {
+      log(`  Session evaluation failed (non-blocking): ${err.message}`);
     }
 
     return { processed: true, clientName, actionCount, decisionCount };
