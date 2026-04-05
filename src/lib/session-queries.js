@@ -12,7 +12,7 @@ const TIER3_DIMS = ['time_utilization', 'redundancy', 'client_confusion', 'meeti
 const ALL_DIMS = [...TIER1_DIMS, ...TIER2_DIMS, ...TIER3_DIMS];
 
 // B3X team members
-const B3X_MEMBERS = ['Dan', 'Philip', 'Phil', 'Joe', 'Richard'];
+const B3X_MEMBERS = ['Dan', 'Phil', 'Joe', 'Richard'];
 
 /**
  * Parse JSON safely

@@ -7211,7 +7211,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
 
         // Also load flags for quick summary
         const flagsRes = await fetch(API + '/session/flags');
-        const flagsData = flagsRes.ok ? await flagsRes.json() : { critical: [], warning: [] };
+        const flagsData = flagsRes.ok ? await flagsRes.json() : { flags: [], summary: { critical: 0, warning: 0 } };
 
         renderOverview(panel, data, flagsData);
       } catch (err) {
@@ -7221,17 +7221,19 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
 
     function renderOverview(panel, data, flagsData) {
       const agency = data.agency || {};
-      const baselines = agency.composite || {};
-      const clients = data.clients || [];
+      const baselines = agency.dimensions?.composite_score || {};
+      const clients = data.by_client || [];
 
-      // Calculate avg score across all clients
-      const avgScore = clients.length > 0
-        ? (clients.reduce((sum, c) => sum + (c.avg_composite || 0), 0) / clients.length).toFixed(2)
-        : 'N/A';
-      const scoreColor = typeof avgScore === 'number' ? getThresholdColor(parseFloat(avgScore), baselines) : '';
+      // Use agency avg_composite from API, or calculate from clients
+      const avgScore = agency.avg_composite
+        ? agency.avg_composite.toFixed(2)
+        : (clients.length > 0
+          ? (clients.reduce((sum, c) => sum + (c.avg_composite || 0), 0) / clients.length).toFixed(2)
+          : 'N/A');
+      const scoreColor = avgScore !== 'N/A' ? getThresholdColor(parseFloat(avgScore), baselines) : '';
 
-      const criticalCount = flagsData.critical?.length || 0;
-      const warningCount = flagsData.warning?.length || 0;
+      const criticalCount = flagsData.summary?.critical || 0;
+      const warningCount = flagsData.summary?.warning || 0;
 
       let html = `
         <div class="overview-header" style="display: flex; gap: 24px; margin-bottom: 24px;">
@@ -7266,7 +7268,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         html += `
           <div class="health-card ${color}" onclick="switchSessionView('trends'); loadSessionTrends('${escapeHtml(client.client_id)}')">
             <h4>${escapeHtml(client.client_name || client.client_id)}</h4>
-            <div class="stats">${client.meeting_count || 0} meetings scored</div>
+            <div class="stats">${client.meetings || client.meeting_count || 0} meetings scored</div>
             <div class="score score-${color}">${(client.avg_composite || 0).toFixed(2)} ${trend}</div>
           </div>
         `;
@@ -7464,7 +7466,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
           const res = await fetch(API + '/session/benchmarks');
           if (res.ok) {
             const data = await res.json();
-            sessionClients = data.clients || [];
+            sessionClients = data.by_client || [];
             const select = document.getElementById('trendsClientSelect');
             sessionClients.forEach(c => {
               const opt = document.createElement('option');
@@ -7524,7 +7526,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         html += `
           <tr style="border-bottom: 1px solid #21262d; cursor: pointer;" onclick="loadSessionTrends('${escapeHtml(c.client_id)}')">
             <td style="padding: 10px; color: #f0f6fc;">${escapeHtml(c.client_name || c.client_id)}</td>
-            <td style="text-align: center; padding: 10px; color: #8b949e;">${c.meeting_count || 0}</td>
+            <td style="text-align: center; padding: 10px; color: #8b949e;">${c.meetings || c.meeting_count || 0}</td>
             <td style="text-align: center; padding: 10px;"><span class="score-${color}">${score.toFixed(2)}</span></td>
             <td style="text-align: center; padding: 10px;">${getTrendArrow(c.trend)}</td>
             <td style="text-align: center; padding: 10px; ${diffColor}">${diff > 0 ? '+' : ''}${diff}</td>

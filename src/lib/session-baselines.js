@@ -262,7 +262,7 @@ export function recalculateAll(dbOrPath = DB_PATH) {
     }
 
     // Per-member (B3X team)
-    const b3xMembers = ['Dan', 'Philip', 'Phil', 'Joe', 'Richard'];
+    const b3xMembers = ['Dan', 'Phil', 'Joe', 'Richard'];
     for (const member of b3xMembers) {
       console.log(`  Computing baselines for member: ${member}...`);
       const memberBaselines = computeTeamMemberBaselines(db, member);
