@@ -7333,19 +7333,47 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     }
 
     function renderScorecard(panel, data) {
-      const scores = data.dimension_scores || {};
-      const composite = data.composite_score || 0;
-      const baselines = data.baselines?.composite || {};
-      const coaching = data.coaching || {};
+      const evaluation = data.evaluation || {};
+      const scoresObj = data.scores || {};
+      const composite = scoresObj.composite || evaluation.composite_score || 0;
+      const thresholds = data.thresholds || {};
       const metrics = data.metrics || {};
+      const meetingType = data.meeting_type || evaluation.meeting_type || '';
 
-      const color = getThresholdColor(composite, baselines);
+      // Parse coaching - may be strings or objects
+      let coaching = data.coaching || {};
+      if (typeof coaching.wins === 'string') {
+        try { coaching.wins = JSON.parse(coaching.wins || '[]'); } catch(e) { coaching.wins = []; }
+      }
+      if (typeof coaching.improvements === 'string') {
+        try { coaching.improvements = JSON.parse(coaching.improvements || '[]'); } catch(e) { coaching.improvements = []; }
+      }
+      if (typeof coaching.frustration_moments === 'string') {
+        try { coaching.frustration_moments = JSON.parse(coaching.frustration_moments || '[]'); } catch(e) { coaching.frustration_moments = []; }
+      }
 
-      // Group dimensions by tier
+      const color = getScoreColor(composite);
+
+      // Build dimension scores from scores object tiers or evaluation
+      const dimensionScores = {};
+      for (const tierKey of ['tier1', 'tier2', 'tier3']) {
+        const tier = scoresObj[tierKey] || {};
+        for (const [k, v] of Object.entries(tier)) {
+          if (k !== 'avg' && typeof v === 'number') dimensionScores[k] = v;
+        }
+      }
+      // Fallback to evaluation object if scores not populated
+      if (Object.keys(dimensionScores).length === 0) {
+        for (const dim of ['client_sentiment', 'accountability', 'relationship_health', 'meeting_structure', 'value_delivery', 'action_discipline', 'proactive_leadership', 'time_utilization', 'redundancy', 'client_confusion', 'meeting_momentum', 'save_rate']) {
+          if (evaluation[dim] !== undefined) dimensionScores[dim] = evaluation[dim];
+        }
+      }
+
+      // REAL tier groups matching the actual evaluation dimensions
       const tiers = {
-        'Tier 1 - Foundation': ['professionalism', 'active_listening', 'respectfulness', 'pacing'],
-        'Tier 2 - Facilitation': ['action_clarity', 'meeting_structure', 'client_engagement', 'expectation_management'],
-        'Tier 3 - Strategic': ['strategic_guidance', 'proactive_recommendations', 'value_demonstration', 'client_education']
+        'Tier 1 - Deal Breakers (40%)': { dimensions: ['client_sentiment', 'accountability', 'relationship_health'], avg: scoresObj.tier1?.avg || evaluation.tier1_avg },
+        'Tier 2 - Core Competence (35%)': { dimensions: ['meeting_structure', 'value_delivery', 'action_discipline', 'proactive_leadership'], avg: scoresObj.tier2?.avg || evaluation.tier2_avg },
+        'Tier 3 - Efficiency (25%)': { dimensions: ['time_utilization', 'redundancy', 'client_confusion', 'meeting_momentum', 'save_rate'], avg: scoresObj.tier3?.avg || evaluation.tier3_avg }
       };
 
       let html = `
@@ -7353,9 +7381,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
           <div class="session-score-card">
             <div class="score-value score-${color}">${composite.toFixed(2)}</div>
             <div class="score-label">Composite Score</div>
-            <div style="font-size: 11px; color: #6e7681; margin-top: 4px;">
-              P25: ${baselines.p25?.toFixed(2) || '—'} | P50: ${baselines.p50?.toFixed(2) || '—'} | P75: ${baselines.p75?.toFixed(2) || '—'}
-            </div>
+            ${meetingType ? `<div style="font-size: 11px; color: #8b949e; margin-top: 4px;">${escapeHtml(meetingType)}</div>` : ''}
           </div>
 
           <div style="flex: 1; background: #21262d; border-radius: 8px; padding: 16px;">
@@ -7365,7 +7391,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
               <div>Action Density: <strong style="color: #f0f6fc;">${metrics.action_density?.toFixed(3) ?? '—'}/min</strong></div>
               <div>Due Date Rate: <strong style="color: #f0f6fc;">${metrics.due_date_rate?.toFixed(0) ?? '—'}%</strong></div>
               <div>Owner Rate: <strong style="color: #f0f6fc;">${metrics.owner_assignment_rate?.toFixed(0) ?? '—'}%</strong></div>
-              <div>B3X Speaking: <strong style="color: #f0f6fc;">${metrics.b3x_speaking_ratio?.toFixed(0) ?? '—'}%</strong></div>
+              <div>B3X Speaking: <strong style="color: #f0f6fc;">${(metrics.speaker_ratio_b3x || metrics.b3x_speaking_ratio)?.toFixed(0) ?? '—'}%</strong></div>
               <div>Duration: <strong style="color: #f0f6fc;">${metrics.duration_minutes ?? '—'} min</strong></div>
             </div>
           </div>
@@ -7374,10 +7400,11 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         <div class="tier-cards">
       `;
 
-      for (const [tierName, dimensions] of Object.entries(tiers)) {
-        html += `<div class="tier-card"><h4>${escapeHtml(tierName)}</h4>`;
-        dimensions.forEach(dim => {
-          const score = scores[dim] || 0;
+      for (const [tierName, tierData] of Object.entries(tiers)) {
+        const tierAvg = tierData.avg?.toFixed(2) || '—';
+        html += `<div class="tier-card"><h4>${escapeHtml(tierName)} <span style="float: right; color: #8b949e; font-size: 12px;">Avg: ${tierAvg}</span></h4>`;
+        tierData.dimensions.forEach(dim => {
+          const score = dimensionScores[dim] || 0;
           const dimColor = getScoreColor(score);
           const label = dim.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
           html += `
@@ -7437,10 +7464,10 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
           html += '</div>';
         }
 
-        if (coaching.overall_notes) {
+        if (coaching.coaching_notes || coaching.overall_notes) {
           html += `
             <div style="margin-top: 16px; padding: 12px; background: #161b22; border-radius: 6px; font-size: 13px; color: #8b949e;">
-              <strong style="color: #f0f6fc;">Coach's Notes:</strong> ${escapeHtml(coaching.overall_notes)}
+              <strong style="color: #f0f6fc;">Coach's Notes:</strong> ${escapeHtml(coaching.coaching_notes || coaching.overall_notes)}
             </div>
           `;
         }
