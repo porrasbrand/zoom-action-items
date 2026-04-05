@@ -7658,6 +7658,22 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       }
     }
 
+    // Helper function for scorecard navigation
+    function buildScorecardNav(navigation) {
+      if (!navigation || navigation.total <= 1) return '';
+      return `
+        <div class="scorecard-nav">
+          <button onclick="loadSessionScorecard(${navigation.prev?.id || 'null'}); document.getElementById('scorecardMeetingSelect').value='${navigation.prev?.id || ''}';" ${!navigation.prev ? 'disabled' : ''}>
+            ◀ ${navigation.prev ? formatShortDate(navigation.prev.date) : 'First'}
+          </button>
+          <span class="nav-current">Meeting ${navigation.position} of ${navigation.total}</span>
+          <button onclick="loadSessionScorecard(${navigation.next?.id || 'null'}); document.getElementById('scorecardMeetingSelect').value='${navigation.next?.id || ''}';" ${!navigation.next ? 'disabled' : ''}>
+            ${navigation.next ? formatShortDate(navigation.next.date) : 'Last'} ▶
+          </button>
+        </div>
+      `;
+    }
+
     function renderScorecard(panel, data) {
       const evaluation = data.evaluation || {};
       const scoresObj = data.scores || {};
@@ -7669,7 +7685,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       const context = data.context || {};
       const navigation = data.navigation || {};
 
-      // Check for no-show or test meeting - show special banner
+      // Check for no-show or test meeting - show special banner with navigation
       if (meetingType === 'no-show' || meetingType === 'test') {
         const typeLabel = meetingType === 'no-show' ? 'Client No-Show' : 'Test Recording';
         const typeDescription = meetingType === 'no-show'
@@ -7686,6 +7702,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
               ${meeting.duration_minutes ? '<span>' + meeting.duration_minutes + ' min</span>' : ''}
             </div>
           </div>
+          ${buildScorecardNav(navigation)}
           <div class="no-show-banner">
             <strong>${typeLabel}</strong>
             <p>${typeDescription}</p>
@@ -7816,17 +7833,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         ` : ''}
 
         <!-- FEATURE 1: Prev/Next Navigation -->
-        ${navigation.total > 1 ? `
-        <div class="scorecard-nav">
-          <button onclick="loadSessionScorecard(${navigation.prev?.id || 'null'}); document.getElementById('scorecardMeetingSelect').value='${navigation.prev?.id || ''}';" ${!navigation.prev ? 'disabled' : ''}>
-            ◀ ${navigation.prev ? formatShortDate(navigation.prev.date) : 'First'}
-          </button>
-          <span class="nav-current">Meeting ${navigation.position} of ${navigation.total}</span>
-          <button onclick="loadSessionScorecard(${navigation.next?.id || 'null'}); document.getElementById('scorecardMeetingSelect').value='${navigation.next?.id || ''}';" ${!navigation.next ? 'disabled' : ''}>
-            ${navigation.next ? formatShortDate(navigation.next.date) : 'Last'} ▶
-          </button>
-        </div>
-        ` : ''}
+        ${buildScorecardNav(navigation)}
 
         <!-- Context comparison bar -->
         ${context.client_avg || context.agency_avg ? `
