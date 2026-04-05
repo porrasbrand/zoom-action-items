@@ -277,6 +277,15 @@ export function getClientTrend(db, clientId, options = {}) {
   // Calculate average composite
   const avgComposite = meetings.reduce((sum, m) => sum + m.composite, 0) / meetings.length;
 
+  // Get no-show meetings for this client (for trend chart markers)
+  const noShows = db.prepare(`
+    SELECT m.id as meeting_id, m.start_time as date
+    FROM meetings m
+    JOIN session_evaluations se ON se.meeting_id = m.id
+    WHERE m.client_id = ? AND se.model_used = 'gpt-5.4' AND se.meeting_type = 'no-show'
+    ORDER BY m.start_time
+  `).all(clientId);
+
   return {
     client_id: clientId,
     client_name: clientInfo?.client_name || clientId,
@@ -284,7 +293,8 @@ export function getClientTrend(db, clientId, options = {}) {
     trend: meetings.reverse(), // Chronological order
     baselines: baselineComposite,
     trend_direction: trendDirection,
-    avg_composite: avgComposite
+    avg_composite: avgComposite,
+    no_shows: noShows
   };
 }
 
@@ -532,16 +542,17 @@ export function getBenchmarks(db) {
   const baselines = getBaselines(db, 'agency');
   const dimensions = baselines?.dimensions || {};
 
-  // By client (filter by default model, exclude no-shows/tests)
+  // By client (filter by default model, include no-show counts)
   const byClient = db.prepare(`
     SELECT
       m.client_id, m.client_name,
-      COUNT(*) as meetings,
-      AVG(se.composite_score) as avg_composite
+      COUNT(CASE WHEN COALESCE(se.meeting_type, 'regular') NOT IN ${EXCLUDED_MEETING_TYPES} THEN 1 END) as meetings,
+      COUNT(CASE WHEN se.meeting_type = 'no-show' THEN 1 END) as no_shows,
+      COUNT(*) as total_scheduled,
+      AVG(CASE WHEN COALESCE(se.meeting_type, 'regular') NOT IN ${EXCLUDED_MEETING_TYPES} THEN se.composite_score END) as avg_composite
     FROM meetings m
     JOIN session_evaluations se ON se.meeting_id = m.id
     WHERE m.client_id != 'unmatched' AND se.model_used = 'gpt-5.4'
-      AND COALESCE(se.meeting_type, 'regular') NOT IN ${EXCLUDED_MEETING_TYPES}
     GROUP BY m.client_id
     ORDER BY meetings DESC
   `).all();
