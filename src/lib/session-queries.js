@@ -600,10 +600,35 @@ export function getWeeklyDigest(db, weekStart = null) {
   };
 }
 
+/**
+ * 7. getAllTeamStats - Aggregate stats for all B3X team members
+ */
+export function getAllTeamStats(db) {
+  const members = [];
+  for (const name of B3X_MEMBERS) {
+    try {
+      const stats = getTeamStats(db, name);
+      if (stats && stats.meetings_led > 0) {
+        members.push({
+          member_name: name,
+          member_id: name.toLowerCase(),
+          meeting_count: stats.meetings_led,
+          raw_avg: stats.avg_composite,
+          adjusted_avg: stats.client_difficulty_adjustment?.difficulty_adjusted_avg || stats.avg_composite,
+          difficult_clients: stats.client_difficulty_adjustment?.difficult_clients || 0,
+          trend_last_10: stats.trend_last_10 || []
+        });
+      }
+    } catch (e) { /* skip member if error */ }
+  }
+  return { members, adjustment_note: 'Scores adjusted for client difficulty tier' };
+}
+
 export default {
   getScorecard,
   getClientTrend,
   getTeamStats,
+  getAllTeamStats,
   getFlags,
   getBenchmarks,
   getWeeklyDigest

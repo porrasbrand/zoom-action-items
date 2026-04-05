@@ -38,7 +38,7 @@ import {
 } from '../lib/ph-reconciler.js';
 import { initDatabase as initMetricsDb, getMetrics, getStats as getMetricsStats, computeAllMetrics } from '../lib/session-metrics.js';
 import { getAllBaselines, getBaselines, recalculateAll as recalculateBaselines, initBaselinesTable } from '../lib/session-baselines.js';
-import { getScorecard, getClientTrend, getTeamStats, getFlags, getBenchmarks, getWeeklyDigest } from '../lib/session-queries.js';
+import { getScorecard, getClientTrend, getTeamStats, getAllTeamStats, getFlags, getBenchmarks, getWeeklyDigest } from '../lib/session-queries.js';
 import { readdirSync, readFileSync as fsReadFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -2031,6 +2031,18 @@ router.get('/session/client/:clientId/trend', (req, res) => {
     metricsDb.close();
 
     res.json(trend);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/session/team - Aggregate team stats for all B3X members
+router.get('/session/team', (req, res) => {
+  try {
+    const metricsDb = initMetricsDb();
+    const data = getAllTeamStats(metricsDb);
+    metricsDb.close();
+    res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
