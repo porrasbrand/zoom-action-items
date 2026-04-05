@@ -1974,6 +1974,10 @@
   display: flex;
 }
 
+.tab-content.active.session-view {
+  display: block;
+}
+
 /* ============ ROADMAP VIEW ============ */
 .roadmap-view {
   flex: 1;
@@ -3958,25 +3962,26 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Session Intelligence View -->
-  <div class="tab-content session-view" id="sessionView" role="tabpanel" aria-labelledby="tab-session">
-    <div class="session-subnav">
-      <button class="session-nav-btn active" onclick="switchSessionView('overview')">Overview</button>
-      <button class="session-nav-btn" onclick="switchSessionView('scorecard')">Meeting Scorecard</button>
-      <button class="session-nav-btn" onclick="switchSessionView('trends')">Client Trends</button>
-      <button class="session-nav-btn" onclick="switchSessionView('team')">Team Performance</button>
-      <button class="session-nav-btn" onclick="switchSessionView('flags')">Flags &amp; Alerts</button>
+    <!-- Session Intelligence View -->
+    <div class="tab-content session-view" id="sessionView" role="tabpanel" aria-labelledby="tab-session">
+      <div class="session-subnav">
+        <button class="session-nav-btn active" onclick="switchSessionView('overview')">Overview</button>
+        <button class="session-nav-btn" onclick="switchSessionView('scorecard')">Meeting Scorecard</button>
+        <button class="session-nav-btn" onclick="switchSessionView('trends')">Client Trends</button>
+        <button class="session-nav-btn" onclick="switchSessionView('team')">Team Performance</button>
+        <button class="session-nav-btn" onclick="switchSessionView('flags')">Flags &amp; Alerts</button>
+      </div>
+
+      <div id="sessionOverview" class="session-panel">
+        <div class="loading">Loading session intelligence...</div>
+      </div>
+      <div id="sessionScorecard" class="session-panel" style="display:none;"></div>
+      <div id="sessionTrends" class="session-panel" style="display:none;"></div>
+      <div id="sessionTeam" class="session-panel" style="display:none;"></div>
+      <div id="sessionFlags" class="session-panel" style="display:none;"></div>
     </div>
 
-    <div id="sessionOverview" class="session-panel">
-      <div class="loading">Loading session intelligence...</div>
-    </div>
-    <div id="sessionScorecard" class="session-panel" style="display:none;"></div>
-    <div id="sessionTrends" class="session-panel" style="display:none;"></div>
-    <div id="sessionTeam" class="session-panel" style="display:none;"></div>
-    <div id="sessionFlags" class="session-panel" style="display:none;"></div>
   </div>
 
   <div class="toast-container" id="toastContainer"></div>
