@@ -3971,6 +3971,7 @@
         <button class="session-nav-btn" onclick="switchSessionView('trends')">Client Trends</button>
         <button class="session-nav-btn" onclick="switchSessionView('team')">Team Performance</button>
         <button class="session-nav-btn" onclick="switchSessionView('flags')">Flags &amp; Alerts</button>
+        <button class="session-nav-btn" onclick="switchSessionView('calibration')">Calibration</button>
       </div>
 
       <div id="sessionOverview" class="session-panel">
@@ -3980,6 +3981,7 @@
       <div id="sessionTrends" class="session-panel" style="display:none;"></div>
       <div id="sessionTeam" class="session-panel" style="display:none;"></div>
       <div id="sessionFlags" class="session-panel" style="display:none;"></div>
+      <div id="sessionCalibration" class="session-panel" style="display:none;"></div>
     </div>
 
   </div>
@@ -7153,11 +7155,12 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
           (view === 'scorecard' && btn.textContent === 'Meeting Scorecard') ||
           (view === 'trends' && btn.textContent === 'Client Trends') ||
           (view === 'team' && btn.textContent === 'Team Performance') ||
-          (view === 'flags' && btn.textContent.includes('Flags')));
+          (view === 'flags' && btn.textContent.includes('Flags')) ||
+          (view === 'calibration' && btn.textContent === 'Calibration'));
       });
 
       // Show/hide panels
-      ['sessionOverview', 'sessionScorecard', 'sessionTrends', 'sessionTeam', 'sessionFlags'].forEach(id => {
+      ['sessionOverview', 'sessionScorecard', 'sessionTrends', 'sessionTeam', 'sessionFlags', 'sessionCalibration'].forEach(id => {
         const panel = document.getElementById(id);
         panel.style.display = id === 'session' + view.charAt(0).toUpperCase() + view.slice(1) ? 'block' : 'none';
       });
@@ -7168,6 +7171,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       else if (view === 'trends') loadSessionTrends();
       else if (view === 'team') loadSessionTeam();
       else if (view === 'flags') loadSessionFlags();
+      else if (view === 'calibration') loadCalibration();
     }
 
     function getScoreColor(score) {
@@ -7783,6 +7787,368 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
           </ul>
         </div>
       `;
+    }
+
+    // ============ CALIBRATION (Phase 17A) ============
+
+    const CALIBRATION_RUBRIC = {
+      client_sentiment: { name: 'Client Sentiment', tier: 1, hints: { 4: 'Engaged, trusting, enthusiastic', 1: 'Frustrated, withdrawn' } },
+      accountability: { name: 'Accountability', tier: 1, hints: { 4: 'Past items acknowledged', 1: 'Commitments ignored' } },
+      relationship_health: { name: 'Relationship Health', tier: 1, hints: { 4: 'Open sharing, trust', 1: 'Surface-level, transactional' } },
+      meeting_structure: { name: 'Meeting Structure', tier: 2, hints: { 4: 'Clear agenda + wrap-up', 1: 'No structure, chaotic' } },
+      value_delivery: { name: 'Value Delivery', tier: 2, hints: { 4: 'Data, results, strategy', 1: 'Only "what do you need?"' } },
+      action_discipline: { name: 'Action Discipline', tier: 2, hints: { 4: 'Specific owners + due dates', 1: 'Vague "we\'ll look into it"' } },
+      proactive_leadership: { name: 'Proactive Leadership', tier: 2, hints: { 4: 'Brought ideas, forward-looking', 1: 'Only responded to asks' } },
+      time_utilization: { name: 'Time Utilization', tier: 3, hints: { 4: 'High substance density', 1: 'Tangents, dead air' } },
+      redundancy: { name: 'Redundancy', tier: 3, hints: { 4: 'New ground, progress', 1: 'Same topics rehashed' } },
+      client_confusion: { name: 'Client Confusion', tier: 3, hints: { 4: 'Clear communication', 1: 'Jargon, needed clarification' } },
+      meeting_momentum: { name: 'Meeting Momentum', tier: 3, hints: { 4: 'Expanding scope', 1: 'Stagnating, same maintenance' } },
+      save_rate: { name: 'Save Rate', tier: 3, hints: { 4: 'Recovered from frustration', 1: 'No recovery (N/A = 3)' } }
+    };
+
+    let calibrationState = { view: 'list', selectedMeetingId: null };
+
+    async function loadCalibration() {
+      const panel = document.getElementById('sessionCalibration');
+      panel.innerHTML = '<div class="loading">Loading calibration data...</div>';
+
+      try {
+        const res = await fetch(API + '/session/calibration/status');
+        if (!res.ok) throw new Error('Failed to load calibration status');
+        const data = await res.json();
+        renderCalibrationList(panel, data);
+      } catch (err) {
+        panel.innerHTML = `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderCalibrationList(panel, data) {
+      const meetings = data.meetings || [];
+      const scored = data.scored_count || 0;
+      const total = data.total || 10;
+      const ready = data.ready_for_comparison;
+
+      let html = `
+        <div class="calibration-header">
+          <h2>Human Calibration</h2>
+          <p style="color: #8b949e; margin-bottom: 16px;">Score 10 meetings to validate AI model quality against human judgment</p>
+          <div class="progress-bar-container" style="margin-bottom: 16px;">
+            <div class="progress-label">${scored} / ${total} scored</div>
+            <div class="progress-bar" style="background: #21262d; height: 8px; border-radius: 4px; overflow: hidden;">
+              <div style="width: ${(scored/total)*100}%; height: 100%; background: ${ready ? '#3fb950' : '#58a6ff'}; transition: width 0.3s;"></div>
+            </div>
+          </div>
+          <button class="btn-primary" onclick="loadCalibrationComparison()" ${ready ? '' : 'disabled'} style="margin-bottom: 24px; opacity: ${ready ? 1 : 0.5};">
+            ${ready ? '📊 View Comparison' : '🔒 Complete all scores to unlock'}
+          </button>
+        </div>
+        <div class="calibration-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+      `;
+
+      meetings.forEach(m => {
+        const isScored = m.scored;
+        const date = m.start_time ? new Date(m.start_time).toLocaleDateString() : '';
+        html += `
+          <div class="calibration-card" onclick="loadCalibrationForm(${m.id})" style="background: #21262d; border-radius: 8px; padding: 16px; cursor: pointer; border-left: 4px solid ${isScored ? '#3fb950' : '#484f58'}; transition: background 0.15s;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+              <span class="meeting-id" style="color: #8b949e; font-size: 12px;">Meeting #${m.id}</span>
+              <span class="status-badge" style="font-size: 11px; padding: 2px 8px; border-radius: 10px; background: ${isScored ? '#238636' : '#30363d'}; color: ${isScored ? '#fff' : '#8b949e'};">${isScored ? '✓ Scored' : 'Pending'}</span>
+            </div>
+            <div class="topic" style="font-weight: 500; color: #f0f6fc; margin-bottom: 6px; font-size: 14px; line-height: 1.4;">${escapeHtml(m.topic || 'Untitled')}</div>
+            <div class="meta" style="color: #8b949e; font-size: 12px;">${escapeHtml(m.client_name || '')} • ${date} • ${m.duration_minutes || 0} min</div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      panel.innerHTML = html;
+    }
+
+    async function loadCalibrationForm(meetingId) {
+      const panel = document.getElementById('sessionCalibration');
+      panel.innerHTML = '<div class="loading">Loading meeting data...</div>';
+
+      try {
+        const res = await fetch(API + `/session/calibration/${meetingId}`);
+        if (!res.ok) throw new Error('Failed to load meeting');
+        const data = await res.json();
+        renderCalibrationForm(panel, data);
+      } catch (err) {
+        panel.innerHTML = `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderCalibrationForm(panel, data) {
+      const meeting = data.meeting;
+      const summary = data.summary || '';
+      const actionItems = data.action_items || [];
+      const transcript = data.transcript || '';
+      const existing = data.existing_scores;
+      const date = meeting.start_time ? new Date(meeting.start_time).toLocaleDateString() : '';
+
+      let html = `
+        <div class="calibration-form">
+          <button class="btn-secondary" onclick="loadCalibration()" style="margin-bottom: 16px;">← Back to List</button>
+
+          <div class="meeting-header" style="background: #21262d; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+            <h3 style="color: #f0f6fc; margin-bottom: 8px;">${escapeHtml(meeting.topic || 'Meeting')}</h3>
+            <div style="color: #8b949e; font-size: 13px;">${escapeHtml(meeting.client_name || '')} • ${date} • ${meeting.duration_minutes || 0} min</div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div class="summary-section" style="background: #161b22; border-radius: 8px; padding: 16px;">
+              <h4 style="color: #c9d1d9; margin-bottom: 12px; font-size: 14px;">📝 AI Summary</h4>
+              <p style="color: #8b949e; font-size: 13px; line-height: 1.6;">${escapeHtml(summary) || '<em>No summary available</em>'}</p>
+            </div>
+            <div class="action-items-section" style="background: #161b22; border-radius: 8px; padding: 16px;">
+              <h4 style="color: #c9d1d9; margin-bottom: 12px; font-size: 14px;">✅ Action Items (${actionItems.length})</h4>
+              <ul style="color: #8b949e; font-size: 12px; line-height: 1.8; padding-left: 16px;">
+                ${actionItems.length > 0 ? actionItems.map(ai => `<li><strong>${escapeHtml(ai.title)}</strong>${ai.owner ? ` — ${escapeHtml(ai.owner)}` : ''}</li>`).join('') : '<li><em>No action items</em></li>'}
+              </ul>
+            </div>
+          </div>
+
+          <div class="transcript-section" style="background: #161b22; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+            <h4 style="color: #c9d1d9; margin-bottom: 12px; font-size: 14px;">📄 Transcript <span style="color: #8b949e; font-weight: normal;">(first 5000 chars)</span></h4>
+            <div id="transcriptPreview" style="color: #8b949e; font-size: 12px; line-height: 1.6; max-height: 200px; overflow-y: auto; white-space: pre-wrap; font-family: monospace; background: #0d1117; padding: 12px; border-radius: 4px;">${escapeHtml(transcript.slice(0, 5000))}</div>
+            ${transcript.length > 5000 ? `<button class="btn-link" onclick="document.getElementById('transcriptPreview').textContent = ${JSON.stringify(transcript)}; this.style.display='none';" style="margin-top: 8px; color: #58a6ff; background: none; border: none; cursor: pointer; font-size: 12px;">Show full transcript (${transcript.length} chars)</button>` : ''}
+          </div>
+
+          <form id="calibrationScoreForm" onsubmit="submitCalibrationScores(event, ${meeting.id})">
+            <h4 style="color: #f0f6fc; margin-bottom: 16px;">Score Each Dimension (1-4)</h4>
+            <p style="color: #8b949e; font-size: 12px; margin-bottom: 16px;">4 = Excellent • 3 = Good • 2 = Needs Improvement • 1 = Failing</p>
+
+            <div class="tier-section" style="margin-bottom: 24px;">
+              <h5 style="color: #58a6ff; margin-bottom: 12px;">Tier 1 — Deal Breakers (40%)</h5>
+              <div class="dimension-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px;">
+      `;
+
+      // Tier 1
+      ['client_sentiment', 'accountability', 'relationship_health'].forEach(dim => {
+        html += renderDimensionDropdown(dim, CALIBRATION_RUBRIC[dim], existing);
+      });
+
+      html += `
+              </div>
+            </div>
+            <div class="tier-section" style="margin-bottom: 24px;">
+              <h5 style="color: #d29922; margin-bottom: 12px;">Tier 2 — Core Competence (35%)</h5>
+              <div class="dimension-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px;">
+      `;
+
+      // Tier 2
+      ['meeting_structure', 'value_delivery', 'action_discipline', 'proactive_leadership'].forEach(dim => {
+        html += renderDimensionDropdown(dim, CALIBRATION_RUBRIC[dim], existing);
+      });
+
+      html += `
+              </div>
+            </div>
+            <div class="tier-section" style="margin-bottom: 24px;">
+              <h5 style="color: #8b949e; margin-bottom: 12px;">Tier 3 — Efficiency (25%)</h5>
+              <div class="dimension-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px;">
+      `;
+
+      // Tier 3
+      ['time_utilization', 'redundancy', 'client_confusion', 'meeting_momentum', 'save_rate'].forEach(dim => {
+        html += renderDimensionDropdown(dim, CALIBRATION_RUBRIC[dim], existing);
+      });
+
+      html += `
+              </div>
+            </div>
+
+            <div class="notes-section" style="margin-bottom: 24px;">
+              <label style="color: #c9d1d9; display: block; margin-bottom: 8px;">Notes (optional)</label>
+              <textarea name="notes" style="width: 100%; height: 80px; background: #21262d; border: 1px solid #30363d; border-radius: 6px; padding: 12px; color: #c9d1d9; font-size: 13px; resize: vertical;">${existing?.notes ? escapeHtml(existing.notes) : ''}</textarea>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+              <button type="submit" class="btn-primary" style="flex: 1;">💾 Save Scores</button>
+              <button type="button" class="btn-secondary" onclick="loadCalibration()">Cancel</button>
+            </div>
+          </form>
+        </div>
+      `;
+
+      panel.innerHTML = html;
+    }
+
+    function renderDimensionDropdown(dimKey, rubric, existing) {
+      const currentValue = existing ? existing[dimKey] : '';
+      return `
+        <div class="dimension-input" style="background: #21262d; border-radius: 6px; padding: 12px;">
+          <label style="color: #c9d1d9; display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500;">${rubric.name}</label>
+          <select name="${dimKey}" required style="width: 100%; padding: 8px; background: #0d1117; border: 1px solid #30363d; border-radius: 4px; color: #c9d1d9; font-size: 13px;">
+            <option value="">Select score...</option>
+            <option value="4" ${currentValue === 4 ? 'selected' : ''}>4 - ${rubric.hints[4]}</option>
+            <option value="3" ${currentValue === 3 ? 'selected' : ''}>3 - Good</option>
+            <option value="2" ${currentValue === 2 ? 'selected' : ''}>2 - Needs Improvement</option>
+            <option value="1" ${currentValue === 1 ? 'selected' : ''}>1 - ${rubric.hints[1]}</option>
+          </select>
+        </div>
+      `;
+    }
+
+    async function submitCalibrationScores(event, meetingId) {
+      event.preventDefault();
+      const form = event.target;
+      const formData = new FormData(form);
+
+      const scores = {};
+      const dims = Object.keys(CALIBRATION_RUBRIC);
+      for (const dim of dims) {
+        const val = formData.get(dim);
+        if (!val) {
+          alert(`Please select a score for ${CALIBRATION_RUBRIC[dim].name}`);
+          return;
+        }
+        scores[dim] = parseInt(val);
+      }
+
+      const notes = formData.get('notes') || '';
+
+      try {
+        const res = await fetch(API + `/session/calibration/${meetingId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ scores, notes })
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || 'Failed to save scores');
+        }
+
+        const result = await res.json();
+        alert(`Scores saved! Composite: ${result.composite_score.toFixed(2)}`);
+        loadCalibration();
+      } catch (err) {
+        alert('Error saving scores: ' + err.message);
+      }
+    }
+
+    async function loadCalibrationComparison() {
+      const panel = document.getElementById('sessionCalibration');
+      panel.innerHTML = '<div class="loading">Loading comparison data...</div>';
+
+      try {
+        const res = await fetch(API + '/session/calibration/comparison');
+        if (!res.ok) throw new Error('Failed to load comparison');
+        const data = await res.json();
+
+        if (!data.ready) {
+          panel.innerHTML = `<div class="error">${escapeHtml(data.message || 'Not ready')}</div>`;
+          return;
+        }
+
+        renderCalibrationComparison(panel, data);
+      } catch (err) {
+        panel.innerHTML = `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderCalibrationComparison(panel, data) {
+      const models = data.models || [];
+      const winner = data.winner;
+
+      let html = `
+        <div class="comparison-view">
+          <button class="btn-secondary" onclick="loadCalibration()" style="margin-bottom: 16px;">← Back to List</button>
+
+          ${winner ? `
+          <div class="winner-card" style="background: linear-gradient(135deg, #238636 0%, #1a7f37 100%); border-radius: 12px; padding: 24px; margin-bottom: 24px; text-align: center;">
+            <h2 style="color: #fff; margin-bottom: 8px;">🏆 ${escapeHtml(winner.model)}</h2>
+            <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin-bottom: 12px;">${escapeHtml(winner.verdict)}</p>
+            <div style="display: flex; justify-content: center; gap: 40px;">
+              <div><span style="font-size: 24px; color: #fff;">${winner.mae?.toFixed(3)}</span><br><span style="font-size: 12px; color: rgba(255,255,255,0.7);">MAE</span></div>
+              <div><span style="font-size: 24px; color: #fff;">${winner.correlation?.toFixed(3)}</span><br><span style="font-size: 12px; color: rgba(255,255,255,0.7);">Correlation</span></div>
+            </div>
+          </div>
+          ` : ''}
+
+          <h3 style="color: #f0f6fc; margin-bottom: 16px;">Model Rankings</h3>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+            <thead>
+              <tr style="background: #21262d;">
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #30363d; color: #8b949e;">Rank</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #30363d; color: #8b949e;">Model</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #30363d; color: #8b949e;">MAE ↓</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #30363d; color: #8b949e;">Correlation</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #30363d; color: #8b949e;">Closest Dims</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 1px solid #30363d; color: #8b949e;">Furthest Dims</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+
+      models.forEach((m, i) => {
+        const isWinner = i === 0;
+        html += `
+          <tr style="background: ${isWinner ? '#238636' : '#161b22'};">
+            <td style="padding: 12px; border-bottom: 1px solid #30363d; color: ${isWinner ? '#fff' : '#c9d1d9'};">${i + 1}</td>
+            <td style="padding: 12px; border-bottom: 1px solid #30363d; color: ${isWinner ? '#fff' : '#f0f6fc'}; font-weight: 500;">${escapeHtml(m.model)}</td>
+            <td style="padding: 12px; border-bottom: 1px solid #30363d; color: ${isWinner ? '#fff' : '#c9d1d9'};">${m.mae?.toFixed(3) || 'N/A'}</td>
+            <td style="padding: 12px; border-bottom: 1px solid #30363d; color: ${isWinner ? '#fff' : '#c9d1d9'};">${m.correlation?.toFixed(3) || 'N/A'}</td>
+            <td style="padding: 12px; border-bottom: 1px solid #30363d; color: ${isWinner ? 'rgba(255,255,255,0.8)' : '#8b949e'}; font-size: 12px;">${(m.closest_dims || []).join(', ')}</td>
+            <td style="padding: 12px; border-bottom: 1px solid #30363d; color: ${isWinner ? 'rgba(255,255,255,0.8)' : '#8b949e'}; font-size: 12px;">${(m.furthest_dims || []).join(', ')}</td>
+          </tr>
+        `;
+      });
+
+      html += `
+            </tbody>
+          </table>
+
+          <h3 style="color: #f0f6fc; margin-bottom: 16px;">Per-Meeting Heatmap</h3>
+          <div style="margin-bottom: 8px; font-size: 12px; color: #8b949e;">
+            <span style="display: inline-block; width: 16px; height: 16px; background: #3fb950; vertical-align: middle; margin-right: 4px; border-radius: 2px;"></span> Exact match
+            <span style="display: inline-block; width: 16px; height: 16px; background: #d29922; vertical-align: middle; margin-left: 16px; margin-right: 4px; border-radius: 2px;"></span> Off by 1
+            <span style="display: inline-block; width: 16px; height: 16px; background: #f85149; vertical-align: middle; margin-left: 16px; margin-right: 4px; border-radius: 2px;"></span> Off by 2+
+          </div>
+      `;
+
+      // Heatmap for each model
+      models.forEach(model => {
+        html += `
+          <details style="margin-bottom: 16px; background: #21262d; border-radius: 8px;">
+            <summary style="padding: 12px; cursor: pointer; color: #f0f6fc; font-weight: 500;">${escapeHtml(model.model)} — MAE: ${model.mae?.toFixed(3)}</summary>
+            <div style="padding: 12px; overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                <thead>
+                  <tr>
+                    <th style="padding: 6px; text-align: left; color: #8b949e;">Meeting</th>
+                    ${Object.keys(CALIBRATION_RUBRIC).map(d => `<th style="padding: 6px; text-align: center; color: #8b949e;" title="${CALIBRATION_RUBRIC[d].name}">${d.slice(0, 6)}</th>`).join('')}
+                  </tr>
+                </thead>
+                <tbody>
+        `;
+
+        (model.per_meeting || []).forEach(pm => {
+          html += `<tr><td style="padding: 6px; color: #c9d1d9;">#${pm.meeting_id}</td>`;
+          Object.keys(CALIBRATION_RUBRIC).forEach(dim => {
+            const dd = pm.dimensions[dim];
+            if (!dd) {
+              html += '<td style="padding: 6px; text-align: center; color: #484f58;">-</td>';
+            } else {
+              const diff = dd.diff;
+              const bgColor = diff === 0 ? '#3fb950' : diff === 1 ? '#d29922' : '#f85149';
+              html += `<td style="padding: 6px; text-align: center; background: ${bgColor}; color: #000;" title="H:${dd.human} AI:${dd.ai}">${dd.human}/${dd.ai}</td>`;
+            }
+          });
+          html += '</tr>';
+        });
+
+        html += `
+                </tbody>
+              </table>
+            </div>
+          </details>
+        `;
+      });
+
+      html += '</div>';
+      panel.innerHTML = html;
     }
 
     // Init

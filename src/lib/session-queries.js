@@ -624,6 +624,342 @@ export function getAllTeamStats(db) {
   return { members, adjustment_note: 'Scores adjusted for client difficulty tier' };
 }
 
+// ============ CALIBRATION (Phase 17A) ============
+
+// The 10 calibration meeting IDs
+const CALIBRATION_MEETING_IDS = [70, 23, 63, 71, 102, 82, 2, 5, 26, 20];
+
+/**
+ * 8. getCalibrationStatus - Returns 10 calibration meetings with scored/unscored status
+ */
+export function getCalibrationStatus(db) {
+  const placeholders = CALIBRATION_MEETING_IDS.map(() => '?').join(',');
+
+  // Get meetings with their human calibration status
+  const meetings = db.prepare(`
+    SELECT m.id, m.topic, m.client_name, m.start_time, m.duration_minutes,
+           CASE WHEN se.id IS NOT NULL THEN 1 ELSE 0 END as scored
+    FROM meetings m
+    LEFT JOIN session_evaluations se ON se.meeting_id = m.id AND se.model_used = 'human-calibration'
+    WHERE m.id IN (${placeholders})
+    ORDER BY m.id
+  `).all(...CALIBRATION_MEETING_IDS);
+
+  const scoredCount = meetings.filter(m => m.scored).length;
+
+  return {
+    meetings,
+    scored_count: scoredCount,
+    total: CALIBRATION_MEETING_IDS.length,
+    ready_for_comparison: scoredCount === CALIBRATION_MEETING_IDS.length
+  };
+}
+
+/**
+ * 9. saveCalibrationScores - Validates and saves human calibration scores
+ */
+export function saveCalibrationScores(db, meetingId, scores, notes = '') {
+  // Validate meeting is in calibration set
+  if (!CALIBRATION_MEETING_IDS.includes(meetingId)) {
+    throw new Error(`Meeting ${meetingId} is not in the calibration set`);
+  }
+
+  // Validate all 12 dimensions are present and valid (1-4)
+  const requiredDims = [...TIER1_DIMS, ...TIER2_DIMS, ...TIER3_DIMS];
+  for (const dim of requiredDims) {
+    const score = scores[dim];
+    if (score === undefined || score === null) {
+      throw new Error(`Missing score for dimension: ${dim}`);
+    }
+    if (score < 1 || score > 4 || !Number.isInteger(score)) {
+      throw new Error(`Invalid score for ${dim}: must be integer 1-4`);
+    }
+  }
+
+  // Calculate tier averages and composite
+  const tier1Scores = TIER1_DIMS.map(d => scores[d]);
+  const tier2Scores = TIER2_DIMS.map(d => scores[d]);
+  const tier3Scores = TIER3_DIMS.map(d => scores[d]);
+
+  const tier1_avg = tier1Scores.reduce((a, b) => a + b, 0) / tier1Scores.length;
+  const tier2_avg = tier2Scores.reduce((a, b) => a + b, 0) / tier2Scores.length;
+  const tier3_avg = tier3Scores.reduce((a, b) => a + b, 0) / tier3Scores.length;
+
+  // Composite formula: (tier1 * 0.40) + (tier2 * 0.35) + (tier3 * 0.25)
+  const composite_score = (tier1_avg * 0.40) + (tier2_avg * 0.35) + (tier3_avg * 0.25);
+
+  // Insert or replace
+  db.prepare(`
+    INSERT INTO session_evaluations (
+      meeting_id, model_used,
+      client_sentiment, accountability, relationship_health,
+      meeting_structure, value_delivery, action_discipline, proactive_leadership,
+      time_utilization, redundancy, client_confusion, meeting_momentum, save_rate,
+      tier1_avg, tier2_avg, tier3_avg, composite_score,
+      meeting_type, coaching_notes, computed_at
+    ) VALUES (
+      ?, 'human-calibration',
+      ?, ?, ?,
+      ?, ?, ?, ?,
+      ?, ?, ?, ?, ?,
+      ?, ?, ?, ?,
+      'calibration', ?, datetime('now')
+    )
+    ON CONFLICT(meeting_id, model_used) DO UPDATE SET
+      client_sentiment = excluded.client_sentiment,
+      accountability = excluded.accountability,
+      relationship_health = excluded.relationship_health,
+      meeting_structure = excluded.meeting_structure,
+      value_delivery = excluded.value_delivery,
+      action_discipline = excluded.action_discipline,
+      proactive_leadership = excluded.proactive_leadership,
+      time_utilization = excluded.time_utilization,
+      redundancy = excluded.redundancy,
+      client_confusion = excluded.client_confusion,
+      meeting_momentum = excluded.meeting_momentum,
+      save_rate = excluded.save_rate,
+      tier1_avg = excluded.tier1_avg,
+      tier2_avg = excluded.tier2_avg,
+      tier3_avg = excluded.tier3_avg,
+      composite_score = excluded.composite_score,
+      coaching_notes = excluded.coaching_notes,
+      computed_at = datetime('now')
+  `).run(
+    meetingId,
+    scores.client_sentiment, scores.accountability, scores.relationship_health,
+    scores.meeting_structure, scores.value_delivery, scores.action_discipline, scores.proactive_leadership,
+    scores.time_utilization, scores.redundancy, scores.client_confusion, scores.meeting_momentum, scores.save_rate,
+    tier1_avg, tier2_avg, tier3_avg, composite_score,
+    notes
+  );
+
+  return {
+    meeting_id: meetingId,
+    scores,
+    tier1_avg,
+    tier2_avg,
+    tier3_avg,
+    composite_score,
+    notes
+  };
+}
+
+/**
+ * 10. getCalibrationComparison - Computes MAE + Pearson correlation for each AI model vs human
+ */
+export function getCalibrationComparison(db) {
+  // First check if all 10 meetings are scored
+  const status = getCalibrationStatus(db);
+  if (!status.ready_for_comparison) {
+    return {
+      ready: false,
+      scored: status.scored_count,
+      remaining: status.total - status.scored_count,
+      message: `Score ${status.total - status.scored_count} more meetings to unlock comparison`
+    };
+  }
+
+  const placeholders = CALIBRATION_MEETING_IDS.map(() => '?').join(',');
+  const dims = [...TIER1_DIMS, ...TIER2_DIMS, ...TIER3_DIMS];
+
+  // Get human scores
+  const humanScores = db.prepare(`
+    SELECT meeting_id, ${dims.join(', ')}, composite_score
+    FROM session_evaluations
+    WHERE meeting_id IN (${placeholders}) AND model_used = 'human-calibration'
+  `).all(...CALIBRATION_MEETING_IDS);
+
+  // Get all AI model evaluations for these meetings
+  const aiModels = db.prepare(`
+    SELECT DISTINCT model_used FROM session_evaluations
+    WHERE meeting_id IN (${placeholders}) AND model_used != 'human-calibration'
+  `).all(...CALIBRATION_MEETING_IDS).map(r => r.model_used);
+
+  const results = [];
+
+  for (const modelId of aiModels) {
+    const aiScores = db.prepare(`
+      SELECT meeting_id, ${dims.join(', ')}, composite_score
+      FROM session_evaluations
+      WHERE meeting_id IN (${placeholders}) AND model_used = ?
+    `).all(...CALIBRATION_MEETING_IDS, modelId);
+
+    // Create lookup for AI scores by meeting_id
+    const aiByMeeting = {};
+    for (const ai of aiScores) {
+      aiByMeeting[ai.meeting_id] = ai;
+    }
+
+    // Calculate MAE and collect data for Pearson correlation
+    let totalAbsError = 0;
+    let dataPoints = 0;
+    const humanVec = [];
+    const aiVec = [];
+    const perDimMAE = {};
+    dims.forEach(d => perDimMAE[d] = { total: 0, count: 0 });
+
+    // Per-meeting breakdown for heatmap
+    const perMeeting = [];
+
+    for (const human of humanScores) {
+      const ai = aiByMeeting[human.meeting_id];
+      if (!ai) continue;
+
+      const meetingDiffs = {};
+      for (const dim of dims) {
+        const humanVal = human[dim];
+        const aiVal = ai[dim];
+        if (humanVal != null && aiVal != null) {
+          const diff = Math.abs(humanVal - aiVal);
+          totalAbsError += diff;
+          dataPoints++;
+          humanVec.push(humanVal);
+          aiVec.push(aiVal);
+          perDimMAE[dim].total += diff;
+          perDimMAE[dim].count++;
+          meetingDiffs[dim] = { human: humanVal, ai: aiVal, diff };
+        }
+      }
+
+      perMeeting.push({
+        meeting_id: human.meeting_id,
+        human_composite: human.composite_score,
+        ai_composite: ai.composite_score,
+        dimensions: meetingDiffs
+      });
+    }
+
+    // MAE
+    const mae = dataPoints > 0 ? totalAbsError / dataPoints : null;
+
+    // Pearson correlation
+    let correlation = null;
+    if (humanVec.length > 1) {
+      const n = humanVec.length;
+      const sumX = humanVec.reduce((a, b) => a + b, 0);
+      const sumY = aiVec.reduce((a, b) => a + b, 0);
+      const sumXY = humanVec.reduce((acc, x, i) => acc + x * aiVec[i], 0);
+      const sumX2 = humanVec.reduce((acc, x) => acc + x * x, 0);
+      const sumY2 = aiVec.reduce((acc, y) => acc + y * y, 0);
+
+      const numerator = n * sumXY - sumX * sumY;
+      const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+      correlation = denominator !== 0 ? numerator / denominator : 0;
+    }
+
+    // Per-dimension MAE
+    const dimensionMAE = {};
+    let closestDims = [];
+    let furthestDims = [];
+
+    for (const dim of dims) {
+      const d = perDimMAE[dim];
+      dimensionMAE[dim] = d.count > 0 ? d.total / d.count : null;
+    }
+
+    // Find closest and furthest dimensions
+    const sortedDims = dims
+      .filter(d => dimensionMAE[d] !== null)
+      .sort((a, b) => dimensionMAE[a] - dimensionMAE[b]);
+
+    closestDims = sortedDims.slice(0, 3);
+    furthestDims = sortedDims.slice(-3).reverse();
+
+    results.push({
+      model: modelId,
+      mae,
+      correlation,
+      data_points: dataPoints,
+      closest_dims: closestDims,
+      furthest_dims: furthestDims,
+      dimension_mae: dimensionMAE,
+      per_meeting: perMeeting
+    });
+  }
+
+  // Sort by MAE (lowest = best)
+  results.sort((a, b) => (a.mae || 999) - (b.mae || 999));
+
+  // Determine winner
+  const winner = results[0];
+
+  return {
+    ready: true,
+    models: results,
+    winner: winner ? {
+      model: winner.model,
+      mae: winner.mae,
+      correlation: winner.correlation,
+      verdict: `${winner.model} most closely matches human judgment with MAE of ${winner.mae?.toFixed(3)} and correlation of ${winner.correlation?.toFixed(3)}`
+    } : null,
+    human_scores: humanScores
+  };
+}
+
+/**
+ * 11. getCalibrationMeetingData - Get meeting data for calibration form
+ */
+export function getCalibrationMeetingData(db, meetingId) {
+  if (!CALIBRATION_MEETING_IDS.includes(meetingId)) {
+    return null;
+  }
+
+  const meeting = db.prepare(`
+    SELECT id, topic, client_name, start_time, duration_minutes, transcript_raw, ai_extraction
+    FROM meetings WHERE id = ?
+  `).get(meetingId);
+
+  if (!meeting) return null;
+
+  // Get existing human calibration scores if any
+  const existingScores = db.prepare(`
+    SELECT * FROM session_evaluations
+    WHERE meeting_id = ? AND model_used = 'human-calibration'
+  `).get(meetingId);
+
+  // Parse ai_extraction for summary and action items
+  let summary = '';
+  let actionItems = [];
+  try {
+    const extraction = JSON.parse(meeting.ai_extraction || '{}');
+    const data = Array.isArray(extraction) ? extraction[0] : extraction;
+    summary = data.summary || '';
+    actionItems = (data.action_items || []).slice(0, 15).map(ai => ({
+      title: ai.title,
+      owner: ai.owner_name || ai.owner,
+      priority: ai.priority
+    }));
+  } catch (e) { /* ignore parse errors */ }
+
+  return {
+    meeting: {
+      id: meeting.id,
+      topic: meeting.topic,
+      client_name: meeting.client_name,
+      start_time: meeting.start_time,
+      duration_minutes: meeting.duration_minutes
+    },
+    summary,
+    action_items: actionItems,
+    transcript: meeting.transcript_raw || '',
+    existing_scores: existingScores ? {
+      client_sentiment: existingScores.client_sentiment,
+      accountability: existingScores.accountability,
+      relationship_health: existingScores.relationship_health,
+      meeting_structure: existingScores.meeting_structure,
+      value_delivery: existingScores.value_delivery,
+      action_discipline: existingScores.action_discipline,
+      proactive_leadership: existingScores.proactive_leadership,
+      time_utilization: existingScores.time_utilization,
+      redundancy: existingScores.redundancy,
+      client_confusion: existingScores.client_confusion,
+      meeting_momentum: existingScores.meeting_momentum,
+      save_rate: existingScores.save_rate,
+      notes: existingScores.coaching_notes
+    } : null
+  };
+}
+
 export default {
   getScorecard,
   getClientTrend,
@@ -631,5 +967,10 @@ export default {
   getAllTeamStats,
   getFlags,
   getBenchmarks,
-  getWeeklyDigest
+  getWeeklyDigest,
+  getCalibrationStatus,
+  saveCalibrationScores,
+  getCalibrationComparison,
+  getCalibrationMeetingData,
+  CALIBRATION_MEETING_IDS
 };

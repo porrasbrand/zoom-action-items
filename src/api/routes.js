@@ -38,7 +38,7 @@ import {
 } from '../lib/ph-reconciler.js';
 import { initDatabase as initMetricsDb, getMetrics, getStats as getMetricsStats, computeAllMetrics } from '../lib/session-metrics.js';
 import { getAllBaselines, getBaselines, recalculateAll as recalculateBaselines, initBaselinesTable } from '../lib/session-baselines.js';
-import { getScorecard, getClientTrend, getTeamStats, getAllTeamStats, getFlags, getBenchmarks, getWeeklyDigest } from '../lib/session-queries.js';
+import { getScorecard, getClientTrend, getTeamStats, getAllTeamStats, getFlags, getBenchmarks, getWeeklyDigest, getCalibrationStatus, saveCalibrationScores, getCalibrationComparison, getCalibrationMeetingData } from '../lib/session-queries.js';
 import { readdirSync, readFileSync as fsReadFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -2057,6 +2057,70 @@ router.get('/session/evaluated-meetings', (req, res) => {
     res.json({ meeting_ids: rows.map(r => r.meeting_id) });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ CALIBRATION (Phase 17A) ============
+// IMPORTANT: These routes must be BEFORE /session/:meetingId to avoid catch-all
+
+// GET /api/session/calibration/status - Get calibration status for all 10 meetings
+router.get('/session/calibration/status', (req, res) => {
+  try {
+    const metricsDb = initMetricsDb();
+    const status = getCalibrationStatus(metricsDb);
+    metricsDb.close();
+    res.json(status);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/session/calibration/comparison - Get AI vs human comparison (only when all 10 scored)
+router.get('/session/calibration/comparison', (req, res) => {
+  try {
+    const metricsDb = initMetricsDb();
+    const comparison = getCalibrationComparison(metricsDb);
+    metricsDb.close();
+    res.json(comparison);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/session/calibration/:meetingId - Get meeting data for calibration form
+router.get('/session/calibration/:meetingId', (req, res) => {
+  try {
+    const meetingId = parseInt(req.params.meetingId);
+    const metricsDb = initMetricsDb();
+    const data = getCalibrationMeetingData(metricsDb, meetingId);
+    metricsDb.close();
+
+    if (!data) {
+      return res.status(404).json({ error: 'Meeting not found or not in calibration set' });
+    }
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/session/calibration/:meetingId - Save human calibration scores
+router.post('/session/calibration/:meetingId', (req, res) => {
+  try {
+    const meetingId = parseInt(req.params.meetingId);
+    const { scores, notes } = req.body;
+
+    if (!scores) {
+      return res.status(400).json({ error: 'scores object required' });
+    }
+
+    const metricsDb = initMetricsDb();
+    const result = saveCalibrationScores(metricsDb, meetingId, scores, notes || '');
+    metricsDb.close();
+
+    res.json({ success: true, ...result });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 });
 
