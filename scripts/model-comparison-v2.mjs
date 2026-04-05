@@ -16,16 +16,16 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const DB_PATH = join(__dirname, '..', 'data', 'zoom-action-items.db');
 const REPORT_PATH = join(__dirname, '..', 'data', 'model-comparison-report.md');
 
-// Models to compare
+// Models to compare - EXACT IDs as specified
 const MODELS = [
-  'gemini-2.0-flash',      // Baseline (already has evaluations)
-  'claude-sonnet-4-20250514', // Claude Sonnet 4 (more available than Opus)
-  'gpt-4o',                // GPT-4o (widely available)
-  'gemini-2.0-flash-exp'   // Gemini 2.0 Flash Experimental
+  'gemini-2.0-flash',        // Baseline (already has evaluations)
+  'claude-opus-4-6',         // Claude Opus 4.6
+  'gpt-5.4',                 // GPT 5.4
+  'gemini-3.1-pro-preview'   // Gemini 3.1 Pro Preview
 ];
 
-// Judge model
-const JUDGE_MODEL = 'gemini-2.0-flash';
+// Judge model - must NOT be a contestant
+const JUDGE_MODEL = 'gemini-2.5-pro';
 
 // Retry config
 const MAX_RETRIES = 3;
