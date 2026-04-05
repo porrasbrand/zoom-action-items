@@ -129,6 +129,74 @@ export function getScorecard(db, meetingId) {
     WHERE model_used = 'gpt-5.4'
   `).get()?.avg;
 
+  // FEATURE 1: Prev/Next navigation for same client
+  let navigation = { prev: null, next: null, position: null, total: null };
+  if (meeting.client_id) {
+    // Previous meeting (earlier date, with evaluation)
+    const prevMeeting = db.prepare(`
+      SELECT m.id, m.start_time FROM meetings m
+      WHERE m.client_id = ? AND m.start_time < ?
+        AND m.id IN (SELECT DISTINCT meeting_id FROM session_evaluations WHERE model_used = 'gpt-5.4')
+      ORDER BY m.start_time DESC LIMIT 1
+    `).get(meeting.client_id, meeting.start_time);
+
+    // Next meeting (later date, with evaluation)
+    const nextMeeting = db.prepare(`
+      SELECT m.id, m.start_time FROM meetings m
+      WHERE m.client_id = ? AND m.start_time > ?
+        AND m.id IN (SELECT DISTINCT meeting_id FROM session_evaluations WHERE model_used = 'gpt-5.4')
+      ORDER BY m.start_time ASC LIMIT 1
+    `).get(meeting.client_id, meeting.start_time);
+
+    // Get total count and position
+    const totalMeetings = db.prepare(`
+      SELECT COUNT(*) as count FROM meetings m
+      WHERE m.client_id = ?
+        AND m.id IN (SELECT DISTINCT meeting_id FROM session_evaluations WHERE model_used = 'gpt-5.4')
+    `).get(meeting.client_id)?.count || 0;
+
+    const position = db.prepare(`
+      SELECT COUNT(*) as pos FROM meetings m
+      WHERE m.client_id = ? AND m.start_time <= ?
+        AND m.id IN (SELECT DISTINCT meeting_id FROM session_evaluations WHERE model_used = 'gpt-5.4')
+    `).get(meeting.client_id, meeting.start_time)?.pos || 1;
+
+    navigation = {
+      prev: prevMeeting ? { id: prevMeeting.id, date: prevMeeting.start_time } : null,
+      next: nextMeeting ? { id: nextMeeting.id, date: nextMeeting.start_time } : null,
+      position,
+      total: totalMeetings
+    };
+  }
+
+  // FEATURE 2 & 5: Get previous meeting's evaluation for delta and biggest movers
+  let prevComposite = null;
+  let biggestMovers = [];
+  if (navigation.prev) {
+    const prevEval = db.prepare(`
+      SELECT * FROM session_evaluations WHERE meeting_id = ? AND model_used = 'gpt-5.4'
+    `).get(navigation.prev.id);
+
+    if (prevEval) {
+      prevComposite = prevEval.composite_score;
+
+      // FEATURE 5: Compute biggest movers
+      const dimensions = [
+        'client_sentiment', 'accountability', 'relationship_health',
+        'meeting_structure', 'value_delivery', 'action_discipline', 'proactive_leadership',
+        'time_utilization', 'redundancy', 'client_confusion', 'meeting_momentum', 'save_rate'
+      ];
+
+      const movers = dimensions
+        .map(d => ({ dimension: d, delta: (evaluation[d] || 0) - (prevEval[d] || 0) }))
+        .filter(m => m.delta !== 0)
+        .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))
+        .slice(0, 3);
+
+      biggestMovers = movers;
+    }
+  }
+
   return {
     meeting,
     metrics,
@@ -137,9 +205,12 @@ export function getScorecard(db, meetingId) {
     thresholds,
     coaching,
     meeting_type: evaluation.meeting_type,
+    navigation,
     context: {
       client_avg: clientAvg,
-      agency_avg: agencyAvg
+      agency_avg: agencyAvg,
+      prev_composite: prevComposite,
+      biggest_movers: biggestMovers
     }
   };
 }

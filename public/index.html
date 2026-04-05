@@ -3349,6 +3349,136 @@
   text-align: center;
 }
 
+/* FEATURE 1: Scorecard navigation */
+.scorecard-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  margin-bottom: 12px;
+}
+.scorecard-nav button {
+  background: #21262d;
+  border: 1px solid #30363d;
+  color: #8b949e;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.scorecard-nav button:hover:not(:disabled) {
+  background: #30363d;
+  color: #f0f6fc;
+}
+.scorecard-nav button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.nav-current {
+  color: #6e7681;
+  font-size: 12px;
+}
+
+/* FEATURE 2: Delta badge */
+.delta-badge {
+  font-size: 13px;
+  margin-top: 8px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+.delta-positive {
+  color: #3fb950;
+  background: rgba(63, 185, 80, 0.1);
+}
+.delta-negative {
+  color: #f85149;
+  background: rgba(248, 81, 73, 0.1);
+}
+.delta-neutral {
+  color: #8b949e;
+}
+
+/* FEATURE 3: Collapsible coaching */
+.coaching-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #21262d;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 16px;
+}
+.coaching-summary:hover {
+  background: #30363d;
+}
+.coaching-counts {
+  font-size: 13px;
+  color: #8b949e;
+}
+.win-count {
+  color: #3fb950;
+}
+.improve-count {
+  color: #d29922;
+}
+.frustration-count {
+  color: #f85149;
+}
+.coaching-toggle {
+  color: #8b949e;
+  font-size: 12px;
+}
+.coaching-preview {
+  font-size: 12px;
+  color: #6e7681;
+  font-style: italic;
+  padding: 8px 16px;
+  margin-top: 4px;
+}
+.coaching-details {
+  margin-top: 8px;
+}
+
+/* FEATURE 4: Clickable dimensions */
+.dimension-row.clickable {
+  cursor: pointer;
+}
+.dimension-row.clickable:hover {
+  background: rgba(88, 166, 255, 0.05);
+  border-radius: 4px;
+}
+
+/* FEATURE 5: Biggest movers */
+.movers-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 12px;
+  background: #161b22;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 12px;
+}
+.movers-label {
+  color: #6e7681;
+  margin-right: 4px;
+}
+.mover {
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.mover.positive {
+  color: #3fb950;
+  background: rgba(63, 185, 80, 0.1);
+}
+.mover.negative {
+  color: #f85149;
+  background: rgba(248, 81, 73, 0.1);
+}
+
 /* Tier bar - FIX 7 */
 .tier-bar {
   height: 4px;
@@ -7413,6 +7543,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       const meetingType = data.meeting_type || evaluation.meeting_type || '';
       const meeting = data.meeting || {};
       const context = data.context || {};
+      const navigation = data.navigation || {};
 
       // Parse coaching - may be strings or objects
       let coaching = data.coaching || {};
@@ -7457,6 +7588,13 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
       };
 
+      // Format short date for navigation
+      const formatShortDate = (dateStr) => {
+        if (!dateStr) return '';
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      };
+
       // FIX 5: Handle 0 vs null for B3X speaking ratio
       const b3xRatio = metrics.speaker_ratio_b3x ?? metrics.b3x_speaking_ratio ?? null;
       const b3xDisplay = b3xRatio !== null ? b3xRatio.toFixed(0) + '%' : 'N/A';
@@ -7469,8 +7607,40 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         return diff > 0 ? '<span style="color: #3fb950;">▲</span>' : '<span style="color: #f85149;">▼</span>';
       };
 
+      // FEATURE 2: Compute delta from previous meeting
+      let deltaBadge = '';
+      if (context.prev_composite != null) {
+        const delta = composite - context.prev_composite;
+        const deltaRounded = delta.toFixed(2);
+        if (delta > 0) {
+          deltaBadge = `<span class="delta-badge delta-positive">▲ +${deltaRounded}</span>`;
+        } else if (delta < 0) {
+          deltaBadge = `<span class="delta-badge delta-negative">▼ ${deltaRounded}</span>`;
+        } else {
+          deltaBadge = `<span class="delta-badge delta-neutral">→ 0.00</span>`;
+        }
+      }
+
+      // FEATURE 5: Format biggest movers
+      const formatDimName = (dim) => dim.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      let moversHtml = '';
+      if (context.biggest_movers?.length) {
+        const moversItems = context.biggest_movers.map(m => {
+          const sign = m.delta > 0 ? '+' : '';
+          const cls = m.delta > 0 ? 'positive' : 'negative';
+          const arrow = m.delta > 0 ? '▲' : '▼';
+          return `<span class="mover ${cls}">${arrow} ${formatDimName(m.dimension)} ${sign}${m.delta}</span>`;
+        }).join('');
+        moversHtml = `
+          <div class="movers-card">
+            <span class="movers-label">Biggest changes from last:</span>
+            ${moversItems}
+          </div>
+        `;
+      }
+
       let html = `
-        <!-- FIX 1: Meeting header with full context -->
+        <!-- Meeting header with full context -->
         <div class="scorecard-header">
           <h3>${escapeHtml(meeting.client_name || 'Unknown Client')}</h3>
           <div class="meeting-topic">${escapeHtml(meeting.topic || 'Meeting')}</div>
@@ -7482,7 +7652,20 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
           </div>
         </div>
 
-        <!-- FIX 4: Context comparison bar -->
+        <!-- FEATURE 1: Prev/Next Navigation -->
+        ${navigation.total > 1 ? `
+        <div class="scorecard-nav">
+          <button onclick="loadSessionScorecard(${navigation.prev?.id || 'null'}); document.getElementById('scorecardMeetingSelect').value='${navigation.prev?.id || ''}';" ${!navigation.prev ? 'disabled' : ''}>
+            ◀ ${navigation.prev ? formatShortDate(navigation.prev.date) : 'First'}
+          </button>
+          <span class="nav-current">Meeting ${navigation.position} of ${navigation.total}</span>
+          <button onclick="loadSessionScorecard(${navigation.next?.id || 'null'}); document.getElementById('scorecardMeetingSelect').value='${navigation.next?.id || ''}';" ${!navigation.next ? 'disabled' : ''}>
+            ${navigation.next ? formatShortDate(navigation.next.date) : 'Last'} ▶
+          </button>
+        </div>
+        ` : ''}
+
+        <!-- Context comparison bar -->
         ${context.client_avg || context.agency_avg ? `
         <div class="context-bar">
           <div><span class="this-meeting">This meeting: ${composite.toFixed(2)}</span></div>
@@ -7491,10 +7674,15 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         </div>
         ` : ''}
 
+        <!-- FEATURE 5: Biggest movers -->
+        ${moversHtml}
+
         <div style="display: flex; gap: 24px; margin-bottom: 24px;">
           <div class="session-score-card">
             <div class="score-value score-${color}">${composite.toFixed(2)}</div>
             <div class="score-label">Composite Score</div>
+            <!-- FEATURE 2: Delta badge -->
+            ${deltaBadge}
           </div>
 
           <div style="flex: 1; background: #21262d; border-radius: 8px; padding: 16px;">
@@ -7527,13 +7715,16 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         `;
         tierData.dimensions.forEach(dim => {
           const score = dimensionScores[dim] || 0;
-          // FIX 3: Use thresholds for color if available
+          // Use thresholds for color if available
           const dimThreshold = thresholds[dim];
           const dimColor = dimThreshold || getScoreColor(score);
           const label = dim.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-          // FIX 2: Show actual score number with color
+          // FEATURE 4: Make low-score dimensions clickable
+          const isClickable = score <= 2;
+          const clickHandler = isClickable ? `onclick="scrollToCoaching('${dim}')"` : '';
+          const clickableClass = isClickable ? 'clickable' : '';
           html += `
-            <div class="dimension-row">
+            <div class="dimension-row ${clickableClass}" ${clickHandler}>
               <span class="dimension-name">${escapeHtml(label)}</span>
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span class="dimension-score score-${dimColor}">${score}</span>
@@ -7547,17 +7738,44 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
 
       html += '</div>';
 
-      // Coaching section
-      if (coaching.wins?.length || coaching.improvements?.length || coaching.frustration_moments?.length) {
-        html += '<div class="coaching-section"><h3>Coaching Insights</h3>';
+      // FEATURE 3: Collapsible Coaching section
+      const winsCount = coaching.wins?.length || 0;
+      const improvementsCount = coaching.improvements?.length || 0;
+      const frustrationCount = coaching.frustration_moments?.length || 0;
+      const hasCoaching = winsCount || improvementsCount || frustrationCount;
+
+      if (hasCoaching) {
+        // Truncate coaching notes for preview
+        const notesPreview = coaching.coaching_notes
+          ? (coaching.coaching_notes.length > 100
+              ? coaching.coaching_notes.slice(0, 100) + '...'
+              : coaching.coaching_notes)
+          : '';
+
+        html += `
+          <div class="coaching-summary" onclick="toggleCoaching()">
+            <span style="color: #f0f6fc; font-weight: 500;">Coaching Insights</span>
+            <span class="coaching-counts">
+              ${winsCount ? `<span class="win-count">${winsCount} win${winsCount > 1 ? 's' : ''}</span>` : ''}
+              ${winsCount && improvementsCount ? ' · ' : ''}
+              ${improvementsCount ? `<span class="improve-count">${improvementsCount} improvement${improvementsCount > 1 ? 's' : ''}</span>` : ''}
+              ${(winsCount || improvementsCount) && frustrationCount ? ' · ' : ''}
+              ${frustrationCount ? `<span class="frustration-count">${frustrationCount} frustration${frustrationCount > 1 ? 's' : ''}</span>` : ''}
+            </span>
+            <span class="coaching-toggle">▼</span>
+          </div>
+          ${notesPreview ? `<div class="coaching-preview">"${escapeHtml(notesPreview)}"</div>` : ''}
+          <div class="coaching-details" id="coachingDetails" style="display: none;">
+        `;
 
         if (coaching.wins?.length) {
-          html += '<div class="coaching-cards">';
+          html += '<h4 style="color: #3fb950; margin: 16px 0 8px;">Wins</h4><div class="coaching-cards">';
           coaching.wins.forEach(w => {
+            const dimension = w.dimension || '';
             html += `
-              <div class="coaching-card win">
+              <div class="coaching-card win" data-dimension="${dimension}">
                 <div class="title">${escapeHtml(w.description || w.moment || 'Win')}</div>
-                ${w.quote ? `<div class="quote">"${escapeHtml(w.quote)}"</div>` : ''}
+                ${w.transcript_quote || w.quote ? `<div class="quote">"${escapeHtml(w.transcript_quote || w.quote)}"</div>` : ''}
               </div>
             `;
           });
@@ -7567,10 +7785,11 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         if (coaching.improvements?.length) {
           html += '<h4 style="color: #d29922; margin: 16px 0 8px;">Areas for Improvement</h4><div class="coaching-cards">';
           coaching.improvements.forEach(imp => {
+            const dimension = imp.dimension || '';
             html += `
-              <div class="coaching-card improvement">
+              <div class="coaching-card improvement" data-dimension="${dimension}">
                 <div class="title">${escapeHtml(imp.description || imp.area || 'Improvement')}</div>
-                ${imp.quote ? `<div class="quote">"${escapeHtml(imp.quote)}"</div>` : ''}
+                ${imp.transcript_quote || imp.quote ? `<div class="quote">"${escapeHtml(imp.transcript_quote || imp.quote)}"</div>` : ''}
                 ${imp.suggestion ? `<div class="suggestion">💡 ${escapeHtml(imp.suggestion)}</div>` : ''}
               </div>
             `;
@@ -7600,10 +7819,39 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
           `;
         }
 
-        html += '</div>';
+        html += '</div>'; // Close coaching-details
       }
 
       panel.innerHTML = html;
+    }
+
+    // FEATURE 3: Toggle coaching section
+    function toggleCoaching() {
+      const details = document.getElementById('coachingDetails');
+      const toggle = document.querySelector('.coaching-toggle');
+      if (details.style.display === 'none') {
+        details.style.display = 'block';
+        toggle.textContent = '▲';
+      } else {
+        details.style.display = 'none';
+        toggle.textContent = '▼';
+      }
+    }
+
+    // FEATURE 4: Scroll to coaching card for a dimension
+    function scrollToCoaching(dimension) {
+      const details = document.getElementById('coachingDetails');
+      if (details) {
+        details.style.display = 'block';
+        const toggle = document.querySelector('.coaching-toggle');
+        if (toggle) toggle.textContent = '▲';
+        const card = document.querySelector('.coaching-card[data-dimension="' + dimension + '"]');
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          card.style.outline = '2px solid #58a6ff';
+          setTimeout(() => card.style.outline = '', 2000);
+        }
+      }
     }
 
     async function loadSessionTrends(clientId = null) {
