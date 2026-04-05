@@ -3296,6 +3296,74 @@
   padding: 16px 0;
 }
 
+/* Scorecard header - FIX 1 */
+.scorecard-header {
+  margin-bottom: 20px;
+}
+.scorecard-header h3 {
+  color: #f0f6fc;
+  font-size: 20px;
+  margin: 0 0 4px;
+}
+.scorecard-header .meeting-topic {
+  color: #8b949e;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.scorecard-header .meeting-meta {
+  color: #6e7681;
+  font-size: 12px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.meeting-type-badge {
+  background: #21262d;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  color: #8b949e;
+}
+
+/* Context comparison bar - FIX 4 */
+.context-bar {
+  display: flex;
+  gap: 24px;
+  padding: 12px 16px;
+  background: #161b22;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #8b949e;
+}
+.context-bar .this-meeting {
+  color: #f0f6fc;
+  font-weight: bold;
+}
+
+/* Dimension score number - FIX 2 */
+.dimension-score {
+  font-weight: bold;
+  font-size: 14px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Tier bar - FIX 7 */
+.tier-bar {
+  height: 4px;
+  background: #21262d;
+  border-radius: 2px;
+  margin: 6px 0 12px;
+}
+.tier-bar .tier-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+.tier-fill-green { background: #3fb950; }
+.tier-fill-yellow { background: #d29922; }
+.tier-fill-red { background: #f85149; }
+
 /* Score card */
 .session-score-card {
   display: inline-flex;
@@ -7343,6 +7411,8 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       const thresholds = data.thresholds || {};
       const metrics = data.metrics || {};
       const meetingType = data.meeting_type || evaluation.meeting_type || '';
+      const meeting = data.meeting || {};
+      const context = data.context || {};
 
       // Parse coaching - may be strings or objects
       let coaching = data.coaching || {};
@@ -7375,17 +7445,56 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
 
       // REAL tier groups matching the actual evaluation dimensions
       const tiers = {
-        'Tier 1 - Deal Breakers (40%)': { dimensions: ['client_sentiment', 'accountability', 'relationship_health'], avg: scoresObj.tier1?.avg || evaluation.tier1_avg },
-        'Tier 2 - Core Competence (35%)': { dimensions: ['meeting_structure', 'value_delivery', 'action_discipline', 'proactive_leadership'], avg: scoresObj.tier2?.avg || evaluation.tier2_avg },
-        'Tier 3 - Efficiency (25%)': { dimensions: ['time_utilization', 'redundancy', 'client_confusion', 'meeting_momentum', 'save_rate'], avg: scoresObj.tier3?.avg || evaluation.tier3_avg }
+        'Tier 1 - Deal Breakers': { weight: 40, dimensions: ['client_sentiment', 'accountability', 'relationship_health'], avg: scoresObj.tier1?.avg || evaluation.tier1_avg },
+        'Tier 2 - Core Competence': { weight: 35, dimensions: ['meeting_structure', 'value_delivery', 'action_discipline', 'proactive_leadership'], avg: scoresObj.tier2?.avg || evaluation.tier2_avg },
+        'Tier 3 - Efficiency': { weight: 25, dimensions: ['time_utilization', 'redundancy', 'client_confusion', 'meeting_momentum', 'save_rate'], avg: scoresObj.tier3?.avg || evaluation.tier3_avg }
+      };
+
+      // Format date
+      const formatDate = (dateStr) => {
+        if (!dateStr) return '';
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      };
+
+      // FIX 5: Handle 0 vs null for B3X speaking ratio
+      const b3xRatio = metrics.speaker_ratio_b3x ?? metrics.b3x_speaking_ratio ?? null;
+      const b3xDisplay = b3xRatio !== null ? b3xRatio.toFixed(0) + '%' : 'N/A';
+
+      // Build context comparison arrow
+      const getCompareArrow = (val, ref) => {
+        if (val == null || ref == null) return '';
+        const diff = val - ref;
+        if (Math.abs(diff) < 0.05) return '<span style="color: #8b949e;">—</span>';
+        return diff > 0 ? '<span style="color: #3fb950;">▲</span>' : '<span style="color: #f85149;">▼</span>';
       };
 
       let html = `
+        <!-- FIX 1: Meeting header with full context -->
+        <div class="scorecard-header">
+          <h3>${escapeHtml(meeting.client_name || 'Unknown Client')}</h3>
+          <div class="meeting-topic">${escapeHtml(meeting.topic || 'Meeting')}</div>
+          <div class="meeting-meta">
+            <span>${formatDate(meeting.start_time)}</span>
+            <span>·</span>
+            <span>${meeting.duration_minutes || '—'} min</span>
+            ${meetingType ? `<span>·</span><span class="meeting-type-badge">${escapeHtml(meetingType)}</span>` : ''}
+          </div>
+        </div>
+
+        <!-- FIX 4: Context comparison bar -->
+        ${context.client_avg || context.agency_avg ? `
+        <div class="context-bar">
+          <div><span class="this-meeting">This meeting: ${composite.toFixed(2)}</span></div>
+          ${context.client_avg ? `<div>Client avg: ${context.client_avg.toFixed(2)} ${getCompareArrow(composite, context.client_avg)}</div>` : ''}
+          ${context.agency_avg ? `<div>Agency avg: ${context.agency_avg.toFixed(2)} ${getCompareArrow(composite, context.agency_avg)}</div>` : ''}
+        </div>
+        ` : ''}
+
         <div style="display: flex; gap: 24px; margin-bottom: 24px;">
           <div class="session-score-card">
             <div class="score-value score-${color}">${composite.toFixed(2)}</div>
             <div class="score-label">Composite Score</div>
-            ${meetingType ? `<div style="font-size: 11px; color: #8b949e; margin-top: 4px;">${escapeHtml(meetingType)}</div>` : ''}
           </div>
 
           <div style="flex: 1; background: #21262d; border-radius: 8px; padding: 16px;">
@@ -7395,7 +7504,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
               <div>Action Density: <strong style="color: #f0f6fc;">${metrics.action_density?.toFixed(3) ?? '—'}/min</strong></div>
               <div>Due Date Rate: <strong style="color: #f0f6fc;">${metrics.due_date_rate?.toFixed(0) ?? '—'}%</strong></div>
               <div>Owner Rate: <strong style="color: #f0f6fc;">${metrics.owner_assignment_rate?.toFixed(0) ?? '—'}%</strong></div>
-              <div>B3X Speaking: <strong style="color: #f0f6fc;">${(metrics.speaker_ratio_b3x || metrics.b3x_speaking_ratio)?.toFixed(0) ?? '—'}%</strong></div>
+              <div>B3X Speaking: <strong style="color: #f0f6fc;">${b3xDisplay}</strong></div>
               <div>Duration: <strong style="color: #f0f6fc;">${metrics.duration_minutes ?? '—'} min</strong></div>
             </div>
           </div>
@@ -7405,16 +7514,31 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       `;
 
       for (const [tierName, tierData] of Object.entries(tiers)) {
-        const tierAvg = tierData.avg?.toFixed(2) || '—';
-        html += `<div class="tier-card"><h4>${escapeHtml(tierName)} <span style="float: right; color: #8b949e; font-size: 12px;">Avg: ${tierAvg}</span></h4>`;
+        const tierAvg = tierData.avg || 0;
+        const tierAvgDisplay = tierAvg.toFixed(2) || '—';
+        const tierPct = (tierAvg / 4) * 100; // percentage for visual bar
+        const tierColor = getScoreColor(tierAvg);
+        html += `<div class="tier-card">
+          <h4>${escapeHtml(tierName)} <span style="color: #6e7681; font-weight: normal;">(${tierData.weight}%)</span>
+            <span style="float: right; color: #8b949e; font-size: 12px;">Avg: ${tierAvgDisplay}</span>
+          </h4>
+          <!-- FIX 7: Tier bar -->
+          <div class="tier-bar"><div class="tier-fill tier-fill-${tierColor}" style="width: ${tierPct}%;"></div></div>
+        `;
         tierData.dimensions.forEach(dim => {
           const score = dimensionScores[dim] || 0;
-          const dimColor = getScoreColor(score);
+          // FIX 3: Use thresholds for color if available
+          const dimThreshold = thresholds[dim];
+          const dimColor = dimThreshold || getScoreColor(score);
           const label = dim.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+          // FIX 2: Show actual score number with color
           html += `
             <div class="dimension-row">
               <span class="dimension-name">${escapeHtml(label)}</span>
-              ${renderScoreDots(score, dimColor)}
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="dimension-score score-${dimColor}">${score}</span>
+                ${renderScoreDots(score, dimColor)}
+              </div>
             </div>
           `;
         });

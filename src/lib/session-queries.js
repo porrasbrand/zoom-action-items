@@ -115,6 +115,20 @@ export function getScorecard(db, meetingId) {
     coaching_notes: evaluation.coaching_notes
   };
 
+  // Get context averages for comparison
+  const clientAvg = meeting.client_id ? db.prepare(`
+    SELECT AVG(se.composite_score) as avg
+    FROM session_evaluations se
+    JOIN meetings m ON m.id = se.meeting_id
+    WHERE m.client_id = ? AND se.model_used = 'gpt-5.4'
+  `).get(meeting.client_id)?.avg : null;
+
+  const agencyAvg = db.prepare(`
+    SELECT AVG(composite_score) as avg
+    FROM session_evaluations
+    WHERE model_used = 'gpt-5.4'
+  `).get()?.avg;
+
   return {
     meeting,
     metrics,
@@ -122,7 +136,11 @@ export function getScorecard(db, meetingId) {
     scores,
     thresholds,
     coaching,
-    meeting_type: evaluation.meeting_type
+    meeting_type: evaluation.meeting_type,
+    context: {
+      client_avg: clientAvg,
+      agency_avg: agencyAvg
+    }
   };
 }
 
