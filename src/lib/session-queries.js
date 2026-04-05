@@ -244,7 +244,7 @@ export function getClientTrend(db, clientId, options = {}) {
     SELECT client_name FROM meetings WHERE client_id = ? LIMIT 1
   `).get(clientId);
 
-  // Get meetings with evaluations for this client
+  // Get meetings with evaluations for this client (filter by default model)
   const meetings = db.prepare(`
     SELECT m.id as meeting_id, m.topic, m.start_time as date,
            se.composite_score as composite, se.tier1_avg, se.tier2_avg, se.tier3_avg,
@@ -252,7 +252,7 @@ export function getClientTrend(db, clientId, options = {}) {
            se.meeting_structure, se.value_delivery, se.action_discipline, se.proactive_leadership
     FROM meetings m
     JOIN session_evaluations se ON se.meeting_id = m.id
-    WHERE m.client_id = ?
+    WHERE m.client_id = ? AND se.model_used = 'gpt-5.4'
     ORDER BY m.start_time DESC
     LIMIT ?
   `).all(clientId, limit);
@@ -286,7 +286,7 @@ export function getClientTrend(db, clientId, options = {}) {
  * Calculate client difficulty tier
  */
 function getClientDifficulty(db, clientId) {
-  // Get client metrics
+  // Get client metrics (filter by default model)
   const stats = db.prepare(`
     SELECT
       COUNT(*) as meeting_count,
@@ -294,7 +294,7 @@ function getClientDifficulty(db, clientId) {
       AVG(se.composite_score * se.composite_score) - AVG(se.composite_score) * AVG(se.composite_score) as score_variance
     FROM meetings m
     JOIN session_evaluations se ON se.meeting_id = m.id
-    WHERE m.client_id = ?
+    WHERE m.client_id = ? AND se.model_used = 'gpt-5.4'
   `).get(clientId);
 
   // Simple heuristic: high meeting count + high variance = difficult
@@ -313,7 +313,7 @@ export function getTeamStats(db, memberName) {
   // Normalize member name (Phil/Philip)
   const searchName = memberName.toLowerCase() === 'phil' ? '%Phil%' : `%${memberName}%`;
 
-  // Get meetings where this member participated
+  // Get meetings where this member participated (filter by default model)
   const meetings = db.prepare(`
     SELECT m.id, m.topic, m.client_id, m.start_time,
            se.composite_score, se.client_sentiment, se.accountability, se.relationship_health,
@@ -321,7 +321,7 @@ export function getTeamStats(db, memberName) {
            se.time_utilization, se.redundancy, se.client_confusion, se.meeting_momentum, se.save_rate
     FROM meetings m
     JOIN session_evaluations se ON se.meeting_id = m.id
-    WHERE m.ai_extraction LIKE ?
+    WHERE m.ai_extraction LIKE ? AND se.model_used = 'gpt-5.4'
     ORDER BY m.start_time DESC
   `).all(searchName);
 
@@ -391,7 +391,7 @@ export function getFlags(db, options = {}) {
   const p25 = baselines?.dimensions?.composite_score?.p25 || 2.0;
   const p50 = baselines?.dimensions?.composite_score?.p50 || 2.5;
 
-  // Get all meetings with evaluations
+  // Get all meetings with evaluations (filter by default model)
   const meetings = db.prepare(`
     SELECT m.id as meeting_id, m.topic, m.client_id, m.client_name, m.start_time as date,
            se.composite_score, se.tier1_avg, se.tier2_avg, se.tier3_avg,
@@ -400,6 +400,7 @@ export function getFlags(db, options = {}) {
     FROM meetings m
     JOIN session_evaluations se ON se.meeting_id = m.id
     LEFT JOIN session_metrics sm ON sm.meeting_id = m.id
+    WHERE se.model_used = 'gpt-5.4'
     ORDER BY m.start_time DESC
     LIMIT ?
   `).all(limit);
@@ -482,19 +483,20 @@ export function getFlags(db, options = {}) {
  * 5. getBenchmarks - Agency-wide benchmarks
  */
 export function getBenchmarks(db) {
-  // Agency stats
+  // Agency stats (filter by default model to avoid counting duplicates)
   const agencyStats = db.prepare(`
     SELECT
       COUNT(*) as meetings_scored,
       AVG(composite_score) as avg_composite
     FROM session_evaluations
+    WHERE model_used = 'gpt-5.4'
   `).get();
 
   // Get dimension stats from baselines
   const baselines = getBaselines(db, 'agency');
   const dimensions = baselines?.dimensions || {};
 
-  // By client
+  // By client (filter by default model)
   const byClient = db.prepare(`
     SELECT
       m.client_id, m.client_name,
@@ -502,7 +504,7 @@ export function getBenchmarks(db) {
       AVG(se.composite_score) as avg_composite
     FROM meetings m
     JOIN session_evaluations se ON se.meeting_id = m.id
-    WHERE m.client_id != 'unmatched'
+    WHERE m.client_id != 'unmatched' AND se.model_used = 'gpt-5.4'
     GROUP BY m.client_id
     ORDER BY meetings DESC
   `).all();
@@ -528,11 +530,12 @@ export function getBenchmarks(db) {
   }
   byMember.sort((a, b) => b.meetings - a.meetings);
 
-  // Top and bottom meetings
+  // Top and bottom meetings (filter by default model)
   const topMeetings = db.prepare(`
     SELECT m.id, m.topic, m.client_name, m.start_time as date, se.composite_score as composite
     FROM meetings m
     JOIN session_evaluations se ON se.meeting_id = m.id
+    WHERE se.model_used = 'gpt-5.4'
     ORDER BY se.composite_score DESC
     LIMIT 5
   `).all();
@@ -541,6 +544,7 @@ export function getBenchmarks(db) {
     SELECT m.id, m.topic, m.client_name, m.start_time as date, se.composite_score as composite
     FROM meetings m
     JOIN session_evaluations se ON se.meeting_id = m.id
+    WHERE se.model_used = 'gpt-5.4'
     ORDER BY se.composite_score ASC
     LIMIT 5
   `).all();
@@ -581,14 +585,14 @@ export function getWeeklyDigest(db, weekStart = null) {
   const startStr = startDate.toISOString();
   const endStr = endDate.toISOString();
 
-  // Get meetings in this week
+  // Get meetings in this week (filter by default model)
   const meetings = db.prepare(`
     SELECT m.id, m.topic, m.client_id, m.client_name, m.start_time,
            se.composite_score, se.wins, se.improvements, se.coaching_notes,
            se.client_sentiment, se.frustration_moments
     FROM meetings m
     JOIN session_evaluations se ON se.meeting_id = m.id
-    WHERE m.start_time >= ? AND m.start_time < ?
+    WHERE m.start_time >= ? AND m.start_time < ? AND se.model_used = 'gpt-5.4'
     ORDER BY se.composite_score DESC
   `).all(startStr, endStr);
 
@@ -652,13 +656,13 @@ export function getWeeklyDigest(db, weekStart = null) {
       return m.topic?.toLowerCase().includes(member.toLowerCase());
     });
 
-    // Actually check ai_extraction for proper attribution
+    // Actually check ai_extraction for proper attribution (filter by default model)
     const memberMeetingsFromDb = db.prepare(`
       SELECT m.id, se.composite_score
       FROM meetings m
       JOIN session_evaluations se ON se.meeting_id = m.id
       WHERE m.start_time >= ? AND m.start_time < ?
-      AND m.ai_extraction LIKE ?
+      AND m.ai_extraction LIKE ? AND se.model_used = 'gpt-5.4'
     `).all(startStr, endStr, searchName);
 
     if (memberMeetingsFromDb.length > 0) {
