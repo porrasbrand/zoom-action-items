@@ -71,9 +71,9 @@ export function getScorecard(db, meetingId) {
     SELECT * FROM session_metrics WHERE meeting_id = ?
   `).get(meetingId);
 
-  // Get evaluation
+  // Get evaluation (filter by gpt-5.4 model to avoid picking consensus-average)
   const evaluation = db.prepare(`
-    SELECT * FROM session_evaluations WHERE meeting_id = ? ORDER BY computed_at DESC LIMIT 1
+    SELECT * FROM session_evaluations WHERE meeting_id = ? AND model_used = 'gpt-5.4' LIMIT 1
   `).get(meetingId);
 
   if (!evaluation) {
