@@ -72,9 +72,10 @@ function calculatePercentiles(values) {
  * Compute baselines for a specific scope
  * @param {Database} db - Database connection
  * @param {string} scope - 'agency', 'client:id', or 'member:name'
+ * @param {Object} options - Options (model: filter by model_used)
  * @returns {Object} - Baselines by dimension
  */
-export function computeBaselines(db, scope) {
+export function computeBaselines(db, scope, options = {}) {
   initBaselinesTable(db);
 
   let whereClause = '';
@@ -94,12 +95,17 @@ export function computeBaselines(db, scope) {
     params = [`%${memberName}%`];
   }
 
-  // Get evaluations for this scope
+  // Get evaluations for this scope, filtered by model if specified
+  // Default to gpt-5.4 (consensus calibration winner)
+  const modelFilter = options.model || 'gpt-5.4';
+  const fullWhereClause = `${whereClause} AND se.model_used = ?`;
+  params.push(modelFilter);
+
   const query = `
     SELECT se.*
     FROM session_evaluations se
     JOIN meetings m ON m.id = se.meeting_id
-    WHERE ${whereClause}
+    WHERE ${fullWhereClause}
     ORDER BY se.computed_at DESC
   `;
 
@@ -139,22 +145,22 @@ export function computeBaselines(db, scope) {
 /**
  * Compute agency-wide baselines
  */
-export function computeAgencyBaselines(db) {
-  return computeBaselines(db, 'agency');
+export function computeAgencyBaselines(db, options = {}) {
+  return computeBaselines(db, 'agency', options);
 }
 
 /**
  * Compute baselines for a specific client
  */
-export function computeClientBaselines(db, clientId) {
-  return computeBaselines(db, `client:${clientId}`);
+export function computeClientBaselines(db, clientId, options = {}) {
+  return computeBaselines(db, `client:${clientId}`, options);
 }
 
 /**
  * Compute baselines for a specific B3X team member
  */
-export function computeTeamMemberBaselines(db, memberName) {
-  return computeBaselines(db, `member:${memberName}`);
+export function computeTeamMemberBaselines(db, memberName, options = {}) {
+  return computeBaselines(db, `member:${memberName}`, options);
 }
 
 /**
@@ -234,19 +240,22 @@ export function getAllBaselines(db) {
 
 /**
  * Recalculate all baselines (agency + per-client + per-member)
+ * @param {string|Database} dbOrPath - Database path or connection
+ * @param {Object} options - Options (model: filter by model_used, defaults to 'gpt-5.4')
  */
-export function recalculateAll(dbOrPath = DB_PATH) {
+export function recalculateAll(dbOrPath = DB_PATH, options = {}) {
   const db = typeof dbOrPath === 'string' ? new Database(dbOrPath) : dbOrPath;
   const shouldClose = typeof dbOrPath === 'string';
+  const modelFilter = options.model || 'gpt-5.4';
 
   try {
     initBaselinesTable(db);
 
-    const results = { agency: null, clients: [], members: [] };
+    const results = { agency: null, clients: [], members: [], model: modelFilter };
 
     // Agency-wide
-    console.log('  Computing agency-wide baselines...');
-    results.agency = computeAgencyBaselines(db);
+    console.log(`  Computing agency-wide baselines (model: ${modelFilter})...`);
+    results.agency = computeAgencyBaselines(db, options);
 
     // Per-client
     const clients = db.prepare(`
@@ -255,7 +264,7 @@ export function recalculateAll(dbOrPath = DB_PATH) {
 
     for (const { client_id } of clients) {
       console.log(`  Computing baselines for client: ${client_id}...`);
-      const clientBaselines = computeClientBaselines(db, client_id);
+      const clientBaselines = computeClientBaselines(db, client_id, options);
       if (!clientBaselines.insufficient) {
         results.clients.push(clientBaselines);
       }
@@ -265,7 +274,7 @@ export function recalculateAll(dbOrPath = DB_PATH) {
     const b3xMembers = ['Dan', 'Phil', 'Joe', 'Richard'];
     for (const member of b3xMembers) {
       console.log(`  Computing baselines for member: ${member}...`);
-      const memberBaselines = computeTeamMemberBaselines(db, member);
+      const memberBaselines = computeTeamMemberBaselines(db, member, options);
       if (!memberBaselines.insufficient) {
         results.members.push(memberBaselines);
       }

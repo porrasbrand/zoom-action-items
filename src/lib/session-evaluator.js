@@ -14,8 +14,8 @@ import { callModel, parseJsonResponse } from './model-providers.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DB_PATH = join(__dirname, '..', '..', 'data', 'zoom-action-items.db');
 
-// Default model for evaluations
-export const DEFAULT_MODEL = 'gemini-2.0-flash';
+// Default model for evaluations (consensus calibration winner - best aligned with multi-model average)
+export const DEFAULT_MODEL = 'gpt-5.4';
 
 // Dimension weights by tier
 const TIER_WEIGHTS = { tier1: 0.40, tier2: 0.35, tier3: 0.25 };
