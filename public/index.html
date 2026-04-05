@@ -3479,6 +3479,22 @@
   background: rgba(248, 81, 73, 0.1);
 }
 
+/* No-show/test meeting banner */
+.no-show-banner {
+  background: rgba(210, 153, 34, 0.15);
+  border: 1px solid #d29922;
+  color: #d29922;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+.meeting-type-badge.badge-warning {
+  background: rgba(210, 153, 34, 0.2);
+  color: #d29922;
+  border: 1px solid #d29922;
+}
+
 /* Tier bar - FIX 7 */
 .tier-bar {
   height: 4px;
@@ -7648,9 +7664,21 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
             <span>${formatDate(meeting.start_time)}</span>
             <span>·</span>
             <span>${meeting.duration_minutes || '—'} min</span>
-            ${meetingType ? `<span>·</span><span class="meeting-type-badge">${escapeHtml(meetingType)}</span>` : ''}
+            ${meetingType ? `<span>·</span><span class="meeting-type-badge ${meetingType === 'no-show' || meetingType === 'test' ? 'badge-warning' : ''}">${escapeHtml(meetingType)}</span>` : ''}
           </div>
         </div>
+
+        <!-- No-show/test warning banner -->
+        ${meetingType === 'no-show' ? `
+        <div class="no-show-banner">
+          ⚠️ Client did not attend this meeting. Scores reflect B3X team behavior only. This meeting is excluded from client averages.
+        </div>
+        ` : ''}
+        ${meetingType === 'test' ? `
+        <div class="no-show-banner">
+          ⚠️ This appears to be a test recording. It is excluded from all metrics and averages.
+        </div>
+        ` : ''}
 
         <!-- FEATURE 1: Prev/Next Navigation -->
         ${navigation.total > 1 ? `

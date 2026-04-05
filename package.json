@@ -10,13 +10,15 @@
     "init-db": "node -e \"import('./src/lib/database.js').then(db => { db.initialize(); console.log('DB initialized'); })\""
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.82.0",
     "@google/generative-ai": "^0.21.0",
     "@slack/web-api": "^7.8.0",
     "better-sqlite3": "^11.7.0",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
     "express": "^5.2.1",
-    "express-session": "^1.19.0"
+    "express-session": "^1.19.0",
+    "openai": "^6.33.0"
   },
   "devDependencies": {
     "playwright": "^1.58.2"

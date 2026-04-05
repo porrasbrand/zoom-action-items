@@ -161,7 +161,7 @@ RETURN VALID JSON:
     "meeting_momentum": N,
     "save_rate": N
   },
-  "meeting_type": "regular|internal|kickoff|vip-session|escalation|renewal",
+  "meeting_type": "regular|internal|kickoff|vip-session|escalation|renewal|no-show|test|partial",
   "wins": [
     { "description": "What B3X did well", "transcript_quote": "Exact quote from transcript", "dimension": "dimension" },
     { "description": "Second win", "transcript_quote": "Exact quote", "dimension": "dimension" }
@@ -173,6 +173,23 @@ RETURN VALID JSON:
   "frustration_moments": [],
   "coaching_notes": "2-3 sentence overall assessment"
 }
+
+SPECIAL CASES:
+1. NO-SHOW MEETING: If the client did not attend the meeting (only B3X team members present, phrases like "they're not here", "no-show", "let's wait", "not joining"):
+   - Set meeting_type to "no-show"
+   - Score client-facing dimensions (client_sentiment, relationship_health, client_confusion, save_rate) as 3 (neutral/N/A)
+   - Score B3X-facing dimensions normally (did they wait appropriately? use time productively?)
+   - In coaching_notes, document: "Client did not attend. Waited X minutes before ending."
+
+2. VERY SHORT MEETING (<5 min): If this appears to be a test or accidental recording:
+   - Set meeting_type to "test"
+   - Score all dimensions as 3 (neutral)
+   - coaching_notes: "Recording appears to be a test or accidental. Not a real meeting."
+
+3. PARTIAL ATTENDANCE: If client joined very late (>10 min) or left very early:
+   - Set meeting_type to "partial"
+   - Note actual engagement time in coaching_notes
+   - Score based on the portion where client was present
 
 RULES:
 - Score each dimension independently based on transcript evidence

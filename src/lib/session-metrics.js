@@ -381,6 +381,42 @@ export function getMetrics(db, meetingId) {
   return db.prepare('SELECT * FROM session_metrics WHERE meeting_id = ?').get(meetingId);
 }
 
+/**
+ * Classify a meeting as no-show, test, partial, or normal
+ * Used for detecting meetings that should be excluded from averages
+ */
+export function classifyMeeting(meeting, transcript) {
+  const B3X_MEMBERS = ['Dan', 'Phil', 'Philip', 'Joe', 'Richard', 'Dan Kuschell', 'Philip Mutrie', 'Joe Boland', 'Richard Bond', 'Tea', 'Tia', 'Lynn'];
+  const noShowPhrases = ['not here', 'no-show', 'not joining', 'give them a few more minutes', 'reschedule', 'looks like they', 'not coming', 'not showing', "they're not", 'they are not'];
+
+  const transcriptLower = (transcript || '').toLowerCase();
+  const duration = meeting.duration_minutes || 0;
+
+  // Extract speakers from VTT-style transcript
+  // Lines like: [00:04:14.870] Dan Kuschell: ...
+  const speakerMatches = transcript?.match(/\]\s*([^:]+):/g) || [];
+  const speakers = [...new Set(speakerMatches.map(s => s.replace(/^\]\s*/, '').replace(/:$/, '').trim()))];
+  const clientSpeakers = speakers.filter(s => !B3X_MEMBERS.some(m => s.toLowerCase().includes(m.toLowerCase())));
+
+  const hasNoShowPhrase = noShowPhrases.some(p => transcriptLower.includes(p));
+
+  // Classification rules
+  if (duration < 5) {
+    return { type: 'test', confidence: 'high', reason: 'Under 5 min, likely test recording' };
+  }
+  if (duration < 10 && clientSpeakers.length === 0) {
+    return { type: 'no-show', confidence: 'high', reason: 'Under 10 min, no client speakers' };
+  }
+  if (hasNoShowPhrase && clientSpeakers.length === 0 && duration < 20) {
+    return { type: 'no-show', confidence: 'high', reason: 'No-show phrases detected, no client speakers' };
+  }
+  if (clientSpeakers.length === 0 && duration < 30) {
+    return { type: 'no-show', confidence: 'medium', reason: 'No client speakers detected' };
+  }
+
+  return { type: 'normal', confidence: 'high', reason: null };
+}
+
 export default {
   initDatabase,
   computeActionMetrics,
@@ -391,5 +427,6 @@ export default {
   computeAllMetrics,
   backfillAll,
   getStats,
-  getMetrics
+  getMetrics,
+  classifyMeeting
 };

@@ -1,0 +1,96 @@
+{"ts":"2026-03-24T14:50:11Z","event":"project_init","data":{"project":"Zoom Action Items Pipeline","path":"/home/mp/awesome/super-agent/projects/zoom-action-items"}}
+{"event":"project_init","timestamp":"2026-03-24T14:50:00Z","data":{"project":"Zoom Action Items Pipeline","target":"hetzner","phases":7}}
+{"event":"phase_complete","timestamp":"2026-03-24T14:50:00Z","data":{"phase":"01-core-pipeline","note":"Built on WSL2, transferred to Hetzner, verified with dry-run"}}
+{"event":"phase_specified","timestamp":"2026-03-24T15:00:00Z","data":{"phase":"02-deployment-operations","spec":"phases/02-deployment-operations/spec.md"}}
+{"event":"phase_queued","timestamp":"2026-03-24T15:00:00Z","data":{"phase":"02-deployment-operations","task_id":"1774363986063","worker":"hetzner"}}
+{"event":"phase_response","timestamp":"2026-03-24T14:57:23Z","data":{"phase":"02-deployment-operations","task_id":"1774363986063","commit":"5ad29cc"}}
+{"event":"smoke_test_pass","timestamp":"2026-03-24T15:00:00Z","data":{"phase":"02-deployment-operations","tests":["pm2-online","health-check","git-repo","dry-run"],"result":"verified independently"}}
+{"event":"phase_complete","timestamp":"2026-03-24T15:00:00Z","data":{"phase":"02-deployment-operations","commit":"5ad29cc"}}
+{"event":"phase_specified","timestamp":"2026-03-24T15:10:00Z","data":{"phase":"03-slack-channel-routing","spec":"phases/03-slack-channel-routing/spec.md"}}
+{"event":"phase_queued","timestamp":"2026-03-24T15:10:00Z","data":{"phase":"03-slack-channel-routing","task_id":"1774364425454","worker":"hetzner"}}
+{"event":"phase_response","timestamp":"2026-03-24T15:06:33Z","data":{"phase":"03-slack-channel-routing","task_id":"1774364425454","commit":"a85d0aa"}}
+{"event":"learning_added","timestamp":"2026-03-24T15:30:00Z","data":{"note":"zoom-action-items was using wrong Slack bot token (claude_bridge instead of B3X Claude Assistant/mention_tracker). Fixed by copying SLACK_BOT_TOKEN from slack-mention-tracker/.env. The correct bot has chat:write, chat:write.public, channels:read scopes."}}
+{"event":"learning_added","timestamp":"2026-03-24T15:30:00Z","data":{"note":"Bot lacks channels:manage scope — cannot create channels via API. Triage channels (zoom-unmatched, zoom-meeting-notes) need to be created manually in Slack or use existing channels as fallback."}}
+{"event":"smoke_test_pass","timestamp":"2026-03-24T15:30:00Z","data":{"phase":"03-slack-channel-routing","tests":["correct-bot-token","8-channels-accessible","dedup-working","fallback-configured"],"result":"verified independently after token fix"}}
+{"event":"phase_complete","timestamp":"2026-03-24T15:30:00Z","data":{"phase":"03-slack-channel-routing","commit":"a85d0aa","note":"Required manual token fix post-implementation"}}
+{"event":"checkpoint","timestamp":"2026-03-24T15:30:00Z","data":{"phases_complete":3,"phases_total":7,"next":"04-proofhub-task-creation"}}
+{"event":"plan_reordered","timestamp":"2026-03-24T15:35:00Z","data":{"reason":"User prioritized web dashboard over Slack notifications. Paused Slack posting (DRY_RUN=true). Reordered: Dashboard API (Phase 4) and Frontend (Phase 5) before ProofHub (Phase 6) and Cross-Meeting Intelligence (Phase 7)."}}
+{"event":"phase_specified","timestamp":"2026-03-24T15:40:00Z","data":{"phase":"04-dashboard-api","spec":"phases/04-dashboard-api/spec.md"}}
+{"event":"phase_queued","timestamp":"2026-03-24T15:40:00Z","data":{"phase":"04-dashboard-api","task_id":"1774366302512","worker":"hetzner"}}
+{"event":"phase_response","timestamp":"2026-03-24T15:36:48Z","data":{"phase":"04-dashboard-api","task_id":"1774366302512","commit":"03bc321"}}
+{"event":"smoke_test_pass","timestamp":"2026-03-24T15:40:00Z","data":{"phase":"04-dashboard-api","tests":["pm2-online","meetings-7","stats","action-items-21","external-access"],"result":"verified independently"}}
+{"event":"phase_complete","timestamp":"2026-03-24T15:40:00Z","data":{"phase":"04-dashboard-api","commit":"03bc321"}}
+{"event":"phase_specified","timestamp":"2026-03-24T15:45:00Z","data":{"phase":"05-dashboard-frontend","spec":"phases/05-dashboard-frontend/spec.md"}}
+{"event":"phase_queued","timestamp":"2026-03-24T15:45:00Z","data":{"phase":"05-dashboard-frontend","task_id":"1774366732852","worker":"hetzner"}}
+{"event":"phase_response","timestamp":"2026-03-24T15:42:53Z","data":{"phase":"05-dashboard-frontend","task_id":"1774366732852","commit":"89190d0"}}
+{"event":"smoke_test_pass","timestamp":"2026-03-24T15:48:00Z","data":{"phase":"05-dashboard-frontend","tests":["html-loads","key-functions","api-stats","external-access"],"result":"verified independently"}}
+{"event":"phase_complete","timestamp":"2026-03-24T15:48:00Z","data":{"phase":"05-dashboard-frontend","commit":"89190d0"}}
+{"event":"checkpoint","timestamp":"2026-03-24T15:48:00Z","data":{"phases_complete":5,"phases_total":7,"next":"06-proofhub-task-creation"}}
+{"event":"phase_specified","timestamp":"2026-03-24T17:20:00Z","data":{"phase":"06A-editable-action-items"}}
+{"event":"phase_queued","timestamp":"2026-03-24T17:20:00Z","data":{"phase":"06A-editable-action-items","task_id":"1774372822977","worker":"hetzner"}}
+{"event":"phase_complete","timestamp":"2026-03-24T17:23:33Z","data":{"phase":"06A-editable-action-items","commit":"ed95038"}}
+{"event":"phase_specified","timestamp":"2026-03-24T17:25:00Z","data":{"phase":"06C-proofhub-integration"}}
+{"event":"phase_queued","timestamp":"2026-03-24T17:25:00Z","data":{"phase":"06C-proofhub-integration","task_id":"1774373117486","worker":"hetzner"}}
+{"event":"phase_complete","timestamp":"2026-03-24T17:30:09Z","data":{"phase":"06C-proofhub-integration","commit":"873d004"}}
+{"event":"phase_complete","timestamp":"2026-03-24T17:36:33Z","data":{"phase":"06B-transcript-excerpts","commit":"8cf934d"}}
+{"event":"phase_specified","timestamp":"2026-03-24T17:38:00Z","data":{"phase":"06D-push-ui"}}
+{"event":"phase_queued","timestamp":"2026-03-24T17:38:00Z","data":{"phase":"06D-push-ui","task_id":"1774373893475","worker":"hetzner"}}
+{"event":"phase_complete","timestamp":"2026-03-24T17:49:23Z","data":{"phase":"06D-push-ui","commit":"6b5a46e"}}
+{"event":"project_milestone","timestamp":"2026-03-24T17:50:00Z","data":{"milestone":"Phase 06 complete — Full action item review + ProofHub push workflow live"}}
+{"ts":"2026-03-30T19:45:00Z","event":"plan_extended","data":{"reason":"Added Phase 08A (Client Roadmap Engine), 08B (Meeting Prep Generator), 09 (AI Evaluation). Task taxonomy derived from 337 real ProofHub tasks via Gemini analysis."}}
+{"ts":"2026-03-30T19:45:00Z","event":"phase_specified","data":{"phase":"08A-client-roadmap-engine","spec":"phases/08A-client-roadmap-engine/spec.md","complexity":"complex"}}
+{"ts":"2026-03-30T20:10:00Z","event":"phase_response","data":{"phase":"08A-client-roadmap-engine","task_id":"1774899913662","commit":"1853234"}}
+{"ts":"2026-03-30T20:15:00Z","event":"smoke_test_pass","data":{"phase":"08A-client-roadmap-engine","tests":["files-created","taxonomy-10cat-35types","db-tables-exist","roadmap-build-prosper-10items","roadmap-build-gs-home-12items","owner-classification-correct","category-distribution-5cats","snapshots-created","cross-meeting-status-detection"],"result":"verified independently via SSH"}}
+{"ts":"2026-03-30T20:15:00Z","event":"phase_complete","data":{"phase":"08A-client-roadmap-engine","commit":"1853234","note":"10 items for prosper-group, 12 for gs-home-services. Cross-meeting intelligence correctly detected 4 in-progress transitions."}}
+{"ts":"2026-03-30T20:15:00Z","event":"phase_specified","data":{"phase":"08B-meeting-prep-generator","spec":"phases/08B-meeting-prep-generator/spec.md"}}
+{"ts":"2026-03-30T20:20:00Z","event":"phase_response","data":{"phase":"08B-meeting-prep-generator","task_id":"1774900776256","commit":"76c4b57"}}
+{"ts":"2026-03-30T20:25:00Z","event":"smoke_test_pass","data":{"phase":"08B-meeting-prep-generator","tests":["files-created","preps-saved-4files","prosper-prep-4sections","gs-home-prep-4sections","client-action-items-detected","b3x-overdue-flagged","strategic-recommendations-grounded","agenda-time-allocations","markdown-formatting-correct"],"result":"verified independently via SSH"}}
+{"ts":"2026-03-30T20:25:00Z","event":"phase_complete","data":{"phase":"08B-meeting-prep-generator","commit":"76c4b57","note":"Both preps high quality: correct owner attribution, service gap recommendations, 30min meeting agendas."}}
+{"ts":"2026-03-30T20:25:00Z","event":"checkpoint","data":{"phases_complete":11,"phases_total":12,"next":"09-ai-evaluation"}}
+{"ts":"2026-03-30T20:30:00Z","event":"phase_specified","data":{"phase":"09-ai-evaluation","spec":"phases/09-ai-evaluation/spec.md"}}
+{"ts":"2026-03-30T20:30:00Z","event":"phase_queued","data":{"phase":"09-ai-evaluation","task_id":"1774901394302","worker":"hetzner"}}
+{"ts":"2026-03-30T20:35:00Z","event":"phase_response","data":{"phase":"09-ai-evaluation","task_id":"1774901394302","commit":"eval-commit"}}
+{"ts":"2026-03-30T20:35:00Z","event":"smoke_test_pass","data":{"phase":"09-ai-evaluation","tests":["A1-taxonomy","A2-no-orphans","A3-status-transitions","A4-staleness","A5-owner-class","A6-dedup","A7-snapshots","A8-category-dist","B1-all-sections","B2-completed-real","B3-stale-surfaced","B4-strategic-grounded","B5-agenda-times","B6-owner-attribution","B7-no-hallucination","B8-service-gaps"],"result":"all 16 checks PASS, avg AI score 4.2/5"}}
+{"ts":"2026-03-30T20:35:00Z","event":"phase_complete","data":{"phase":"09-ai-evaluation","note":"VERDICT PASS. Ownership 5/5, Completeness 5/5, Accuracy 4/5, Actionability 4/5, Classification 4/5, Strategic Value 3/5. Improvement area: strategic recommendations need more data-driven reasoning (future: GA4/Ads API integration)."}}
+{"ts":"2026-03-30T20:35:00Z","event":"project_milestone","data":{"milestone":"Phases 08A + 08B + 09 complete — Client Roadmap Engine + Meeting Prep Generator live with evaluation PASS"}}
+{"event":"plan_extended","timestamp":"2026-03-31T07:06:01Z","data":{"phase":"10-roadmap-prep-dashboard","description":"Roadmap & Meeting Prep Dashboard frontend","spec_updated_with":"review fixes - escapeAttr, ARIA, AbortController, filter reset, timeline ID matching, search, category labels"}}
+{"event":"phase_queued","timestamp":"2026-03-31T07:06:52Z","data":{"phase":"10-roadmap-prep-dashboard","task_id":"1774940805700","worker":"hetzner"}}
+{"event":"phase_specified","timestamp":"2026-03-31T07:10:57Z","data":{"phase":"11-playwright-audit","description":"Playwright AI audit agent - test, find bugs, implement fixes"}}
+{"event":"phase_response","timestamp":"2026-03-31T07:14:54Z","data":{"phase":"10-roadmap-prep-dashboard","task_id":"1774940805700","commit":"aef2156"}}
+{"event":"smoke_test_pass","timestamp":"2026-03-31T07:14:54Z","data":{"phase":"10-roadmap-prep-dashboard","result":"verified via file grep - all 8 checks pass: switchTab=5, roadmapView=5, prepView=3, CATEGORY_COLORS=3, escapeAttr=5, renderPrepDocument=3, renderRoadmapTimeline=3, initTabFromHash=2"}}
+{"event":"phase_complete","timestamp":"2026-03-31T07:14:54Z","data":{"phase":"10-roadmap-prep-dashboard","commit":"aef2156"}}
+{"event":"phase_queued","timestamp":"2026-03-31T07:15:20Z","data":{"phase":"11-playwright-audit","task_id":"1774941314355","worker":"hetzner"}}
+{"event":"phase_response","timestamp":"2026-03-31T07:26:52Z","data":{"phase":"11-playwright-audit","task_id":"1774941314355","commit":"70cb9f8"}}
+{"event":"smoke_test_pass","timestamp":"2026-03-31T07:26:52Z","data":{"phase":"11-playwright-audit","result":"45/45 tests pass, 3 bugs found+fixed, 5 screenshots, 0 failures, 2 warnings (data-dependent)"}}
+{"event":"phase_complete","timestamp":"2026-03-31T07:26:52Z","data":{"phase":"11-playwright-audit","commit":"70cb9f8"}}
+{"event":"project_milestone","timestamp":"2026-03-31T07:26:52Z","data":{"milestone":"Phases 10-11 complete","phases_complete":14,"phases_total":14}}
+{"event":"phase_specified","timestamp":"2026-03-31T08:02:04Z","data":{"phase":"12-model-comparison","description":"Gemini 2.0 Flash vs 3 Flash Preview head-to-head comparison"}}
+{"event":"phase_queued","timestamp":"2026-03-31T08:02:04Z","data":{"phase":"12-model-comparison","task_id":"1774944115855","worker":"hetzner"}}
+{"event":"phase_specified","timestamp":"2026-03-31T11:08:35Z","data":{"phase":"13-projected-roadmap","description":"Projected Roadmap (Section 5) + Pre-Huddle Brief"}}
+{"event":"phase_queued","timestamp":"2026-03-31T11:08:54Z","data":{"phase":"13-projected-roadmap","task_id":"1774955326945","worker":"hetzner"}}
+{"event":"phase_response","timestamp":"2026-03-31T11:17:44Z","data":{"phase":"13-projected-roadmap","task_id":"1774955326945","commit":"afb52be"}}
+{"event":"smoke_test_pass","timestamp":"2026-03-31T11:17:44Z","data":{"phase":"13-projected-roadmap","result":"3 projected items generated (QUICK_WIN/GROWTH/STRATEGIC), brief endpoint working, dashboard elements present (10 matches)"}}
+{"event":"phase_complete","timestamp":"2026-03-31T11:17:44Z","data":{"phase":"13-projected-roadmap","commit":"afb52be"}}
+{"event":"phase_specified","timestamp":"2026-03-31T13:04:22Z","data":{"phase":"14A-ph-reconciliation","description":"ProofHub reconciliation engine - 4-layer matching with Gemini review fixes"}}
+{"event":"phase_queued","timestamp":"2026-03-31T13:05:07Z","data":{"phase":"14A-ph-reconciliation","task_id":"1774962299851","worker":"hetzner"}}
+{"event":"phase_response","timestamp":"2026-03-31T13:10:21Z","data":{"phase":"14A-ph-reconciliation","task_id":"1774962299851","commit":"fe11d25"}}
+{"event":"smoke_test_pass","timestamp":"2026-03-31T13:10:21Z","data":{"phase":"14A-ph-reconciliation","result":"6 links created for prosper-group (3 keyword 37-58%, 3 AI batch 60-80%), 18 PH tasks cached, 17 unlinked (correct - granular items without PH campaigns)"}}
+{"event":"phase_complete","timestamp":"2026-03-31T13:10:21Z","data":{"phase":"14A-ph-reconciliation","commit":"fe11d25"}}
+{"event":"phase_queued","timestamp":"2026-03-31T13:10:41Z","data":{"phase":"14B-cockpit-data","task_id":"1774962634344","worker":"hetzner"}}
+{"event":"phase_response","timestamp":"2026-03-31T13:13:29Z","data":{"phase":"14B-cockpit-data","task_id":"1774962634344","commit":"797a55d"}}
+{"event":"phase_complete","timestamp":"2026-03-31T13:13:29Z","data":{"phase":"14B-cockpit-data","commit":"797a55d"}}
+{"event":"phase_queued","timestamp":"2026-03-31T13:13:53Z","data":{"phase":"14C-cockpit-ui","task_id":"1774962826730","worker":"hetzner"}}
+{"event":"phase_response","timestamp":"2026-03-31T13:17:13Z","data":{"phase":"14C-cockpit-ui","task_id":"1774962826730","commit":"cc18b21"}}
+{"event":"phase_complete","timestamp":"2026-03-31T13:17:13Z","data":{"phase":"14C-cockpit-ui","commit":"cc18b21"}}
+{"event":"project_milestone","timestamp":"2026-03-31T13:17:13Z","data":{"milestone":"Phase 14 Meeting Cockpit complete (3 sub-phases)","phases_complete":18,"phases_total":18}}
+{"event":"phase_queued","timestamp":"2026-03-31T15:07:21Z","data":{"phase":"14D-deep-reconciliation","task_id":"1774969628176","worker":"hetzner","note":"credential sanitization + scope summaries + comment threads"}}
+{"timestamp":"2026-04-04T21:30:00Z","event":"phases_added","phases":["15A-session-metrics","15B-session-evaluator","15C-pipeline-integration","15D-session-api","15E-dashboard-ui","15F-coaching-digest"],"description":"Session Intelligence subsystem - 6 new phases added after Gemini consultation on meeting quality evaluation framework"}
+{"timestamp":"2026-04-04T21:39:00Z","event":"phase_complete","phase":"15A-session-metrics","status":"COMPLETE","note":"99 meetings backfilled, all smoke tests pass, 3 API endpoints added"}
+{"timestamp":"2026-04-04T21:58:00Z","event":"phase_complete","phase":"15B-session-evaluator","status":"COMPLETE","note":"Winner: gemini-2.0-flash (3.75/5). 99 meetings backfilled. Avg composite 2.55. Commit e4849bf"}
+{"timestamp":"2026-04-05T22:03:00Z","event":"phase_complete","phase":"15B-validate","status":"COMPLETE","note":"GATE PASSED. 59/60 consistency tests pass. save_rate has low discrimination (91% score 3). No leader bias. Commit 74f73a2"}
+{"timestamp":"2026-04-05T22:09:00Z","event":"phase_complete","phase":"15C-pipeline-integration","status":"COMPLETE","note":"368 baselines computed. Agency composite P25=2.28 P50=2.64 P75=2.97. Commit ec52b34"}
+{"timestamp":"2026-04-05T22:13:00Z","event":"phase_complete","phase":"15D-session-api","status":"COMPLETE","note":"6 endpoints live. 15 critical flags, 13 warnings. Commit 87a74bb"}
+{"timestamp":"2026-04-05T22:20:00Z","event":"phase_complete","phase":"15E-dashboard-ui","status":"COMPLETE","note":"5 sub-views: Overview, Scorecard, Trends, Team, Flags. ~400 CSS lines. Commit bf6b136"}
+{"timestamp":"2026-04-05T22:30:00Z","event":"phase_complete","phase":"15F-regression-tests","status":"COMPLETE","note":"25/30 pass, 0 fail, 3 warn, 2 skip. PASS WITH WARNINGS. Action count bias +1.32 to monitor. Commit 2ba8eca"}
+{"timestamp":"2026-04-05T22:37:00Z","event":"phase_complete","phase":"15G-coaching-digest","status":"COMPLETE","note":"Digest, coaching, alerts all working. 5 pattern alerts found. Frustration spike on Empower. Commit 04297be"}
+{"timestamp":"2026-04-05T22:37:30Z","event":"subsystem_complete","subsystem":"session-intelligence","phases_completed":8,"phases_total":8,"note":"Full Session Intelligence subsystem operational. 15A-15G all COMPLETE."}
