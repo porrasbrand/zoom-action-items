@@ -745,34 +745,60 @@ export function saveCalibrationScores(db, meetingId, scores, notes = '') {
 }
 
 /**
- * 10. getCalibrationComparison - Computes MAE + Pearson correlation for each AI model vs human
+ * 10. getCalibrationComparison - Computes MAE + Pearson correlation for each AI model vs baseline
+ * Uses human-calibration if available, otherwise falls back to consensus-average
  */
 export function getCalibrationComparison(db) {
-  // First check if all 10 meetings are scored
-  const status = getCalibrationStatus(db);
-  if (!status.ready_for_comparison) {
-    return {
-      ready: false,
-      scored: status.scored_count,
-      remaining: status.total - status.scored_count,
-      message: `Score ${status.total - status.scored_count} more meetings to unlock comparison`
-    };
-  }
-
   const placeholders = CALIBRATION_MEETING_IDS.map(() => '?').join(',');
   const dims = [...TIER1_DIMS, ...TIER2_DIMS, ...TIER3_DIMS];
 
-  // Get human scores
+  // Check for human scores first
   const humanScores = db.prepare(`
     SELECT meeting_id, ${dims.join(', ')}, composite_score
     FROM session_evaluations
     WHERE meeting_id IN (${placeholders}) AND model_used = 'human-calibration'
   `).all(...CALIBRATION_MEETING_IDS);
 
-  // Get all AI model evaluations for these meetings
+  // Check for consensus scores as fallback
+  const consensusScores = db.prepare(`
+    SELECT meeting_id, ${dims.join(', ')}, composite_score
+    FROM session_evaluations
+    WHERE meeting_id IN (${placeholders}) AND model_used = 'consensus-average'
+  `).all(...CALIBRATION_MEETING_IDS);
+
+  // Determine which baseline to use
+  let baselineScores = humanScores;
+  let baselineType = 'human-calibration';
+
+  if (humanScores.length < CALIBRATION_MEETING_IDS.length) {
+    // Not all human scores available, check consensus
+    if (consensusScores.length === CALIBRATION_MEETING_IDS.length) {
+      baselineScores = consensusScores;
+      baselineType = 'consensus-average';
+    } else if (humanScores.length === 0 && consensusScores.length === 0) {
+      // No baseline available
+      return {
+        ready: false,
+        scored: 0,
+        remaining: CALIBRATION_MEETING_IDS.length,
+        message: 'No baseline scores available. Run consensus calibration script or score meetings manually.'
+      };
+    } else {
+      // Partial human scores, no full consensus
+      return {
+        ready: false,
+        scored: humanScores.length,
+        remaining: CALIBRATION_MEETING_IDS.length - humanScores.length,
+        message: `Score ${CALIBRATION_MEETING_IDS.length - humanScores.length} more meetings to unlock comparison`
+      };
+    }
+  }
+
+  // Get all AI model evaluations for these meetings (excluding baseline types)
   const aiModels = db.prepare(`
     SELECT DISTINCT model_used FROM session_evaluations
-    WHERE meeting_id IN (${placeholders}) AND model_used != 'human-calibration'
+    WHERE meeting_id IN (${placeholders})
+    AND model_used NOT IN ('human-calibration', 'consensus-average')
   `).all(...CALIBRATION_MEETING_IDS).map(r => r.model_used);
 
   const results = [];
@@ -793,7 +819,7 @@ export function getCalibrationComparison(db) {
     // Calculate MAE and collect data for Pearson correlation
     let totalAbsError = 0;
     let dataPoints = 0;
-    const humanVec = [];
+    const baselineVec = [];
     const aiVec = [];
     const perDimMAE = {};
     dims.forEach(d => perDimMAE[d] = { total: 0, count: 0 });
@@ -801,29 +827,29 @@ export function getCalibrationComparison(db) {
     // Per-meeting breakdown for heatmap
     const perMeeting = [];
 
-    for (const human of humanScores) {
-      const ai = aiByMeeting[human.meeting_id];
+    for (const baseline of baselineScores) {
+      const ai = aiByMeeting[baseline.meeting_id];
       if (!ai) continue;
 
       const meetingDiffs = {};
       for (const dim of dims) {
-        const humanVal = human[dim];
+        const baselineVal = baseline[dim];
         const aiVal = ai[dim];
-        if (humanVal != null && aiVal != null) {
-          const diff = Math.abs(humanVal - aiVal);
+        if (baselineVal != null && aiVal != null) {
+          const diff = Math.abs(baselineVal - aiVal);
           totalAbsError += diff;
           dataPoints++;
-          humanVec.push(humanVal);
+          baselineVec.push(baselineVal);
           aiVec.push(aiVal);
           perDimMAE[dim].total += diff;
           perDimMAE[dim].count++;
-          meetingDiffs[dim] = { human: humanVal, ai: aiVal, diff };
+          meetingDiffs[dim] = { human: baselineVal, ai: aiVal, diff };
         }
       }
 
       perMeeting.push({
-        meeting_id: human.meeting_id,
-        human_composite: human.composite_score,
+        meeting_id: baseline.meeting_id,
+        human_composite: baseline.composite_score,
         ai_composite: ai.composite_score,
         dimensions: meetingDiffs
       });
@@ -834,12 +860,12 @@ export function getCalibrationComparison(db) {
 
     // Pearson correlation
     let correlation = null;
-    if (humanVec.length > 1) {
-      const n = humanVec.length;
-      const sumX = humanVec.reduce((a, b) => a + b, 0);
+    if (baselineVec.length > 1) {
+      const n = baselineVec.length;
+      const sumX = baselineVec.reduce((a, b) => a + b, 0);
       const sumY = aiVec.reduce((a, b) => a + b, 0);
-      const sumXY = humanVec.reduce((acc, x, i) => acc + x * aiVec[i], 0);
-      const sumX2 = humanVec.reduce((acc, x) => acc + x * x, 0);
+      const sumXY = baselineVec.reduce((acc, x, i) => acc + x * aiVec[i], 0);
+      const sumX2 = baselineVec.reduce((acc, x) => acc + x * x, 0);
       const sumY2 = aiVec.reduce((acc, y) => acc + y * y, 0);
 
       const numerator = n * sumXY - sumX * sumY;
@@ -882,17 +908,19 @@ export function getCalibrationComparison(db) {
 
   // Determine winner
   const winner = results[0];
+  const baselineLabel = baselineType === 'human-calibration' ? 'human judgment' : 'consensus (avg of 4 models)';
 
   return {
     ready: true,
+    baseline_type: baselineType,
     models: results,
     winner: winner ? {
       model: winner.model,
       mae: winner.mae,
       correlation: winner.correlation,
-      verdict: `${winner.model} most closely matches human judgment with MAE of ${winner.mae?.toFixed(3)} and correlation of ${winner.correlation?.toFixed(3)}`
+      verdict: `${winner.model} most closely matches ${baselineLabel} with MAE of ${winner.mae?.toFixed(3)} and correlation of ${winner.correlation?.toFixed(3)}`
     } : null,
-    human_scores: humanScores
+    baseline_scores: baselineScores
   };
 }
 
