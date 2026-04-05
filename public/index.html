@@ -7499,7 +7499,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     }
 
     function renderClientComparison(panel, clients, agency) {
-      const baselines = agency?.composite || {};
+      const baselines = agency?.dimensions?.composite_score || agency?.composite || {};
 
       let html = `
         <h3 style="color: #f0f6fc; font-size: 16px; margin-bottom: 12px;">Client Comparison</h3>
@@ -7541,7 +7541,17 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     function renderTrend(panel, data) {
       const trend = data.trend || [];
       const baselines = data.baselines?.composite || {};
-      const stats = data.stats || {};
+
+      // Build stats from flat API response + compute from trend array
+      const scores = trend.map(t => t.composite_score || t.composite || 0).filter(s => s > 0);
+      const stats = {
+        avg_composite: data.avg_composite || 0,
+        trend_direction: data.trend_direction || 'stable',
+        meeting_count: data.meeting_count || trend.length,
+        best_score: scores.length ? Math.max(...scores) : null,
+        worst_score: scores.length ? Math.min(...scores) : null,
+        std_dev: scores.length > 1 ? Math.sqrt(scores.reduce((sum, s) => sum + Math.pow(s - (data.avg_composite || 0), 2), 0) / scores.length) : null
+      };
 
       let html = `
         <div style="display: flex; gap: 24px; margin-bottom: 24px;">
@@ -7600,13 +7610,13 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       if (baselines.p75) svg += `<line class="baseline p75" x1="${padding.left}" y1="${yScale(baselines.p75)}" x2="${width - padding.right}" y2="${yScale(baselines.p75)}" stroke="#3fb950" />`;
 
       // Data line
-      const pathPoints = dataPoints.map((d, i) => `${i === 0 ? 'M' : 'L'} ${xScale(i)} ${yScale(d.composite_score || 0)}`).join(' ');
+      const pathPoints = dataPoints.map((d, i) => `${i === 0 ? 'M' : 'L'} ${xScale(i)} ${yScale(d.composite_score || d.composite || 0)}`).join(' ');
       svg += `<path d="${pathPoints}" fill="none" stroke="#58a6ff" stroke-width="2" />`;
 
       // Data points
       dataPoints.forEach((d, i) => {
         const x = xScale(i);
-        const y = yScale(d.composite_score || 0);
+        const y = yScale(d.composite_score || d.composite || 0);
         svg += `<circle cx="${x}" cy="${y}" r="5" onclick="loadSessionScorecard(${d.meeting_id}); switchSessionView('scorecard'); document.getElementById('scorecardMeetingSelect').value='${d.meeting_id}';" />`;
       });
 
@@ -7689,8 +7699,9 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     }
 
     function renderFlags(panel, data) {
-      const critical = data.critical || [];
-      const warning = data.warning || [];
+      const allFlags = data.flags || [];
+      const critical = allFlags.filter(f => f.severity === 'critical');
+      const warning = allFlags.filter(f => f.severity === 'warning');
 
       let html = `
         <div class="flags-summary">
@@ -7726,14 +7737,16 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
 
     function renderFlagCard(flag, severity) {
       const reasons = flag.reasons || [];
+      const composite = flag.composite || flag.composite_score || 0;
+      const meetingDate = flag.date || flag.meeting_date;
       return `
         <div class="flag-card ${severity}" onclick="loadSessionScorecard(${flag.meeting_id}); switchSessionView('scorecard'); document.getElementById('scorecardMeetingSelect').value='${flag.meeting_id}';">
           <div class="header">
             <div>
               <div class="topic">${escapeHtml(flag.topic || 'Meeting')}</div>
-              <div class="meta">${escapeHtml(flag.client_name || '')} • ${flag.meeting_date ? new Date(flag.meeting_date).toLocaleDateString() : ''}</div>
+              <div class="meta">${escapeHtml(flag.client_name || '')} • ${meetingDate ? new Date(meetingDate).toLocaleDateString() : ''}</div>
             </div>
-            <div class="composite score-${getScoreColor(flag.composite_score || 0)}">${(flag.composite_score || 0).toFixed(2)}</div>
+            <div class="composite score-${getScoreColor(composite)}">${composite.toFixed(2)}</div>
           </div>
           <ul class="reasons">
             ${reasons.map(r => `<li>${escapeHtml(r)}</li>`).join('')}
