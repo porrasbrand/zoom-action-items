@@ -17,6 +17,7 @@ const B3X_TEAM = [
   'philip mutrie', 'phil', 'phil mutrie', 'philip',
   'joe boland', 'joe',
   'richard bond', 'richard',
+  'sarah young', 'sarah',
   'tea', 'tia',
   'lynn',
 ];
@@ -386,8 +387,22 @@ export function getMetrics(db, meetingId) {
  * Used for detecting meetings that should be excluded from averages
  */
 export function classifyMeeting(meeting, transcript) {
-  const B3X_MEMBERS = ['Dan', 'Phil', 'Philip', 'Joe', 'Richard', 'Dan Kuschell', 'Philip Mutrie', 'Joe Boland', 'Richard Bond', 'Tea', 'Tia', 'Lynn'];
-  const noShowPhrases = ['not here', 'no-show', 'not joining', 'give them a few more minutes', 'reschedule', 'looks like they', 'not coming', 'not showing', "they're not", 'they are not'];
+  const B3X_MEMBERS = [
+    'Dan', 'Dan Kuschell', 'Daniel Kuschell',
+    'Phil', 'Philip', 'Philip Mutrie', 'Phil Mutrie',
+    'Joe', 'Joe Boland',
+    'Richard', 'Richard Bond',
+    'Sarah', 'Sarah Young',
+    'Tea', 'Tia',
+    'Lynn'
+  ];
+  const noShowPhrases = [
+    'not here', 'no-show', 'not joining', 'give them a few more minutes', 'reschedule',
+    'looks like they', 'not coming', 'not showing', "they're not", 'they are not',
+    'see if they', 'are they running late', 'are they coming', 'they coming',
+    'waiting for', 'give them', "let's wait", "haven't joined", "hasn't joined",
+    'not on yet', 'not on the call', 'waiting on', 'no one else'
+  ];
 
   const transcriptLower = (transcript || '').toLowerCase();
   const duration = meeting.duration_minutes || 0;
@@ -407,9 +422,11 @@ export function classifyMeeting(meeting, transcript) {
   if (duration < 10 && clientSpeakers.length === 0) {
     return { type: 'no-show', confidence: 'high', reason: 'Under 10 min, no client speakers' };
   }
-  if (hasNoShowPhrase && clientSpeakers.length === 0 && duration < 20) {
+  // Expanded: If no-show phrases detected and no client speakers, flag up to 30 min
+  if (hasNoShowPhrase && clientSpeakers.length === 0 && duration <= 30) {
     return { type: 'no-show', confidence: 'high', reason: 'No-show phrases detected, no client speakers' };
   }
+  // No client speakers for longer meetings - medium confidence
   if (clientSpeakers.length === 0 && duration < 30) {
     return { type: 'no-show', confidence: 'medium', reason: 'No client speakers detected' };
   }
