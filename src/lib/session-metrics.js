@@ -18,6 +18,8 @@ const B3X_TEAM = [
   'joe boland', 'joe',
   'richard bond', 'richard',
   'sarah young', 'sarah',
+  'joaco malig', 'joaco',
+  'justine', 'bill',
   'tea', 'tia',
   'lynn',
 ];
@@ -393,6 +395,8 @@ export function classifyMeeting(meeting, transcript) {
     'Joe', 'Joe Boland',
     'Richard', 'Richard Bond',
     'Sarah', 'Sarah Young',
+    'Joaco', 'Joaco Malig',
+    'Justine', 'Bill',
     'Tea', 'Tia',
     'Lynn'
   ];
