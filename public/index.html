@@ -7296,9 +7296,12 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         // Load meetings with evaluations
         try {
           const res = await fetch(API + '/meetings?limit=100');
+          const evalRes = await fetch(API + '/session/evaluated-meetings');
           if (res.ok) {
             const data = await res.json();
-            sessionMeetings = (data.meetings || []).filter(m => m.evaluation_stored_at);
+            const evalData = evalRes.ok ? await evalRes.json() : { meeting_ids: [] };
+            const evaluatedIds = new Set(evalData.meeting_ids);
+            sessionMeetings = (data.meetings || []).filter(m => evaluatedIds.has(m.id));
             const select = document.getElementById('scorecardMeetingSelect');
             sessionMeetings.forEach(m => {
               const opt = document.createElement('option');

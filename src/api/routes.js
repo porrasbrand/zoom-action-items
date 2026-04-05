@@ -2048,6 +2048,18 @@ router.get('/session/team', (req, res) => {
   }
 });
 
+// GET /api/session/evaluated-meetings - List meeting IDs that have evaluations
+router.get('/session/evaluated-meetings', (req, res) => {
+  try {
+    const metricsDb = initMetricsDb();
+    const rows = metricsDb.prepare('SELECT DISTINCT meeting_id FROM session_evaluations').all();
+    metricsDb.close();
+    res.json({ meeting_ids: rows.map(r => r.meeting_id) });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/session/team/:memberName/stats - Team member stats
 router.get('/session/team/:memberName/stats', (req, res) => {
   try {
