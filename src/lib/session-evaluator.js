@@ -9,6 +9,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { getMetrics } from './session-metrics.js';
+import { callModel, parseJsonResponse } from './model-providers.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DB_PATH = join(__dirname, '..', '..', 'data', 'zoom-action-items.db');
@@ -237,40 +238,16 @@ export async function evaluateMeeting(meetingId, options = {}) {
     // Build prompt
     const prompt = buildEvaluationPrompt(meeting, metrics, aiExtraction, meeting.transcript_raw);
 
-    // Call Gemini
-    const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-    const model = genAI.getGenerativeModel({ model: modelId });
-
+    // Call model (routes to correct provider based on modelId prefix)
     const startTime = Date.now();
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: {
-        temperature: 0.3,
-        topP: 0.8,
-        maxOutputTokens: 4096,
-        responseMimeType: 'application/json'
-      }
+    const { text, tokensIn, tokensOut } = await callModel(modelId, prompt, {
+      temperature: 0.3,
+      maxTokens: 4096
     });
     const latencyMs = Date.now() - startTime;
 
-    const response = result.response;
-    const text = response.text();
-    const tokensIn = response.usageMetadata?.promptTokenCount || 0;
-    const tokensOut = response.usageMetadata?.candidatesTokenCount || 0;
-
-    // Parse JSON response
-    let evaluation;
-    try {
-      evaluation = JSON.parse(text);
-    } catch (e) {
-      // Try to extract JSON from response
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        evaluation = JSON.parse(jsonMatch[0]);
-      } else {
-        throw new Error('Failed to parse evaluation response as JSON');
-      }
-    }
+    // Parse JSON response (handles markdown fences from some models)
+    const evaluation = parseJsonResponse(text);
 
     const scores = evaluation.scores || {};
     const composite = calculateComposite(scores);
