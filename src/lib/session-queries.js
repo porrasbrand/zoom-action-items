@@ -399,127 +399,151 @@ export function getTeamStats(db, memberName) {
 }
 
 /**
- * 4. getFlags - Flagged meetings requiring attention
+ * 4. getFlags - Client-grouped, trend-based flagging system
+ * Three tiers: critical, warning, watch
  */
 export function getFlags(db, options = {}) {
-  const limit = options.limit || 50;
+  const clientFlags = {};
 
-  // Get agency baselines for thresholds
-  const baselines = getBaselines(db, 'agency');
-  const p25 = baselines?.dimensions?.composite_score?.p25 || 2.0;
-  const p50 = baselines?.dimensions?.composite_score?.p50 || 2.5;
-
-  // Get all meetings with evaluations (filter by default model, exclude no-shows/tests)
-  const meetings = db.prepare(`
-    SELECT m.id as meeting_id, m.topic, m.client_id, m.client_name, m.start_time as date,
-           se.composite_score, se.tier1_avg, se.tier2_avg, se.tier3_avg,
-           se.client_sentiment, se.accountability, se.relationship_health,
-           se.frustration_moments, sm.b3x_stale_items
+  // Get all clients with scored meetings
+  const clients = db.prepare(`
+    SELECT DISTINCT m.client_id, m.client_name
     FROM meetings m
     JOIN session_evaluations se ON se.meeting_id = m.id
-    LEFT JOIN session_metrics sm ON sm.meeting_id = m.id
     WHERE se.model_used = 'gpt-5.4'
       AND COALESCE(se.meeting_type, 'regular') NOT IN ${EXCLUDED_MEETING_TYPES}
-    ORDER BY m.start_time DESC
-    LIMIT ?
-  `).all(limit);
+      AND m.client_id != 'unmatched'
+      AND se.composite_score IS NOT NULL
+  `).all();
 
-  const flags = [];
-  let critical = 0, warning = 0;
+  for (const client of clients) {
+    // Get this client's meetings ordered by date (most recent first)
+    const meetings = db.prepare(`
+      SELECT m.id, m.start_time, se.composite_score, se.client_sentiment, se.save_rate,
+        se.frustration_moments, se.meeting_type
+      FROM meetings m
+      JOIN session_evaluations se ON se.meeting_id = m.id
+      WHERE m.client_id = ? AND se.model_used = 'gpt-5.4'
+        AND se.composite_score IS NOT NULL
+      ORDER BY m.start_time DESC
+    `).all(client.client_id);
 
-  for (const m of meetings) {
-    const reasons = [];
-    let severity = null;
+    if (meetings.length === 0) continue;
 
-    const frustrations = safeParseJson(m.frustration_moments);
+    const flags = [];
+    const latest = meetings[0];
+    const latestComposite = latest.composite_score;
 
-    // Critical flags
-    if (m.composite_score < p25) {
-      reasons.push(`Composite score ${m.composite_score.toFixed(2)} below P25 (${p25.toFixed(2)})`);
-      severity = 'critical';
+    // CRITICAL: Failing meeting (composite < 2.0)
+    if (latestComposite < 2.0) {
+      flags.push({ severity: 'critical', type: 'failing_score', reason: `Last meeting scored ${latestComposite.toFixed(2)} (below 2.0)` });
     }
-    if (m.client_sentiment === 1) {
-      reasons.push('Client sentiment scored 1 (frustration detected)');
-      severity = 'critical';
-    }
-    if (frustrations.length > 2) {
-      reasons.push(`${frustrations.length} frustration moments detected`);
-      severity = 'critical';
+
+    // CRITICAL: Unrecovered frustration
+    const frustrations = safeParseJson(latest.frustration_moments);
+    if (frustrations.length > 0 && latest.save_rate && latest.save_rate <= 2) {
+      flags.push({ severity: 'critical', type: 'unrecovered_frustration', reason: `${frustrations.length} frustration moment(s), not recovered (save_rate=${latest.save_rate})` });
     }
 
-    // Warning flags (if not already critical)
-    if (!severity) {
-      if (m.composite_score < p50) {
-        reasons.push(`Composite score ${m.composite_score.toFixed(2)} below P50 (${p50.toFixed(2)})`);
-        severity = 'warning';
+    // CRITICAL: Sentiment crisis
+    if (latest.client_sentiment === 1) {
+      flags.push({ severity: 'critical', type: 'sentiment_crisis', reason: 'Client sentiment scored 1 in last meeting' });
+    }
+
+    // WARNING: Declining trend (3+ meetings)
+    if (meetings.length >= 3) {
+      const last3 = meetings.slice(0, 3);
+      const declining = last3[0].composite_score < last3[1].composite_score && last3[1].composite_score < last3[2].composite_score;
+      if (declining) {
+        flags.push({ severity: 'warning', type: 'declining_trend', reason: `Declining for 3 consecutive meetings: ${last3.map(m => m.composite_score.toFixed(2)).reverse().join(' → ')}` });
       }
-      if (m.accountability === 1 || m.relationship_health === 1) {
-        reasons.push('Tier 1 dimension scored 1');
-        severity = 'warning';
-      }
-      if (m.b3x_stale_items > 2) {
-        reasons.push(`${m.b3x_stale_items} B3X-owned stale items ignored`);
-        severity = severity || 'warning';
+    }
+
+    // WARNING: Worst in history
+    if (meetings.length >= 3) {
+      const allScores = meetings.map(m => m.composite_score);
+      const minScore = Math.min(...allScores);
+      if (latestComposite <= minScore && latestComposite < 2.5) {
+        flags.push({ severity: 'warning', type: 'worst_ever', reason: `Last meeting (${latestComposite.toFixed(2)}) is worst score in history` });
       }
     }
 
-    if (severity) {
-      flags.push({
-        meeting_id: m.meeting_id,
-        topic: m.topic,
-        client_id: m.client_id,
-        client_name: m.client_name,
-        date: m.date,
-        composite: m.composite_score,
-        severity,
-        reasons,
-        frustration_moments: frustrations
-      });
+    // WARNING: No-show pattern
+    const noShows = db.prepare(`
+      SELECT COUNT(*) as c FROM session_evaluations se
+      JOIN meetings m ON se.meeting_id = m.id
+      WHERE m.client_id = ? AND se.model_used = 'gpt-5.4' AND se.meeting_type = 'no-show'
+    `).get(client.client_id);
+    const totalScheduled = meetings.length + (noShows?.c || 0);
+    const noShowRate = totalScheduled > 0 ? (noShows?.c || 0) / totalScheduled : 0;
+    if (noShowRate > 0.2 && noShows?.c >= 2) {
+      flags.push({ severity: 'warning', type: 'no_show_pattern', reason: `${noShows.c} no-shows out of ${totalScheduled} meetings (${(noShowRate * 100).toFixed(0)}%)` });
+    }
 
-      if (severity === 'critical') critical++;
-      else warning++;
+    // WATCH: Early decline (2 meetings, significant drop)
+    if (meetings.length >= 2 && !flags.some(f => f.type === 'declining_trend')) {
+      const delta = meetings[1].composite_score - meetings[0].composite_score;
+      if (delta > 0.3) {
+        flags.push({ severity: 'watch', type: 'early_decline', reason: `Last meeting dropped ${delta.toFixed(2)} from previous` });
+      }
+    }
+
+    // WATCH: New client risk
+    if (meetings.length < 3 && latestComposite < 2.5) {
+      flags.push({ severity: 'watch', type: 'new_client_risk', reason: `New client (${meetings.length} meetings), last score ${latestComposite.toFixed(2)}` });
+    }
+
+    // WATCH: Silent client (B3X monologue)
+    const latestMetrics = db.prepare('SELECT speaker_ratio_client FROM session_metrics WHERE meeting_id = ?').get(latest.id);
+    if (latestMetrics && latestMetrics.speaker_ratio_client < 20 && latestMetrics.speaker_ratio_client > 0) {
+      flags.push({ severity: 'watch', type: 'silent_client', reason: `Client spoke only ${latestMetrics.speaker_ratio_client.toFixed(0)}% in last meeting` });
+    }
+
+    // WATCH: Coverage gap (no meetings in 30 days)
+    const daysSinceLast = (Date.now() - new Date(latest.start_time).getTime()) / (1000 * 60 * 60 * 24);
+    if (daysSinceLast > 30) {
+      flags.push({ severity: 'watch', type: 'coverage_gap', reason: `No meetings in ${Math.floor(daysSinceLast)} days` });
+    }
+
+    if (flags.length > 0) {
+      // Compute urgency score
+      const severityWeight = { critical: 100, warning: 50, watch: 10 };
+      const highestSeverity = flags.reduce((max, f) => severityWeight[f.severity] > severityWeight[max] ? f.severity : max, 'watch');
+      const recencyWeight = daysSinceLast < 1 ? 30 : daysSinceLast < 7 ? 20 : daysSinceLast < 30 ? 10 : 0;
+      const urgency = severityWeight[highestSeverity] + recencyWeight;
+
+      // Determine trend arrow
+      let trend = '—';
+      if (meetings.length >= 2) {
+        const delta = meetings[0].composite_score - meetings[1].composite_score;
+        trend = delta > 0.1 ? '▲' : delta < -0.1 ? '▼' : '—';
+      }
+
+      clientFlags[client.client_id] = {
+        client_id: client.client_id,
+        client_name: client.client_name,
+        severity: highestSeverity,
+        flags: flags,
+        urgency: urgency,
+        meeting_count: meetings.length,
+        last_meeting: { id: latest.id, date: latest.start_time, composite: latestComposite },
+        avg_composite: meetings.reduce((s, m) => s + m.composite_score, 0) / meetings.length,
+        trend: trend
+      };
     }
   }
 
-  // Sort by severity then date
-  flags.sort((a, b) => {
-    if (a.severity === 'critical' && b.severity !== 'critical') return -1;
-    if (b.severity === 'critical' && a.severity !== 'critical') return 1;
-    return new Date(b.date) - new Date(a.date);
-  });
-
-  // Check for no-show patterns per client
-  const noShowPatterns = db.prepare(`
-    SELECT m.client_id, m.client_name,
-      COUNT(CASE WHEN se.meeting_type = 'no-show' THEN 1 END) as no_shows,
-      COUNT(*) as total
-    FROM meetings m
-    JOIN session_evaluations se ON se.meeting_id = m.id
-    WHERE se.model_used = 'gpt-5.4' AND m.client_id != 'unmatched'
-    GROUP BY m.client_id
-    HAVING no_shows >= 2
-  `).all();
-
-  // Add no-show pattern flags
-  noShowPatterns.forEach(p => {
-    const rate = p.no_shows / p.total;
-    flags.push({
-      severity: rate > 0.3 ? 'critical' : 'warning',
-      type: 'no_show_pattern',
-      client_id: p.client_id,
-      client_name: p.client_name,
-      reasons: [`${p.no_shows} no-shows out of ${p.total} meetings (${(rate * 100).toFixed(0)}%)`]
-    });
-    if (rate > 0.3) critical++;
-    else warning++;
-  });
+  // Sort by urgency descending
+  const sortedFlags = Object.values(clientFlags).sort((a, b) => b.urgency - a.urgency);
 
   return {
-    flags: flags.slice(0, limit),
+    flags: sortedFlags,
     summary: {
-      critical,
-      warning,
-      total_meetings: meetings.length
+      critical: sortedFlags.filter(f => f.severity === 'critical').length,
+      warning: sortedFlags.filter(f => f.severity === 'warning').length,
+      watch: sortedFlags.filter(f => f.severity === 'watch').length,
+      total_clients_flagged: sortedFlags.length,
+      total_clients: clients.length
     }
   };
 }

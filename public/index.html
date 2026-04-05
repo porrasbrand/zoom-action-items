@@ -3726,6 +3726,12 @@
   color: #d29922;
 }
 
+.flag-badge.watch {
+  background: rgba(110, 118, 129, 0.15);
+  border: 1px solid #30363d;
+  color: #8b949e;
+}
+
 .flag-badge .count {
   font-size: 24px;
 }
@@ -3751,6 +3757,82 @@
 
 .flag-card.critical { border-left-color: #f85149; }
 .flag-card.warning { border-left-color: #d29922; }
+.flag-card.watch { border-left-color: #6e7681; }
+
+.flag-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flag-header h4 {
+  color: #f0f6fc;
+  font-size: 15px;
+  margin: 0;
+}
+
+.flag-composite {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.flag-meta {
+  color: #6e7681;
+  font-size: 12px;
+  margin: 4px 0 8px;
+}
+
+.flag-reasons {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.flag-reasons li {
+  color: #8b949e;
+  font-size: 13px;
+  margin: 4px 0;
+}
+
+.watch-section {
+  margin-top: 16px;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.watch-section.collapsed .watch-content {
+  display: none;
+}
+
+.watch-section.collapsed .toggle-icon {
+  transform: rotate(-90deg);
+}
+
+.watch-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #161b22;
+  cursor: pointer;
+  color: #8b949e;
+  font-size: 13px;
+}
+
+.watch-header:hover {
+  background: #21262d;
+}
+
+.toggle-icon {
+  transition: transform 0.2s;
+}
+
+.watch-content {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
 .flag-card .header {
   display: flex;
@@ -7468,6 +7550,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
 
       const criticalCount = flagsData.summary?.critical || 0;
       const warningCount = flagsData.summary?.warning || 0;
+      const watchCount = flagsData.summary?.watch || 0;
 
       let html = `
         <div class="overview-header" style="display: flex; gap: 24px; margin-bottom: 24px;">
@@ -7487,6 +7570,10 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
             <div class="flag-badge warning">
               <span class="count">${warningCount}</span>
               <span>Warning</span>
+            </div>
+            <div class="flag-badge watch">
+              <span class="count">${watchCount}</span>
+              <span>Watch</span>
             </div>
           </div>
         </div>
@@ -8182,19 +8269,28 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
 
     function renderFlags(panel, data) {
       const allFlags = data.flags || [];
+      const summary = data.summary || {};
       const critical = allFlags.filter(f => f.severity === 'critical');
       const warning = allFlags.filter(f => f.severity === 'warning');
+      const watch = allFlags.filter(f => f.severity === 'watch');
 
       let html = `
         <div class="flags-summary">
           <div class="flag-badge critical">
-            <span class="count">${critical.length}</span>
+            <span class="count">${summary.critical || critical.length}</span>
             <span>Critical</span>
           </div>
           <div class="flag-badge warning">
-            <span class="count">${warning.length}</span>
+            <span class="count">${summary.warning || warning.length}</span>
             <span>Warning</span>
           </div>
+          <div class="flag-badge watch">
+            <span class="count">${summary.watch || watch.length}</span>
+            <span>Watch</span>
+          </div>
+        </div>
+        <div class="flags-info" style="color: #6e7681; font-size: 12px; margin-bottom: 16px;">
+          ${summary.total_clients_flagged || allFlags.length} clients flagged out of ${summary.total_clients || '?'} total
         </div>
         <div class="flag-cards">
       `;
@@ -8209,8 +8305,24 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         html += renderFlagCard(f, 'warning');
       });
 
-      if (critical.length === 0 && warning.length === 0) {
-        html += '<div style="color: #8b949e; text-align: center; padding: 40px;">No flags to display — all sessions are performing well!</div>';
+      // Watch in collapsible section
+      if (watch.length > 0) {
+        html += `
+          <div class="watch-section">
+            <div class="watch-header" onclick="this.parentElement.classList.toggle('collapsed')">
+              <span>Watch Items (${watch.length})</span>
+              <span class="toggle-icon">▼</span>
+            </div>
+            <div class="watch-content">
+        `;
+        watch.forEach(f => {
+          html += renderFlagCard(f, 'watch');
+        });
+        html += '</div></div>';
+      }
+
+      if (critical.length === 0 && warning.length === 0 && watch.length === 0) {
+        html += '<div style="color: #3fb950; text-align: center; padding: 40px; font-size: 16px;">✓ All clients performing well — no flags!</div>';
       }
 
       html += '</div>';
@@ -8218,19 +8330,22 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     }
 
     function renderFlagCard(flag, severity) {
-      const reasons = flag.reasons || [];
-      const composite = flag.composite || flag.composite_score || 0;
-      const meetingDate = flag.date || flag.meeting_date;
+      // New structure: client-grouped with flags array
+      const reasons = flag.flags ? flag.flags.map(f => f.reason) : (flag.reasons || []);
+      const composite = flag.last_meeting?.composite || flag.avg_composite || 0;
+      const meetingDate = flag.last_meeting?.date;
+      const meetingId = flag.last_meeting?.id;
+      const trend = flag.trend || '—';
+      const trendClass = trend === '▲' ? 'up' : trend === '▼' ? 'down' : 'stable';
+
       return `
-        <div class="flag-card ${severity}" onclick="loadSessionScorecard(${flag.meeting_id}); switchSessionView('scorecard'); document.getElementById('scorecardMeetingSelect').value='${flag.meeting_id}';">
-          <div class="header">
-            <div>
-              <div class="topic">${escapeHtml(flag.topic || 'Meeting')}</div>
-              <div class="meta">${escapeHtml(flag.client_name || '')} • ${meetingDate ? new Date(meetingDate).toLocaleDateString() : ''}</div>
-            </div>
-            <div class="composite score-${getScoreColor(composite)}">${composite.toFixed(2)}</div>
+        <div class="flag-card ${severity}" onclick="loadSessionScorecard(${meetingId}); switchSessionView('scorecard'); document.getElementById('scorecardMeetingSelect').value='${meetingId}';">
+          <div class="flag-header">
+            <h4>${escapeHtml(flag.client_name || 'Unknown Client')}</h4>
+            <span class="flag-composite score-${getScoreColor(composite)}">${composite.toFixed(2)}</span>
           </div>
-          <ul class="reasons">
+          <div class="flag-meta">${flag.meeting_count || 0} meetings scored · Last: ${meetingDate ? new Date(meetingDate).toLocaleDateString() : 'N/A'} · Trend: <span class="trend-arrow ${trendClass}">${trend}</span></div>
+          <ul class="flag-reasons">
             ${reasons.map(r => `<li>${escapeHtml(r)}</li>`).join('')}
           </ul>
         </div>
