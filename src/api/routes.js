@@ -39,6 +39,7 @@ import {
 import { initDatabase as initMetricsDb, getMetrics, getStats as getMetricsStats, computeAllMetrics } from '../lib/session-metrics.js';
 import { getAllBaselines, getBaselines, recalculateAll as recalculateBaselines, initBaselinesTable } from '../lib/session-baselines.js';
 import { getScorecard, getClientTrend, getTeamStats, getAllTeamStats, getFlags, getBenchmarks, getWeeklyDigest, getCalibrationStatus, saveCalibrationScores, getCalibrationComparison, getCalibrationMeetingData } from '../lib/session-queries.js';
+import { getPPCReport, trackPPCTasks, updateDisposition, initPPCTrackingTable } from '../lib/ppc-task-tracker.js';
 import { readdirSync, readFileSync as fsReadFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -2179,6 +2180,151 @@ router.get('/session/digest/weekly', (req, res) => {
     res.json(digest);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// ============ PPC TASK ACCOUNTABILITY (Phase 21A) ============
+
+// GET /api/ppc/status - Agency-wide PPC tracking stats
+router.get('/ppc/status', (req, res) => {
+  try {
+    const days = parseInt(req.query.days) || 30;
+    const database = getDatabase();
+    initPPCTrackingTable(database);
+    const report = getPPCReport(database, { days });
+
+    res.json({
+      period_days: report.period_days,
+      total_ppc_tasks: report.total_ppc_tasks,
+      in_proofhub: report.in_proofhub,
+      missing: report.missing,
+      completion_rate: report.completion_rate,
+      avg_score: report.avg_score,
+      avg_days_to_proofhub: report.avg_days_to_proofhub,
+      clients: Object.entries(report.by_client).map(([id, data]) => ({
+        client_id: id,
+        client_name: data.client_name,
+        total: data.total,
+        tracked: data.tracked,
+        missing: data.missing,
+        completion_rate: data.completion_rate
+      }))
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/ppc/client/:clientId - Per-client PPC task list + completion rates
+router.get('/ppc/client/:clientId', (req, res) => {
+  try {
+    const clientId = req.params.clientId;
+    const days = parseInt(req.query.days) || 30;
+    const database = getDatabase();
+    initPPCTrackingTable(database);
+    const report = getPPCReport(database, { clientId, days });
+
+    const clientData = report.by_client[clientId];
+    if (!clientData) {
+      return res.json({
+        client_id: clientId,
+        total: 0,
+        tracked: 0,
+        missing: 0,
+        completion_rate: 0,
+        tasks: []
+      });
+    }
+
+    res.json({
+      client_id: clientId,
+      client_name: clientData.client_name,
+      period_days: days,
+      total: clientData.total,
+      tracked: clientData.tracked,
+      missing: clientData.missing,
+      completion_rate: clientData.completion_rate,
+      avg_score: clientData.avg_score,
+      tasks: clientData.tasks
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/ppc/meeting/:meetingId - PPC tasks from a specific meeting
+router.get('/ppc/meeting/:meetingId', (req, res) => {
+  try {
+    const meetingId = parseInt(req.params.meetingId);
+    const database = getDatabase();
+    initPPCTrackingTable(database);
+
+    const tasks = database.prepare(`
+      SELECT * FROM ppc_task_tracking WHERE meeting_id = ?
+      ORDER BY action_item_index
+    `).all(meetingId);
+
+    const tracked = tasks.filter(t => t.proofhub_match === 1).length;
+
+    res.json({
+      meeting_id: meetingId,
+      total: tasks.length,
+      tracked,
+      missing: tasks.length - tracked,
+      tasks
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/ppc/at-risk - Tasks missing from ProofHub (needs attention)
+router.get('/ppc/at-risk', (req, res) => {
+  try {
+    const days = parseInt(req.query.days) || 30;
+    const database = getDatabase();
+    initPPCTrackingTable(database);
+    const report = getPPCReport(database, { days });
+
+    res.json({
+      period_days: days,
+      total_at_risk: report.at_risk.length,
+      tasks: report.at_risk.map(t => ({
+        id: t.id,
+        task_title: t.task_title,
+        task_description: t.task_description,
+        client_id: t.client_id,
+        client_name: t.client_name,
+        meeting_id: t.meeting_id,
+        meeting_date: t.meeting_date,
+        owner: t.owner,
+        platform: t.platform,
+        days_ago: Math.floor((Date.now() - new Date(t.meeting_date).getTime()) / (1000 * 60 * 60 * 24)),
+        disposition: t.disposition
+      }))
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/ppc/task/:id/disposition - Mark task as cancelled/deprioritized
+router.post('/ppc/task/:id/disposition', (req, res) => {
+  try {
+    const taskId = parseInt(req.params.id);
+    const { disposition, reason } = req.body;
+
+    if (!disposition) {
+      return res.status(400).json({ error: 'disposition required' });
+    }
+
+    const database = getDatabase();
+    initPPCTrackingTable(database);
+    updateDisposition(database, taskId, disposition, reason || null);
+
+    res.json({ success: true, task_id: taskId, disposition });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 });
 

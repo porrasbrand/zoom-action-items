@@ -1978,6 +1978,200 @@
   display: block;
 }
 
+.tab-content.active.ppc-view {
+  display: block;
+}
+
+/* ============ PPC TASK ACCOUNTABILITY VIEW ============ */
+.ppc-view {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.ppc-overview {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.ppc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.ppc-header h2 {
+  font-size: 24px;
+  color: #f0f6fc;
+}
+
+.ppc-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.ppc-stat-card {
+  background: #21262d;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.ppc-stat-card .value {
+  font-size: 36px;
+  font-weight: 700;
+  color: #58a6ff;
+}
+
+.ppc-stat-card .value.green { color: #3fb950; }
+.ppc-stat-card .value.red { color: #f85149; }
+.ppc-stat-card .value.yellow { color: #d29922; }
+
+.ppc-stat-card .label {
+  font-size: 12px;
+  color: #8b949e;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+.ppc-funnel {
+  background: #21262d;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 32px;
+}
+
+.ppc-funnel h3 {
+  font-size: 14px;
+  color: #8b949e;
+  margin-bottom: 12px;
+}
+
+.ppc-funnel-bar {
+  height: 24px;
+  background: #30363d;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+}
+
+.ppc-funnel-bar .tracked {
+  background: #3fb950;
+  height: 100%;
+  transition: width 0.3s;
+}
+
+.ppc-funnel-bar .missing {
+  background: #f85149;
+  height: 100%;
+}
+
+.ppc-funnel-label {
+  font-size: 13px;
+  color: #c9d1d9;
+  margin-top: 8px;
+}
+
+.ppc-section {
+  margin-bottom: 32px;
+}
+
+.ppc-section h3 {
+  font-size: 16px;
+  color: #f0f6fc;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #30363d;
+}
+
+.ppc-client-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.ppc-client-card {
+  background: #21262d;
+  border-radius: 10px;
+  padding: 16px;
+  border-left: 4px solid #30363d;
+}
+
+.ppc-client-card.healthy { border-left-color: #3fb950; }
+.ppc-client-card.warning { border-left-color: #d29922; }
+.ppc-client-card.critical { border-left-color: #f85149; }
+
+.ppc-client-card .name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #f0f6fc;
+  margin-bottom: 8px;
+}
+
+.ppc-client-card .stats {
+  font-size: 13px;
+  color: #8b949e;
+}
+
+.ppc-client-card .rate {
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+.ppc-client-card .rate.green { color: #3fb950; }
+.ppc-client-card .rate.yellow { color: #d29922; }
+.ppc-client-card .rate.red { color: #f85149; }
+
+.ppc-at-risk-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ppc-at-risk-item {
+  background: #21262d;
+  border-radius: 8px;
+  padding: 14px 16px;
+  border-left: 4px solid #f85149;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.ppc-at-risk-item:hover {
+  background: #30363d;
+}
+
+.ppc-at-risk-item .title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #f0f6fc;
+  margin-bottom: 6px;
+}
+
+.ppc-at-risk-item .meta {
+  font-size: 12px;
+  color: #8b949e;
+}
+
+.ppc-at-risk-item .meta span {
+  margin-right: 12px;
+}
+
+.ppc-empty {
+  text-align: center;
+  padding: 40px;
+  color: #8b949e;
+}
+
+.ppc-empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
 /* ============ ROADMAP VIEW ============ */
 .roadmap-view {
   flex: 1;
@@ -4155,6 +4349,7 @@
       <button class="tab-btn" onclick="switchTab('roadmap')" data-tab="roadmap" role="tab" aria-selected="false" aria-controls="roadmapView">Roadmap</button>
       <button class="tab-btn" onclick="switchTab('prep')" data-tab="prep" role="tab" aria-selected="false" aria-controls="prepView">Meeting Prep</button>
       <button class="tab-btn" onclick="switchTab('session')" data-tab="session" role="tab" aria-selected="false" aria-controls="sessionView">Session Intelligence</button>
+      <button class="tab-btn" onclick="switchTab('ppc')" data-tab="ppc" role="tab" aria-selected="false" aria-controls="ppcView">PPC Tasks</button>
     </div>
 
     <div class="main tab-content active" id="meetingsView" role="tabpanel" aria-labelledby="tab-meetings">
@@ -4294,6 +4489,13 @@
       <div id="sessionTeam" class="session-panel" style="display:none;"></div>
       <div id="sessionFlags" class="session-panel" style="display:none;"></div>
       <div id="sessionCalibration" class="session-panel" style="display:none;"></div>
+    </div>
+
+    <!-- PPC Task Accountability View -->
+    <div class="tab-content ppc-view" id="ppcView" role="tabpanel" aria-labelledby="tab-ppc">
+      <div class="ppc-overview" id="ppcOverview">
+        <div class="loading">Loading PPC accountability data...</div>
+      </div>
     </div>
 
   </div>
@@ -6398,6 +6600,7 @@
       document.getElementById('roadmapView').classList.toggle('active', tab === 'roadmap');
       document.getElementById('prepView').classList.toggle('active', tab === 'prep');
       document.getElementById('sessionView').classList.toggle('active', tab === 'session');
+      document.getElementById('ppcView').classList.toggle('active', tab === 'ppc');
 
       // Update stats bar visibility
       document.getElementById('statsBar').style.display = tab === 'meetings' ? 'flex' : 'none';
@@ -6427,13 +6630,15 @@
         }
       } else if (tab === 'session') {
         loadSessionOverview();
+      } else if (tab === 'ppc') {
+        loadPPCOverview();
       }
     }
 
     // Handle hash on page load and hash changes
     function initTabFromHash() {
       const hash = window.location.hash.replace('#', '');
-      if (hash === 'roadmap' || hash === 'prep' || hash === 'session') {
+      if (hash === 'roadmap' || hash === 'prep' || hash === 'session' || hash === 'ppc') {
         switchTab(hash);
       }
     }
@@ -6441,7 +6646,7 @@
     // Listen for hash changes (back/forward navigation)
     window.addEventListener('hashchange', () => {
       const hash = window.location.hash.replace('#', '');
-      if (hash === 'roadmap' || hash === 'prep' || hash === 'session') {
+      if (hash === 'roadmap' || hash === 'prep' || hash === 'session' || hash === 'ppc') {
         switchTab(hash);
       } else if (!hash) {
         switchTab('meetings');
@@ -8718,6 +8923,152 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       });
 
       html += '</div>';
+      panel.innerHTML = html;
+    }
+
+    // ============ PPC TASK ACCOUNTABILITY FUNCTIONS ============
+
+    async function loadPPCOverview() {
+      const panel = document.getElementById('ppcOverview');
+      panel.innerHTML = '<div class="loading">Loading PPC accountability data...</div>';
+
+      try {
+        const [statusRes, atRiskRes] = await Promise.all([
+          fetch(API + '/ppc/status'),
+          fetch(API + '/ppc/at-risk')
+        ]);
+
+        if (!statusRes.ok) throw new Error('Failed to load PPC status');
+
+        const status = await statusRes.json();
+        const atRisk = atRiskRes.ok ? await atRiskRes.json() : { tasks: [] };
+
+        renderPPCOverview(panel, status, atRisk);
+      } catch (err) {
+        panel.innerHTML = `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderPPCOverview(panel, status, atRisk) {
+      const trackedPct = status.completion_rate || 0;
+      const missingPct = 100 - trackedPct;
+
+      let html = `
+        <div class="ppc-header">
+          <h2>PPC Task Accountability</h2>
+          <span style="color: #8b949e; font-size: 13px;">Last ${status.period_days} days</span>
+        </div>
+
+        <div class="ppc-stats-grid">
+          <div class="ppc-stat-card">
+            <div class="value">${status.total_ppc_tasks || 0}</div>
+            <div class="label">Total PPC Tasks</div>
+          </div>
+          <div class="ppc-stat-card">
+            <div class="value green">${status.in_proofhub || 0}</div>
+            <div class="label">In ProofHub</div>
+          </div>
+          <div class="ppc-stat-card">
+            <div class="value red">${status.missing || 0}</div>
+            <div class="label">Missing</div>
+          </div>
+          <div class="ppc-stat-card">
+            <div class="value ${trackedPct >= 80 ? 'green' : trackedPct >= 50 ? 'yellow' : 'red'}">${trackedPct}%</div>
+            <div class="label">Completion Rate</div>
+          </div>
+          <div class="ppc-stat-card">
+            <div class="value">${status.avg_score || 0}%</div>
+            <div class="label">Avg Score</div>
+          </div>
+          ${status.avg_days_to_proofhub ? `
+          <div class="ppc-stat-card">
+            <div class="value">${status.avg_days_to_proofhub}</div>
+            <div class="label">Avg Days to PH</div>
+          </div>
+          ` : ''}
+        </div>
+
+        <div class="ppc-funnel">
+          <h3>Drop-off Funnel</h3>
+          <div class="ppc-funnel-bar">
+            <div class="tracked" style="width: ${trackedPct}%;"></div>
+            <div class="missing" style="width: ${missingPct}%;"></div>
+          </div>
+          <div class="ppc-funnel-label">${trackedPct}% tracked in ProofHub</div>
+        </div>
+      `;
+
+      // Per-client cards
+      if (status.clients && status.clients.length > 0) {
+        html += `<div class="ppc-section">
+          <h3>By Client</h3>
+          <div class="ppc-client-grid">
+        `;
+
+        status.clients
+          .filter(c => c.total > 0)
+          .sort((a, b) => b.total - a.total)
+          .forEach(client => {
+            const rate = client.completion_rate || 0;
+            const cardClass = rate >= 80 ? 'healthy' : rate >= 50 ? 'warning' : 'critical';
+            const rateClass = rate >= 80 ? 'green' : rate >= 50 ? 'yellow' : 'red';
+
+            html += `
+              <div class="ppc-client-card ${cardClass}">
+                <div class="name">${escapeHtml(client.client_name || client.client_id)}</div>
+                <div class="stats">${client.total} PPC tasks | ${client.tracked} in PH | ${client.missing} missing</div>
+                <div class="rate ${rateClass}">${rate}%</div>
+              </div>
+            `;
+          });
+
+        html += '</div></div>';
+      }
+
+      // At-risk tasks
+      if (atRisk.tasks && atRisk.tasks.length > 0) {
+        html += `<div class="ppc-section">
+          <h3>Missing from ProofHub (${atRisk.tasks.length} tasks)</h3>
+          <div class="ppc-at-risk-list">
+        `;
+
+        atRisk.tasks.slice(0, 15).forEach(task => {
+          const date = task.meeting_date?.split('T')[0] || 'unknown';
+          html += `
+            <div class="ppc-at-risk-item" onclick="loadMeetingDetail(${task.meeting_id})">
+              <div class="title">${escapeHtml(task.task_title)}</div>
+              <div class="meta">
+                <span>${escapeHtml(task.client_name || task.client_id)}</span>
+                <span>${date} (${task.days_ago}d ago)</span>
+                <span>Owner: ${escapeHtml(task.owner || 'unassigned')}</span>
+                ${task.platform ? `<span>Platform: ${task.platform}</span>` : ''}
+              </div>
+            </div>
+          `;
+        });
+
+        if (atRisk.tasks.length > 15) {
+          html += `<div style="text-align: center; padding: 12px; color: #8b949e;">... and ${atRisk.tasks.length - 15} more</div>`;
+        }
+
+        html += '</div></div>';
+      } else if (status.total_ppc_tasks === 0) {
+        html += `
+          <div class="ppc-empty">
+            <div class="ppc-empty-icon">📋</div>
+            <p>No PPC tasks found in the last ${status.period_days} days.</p>
+            <p style="font-size: 12px; margin-top: 8px;">Run the backfill to analyze existing meetings.</p>
+          </div>
+        `;
+      } else {
+        html += `
+          <div class="ppc-empty">
+            <div class="ppc-empty-icon">✅</div>
+            <p>All PPC tasks are tracked in ProofHub!</p>
+          </div>
+        `;
+      }
+
       panel.innerHTML = html;
     }
 

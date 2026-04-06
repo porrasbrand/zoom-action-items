@@ -291,6 +291,17 @@ async function processMeeting(meeting) {
       log(`  Session evaluation failed (non-blocking): ${err.message}`);
     }
 
+    // Step: PPC Task Tracking (non-blocking)
+    try {
+      const { trackPPCTasks } = await import('./lib/ppc-task-tracker.js');
+      const ppcResult = await trackPPCTasks(meetingId, db.getDb());
+      if (ppcResult.ppc_tasks > 0) {
+        log(`  PPC tracking: ${ppcResult.ppc_tasks} tasks found, ${ppcResult.tracked} in ProofHub`);
+      }
+    } catch (err) {
+      log(`  PPC tracking failed (non-blocking): ${err.message}`);
+    }
+
     return { processed: true, clientName, actionCount, decisionCount };
 
   } catch (err) {
