@@ -2286,10 +2286,9 @@ router.get('/ppc/at-risk', (req, res) => {
     initPPCTrackingTable(database);
     const report = getPPCReport(database, { days });
 
-    res.json({
-      period_days: days,
-      total_at_risk: report.at_risk.length,
-      tasks: report.at_risk.map(t => ({
+    // Enrich tasks with ai_extraction data
+    const enrichedTasks = report.at_risk.map(t => {
+      const task = {
         id: t.id,
         task_title: t.task_title,
         task_description: t.task_description,
@@ -2299,9 +2298,37 @@ router.get('/ppc/at-risk', (req, res) => {
         meeting_date: t.meeting_date,
         owner: t.owner,
         platform: t.platform,
+        action_type: t.action_type,
+        ppc_confidence: t.ppc_confidence,
         days_ago: Math.floor((Date.now() - new Date(t.meeting_date).getTime()) / (1000 * 60 * 60 * 24)),
-        disposition: t.disposition
-      }))
+        disposition: t.disposition,
+        transcript_excerpt: null,
+        priority: null,
+        due_date: null
+      };
+
+      // Get ai_extraction from meeting
+      const meeting = database.prepare('SELECT ai_extraction FROM meetings WHERE id = ?').get(t.meeting_id);
+      if (meeting && meeting.ai_extraction) {
+        try {
+          const extraction = JSON.parse(meeting.ai_extraction);
+          const items = extraction.action_items || (extraction[0]?.action_items) || [];
+          const item = items[t.action_item_index];
+          if (item) {
+            task.transcript_excerpt = item.transcript_excerpt || null;
+            task.priority = item.priority || null;
+            task.due_date = item.due_date || null;
+          }
+        } catch (e) { /* ignore parse errors */ }
+      }
+
+      return task;
+    });
+
+    res.json({
+      period_days: days,
+      total_at_risk: enrichedTasks.length,
+      tasks: enrichedTasks
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -2321,32 +2348,159 @@ router.get('/ppc/tracked', (req, res) => {
     const tasks = database.prepare(`
       SELECT p.id, p.task_title, p.task_description, p.client_id, p.client_name,
              p.meeting_id, p.meeting_date, p.owner, p.platform, p.action_type,
+             p.action_item_index, p.ppc_confidence,
              p.proofhub_task_id, p.proofhub_task_title, p.proofhub_status,
              p.proofhub_created, p.proofhub_assignee, p.proofhub_confidence,
              p.proofhub_reasoning, p.completion_score, p.days_to_proofhub,
-             c.project_id AS ph_project_id, c.task_list_id AS ph_task_list_id
+             c.project_id AS ph_project_id, c.task_list_id AS ph_task_list_id,
+             c.stage_name AS ph_stage_name
       FROM ppc_task_tracking p
       LEFT JOIN ph_task_cache c ON CAST(p.proofhub_task_id AS INTEGER) = c.ph_task_id
       WHERE p.proofhub_match = 1 AND p.meeting_date >= ?
       ORDER BY p.meeting_date DESC
     `).all(cutoffDate.toISOString());
 
-    res.json({
-      period_days: days,
-      total_tracked: tasks.length,
-      tasks: tasks.map(t => ({
+    // Enrich with ai_extraction data
+    const enrichedTasks = tasks.map(t => {
+      const task = {
         ...t,
         ph_url: t.ph_project_id && t.ph_task_list_id
           ? `https://breakthrough3x.proofhub.com/bapplite/#app/todos/project-${t.ph_project_id}/list-${t.ph_task_list_id}/task-${t.proofhub_task_id}`
           : null,
-        days_ago: Math.floor((Date.now() - new Date(t.meeting_date).getTime()) / (1000 * 60 * 60 * 24))
-      }))
+        days_ago: Math.floor((Date.now() - new Date(t.meeting_date).getTime()) / (1000 * 60 * 60 * 24)),
+        transcript_excerpt: null,
+        priority: null,
+        due_date: null
+      };
+
+      // Get ai_extraction from meeting
+      const meeting = database.prepare('SELECT ai_extraction FROM meetings WHERE id = ?').get(t.meeting_id);
+      if (meeting && meeting.ai_extraction) {
+        try {
+          const extraction = JSON.parse(meeting.ai_extraction);
+          const items = extraction.action_items || (extraction[0]?.action_items) || [];
+          const item = items[t.action_item_index];
+          if (item) {
+            task.transcript_excerpt = item.transcript_excerpt || null;
+            task.priority = item.priority || null;
+            task.due_date = item.due_date || null;
+          }
+        } catch (e) { /* ignore parse errors */ }
+      }
+
+      return task;
+    });
+
+    res.json({
+      period_days: days,
+      total_tracked: enrichedTasks.length,
+      tasks: enrichedTasks
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+
+// GET /api/ppc/task/:id/detail - Full task detail with transcript and PH enrichment
+router.get('/ppc/task/:id/detail', (req, res) => {
+  try {
+    const taskId = parseInt(req.params.id);
+    const database = getDatabase();
+    initPPCTrackingTable(database);
+
+    // Get task with PH cache enrichment
+    const task = database.prepare(`
+      SELECT p.*,
+             c.project_id AS ph_project_id, c.task_list_id AS ph_task_list_id,
+             c.stage_name AS ph_stage_name, c.task_list_name AS ph_task_list_name,
+             c.comments_count AS ph_comments_count, c.assigned_names AS ph_assigned_names,
+             c.due_date AS ph_due_date, c.scope_summary AS ph_scope_summary
+      FROM ppc_task_tracking p
+      LEFT JOIN ph_task_cache c ON CAST(p.proofhub_task_id AS INTEGER) = c.ph_task_id
+      WHERE p.id = ?
+    `).get(taskId);
+
+    if (!task) {
+      return res.status(404).json({ error: 'PPC task not found' });
+    }
+
+    // Get meeting's ai_extraction to find the specific action item
+    const meeting = database.prepare('SELECT ai_extraction FROM meetings WHERE id = ?').get(task.meeting_id);
+    let transcript_excerpt = null;
+    let due_date = null;
+    let priority = null;
+    let category = null;
+
+    if (meeting && meeting.ai_extraction) {
+      try {
+        const extraction = JSON.parse(meeting.ai_extraction);
+        const items = extraction.action_items || (extraction[0]?.action_items) || [];
+        const item = items[task.action_item_index];
+        if (item) {
+          transcript_excerpt = item.transcript_excerpt || null;
+          due_date = item.due_date || null;
+          priority = item.priority || null;
+          category = item.category || null;
+        }
+      } catch (e) {
+        console.error('[PPC Detail] Error parsing ai_extraction:', e.message);
+      }
+    }
+
+    // Build ProofHub URL
+    const ph_url = task.ph_project_id && task.ph_task_list_id
+      ? `https://breakthrough3x.proofhub.com/bapplite/#app/todos/project-${task.ph_project_id}/list-${task.ph_task_list_id}/task-${task.proofhub_task_id}`
+      : null;
+
+    res.json({
+      // Core task
+      id: task.id,
+      task_title: task.task_title,
+      task_description: task.task_description,
+      platform: task.platform,
+      action_type: task.action_type,
+      owner: task.owner,
+      meeting_id: task.meeting_id,
+      meeting_date: task.meeting_date,
+      client_id: task.client_id,
+      client_name: task.client_name,
+      ppc_confidence: task.ppc_confidence,
+      disposition: task.disposition,
+      disposition_reason: task.disposition_reason,
+      action_item_index: task.action_item_index,
+
+      // From ai_extraction
+      due_date,
+      priority,
+      category,
+      transcript_excerpt,
+
+      // ProofHub match
+      proofhub_match: task.proofhub_match === 1,
+      proofhub_task_id: task.proofhub_task_id,
+      proofhub_task_title: task.proofhub_task_title,
+      proofhub_status: task.proofhub_status,
+      proofhub_created: task.proofhub_created,
+      proofhub_assignee: task.proofhub_assignee,
+      proofhub_confidence: task.proofhub_confidence,
+      proofhub_reasoning: task.proofhub_reasoning,
+      completion_score: task.completion_score,
+      days_to_proofhub: task.days_to_proofhub,
+
+      // PH cache enrichment
+      ph_url,
+      ph_stage_name: task.ph_stage_name,
+      ph_task_list_name: task.ph_task_list_name,
+      ph_comments_count: task.ph_comments_count,
+      ph_assigned_names: task.ph_assigned_names,
+      ph_due_date: task.ph_due_date,
+      ph_scope_summary: task.ph_scope_summary
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // POST /api/ppc/task/:id/disposition - Mark task as cancelled/deprioritized
 router.post('/ppc/task/:id/disposition', (req, res) => {

@@ -2126,6 +2126,504 @@
 .ppc-client-card .rate.yellow { color: #d29922; }
 .ppc-client-card .rate.red { color: #f85149; }
 
+/* ---- PPC Controls & Filters ---- */
+.ppc-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: #161b22;
+  border-radius: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.ppc-filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ppc-filters select,
+.ppc-filters input {
+  background: #21262d;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: #c9d1d9;
+  font-size: 13px;
+}
+
+.ppc-filters select:focus,
+.ppc-filters input:focus {
+  border-color: #58a6ff;
+  outline: none;
+}
+
+.ppc-filters input {
+  min-width: 200px;
+}
+
+.ppc-count {
+  font-size: 13px;
+  color: #8b949e;
+}
+
+/* ---- Expandable Task Cards ---- */
+.ppc-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ppc-task-card {
+  display: flex;
+  align-items: center;
+  background: #21262d;
+  border-radius: 8px;
+  padding: 12px 16px;
+  border-left: 4px solid #30363d;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.ppc-task-card:hover {
+  background: #30363d;
+}
+
+.ppc-task-card.expanded {
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* Status border colors */
+.ppc-task-card.status-complete { border-left-color: #3fb950; }
+.ppc-task-card.status-tracked { border-left-color: #58a6ff; }
+.ppc-task-card.status-missing { border-left-color: #f85149; }
+.ppc-task-card.status-dismissed { border-left-color: #6e7681; }
+
+/* Status icon */
+.ppc-task-status {
+  font-size: 18px;
+  width: 28px;
+  flex-shrink: 0;
+}
+
+/* Task summary (title + meta) */
+.ppc-task-summary {
+  flex: 1;
+  min-width: 0;
+}
+
+.ppc-task-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #f0f6fc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ppc-task-meta {
+  font-size: 12px;
+  color: #8b949e;
+  margin-top: 2px;
+}
+
+/* Badges */
+.ppc-task-badges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+.platform-badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.platform-badge.google_ads { background: #4285F4; color: #fff; }
+.platform-badge.google_lsa { background: #00897B; color: #fff; }
+.platform-badge.meta { background: #7B1FA2; color: #fff; }
+.platform-badge.bing { background: #F57C00; color: #fff; }
+.platform-badge.multiple { background: linear-gradient(90deg, #4285F4, #7B1FA2); color: #fff; }
+.platform-badge.unknown { background: #6e7681; color: #c9d1d9; }
+
+.ph-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #238636;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ---- Level 2: Expanded Detail Panel ---- */
+.ppc-task-detail {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  padding: 16px;
+  margin-bottom: 8px;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; max-height: 0; }
+  to { opacity: 1; max-height: 1000px; }
+}
+
+/* Action buttons row */
+.ppc-task-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.ppc-task-actions button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s;
+}
+
+.btn-create-ph {
+  background: #238636;
+  color: #fff;
+}
+.btn-create-ph:hover { background: #2ea043; }
+.btn-create-ph:disabled { background: #21262d; color: #6e7681; cursor: not-allowed; }
+
+.btn-mark-complete {
+  background: #1f6feb;
+  color: #fff;
+}
+.btn-mark-complete:hover { background: #388bfd; }
+
+.btn-dismiss {
+  background: #21262d;
+  color: #c9d1d9;
+  border: 1px solid #30363d;
+}
+.btn-dismiss:hover { background: #30363d; }
+
+.btn-open-meeting {
+  background: #21262d;
+  color: #c9d1d9;
+  border: 1px solid #30363d;
+}
+.btn-open-meeting:hover { background: #30363d; }
+
+/* Two-column layout */
+.ppc-detail-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .ppc-detail-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ppc-detail-left h4,
+.ppc-detail-right h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #8b949e;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #30363d;
+}
+
+.detail-field {
+  display: flex;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.detail-field label {
+  width: 110px;
+  color: #6e7681;
+  flex-shrink: 0;
+}
+
+.detail-field span,
+.detail-field a {
+  color: #c9d1d9;
+  flex: 1;
+}
+
+.detail-field a {
+  color: #58a6ff;
+  text-decoration: none;
+}
+
+.detail-field a:hover {
+  text-decoration: underline;
+}
+
+.priority-badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.priority-badge.high { background: #f85149; color: #fff; }
+.priority-badge.medium { background: #d29922; color: #fff; }
+.priority-badge.low { background: #6e7681; color: #c9d1d9; }
+
+.confidence-dots {
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+.confidence-dots.high { color: #3fb950; }
+.confidence-dots.medium { color: #d29922; }
+.confidence-dots.low { color: #f85149; }
+
+/* Not found panel */
+.ppc-not-found {
+  text-align: center;
+  padding: 20px;
+  background: #21262d;
+  border-radius: 8px;
+}
+
+.ppc-not-found h4 {
+  color: #f85149;
+  margin-bottom: 8px;
+}
+
+.ppc-not-found p {
+  color: #8b949e;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+/* ---- Timeline ---- */
+.ppc-timeline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  margin: 16px 0;
+  border-top: 1px solid #30363d;
+  border-bottom: 1px solid #30363d;
+}
+
+.timeline-point {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 80px;
+}
+
+.timeline-point .dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #6e7681;
+  margin-bottom: 6px;
+}
+
+.timeline-point.meeting .dot { background: #58a6ff; }
+.timeline-point.ph .dot { background: #3fb950; }
+.timeline-point.ph.not-tracked .dot { background: #f85149; }
+.timeline-point.completion .dot { background: #3fb950; }
+.timeline-point.completion.pending .dot { background: #d29922; }
+.timeline-point.completion.missing .dot { background: #6e7681; }
+
+.timeline-point .label {
+  font-size: 11px;
+  color: #8b949e;
+  font-weight: 500;
+}
+
+.timeline-point .date {
+  font-size: 11px;
+  color: #6e7681;
+}
+
+.timeline-point .delta {
+  font-size: 10px;
+  color: #58a6ff;
+  margin-top: 2px;
+}
+
+.timeline-line {
+  flex: 1;
+  height: 2px;
+  background: #30363d;
+  margin: 0 8px;
+}
+
+.timeline-line.fast { background: #3fb950; }
+.timeline-line.medium { background: #d29922; }
+.timeline-line.slow { background: #f85149; }
+
+/* ---- Level 3: Evidence Panel ---- */
+.btn-show-evidence {
+  width: 100%;
+  padding: 10px;
+  background: #21262d;
+  border: 1px dashed #30363d;
+  border-radius: 6px;
+  color: #8b949e;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-show-evidence:hover {
+  background: #30363d;
+  color: #c9d1d9;
+}
+
+.ppc-evidence {
+  margin-top: 16px;
+  animation: slideDown 0.2s ease-out;
+}
+
+.evidence-section {
+  margin-bottom: 16px;
+}
+
+.evidence-section h4 {
+  font-size: 13px;
+  color: #8b949e;
+  margin-bottom: 8px;
+}
+
+.transcript-box {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #c9d1d9;
+  font-family: 'SF Mono', 'Menlo', monospace;
+  white-space: pre-wrap;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.transcript-box .speaker {
+  font-weight: 600;
+  color: #f0f6fc;
+}
+
+.reasoning-box {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #8b949e;
+  font-style: italic;
+}
+
+.confidence-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #8b949e;
+}
+
+/* ---- Disposition Modal ---- */
+.disposition-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.disposition-modal {
+  background: #21262d;
+  border-radius: 10px;
+  padding: 24px;
+  width: 400px;
+  max-width: 90vw;
+}
+
+.disposition-modal h4 {
+  font-size: 16px;
+  color: #f0f6fc;
+  margin-bottom: 16px;
+}
+
+.disposition-modal select,
+.disposition-modal textarea {
+  width: 100%;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: #c9d1d9;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.disposition-modal textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.disposition-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.disposition-modal-actions button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  border: none;
+}
+
+.disposition-modal-actions .btn-cancel {
+  background: transparent;
+  color: #8b949e;
+  border: 1px solid #30363d;
+}
+
+.disposition-modal-actions .btn-confirm {
+  background: #f85149;
+  color: #fff;
+}
+
+/* Legacy task list styles (kept for backwards compatibility) */
 .ppc-at-risk-list {
   display: flex;
   flex-direction: column;
@@ -8971,6 +9469,11 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
 
     // ============ PPC TASK ACCOUNTABILITY FUNCTIONS ============
 
+    // Store PPC data globally for filtering
+    let ppcData = { status: null, atRisk: [], tracked: [], allTasks: [] };
+    let ppcExpandedTaskId = null;
+    let ppcEvidenceShown = new Set();
+
     async function loadPPCOverview() {
       const panel = document.getElementById('ppcOverview');
       panel.innerHTML = '<div class="loading">Loading PPC accountability data...</div>';
@@ -8984,19 +9487,312 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
 
         if (!statusRes.ok) throw new Error('Failed to load PPC status');
 
-        const status = await statusRes.json();
-        const atRisk = atRiskRes.ok ? await atRiskRes.json() : { tasks: [] };
-        const tracked = trackedRes.ok ? await trackedRes.json() : { tasks: [] };
+        ppcData.status = await statusRes.json();
+        ppcData.atRisk = atRiskRes.ok ? (await atRiskRes.json()).tasks || [] : [];
+        ppcData.tracked = trackedRes.ok ? (await trackedRes.json()).tasks || [] : [];
 
-        renderPPCOverview(panel, status, atRisk, tracked);
+        // Combine all tasks with status info
+        ppcData.allTasks = [
+          ...ppcData.tracked.map(t => ({ ...t, _status: t.proofhub_status === 'complete' ? 'complete' : 'tracked' })),
+          ...ppcData.atRisk.map(t => ({ ...t, _status: t.disposition === 'cancelled' || t.disposition === 'deprioritized' ? 'dismissed' : 'missing' }))
+        ].sort((a, b) => new Date(b.meeting_date) - new Date(a.meeting_date));
+
+        renderPPCOverview(panel);
       } catch (err) {
         panel.innerHTML = `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
       }
     }
 
-    function renderPPCOverview(panel, status, atRisk, tracked) {
+    function getPPCStatusInfo(task) {
+      if (task._status === 'complete') return { icon: '✅', class: 'status-complete', label: 'Complete' };
+      if (task._status === 'tracked') return { icon: '⏳', class: 'status-tracked', label: 'Tracked' };
+      if (task._status === 'dismissed') return { icon: '⊘', class: 'status-dismissed', label: 'Dismissed' };
+      return { icon: '❌', class: 'status-missing', label: 'Missing' };
+    }
+
+    function formatPPCRelativeDate(dateStr) {
+      if (!dateStr) return 'unknown';
+      const date = new Date(dateStr);
+      const now = new Date();
+      const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+      if (diffDays === 0) return 'Today';
+      if (diffDays === 1) return 'Yesterday';
+      if (diffDays < 7) return `${diffDays}d ago`;
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    function getConfidenceDots(level) {
+      const l = (level || '').toLowerCase();
+      if (l === 'high') return '<span class="confidence-dots high">●●●○</span>';
+      if (l === 'medium') return '<span class="confidence-dots medium">●●○○</span>';
+      return '<span class="confidence-dots low">●○○○</span>';
+    }
+
+    function getTimelineLineClass(days) {
+      if (days === null || days === undefined) return '';
+      if (days <= 2) return 'fast';
+      if (days <= 7) return 'medium';
+      return 'slow';
+    }
+
+    function formatTranscriptExcerpt(text) {
+      if (!text) return '<em>No transcript excerpt available</em>';
+      // Bold speaker names (text before first colon on each line)
+      return text.split('\n').map(line => {
+        const colonIdx = line.indexOf(':');
+        if (colonIdx > 0 && colonIdx < 30) {
+          const speaker = line.substring(0, colonIdx);
+          const rest = line.substring(colonIdx);
+          return `<span class="speaker">${escapeHtml(speaker)}</span>${escapeHtml(rest)}`;
+        }
+        return escapeHtml(line);
+      }).join('\n');
+    }
+
+    function filterPPCTasks() {
+      const statusFilter = document.getElementById('ppcFilterStatus')?.value || 'all';
+      const clientFilter = document.getElementById('ppcFilterClient')?.value || 'all';
+      const platformFilter = document.getElementById('ppcFilterPlatform')?.value || 'all';
+      const searchQuery = (document.getElementById('ppcSearch')?.value || '').toLowerCase();
+
+      return ppcData.allTasks.filter(task => {
+        if (statusFilter !== 'all' && task._status !== statusFilter) return false;
+        if (clientFilter !== 'all' && task.client_id !== clientFilter) return false;
+        if (platformFilter !== 'all' && task.platform !== platformFilter) return false;
+        if (searchQuery && !task.task_title.toLowerCase().includes(searchQuery) &&
+            !(task.owner || '').toLowerCase().includes(searchQuery)) return false;
+        return true;
+      });
+    }
+
+    function renderPPCTaskCard(task) {
+      const statusInfo = getPPCStatusInfo(task);
+      const isExpanded = ppcExpandedTaskId === task.id;
+
+      return `
+        <div class="ppc-task-card ${statusInfo.class} ${isExpanded ? 'expanded' : ''}"
+             onclick="togglePPCTask(${task.id})" data-task-id="${task.id}">
+          <div class="ppc-task-status">${statusInfo.icon}</div>
+          <div class="ppc-task-summary">
+            <div class="ppc-task-title">${escapeHtml(task.task_title)}</div>
+            <div class="ppc-task-meta">${escapeHtml(task.owner || 'Unassigned')} · ${formatPPCRelativeDate(task.meeting_date)} · ${escapeHtml(task.client_name || task.client_id)}</div>
+          </div>
+          <div class="ppc-task-badges">
+            <span class="platform-badge ${task.platform || 'unknown'}">${(task.platform || 'unknown').replace('_', ' ')}</span>
+            ${task.proofhub_match || task._status === 'tracked' || task._status === 'complete' ? '<span class="ph-badge">PH</span>' : ''}
+          </div>
+        </div>
+        ${isExpanded ? renderPPCTaskDetail(task) : ''}
+      `;
+    }
+
+    function renderPPCTaskDetail(task) {
+      const isMatched = task.proofhub_match || task._status === 'tracked' || task._status === 'complete';
+      const showEvidence = ppcEvidenceShown.has(task.id);
+
+      // Timeline calculations
+      const meetingDate = task.meeting_date?.split('T')[0] || '—';
+      const phCreated = task.proofhub_created?.split('T')[0] || null;
+      const daysToPhClass = getTimelineLineClass(task.days_to_proofhub);
+
+      return `
+        <div class="ppc-task-detail" data-detail-id="${task.id}">
+          <!-- Action buttons -->
+          <div class="ppc-task-actions">
+            ${!isMatched ? '<button class="btn-create-ph" disabled title="Coming soon">Create PH Task</button>' : ''}
+            ${isMatched && task.proofhub_status !== 'complete' ? '<button class="btn-mark-complete" onclick="event.stopPropagation();" disabled title="Coming soon">Mark Complete</button>' : ''}
+            <button class="btn-dismiss" onclick="event.stopPropagation(); showDispositionModal(${task.id});">Dismiss</button>
+            <button class="btn-open-meeting" onclick="event.stopPropagation(); loadMeetingDetail(${task.meeting_id});">View Meeting</button>
+          </div>
+
+          <!-- Two-column layout -->
+          <div class="ppc-detail-columns">
+            <div class="ppc-detail-left">
+              <h4>Action Item</h4>
+              <div class="detail-field"><label>Description</label><span>${escapeHtml(task.task_description || '—')}</span></div>
+              <div class="detail-field"><label>Platform</label><span>${escapeHtml((task.platform || 'unknown').replace('_', ' '))}</span></div>
+              <div class="detail-field"><label>Action Type</label><span>${escapeHtml(task.action_type || '—')}</span></div>
+              <div class="detail-field"><label>Owner</label><span>${escapeHtml(task.owner || 'Unassigned')}</span></div>
+              <div class="detail-field"><label>Due Date</label><span>${task.due_date || 'Not set'}</span></div>
+              <div class="detail-field"><label>Priority</label><span>${task.priority ? `<span class="priority-badge ${(task.priority || '').toLowerCase()}">${task.priority}</span>` : '—'}</span></div>
+              <div class="detail-field"><label>PPC Confidence</label><span>${getConfidenceDots(task.ppc_confidence)}</span></div>
+            </div>
+
+            <div class="ppc-detail-right">
+              ${isMatched ? `
+                <h4>ProofHub Task</h4>
+                <div class="detail-field"><label>Title</label><span>${task.ph_url ? `<a href="${task.ph_url}" target="_blank">${escapeHtml(task.proofhub_task_title)}</a>` : escapeHtml(task.proofhub_task_title || '—')}</span></div>
+                <div class="detail-field"><label>Status</label><span>${task.proofhub_status || '—'} ${task.ph_stage_name ? `(${task.ph_stage_name})` : ''}</span></div>
+                <div class="detail-field"><label>Created</label><span>${phCreated || '—'}</span></div>
+                <div class="detail-field"><label>Task List</label><span>${escapeHtml(task.ph_task_list_name || '—')}</span></div>
+                <div class="detail-field"><label>Assignee</label><span>${escapeHtml(task.proofhub_assignee || task.ph_assigned_names || '—')}</span></div>
+                <div class="detail-field"><label>Comments</label><span>${task.ph_comments_count ?? '—'}</span></div>
+                <div class="detail-field"><label>Match Confidence</label><span>${getConfidenceDots(task.proofhub_confidence)}</span></div>
+              ` : `
+                <div class="ppc-not-found">
+                  <h4>❌ Not Found in ProofHub</h4>
+                  <p>No matching task found within 10 days of meeting.</p>
+                  <button class="btn-create-ph" disabled title="Coming soon">Create Task in ProofHub</button>
+                </div>
+              `}
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <div class="ppc-timeline">
+            <div class="timeline-point meeting">
+              <div class="dot"></div>
+              <div class="label">Discussed</div>
+              <div class="date">${meetingDate}</div>
+            </div>
+            <div class="timeline-line ${isMatched ? daysToPhClass : ''}"></div>
+            <div class="timeline-point ph ${isMatched ? '' : 'not-tracked'}">
+              <div class="dot"></div>
+              <div class="label">${isMatched ? 'PH Created' : 'Not Tracked'}</div>
+              <div class="date">${phCreated || '—'}</div>
+              ${task.days_to_proofhub != null ? `<div class="delta">${task.days_to_proofhub}d</div>` : ''}
+            </div>
+            <div class="timeline-line ${task.proofhub_status === 'complete' ? 'fast' : ''}"></div>
+            <div class="timeline-point completion ${task.proofhub_status === 'complete' ? '' : isMatched ? 'pending' : 'missing'}">
+              <div class="dot"></div>
+              <div class="label">${task.proofhub_status === 'complete' ? 'Completed' : 'Pending'}</div>
+              <div class="date">—</div>
+            </div>
+          </div>
+
+          <!-- Show Evidence toggle -->
+          <button class="btn-show-evidence" onclick="event.stopPropagation(); togglePPCEvidence(${task.id});">
+            ${showEvidence ? 'Hide' : 'Show'} Evidence (Transcript + AI Reasoning)
+          </button>
+
+          ${showEvidence ? `
+            <div class="ppc-evidence">
+              <div class="evidence-section">
+                <h4>📝 Transcript Excerpt</h4>
+                <div class="transcript-box">${formatTranscriptExcerpt(task.transcript_excerpt)}</div>
+              </div>
+              ${isMatched && task.proofhub_reasoning ? `
+                <div class="evidence-section">
+                  <h4>🤖 AI Match Reasoning</h4>
+                  <div class="reasoning-box">${escapeHtml(task.proofhub_reasoning)}</div>
+                  <div class="confidence-bar">
+                    Confidence: ${getConfidenceDots(task.proofhub_confidence)} ${task.proofhub_confidence || ''}
+                    ${task.completion_score != null ? ` · Match Score: ${task.completion_score}%` : ''}
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    async function togglePPCTask(taskId) {
+      if (ppcExpandedTaskId === taskId) {
+        ppcExpandedTaskId = null;
+      } else {
+        ppcExpandedTaskId = taskId;
+        ppcEvidenceShown.delete(taskId);
+
+        // Fetch full detail for expanded task if we don't have transcript_excerpt
+        const task = ppcData.allTasks.find(t => t.id === taskId);
+        if (task && !task.transcript_excerpt) {
+          try {
+            const res = await fetch(API + '/ppc/task/' + taskId + '/detail');
+            if (res.ok) {
+              const detail = await res.json();
+              // Merge detail into task
+              Object.assign(task, detail);
+            }
+          } catch (e) { console.warn('Failed to fetch task detail:', e); }
+        }
+      }
+      renderPPCTaskList();
+    }
+
+    function togglePPCEvidence(taskId) {
+      if (ppcEvidenceShown.has(taskId)) {
+        ppcEvidenceShown.delete(taskId);
+      } else {
+        ppcEvidenceShown.add(taskId);
+      }
+      renderPPCTaskList();
+    }
+
+    function renderPPCTaskList() {
+      const listContainer = document.getElementById('ppcTaskList');
+      if (!listContainer) return;
+
+      const filtered = filterPPCTasks();
+      const countEl = document.getElementById('ppcFilterCount');
+      if (countEl) countEl.textContent = `Showing ${filtered.length} of ${ppcData.allTasks.length} tasks`;
+
+      if (filtered.length === 0) {
+        listContainer.innerHTML = '<div class="ppc-empty"><div class="ppc-empty-icon">🔍</div><p>No tasks match your filters.</p></div>';
+        return;
+      }
+
+      listContainer.innerHTML = filtered.map(task => renderPPCTaskCard(task)).join('');
+    }
+
+    function showDispositionModal(taskId) {
+      const overlay = document.createElement('div');
+      overlay.className = 'disposition-modal-overlay';
+      overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+
+      overlay.innerHTML = `
+        <div class="disposition-modal">
+          <h4>Dismiss Task</h4>
+          <select id="dispositionSelect">
+            <option value="cancelled">Cancelled — client changed mind</option>
+            <option value="deprioritized">Deprioritized — will do later</option>
+            <option value="blocked">Blocked — waiting on something</option>
+          </select>
+          <textarea id="dispositionReason" placeholder="Reason (optional)"></textarea>
+          <div class="disposition-modal-actions">
+            <button class="btn-cancel" onclick="this.closest('.disposition-modal-overlay').remove()">Cancel</button>
+            <button class="btn-confirm" onclick="submitDisposition(${taskId})">Confirm</button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(overlay);
+    }
+
+    async function submitDisposition(taskId) {
+      const disposition = document.getElementById('dispositionSelect').value;
+      const reason = document.getElementById('dispositionReason').value;
+
+      try {
+        const res = await fetch(API + '/ppc/task/' + taskId + '/disposition', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ disposition, reason })
+        });
+
+        if (!res.ok) throw new Error('Failed to update disposition');
+
+        // Update local data
+        const task = ppcData.allTasks.find(t => t.id === taskId);
+        if (task) {
+          task.disposition = disposition;
+          task._status = 'dismissed';
+        }
+
+        document.querySelector('.disposition-modal-overlay')?.remove();
+        renderPPCTaskList();
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
+    function renderPPCOverview(panel) {
+      const status = ppcData.status;
       const trackedPct = status.completion_rate || 0;
       const missingPct = 100 - trackedPct;
+
+      // Build unique client list for filter
+      const clients = [...new Set(ppcData.allTasks.map(t => t.client_id))].filter(Boolean).sort();
 
       let html = `
         <div class="ppc-header">
@@ -9043,7 +9839,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         </div>
       `;
 
-      // Per-client cards
+      // Per-client cards (existing)
       if (status.clients && status.clients.length > 0) {
         html += `<div class="ppc-section">
           <h3>By Client</h3>
@@ -9070,72 +9866,43 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         html += '</div></div>';
       }
 
-      // Tracked in ProofHub tasks
-      if (tracked && tracked.tasks && tracked.tasks.length > 0) {
-        html += `<div class="ppc-section">
-          <h3>Tracked in ProofHub (${tracked.tasks.length} tasks)</h3>
-          <div class="ppc-at-risk-list">
-        `;
+      // Task list with filters
+      if (ppcData.allTasks.length > 0) {
+        html += `
+          <div class="ppc-section">
+            <h3>All PPC Tasks</h3>
 
-        tracked.tasks.slice(0, 20).forEach(task => {
-          const date = task.meeting_date?.split('T')[0] || 'unknown';
-          const phStatus = task.proofhub_status === 'complete' ? '\u2705' : '\u23f3';
-          html += `
-            <div class="ppc-tracked-item">
-              <div class="title">${escapeHtml(task.task_title)}</div>
-              <div class="ph-match">
-                ${phStatus} PH: ${task.ph_url
-                  ? `<a href="${task.ph_url}" target="_blank">${escapeHtml(task.proofhub_task_title)}</a>`
-                  : escapeHtml(task.proofhub_task_title)}
-                ${task.proofhub_assignee ? ` &mdash; Assignee: ${escapeHtml(task.proofhub_assignee)}` : ''}
-                ${task.proofhub_status ? ` &mdash; Status: ${task.proofhub_status}` : ''}
+            <!-- Filter Controls -->
+            <div class="ppc-controls">
+              <div class="ppc-filters">
+                <select id="ppcFilterStatus" onchange="renderPPCTaskList()">
+                  <option value="all">All Status</option>
+                  <option value="missing">❌ Missing</option>
+                  <option value="tracked">⏳ Tracked</option>
+                  <option value="complete">✅ Complete</option>
+                  <option value="dismissed">⊘ Dismissed</option>
+                </select>
+                <select id="ppcFilterClient" onchange="renderPPCTaskList()">
+                  <option value="all">All Clients</option>
+                  ${clients.map(c => `<option value="${c}">${escapeHtml(c)}</option>`).join('')}
+                </select>
+                <select id="ppcFilterPlatform" onchange="renderPPCTaskList()">
+                  <option value="all">All Platforms</option>
+                  <option value="google_ads">Google Ads</option>
+                  <option value="google_lsa">Google LSA</option>
+                  <option value="meta">Meta</option>
+                  <option value="bing">Bing</option>
+                </select>
+                <input type="text" id="ppcSearch" placeholder="Search tasks..." oninput="renderPPCTaskList()">
               </div>
-              <div class="meta">
-                <span>${escapeHtml(task.client_name || task.client_id)}</span>
-                <span>${date} (${task.days_ago}d ago)</span>
-                <span>Owner: ${escapeHtml(task.owner || 'unassigned')}</span>
-                ${task.platform ? `<span>Platform: ${task.platform}</span>` : ''}
-                ${task.days_to_proofhub != null ? `<span>${task.days_to_proofhub}d to PH</span>` : ''}
-              </div>
+              <div class="ppc-count" id="ppcFilterCount">Showing ${ppcData.allTasks.length} of ${ppcData.allTasks.length} tasks</div>
             </div>
-          `;
-        });
 
-        if (tracked.tasks.length > 20) {
-          html += `<div style="text-align: center; padding: 12px; color: #8b949e;">... and ${tracked.tasks.length - 20} more</div>`;
-        }
-
-        html += '</div></div>';
-      }
-
-      // At-risk tasks
-      if (atRisk.tasks && atRisk.tasks.length > 0) {
-        html += `<div class="ppc-section">
-          <h3>Missing from ProofHub (${atRisk.tasks.length} tasks)</h3>
-          <div class="ppc-at-risk-list">
+            <!-- Task List -->
+            <div class="ppc-task-list" id="ppcTaskList"></div>
+          </div>
         `;
-
-        atRisk.tasks.slice(0, 15).forEach(task => {
-          const date = task.meeting_date?.split('T')[0] || 'unknown';
-          html += `
-            <div class="ppc-at-risk-item" onclick="loadMeetingDetail(${task.meeting_id})">
-              <div class="title">${escapeHtml(task.task_title)}</div>
-              <div class="meta">
-                <span>${escapeHtml(task.client_name || task.client_id)}</span>
-                <span>${date} (${task.days_ago}d ago)</span>
-                <span>Owner: ${escapeHtml(task.owner || 'unassigned')}</span>
-                ${task.platform ? `<span>Platform: ${task.platform}</span>` : ''}
-              </div>
-            </div>
-          `;
-        });
-
-        if (atRisk.tasks.length > 15) {
-          html += `<div style="text-align: center; padding: 12px; color: #8b949e;">... and ${atRisk.tasks.length - 15} more</div>`;
-        }
-
-        html += '</div></div>';
-      } else if (status.total_ppc_tasks === 0) {
+      } else {
         html += `
           <div class="ppc-empty">
             <div class="ppc-empty-icon">📋</div>
@@ -9143,16 +9910,14 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
             <p style="font-size: 12px; margin-top: 8px;">Run the backfill to analyze existing meetings.</p>
           </div>
         `;
-      } else {
-        html += `
-          <div class="ppc-empty">
-            <div class="ppc-empty-icon">✅</div>
-            <p>All PPC tasks are tracked in ProofHub!</p>
-          </div>
-        `;
       }
 
       panel.innerHTML = html;
+
+      // Render task cards
+      if (ppcData.allTasks.length > 0) {
+        renderPPCTaskList();
+      }
     }
 
     // Init
