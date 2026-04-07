@@ -2145,6 +2145,49 @@
   background: #30363d;
 }
 
+.ppc-tracked-item {
+  background: #21262d;
+  border-radius: 8px;
+  padding: 14px 16px;
+  border-left: 4px solid #3fb950;
+  transition: background 0.15s;
+}
+
+.ppc-tracked-item:hover {
+  background: #30363d;
+}
+
+.ppc-tracked-item .title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #f0f6fc;
+  margin-bottom: 4px;
+}
+
+.ppc-tracked-item .ph-match {
+  font-size: 12px;
+  color: #3fb950;
+  margin-bottom: 6px;
+}
+
+.ppc-tracked-item .ph-match a {
+  color: #58a6ff;
+  text-decoration: none;
+}
+
+.ppc-tracked-item .ph-match a:hover {
+  text-decoration: underline;
+}
+
+.ppc-tracked-item .meta {
+  font-size: 12px;
+  color: #8b949e;
+}
+
+.ppc-tracked-item .meta span {
+  margin-right: 12px;
+}
+
 .ppc-at-risk-item .title {
   font-size: 14px;
   font-weight: 500;
@@ -8933,23 +8976,25 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       panel.innerHTML = '<div class="loading">Loading PPC accountability data...</div>';
 
       try {
-        const [statusRes, atRiskRes] = await Promise.all([
+        const [statusRes, atRiskRes, trackedRes] = await Promise.all([
           fetch(API + '/ppc/status'),
-          fetch(API + '/ppc/at-risk')
+          fetch(API + '/ppc/at-risk'),
+          fetch(API + '/ppc/tracked')
         ]);
 
         if (!statusRes.ok) throw new Error('Failed to load PPC status');
 
         const status = await statusRes.json();
         const atRisk = atRiskRes.ok ? await atRiskRes.json() : { tasks: [] };
+        const tracked = trackedRes.ok ? await trackedRes.json() : { tasks: [] };
 
-        renderPPCOverview(panel, status, atRisk);
+        renderPPCOverview(panel, status, atRisk, tracked);
       } catch (err) {
         panel.innerHTML = `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
       }
     }
 
-    function renderPPCOverview(panel, status, atRisk) {
+    function renderPPCOverview(panel, status, atRisk, tracked) {
       const trackedPct = status.completion_rate || 0;
       const missingPct = 100 - trackedPct;
 
@@ -9021,6 +9066,44 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
               </div>
             `;
           });
+
+        html += '</div></div>';
+      }
+
+      // Tracked in ProofHub tasks
+      if (tracked && tracked.tasks && tracked.tasks.length > 0) {
+        html += `<div class="ppc-section">
+          <h3>Tracked in ProofHub (${tracked.tasks.length} tasks)</h3>
+          <div class="ppc-at-risk-list">
+        `;
+
+        tracked.tasks.slice(0, 20).forEach(task => {
+          const date = task.meeting_date?.split('T')[0] || 'unknown';
+          const phStatus = task.proofhub_status === 'complete' ? '\u2705' : '\u23f3';
+          html += `
+            <div class="ppc-tracked-item">
+              <div class="title">${escapeHtml(task.task_title)}</div>
+              <div class="ph-match">
+                ${phStatus} PH: ${task.ph_url
+                  ? `<a href="${task.ph_url}" target="_blank">${escapeHtml(task.proofhub_task_title)}</a>`
+                  : escapeHtml(task.proofhub_task_title)}
+                ${task.proofhub_assignee ? ` &mdash; Assignee: ${escapeHtml(task.proofhub_assignee)}` : ''}
+                ${task.proofhub_status ? ` &mdash; Status: ${task.proofhub_status}` : ''}
+              </div>
+              <div class="meta">
+                <span>${escapeHtml(task.client_name || task.client_id)}</span>
+                <span>${date} (${task.days_ago}d ago)</span>
+                <span>Owner: ${escapeHtml(task.owner || 'unassigned')}</span>
+                ${task.platform ? `<span>Platform: ${task.platform}</span>` : ''}
+                ${task.days_to_proofhub != null ? `<span>${task.days_to_proofhub}d to PH</span>` : ''}
+              </div>
+            </div>
+          `;
+        });
+
+        if (tracked.tasks.length > 20) {
+          html += `<div style="text-align: center; padding: 12px; color: #8b949e;">... and ${tracked.tasks.length - 20} more</div>`;
+        }
 
         html += '</div></div>';
       }

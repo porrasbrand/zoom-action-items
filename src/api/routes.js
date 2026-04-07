@@ -2308,6 +2308,46 @@ router.get('/ppc/at-risk', (req, res) => {
   }
 });
 
+// GET /api/ppc/tracked - Tasks matched in ProofHub with links
+router.get('/ppc/tracked', (req, res) => {
+  try {
+    const days = parseInt(req.query.days) || 30;
+    const database = getDatabase();
+    initPPCTrackingTable(database);
+
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+
+    const tasks = database.prepare(`
+      SELECT p.id, p.task_title, p.task_description, p.client_id, p.client_name,
+             p.meeting_id, p.meeting_date, p.owner, p.platform, p.action_type,
+             p.proofhub_task_id, p.proofhub_task_title, p.proofhub_status,
+             p.proofhub_created, p.proofhub_assignee, p.proofhub_confidence,
+             p.proofhub_reasoning, p.completion_score, p.days_to_proofhub,
+             c.project_id AS ph_project_id, c.task_list_id AS ph_task_list_id
+      FROM ppc_task_tracking p
+      LEFT JOIN ph_task_cache c ON CAST(p.proofhub_task_id AS INTEGER) = c.ph_task_id
+      WHERE p.proofhub_match = 1 AND p.meeting_date >= ?
+      ORDER BY p.meeting_date DESC
+    `).all(cutoffDate.toISOString());
+
+    res.json({
+      period_days: days,
+      total_tracked: tasks.length,
+      tasks: tasks.map(t => ({
+        ...t,
+        ph_url: t.ph_project_id && t.ph_task_list_id
+          ? `https://breakthrough3x.proofhub.com/bapplite/#app/todos/project-${t.ph_project_id}/list-${t.ph_task_list_id}/task-${t.proofhub_task_id}`
+          : null,
+        days_ago: Math.floor((Date.now() - new Date(t.meeting_date).getTime()) / (1000 * 60 * 60 * 24))
+      }))
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 // POST /api/ppc/task/:id/disposition - Mark task as cancelled/deprioritized
 router.post('/ppc/task/:id/disposition', (req, res) => {
   try {
