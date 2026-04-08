@@ -2495,7 +2495,28 @@ router.get('/ppc/task/:id/detail', (req, res) => {
       ph_stage_name: task.ph_stage_name,
       ph_task_list_name: task.ph_task_list_name,
       ph_comments_count: task.ph_comments_count,
-      ph_assigned_names: task.ph_assigned_names,
+      ph_assigned_names: (() => {
+        // Resolve PH user IDs to names
+        const idToName = {
+          "12896349500": "Philip Mutrie",
+          "13652696772": "Bill Soady",
+          "12930841172": "Richard Bonn",
+          "12953229550": "Joaco Malig",
+          "13766931777": "Jacob Hastings",
+          "14513930205": "Vince Lei",
+          "12953338100": "Sarah Young",
+          "12953283825": "Manuel Porras",
+          "12953297394": "Ray Z",
+          "13766918208": "Nicole",
+          "12896335931": "Joe Boland"
+        };
+        try {
+          const ids = JSON.parse(task.ph_assigned_names || "[]");
+          return ids.map(id => idToName[String(id)] || String(id));
+        } catch(e) {
+          return task.ph_assigned_names;
+        }
+      })(),
       ph_due_date: task.ph_due_date,
       ph_scope_summary: task.ph_scope_summary
     });
