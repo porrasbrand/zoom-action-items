@@ -2713,6 +2713,42 @@
   margin-bottom: 12px;
 }
 
+/* ============ PPC REFRESH ============ */
+.ppc-refresh-banner {
+  background: #1c2128;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: #8b949e;
+  margin-bottom: 12px;
+  transition: all 0.3s;
+}
+.ppc-refresh-banner.has-updates { border-color: #3fb950; color: #3fb950; }
+.ppc-refresh-banner.refresh-error { border-color: #f85149; color: #f85149; }
+.btn-refresh-task {
+  background: none;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 6px;
+  margin-left: 8px;
+}
+.btn-refresh-task:hover { border-color: #58a6ff; }
+.ppc-refresh-btn {
+  background: #21262d;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  color: #8b949e;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 6px 12px;
+  margin-left: 12px;
+}
+.ppc-refresh-btn:hover { border-color: #58a6ff; color: #f0f6fc; }
+.staleness-indicator { font-size: 10px; color: #6e7681; font-style: italic; }
+
 /* ============ ROADMAP VIEW ============ */
 .roadmap-view {
   flex: 1;
@@ -9498,6 +9534,8 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         ].sort((a, b) => new Date(b.meeting_date) - new Date(a.meeting_date));
 
         renderPPCOverview(panel);
+        // Trigger background refresh after rendering stale data
+        triggerPPCRefresh();
       } catch (err) {
         panel.innerHTML = `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
       }
@@ -9549,6 +9587,61 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       }).join('\n');
     }
 
+    async function triggerPPCRefresh() {
+      const existing = document.getElementById('ppcRefreshBanner');
+      if (existing) existing.remove();
+
+      const banner = document.createElement('div');
+      banner.className = 'ppc-refresh-banner';
+      banner.id = 'ppcRefreshBanner';
+      banner.innerHTML = '🔄 Refreshing ProofHub status...';
+      const panel = document.getElementById('ppcOverview');
+      if (panel) panel.prepend(banner);
+
+      try {
+        const res = await fetch(API + '/ppc/refresh', { method: 'POST' });
+        const result = await res.json();
+
+        if (result.skipped) {
+          banner.innerHTML = '✓ ProofHub status is current';
+        } else if (result.updated && result.updated.length > 0) {
+          banner.innerHTML = `✓ ${result.updated.length} task(s) updated from ProofHub`;
+          banner.classList.add('has-updates');
+          setTimeout(() => loadPPCOverview(), 1500);
+        } else {
+          banner.innerHTML = `✓ All ${result.checked} tasks checked — no changes`;
+        }
+      } catch (err) {
+        banner.innerHTML = '⚠ Could not refresh ProofHub status';
+        banner.classList.add('refresh-error');
+      }
+
+      setTimeout(() => { if (banner.parentNode) banner.remove(); }, 5000);
+    }
+
+    async function refreshSinglePPCTask(taskId, event) {
+      event.stopPropagation();
+      const btn = event.target;
+      btn.disabled = true;
+      btn.textContent = '⏳';
+
+      try {
+        const res = await fetch(API + '/ppc/refresh/' + taskId, { method: 'POST' });
+        const result = await res.json();
+
+        if (result.updated) {
+          btn.textContent = '✅';
+          setTimeout(() => togglePPCTask(taskId), 1000);
+        } else {
+          btn.textContent = '✓';
+        }
+      } catch (err) {
+        btn.textContent = '⚠';
+      }
+
+      setTimeout(() => { btn.disabled = false; btn.textContent = '🔄'; }, 3000);
+    }
+
     function filterPPCTasks() {
       const statusFilter = document.getElementById('ppcFilterStatus')?.value || 'all';
       const clientFilter = document.getElementById('ppcFilterClient')?.value || 'all';
@@ -9575,7 +9668,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
           <div class="ppc-task-status">${statusInfo.icon}</div>
           <div class="ppc-task-summary">
             <div class="ppc-task-title">${escapeHtml(task.task_title)}</div>
-            <div class="ppc-task-meta">${escapeHtml(task.owner || 'Unassigned')} · ${formatPPCRelativeDate(task.meeting_date)} · ${escapeHtml(task.client_name || task.client_id)}</div>
+            <div class="ppc-task-meta">${escapeHtml(task.owner || 'Unassigned')} · ${formatPPCRelativeDate(task.meeting_date)} · ${escapeHtml(task.client_name || task.client_id)} <span class="staleness-indicator">${task.last_checked ? 'Checked ' + formatPPCRelativeDate(task.last_checked) : 'Never checked'}</span></div>
           </div>
           <div class="ppc-task-badges">
             <span class="platform-badge ${task.platform || 'unknown'}">${(task.platform || 'unknown').replace('_', ' ')}</span>
@@ -9622,7 +9715,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
               ${isMatched ? `
                 <h4>ProofHub Task</h4>
                 <div class="detail-field"><label>Title</label><span>${task.ph_url ? `<a href="${task.ph_url}" target="_blank">${escapeHtml(task.proofhub_task_title)}</a>` : escapeHtml(task.proofhub_task_title || '—')}</span></div>
-                <div class="detail-field"><label>Status</label><span>${task.proofhub_status || '—'} ${task.ph_stage_name ? `(${task.ph_stage_name})` : ''}</span></div>
+                <div class="detail-field"><label>Status</label><span>${task.proofhub_status || '—'} ${task.ph_stage_name ? `(${task.ph_stage_name})` : ''} <button class="btn-refresh-task" onclick="refreshSinglePPCTask(${task.id}, event)" title="Check ProofHub now">🔄</button></span></div>
                 <div class="detail-field"><label>Created</label><span>${phCreated || '—'}</span></div>
                 <div class="detail-field"><label>Task List</label><span>${escapeHtml(task.ph_task_list_name || '—')}</span></div>
                 <div class="detail-field"><label>Assignee</label><span>${escapeHtml(task.proofhub_assignee || task.ph_assigned_names || '—')}</span></div>
@@ -9797,6 +9890,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       let html = `
         <div class="ppc-header">
           <h2>PPC Task Accountability</h2>
+          <button class="ppc-refresh-btn" onclick="triggerPPCRefresh()">🔄 Refresh PH Status</button>
           <span style="color: #8b949e; font-size: 13px;">Last ${status.period_days} days</span>
         </div>
 

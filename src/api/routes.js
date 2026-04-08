@@ -39,7 +39,7 @@ import {
 import { initDatabase as initMetricsDb, getMetrics, getStats as getMetricsStats, computeAllMetrics } from '../lib/session-metrics.js';
 import { getAllBaselines, getBaselines, recalculateAll as recalculateBaselines, initBaselinesTable } from '../lib/session-baselines.js';
 import { getScorecard, getClientTrend, getTeamStats, getAllTeamStats, getFlags, getBenchmarks, getWeeklyDigest, getCalibrationStatus, saveCalibrationScores, getCalibrationComparison, getCalibrationMeetingData } from '../lib/session-queries.js';
-import { getPPCReport, trackPPCTasks, updateDisposition, initPPCTrackingTable } from '../lib/ppc-task-tracker.js';
+import { getPPCReport, trackPPCTasks, updateDisposition, initPPCTrackingTable, refreshPPCStatuses, refreshSingleTask } from '../lib/ppc-task-tracker.js';
 import { readdirSync, readFileSync as fsReadFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -2302,6 +2302,7 @@ router.get('/ppc/at-risk', (req, res) => {
         ppc_confidence: t.ppc_confidence,
         days_ago: Math.floor((Date.now() - new Date(t.meeting_date).getTime()) / (1000 * 60 * 60 * 24)),
         disposition: t.disposition,
+        last_checked: t.last_checked || null,
         transcript_excerpt: null,
         priority: null,
         due_date: null
@@ -2352,6 +2353,7 @@ router.get('/ppc/tracked', (req, res) => {
              p.proofhub_task_id, p.proofhub_task_title, p.proofhub_status,
              p.proofhub_created, p.proofhub_assignee, p.proofhub_confidence,
              p.proofhub_reasoning, p.completion_score, p.days_to_proofhub,
+             p.last_checked,
              c.project_id AS ph_project_id, c.task_list_id AS ph_task_list_id,
              c.stage_name AS ph_stage_name
       FROM ppc_task_tracking p
@@ -2497,6 +2499,29 @@ router.get('/ppc/task/:id/detail', (req, res) => {
       ph_due_date: task.ph_due_date,
       ph_scope_summary: task.ph_scope_summary
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/ppc/refresh - Refresh all incomplete PPC task statuses from ProofHub
+router.post('/ppc/refresh', async (req, res) => {
+  try {
+    const database = getDatabase();
+    const result = await refreshPPCStatuses(database);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/ppc/refresh/:taskId - Refresh single task status
+router.post('/ppc/refresh/:taskId', async (req, res) => {
+  try {
+    const taskId = parseInt(req.params.taskId);
+    const database = getDatabase();
+    const result = await refreshSingleTask(database, taskId);
+    res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

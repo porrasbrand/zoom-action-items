@@ -619,6 +619,243 @@ export function updateDisposition(db, taskId, disposition, reason = null) {
   `).run(disposition, reason, taskId);
 }
 
+// ============ ON-DEMAND PROOFHUB STATUS SYNC ============
+
+let refreshInProgress = null;
+let lastRefreshTime = null;
+const REFRESH_COOLDOWN_MS = 60 * 60 * 1000; // 1 hour
+
+/**
+ * Refresh ProofHub statuses for all incomplete matched PPC tasks.
+ * In-memory lock prevents concurrent refreshes; 1-hour cooldown prevents over-polling.
+ */
+export async function refreshPPCStatuses(db) {
+  if (lastRefreshTime && (Date.now() - lastRefreshTime) < REFRESH_COOLDOWN_MS) {
+    return { skipped: true, reason: 'cooldown', last_refresh: new Date(lastRefreshTime).toISOString() };
+  }
+
+  if (refreshInProgress) {
+    return refreshInProgress;
+  }
+
+  refreshInProgress = _doRefresh(db);
+  try {
+    const result = await refreshInProgress;
+    lastRefreshTime = Date.now();
+    return result;
+  } finally {
+    refreshInProgress = null;
+  }
+}
+
+async function _doRefresh(db) {
+  const tasks = db.prepare(`
+    SELECT id, proofhub_task_id, proofhub_status, proofhub_task_title,
+           client_name, task_title, meeting_date
+    FROM ppc_task_tracking
+    WHERE proofhub_match = 1 AND proofhub_status != 'complete'
+  `).all();
+
+  const updated = [];
+  let apiCalls = 0;
+
+  for (const task of tasks) {
+    // Step A: Check ph_task_cache first (free — no API call)
+    const cached = db.prepare(`
+      SELECT completed, completed_at, stage_name
+      FROM ph_task_cache WHERE ph_task_id = ?
+    `).get(parseInt(task.proofhub_task_id));
+
+    if (cached && cached.completed === 1) {
+      db.prepare(`
+        UPDATE ppc_task_tracking
+        SET proofhub_status = 'complete', last_checked = datetime('now')
+        WHERE id = ?
+      `).run(task.id);
+      const change = {
+        task_id: task.id,
+        task_title: task.task_title,
+        client_name: task.client_name,
+        old_status: 'incomplete',
+        new_status: 'complete',
+        source: 'cache'
+      };
+      updated.push(change);
+      _notifySlack(task);
+      continue;
+    }
+
+    // Step B: Hit ProofHub API directly
+    try {
+      const cacheInfo = db.prepare(`
+        SELECT project_id, task_list_id FROM ph_task_cache WHERE ph_task_id = ?
+      `).get(parseInt(task.proofhub_task_id));
+
+      if (!cacheInfo) continue;
+
+      const url = `https://breakthrough3x.proofhub.com/api/v3/projects/${cacheInfo.project_id}/todolists/${cacheInfo.task_list_id}/tasks/${task.proofhub_task_id}`;
+
+      const response = await fetch(url, {
+        headers: {
+          'X-API-KEY': process.env.PROOFHUB_API_KEY,
+          'User-Agent': 'zoom-action-items'
+        }
+      });
+
+      if (response.ok) {
+        const phTask = await response.json();
+        apiCalls++;
+
+        const isComplete = phTask.completed === true || phTask.completed === 1;
+        db.prepare(`
+          UPDATE ph_task_cache
+          SET completed = ?, completed_at = ?, stage_name = ?, last_synced_at = datetime('now')
+          WHERE ph_task_id = ?
+        `).run(
+          isComplete ? 1 : 0,
+          phTask.completed_on || null,
+          phTask.stage?.name || phTask.workflow_status?.name || null,
+          parseInt(task.proofhub_task_id)
+        );
+
+        if (isComplete && task.proofhub_status !== 'complete') {
+          db.prepare(`
+            UPDATE ppc_task_tracking
+            SET proofhub_status = 'complete', last_checked = datetime('now')
+            WHERE id = ?
+          `).run(task.id);
+          updated.push({
+            task_id: task.id,
+            task_title: task.task_title,
+            client_name: task.client_name,
+            old_status: 'incomplete',
+            new_status: 'complete',
+            source: 'api'
+          });
+          _notifySlack(task);
+        } else {
+          db.prepare(`
+            UPDATE ppc_task_tracking SET last_checked = datetime('now') WHERE id = ?
+          `).run(task.id);
+        }
+      }
+
+      // Rate limit: 1 second between API calls
+      await new Promise(r => setTimeout(r, 1000));
+    } catch (err) {
+      console.error(`[PPC Sync] Error checking task ${task.id}:`, err.message);
+    }
+  }
+
+  return {
+    skipped: false,
+    checked: tasks.length,
+    api_calls: apiCalls,
+    updated,
+    timestamp: new Date().toISOString()
+  };
+}
+
+/**
+ * Refresh a single PPC task's ProofHub status. No cooldown, no lock.
+ */
+export async function refreshSingleTask(db, taskId) {
+  const task = db.prepare(`
+    SELECT id, proofhub_task_id, proofhub_status, proofhub_task_title,
+           client_name, task_title, meeting_date
+    FROM ppc_task_tracking WHERE id = ?
+  `).get(taskId);
+
+  if (!task) return { error: 'task_not_found' };
+  if (!task.proofhub_task_id) return { error: 'no_proofhub_match', updated: false };
+
+  // Check cache first
+  const cached = db.prepare(`
+    SELECT completed, project_id, task_list_id FROM ph_task_cache WHERE ph_task_id = ?
+  `).get(parseInt(task.proofhub_task_id));
+
+  let isComplete = false;
+  let source = 'cache';
+
+  if (cached && cached.completed === 1) {
+    isComplete = true;
+  } else if (cached) {
+    // Hit API
+    try {
+      const url = `https://breakthrough3x.proofhub.com/api/v3/projects/${cached.project_id}/todolists/${cached.task_list_id}/tasks/${task.proofhub_task_id}`;
+      const response = await fetch(url, {
+        headers: {
+          'X-API-KEY': process.env.PROOFHUB_API_KEY,
+          'User-Agent': 'zoom-action-items'
+        }
+      });
+
+      if (response.ok) {
+        const phTask = await response.json();
+        isComplete = phTask.completed === true || phTask.completed === 1;
+        source = 'api';
+
+        db.prepare(`
+          UPDATE ph_task_cache
+          SET completed = ?, completed_at = ?, stage_name = ?, last_synced_at = datetime('now')
+          WHERE ph_task_id = ?
+        `).run(
+          isComplete ? 1 : 0,
+          phTask.completed_on || null,
+          phTask.stage?.name || phTask.workflow_status?.name || null,
+          parseInt(task.proofhub_task_id)
+        );
+      }
+    } catch (err) {
+      console.error(`[PPC Sync] Error checking single task ${taskId}:`, err.message);
+      db.prepare(`UPDATE ppc_task_tracking SET last_checked = datetime('now') WHERE id = ?`).run(taskId);
+      return { updated: false, error: err.message };
+    }
+  } else {
+    // No cache entry at all
+    db.prepare(`UPDATE ppc_task_tracking SET last_checked = datetime('now') WHERE id = ?`).run(taskId);
+    return { updated: false, reason: 'no_cache_entry' };
+  }
+
+  const oldStatus = task.proofhub_status;
+  const newStatus = isComplete ? 'complete' : 'incomplete';
+
+  db.prepare(`
+    UPDATE ppc_task_tracking
+    SET proofhub_status = ?, last_checked = datetime('now')
+    WHERE id = ?
+  `).run(newStatus, taskId);
+
+  if (isComplete && oldStatus !== 'complete') {
+    _notifySlack(task);
+  }
+
+  return {
+    updated: newStatus !== oldStatus,
+    old_status: oldStatus,
+    new_status: newStatus,
+    source
+  };
+}
+
+/**
+ * Best-effort Slack notification when a PPC task completes in ProofHub
+ */
+async function _notifySlack(task) {
+  try {
+    const { WebClient } = await import('@slack/web-api');
+    const slack = new WebClient(process.env.SLACK_BOT_TOKEN);
+    const alertChannel = process.env.SLACK_ALERT_CHANNEL || '#zoom-pipeline-alerts';
+
+    await slack.chat.postMessage({
+      channel: alertChannel,
+      text: `✅ PPC task completed in ProofHub\n*${task.task_title}*\nClient: ${task.client_name} | Meeting: ${task.meeting_date?.split('T')[0]}\nPH: ${task.proofhub_task_title}`
+    });
+  } catch (slackErr) {
+    console.error('[PPC Sync] Slack notification failed:', slackErr.message);
+  }
+}
+
 export default {
   initPPCTrackingTable,
   classifyPPCTasks,
@@ -626,5 +863,7 @@ export default {
   trackPPCTasks,
   backfillPPCTracking,
   getPPCReport,
-  updateDisposition
+  updateDisposition,
+  refreshPPCStatuses,
+  refreshSingleTask
 };
