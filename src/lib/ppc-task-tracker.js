@@ -69,6 +69,18 @@ export function initPPCTrackingTable(db) {
     CREATE INDEX IF NOT EXISTS idx_ppc_meeting ON ppc_task_tracking(meeting_id);
     CREATE INDEX IF NOT EXISTS idx_ppc_proofhub_match ON ppc_task_tracking(proofhub_match);
   `);
+
+  // Phase 22A: Add columns for universal task tracking (idempotent)
+  const newColumns = [
+    ['category', 'TEXT DEFAULT NULL'],
+    ['trackable', 'BOOLEAN DEFAULT NULL'],
+    ['trackable_reason', 'TEXT DEFAULT NULL'],
+    ['embedding_score', 'REAL DEFAULT NULL'],
+    ['match_method', 'TEXT DEFAULT NULL']
+  ];
+  for (const [name, def] of newColumns) {
+    try { db.exec(`ALTER TABLE ppc_task_tracking ADD COLUMN ${name} ${def}`); } catch {}
+  }
 }
 
 // ============ CLIENT CONFIG ============
@@ -216,44 +228,48 @@ export async function classifyPPCTasks(meetingId, db) {
  * @param {Database} db - Database connection
  * @returns {Object} Match result with proofhub details
  */
-export async function matchProofHub(task, clientId, meetingDate, db) {
-  // Get ProofHub project ID
-  const projectId = getClientProjectId(clientId);
-  if (!projectId) {
-    return { match_found: false, reason: 'no_proofhub_project' };
-  }
-
-  // Check if ProofHub is configured
-  if (!proofhub.isProofhubConfigured()) {
-    return { match_found: false, reason: 'proofhub_not_configured' };
-  }
-
-  // Fetch all tasks from ProofHub for this project
-  let phTasks;
-  try {
-    phTasks = await proofhub.getAllProjectTasks(projectId);
-  } catch (err) {
-    return { match_found: false, reason: 'proofhub_api_error', error: err.message };
-  }
-
-  if (!phTasks || phTasks.length === 0) {
-    return { match_found: false, reason: 'no_proofhub_tasks' };
-  }
-
-  // Filter to tasks created within 10 days of meeting
+export async function matchProofHub(task, clientId, meetingDate, db, candidateOverride = null) {
   const meetingDateObj = new Date(meetingDate);
-  const windowStart = new Date(meetingDateObj);
-  windowStart.setDate(windowStart.getDate() - 2); // 2 days before (may have been created earlier)
-  const windowEnd = new Date(meetingDateObj);
-  windowEnd.setDate(windowEnd.getDate() + 10); // 10 days after
+  let candidateTasks;
 
-  const candidateTasks = phTasks.filter(t => {
-    if (!t.created_at) return false;
-    const created = new Date(t.created_at);
-    return created >= windowStart && created <= windowEnd;
-  });
+  if (candidateOverride) {
+    // Use pre-screened candidates (from embedding funnel)
+    candidateTasks = candidateOverride;
+  } else {
+    // Original behavior: fetch from ProofHub API
+    const projectId = getClientProjectId(clientId);
+    if (!projectId) {
+      return { match_found: false, reason: 'no_proofhub_project' };
+    }
 
-  if (candidateTasks.length === 0) {
+    if (!proofhub.isProofhubConfigured()) {
+      return { match_found: false, reason: 'proofhub_not_configured' };
+    }
+
+    let phTasks;
+    try {
+      phTasks = await proofhub.getAllProjectTasks(projectId);
+    } catch (err) {
+      return { match_found: false, reason: 'proofhub_api_error', error: err.message };
+    }
+
+    if (!phTasks || phTasks.length === 0) {
+      return { match_found: false, reason: 'no_proofhub_tasks' };
+    }
+
+    const windowStart = new Date(meetingDateObj);
+    windowStart.setDate(windowStart.getDate() - 2);
+    const windowEnd = new Date(meetingDateObj);
+    windowEnd.setDate(windowEnd.getDate() + 10);
+
+    candidateTasks = phTasks.filter(t => {
+      if (!t.created_at) return false;
+      const created = new Date(t.created_at);
+      return created >= windowStart && created <= windowEnd;
+    });
+  }
+
+  if (!candidateTasks || candidateTasks.length === 0) {
     return { match_found: false, reason: 'no_tasks_in_window' };
   }
 
@@ -295,6 +311,7 @@ EXAMPLES OF NON-MATCHES:
 - "Develop Facebook ad concepts" ≠ "Getting More Hardwood Leads" (different scope — one is FB creative, one is lead strategy)
 - "Pull CTR and Conversion Rate data" ≠ "AC Ads and Expansion" (reporting task ≠ campaign management)
 - "Throttle sump pump campaigns" ≠ "UPDATES TO MAKE ON TRAFFIC" (specific action ≠ generic bucket)
+- "Follow up with client about proposal" ≠ "Client Onboarding Tasks" (verbal follow-up ≠ project task)
 
 EXAMPLES OF VALID MATCHES:
 - "Update Google Ads keywords for AC" ≈ "Jacob - Pearce HVAC - Google/Bing Ads For AC" (same specific work)
@@ -536,6 +553,60 @@ export async function backfillPPCTracking(db) {
   }
 
   return results;
+}
+
+// ============ UNIVERSAL TASK TRACKING ============
+
+/**
+ * Track ALL non-PPC action items for a meeting using 3-step funnel
+ * Called by poll.js after trackPPCTasks for new meetings
+ */
+export async function trackAllTasks(meetingId, db) {
+  initPPCTrackingTable(db);
+
+  const meeting = db.prepare(`
+    SELECT ai_extraction, client_id, client_name, start_time
+    FROM meetings WHERE id = ?
+  `).get(meetingId);
+
+  if (!meeting || !meeting.ai_extraction) return { added: 0 };
+
+  let extraction;
+  try { extraction = JSON.parse(meeting.ai_extraction); } catch { return { added: 0 }; }
+
+  const actionItems = extraction.action_items ||
+    (Array.isArray(extraction) ? extraction[0]?.action_items : null) || [];
+
+  let added = 0;
+  for (let i = 0; i < actionItems.length; i++) {
+    const item = actionItems[i];
+
+    // Skip if already tracked
+    const existing = db.prepare(
+      'SELECT id FROM ppc_task_tracking WHERE meeting_id = ? AND action_item_index = ?'
+    ).get(meetingId, i);
+    if (existing) continue;
+
+    // Insert non-PPC item as unmatched (matching happens in batch via match-all-tasks.mjs)
+    db.prepare(`
+      INSERT OR IGNORE INTO ppc_task_tracking (
+        meeting_id, action_item_index, task_title, task_description, client_id, client_name,
+        platform, action_type, owner, meeting_date, ppc_confidence, category,
+        proofhub_match, computed_at
+      ) VALUES (?, ?, ?, ?, ?, ?, NULL, NULL, ?, ?, NULL, ?, NULL, datetime('now'))
+    `).run(
+      meetingId, i,
+      item.title || item.task || 'Untitled',
+      item.description || null,
+      meeting.client_id, meeting.client_name,
+      item.owner || item.owner_name || null,
+      meeting.start_time,
+      item.category || null
+    );
+    added++;
+  }
+
+  return { meeting_id: meetingId, added };
 }
 
 // ============ REPORTING ============
@@ -892,6 +963,7 @@ export default {
   classifyPPCTasks,
   matchProofHub,
   trackPPCTasks,
+  trackAllTasks,
   backfillPPCTracking,
   getPPCReport,
   updateDisposition,
