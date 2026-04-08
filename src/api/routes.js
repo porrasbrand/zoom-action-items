@@ -2219,12 +2219,19 @@ router.get('/ppc/status', (req, res) => {
     initPPCTrackingTable(database);
     const report = getPPCReport(database, { days });
 
+    // Confidence-based counts: HIGH/human-verified = confirmed, MEDIUM = needs_review, rest = missing
+    const allTasks = report.all_tasks || [];
+    const confirmedCount = allTasks.filter(t => t.proofhub_match === 1 && (t.proofhub_confidence === 'high' || t.proofhub_confidence === 'human-verified')).length;
+    const needsReviewCount = allTasks.filter(t => t.proofhub_match === 1 && t.proofhub_confidence === 'medium').length;
+    const missingCount = report.total_ppc_tasks - confirmedCount - needsReviewCount;
+
     res.json({
       period_days: report.period_days,
       total_ppc_tasks: report.total_ppc_tasks,
-      in_proofhub: report.in_proofhub,
-      missing: report.missing,
-      completion_rate: report.completion_rate,
+      in_proofhub: confirmedCount,
+      needs_review: needsReviewCount,
+      missing: missingCount,
+      completion_rate: report.total_ppc_tasks > 0 ? Math.round((confirmedCount / report.total_ppc_tasks) * 100) : 0,
       avg_score: report.avg_score,
       avg_days_to_proofhub: report.avg_days_to_proofhub,
       clients: Object.entries(report.by_client).map(([id, data]) => ({
@@ -2395,6 +2402,9 @@ router.get('/ppc/tracked', (req, res) => {
     const enrichedTasks = tasks.map(t => {
       const task = {
         ...t,
+        match_status: t.proofhub_confidence === 'high' || t.proofhub_confidence === 'human-verified' ? 'confirmed'
+                    : t.proofhub_confidence === 'medium' ? 'needs_review'
+                    : 'unconfirmed',
         ph_url: t.ph_project_id && t.ph_task_list_id
           ? `https://breakthrough3x.proofhub.com/bapplite/#app/todos/project-${t.ph_project_id}/list-${t.ph_task_list_id}/task-${t.proofhub_task_id}`
           : null,
@@ -2554,6 +2564,39 @@ router.post('/ppc/refresh/:taskId', async (req, res) => {
     res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/ppc/task/:id/verify - Accept or reject a medium-confidence match
+router.post('/ppc/task/:id/verify', (req, res) => {
+  try {
+    const taskId = parseInt(req.params.id);
+    const { action } = req.body;
+
+    if (!action || !['accept', 'reject'].includes(action)) {
+      return res.status(400).json({ error: 'action must be "accept" or "reject"' });
+    }
+
+    const database = getDatabase();
+    initPPCTrackingTable(database);
+
+    if (action === 'accept') {
+      database.prepare(`
+        UPDATE ppc_task_tracking
+        SET proofhub_confidence = 'human-verified', last_checked = datetime('now')
+        WHERE id = ?
+      `).run(taskId);
+    } else {
+      database.prepare(`
+        UPDATE ppc_task_tracking
+        SET proofhub_match = 0, proofhub_confidence = 'rejected', last_checked = datetime('now')
+        WHERE id = ?
+      `).run(taskId);
+    }
+
+    res.json({ success: true, task_id: taskId, action });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 });
 

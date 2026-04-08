@@ -197,7 +197,8 @@ export async function classifyPPCTasks(meetingId, db) {
         ppc_confidence: classification.confidence,
         client_id: meeting.client_id,
         client_name: meeting.client_name,
-        meeting_date: meeting.start_time
+        meeting_date: meeting.start_time,
+        transcript_excerpt: item.transcript_excerpt || null
       });
     }
   }
@@ -256,31 +257,61 @@ export async function matchProofHub(task, clientId, meetingDate, db) {
     return { match_found: false, reason: 'no_tasks_in_window' };
   }
 
-  // Build GPT prompt for semantic matching
-  const taskListStr = candidateTasks.slice(0, 20).map((t, i) =>
-    `${i + 1}. Title: "${t.title}", Created: "${t.created_at?.split('T')[0] || 'unknown'}", Assignee: "${t.responsible_name || 'unassigned'}", Status: "${t.completed ? 'complete' : 'incomplete'}"`
-  ).join('\n');
+  // Build GPT prompt for semantic matching — include PH descriptions
+  const taskListStr = candidateTasks.slice(0, 20).map((t, i) => {
+    // Look up description from ph_task_cache
+    const cached = db.prepare('SELECT description_text, scope_summary FROM ph_task_cache WHERE ph_task_id = ?')
+      .get(parseInt(t.id));
+    const desc = cached?.scope_summary || (cached?.description_text || '').replace(/<[^>]+>/g, '').slice(0, 200) || 'No description';
+    return `${i + 1}. Title: "${t.title}"
+   Description: "${desc}"
+   Created: "${t.created_at?.split('T')[0] || 'unknown'}", Assignee: "${t.responsible_name || 'unassigned'}", Status: "${t.completed ? 'complete' : 'incomplete'}"`;
+  }).join('\n');
 
-  const prompt = `TASK from client meeting (${meetingDate.split('T')[0]}):
+  // Include transcript excerpt if available
+  const transcriptLine = task.transcript_excerpt
+    ? `\nTranscript context (what was said in the meeting):\n"${task.transcript_excerpt.slice(0, 500)}"\n`
+    : '';
+
+  const prompt = `MEETING ACTION ITEM (${meetingDate.split('T')[0]}):
 Title: "${task.title}"
 Description: "${task.description || 'No description'}"
 Owner: "${task.owner || 'unspecified'}"
 Client: "${task.client_name}"
-
-PROOFHUB TASKS (created within 10 days of meeting):
+${transcriptLine}
+CANDIDATE PROOFHUB TASKS (created within 10 days of meeting):
 ${taskListStr}
 
-Which ProofHub task (if any) tracks the same work as the meeting action item? Consider:
-- Same intent even if different wording
-- Same client context
-- Could be a broader task that encompasses this specific item
+Does any ProofHub task track THE SAME SPECIFIC WORK as this meeting action item?
+
+MATCHING RULES:
+- A match means the PH task was created specifically to track this action item or describes the same concrete deliverable
+- The PH task title or description must reference the same specific activity, not just the same general area
+- Same client + same broad category (e.g., "ads") is NOT sufficient for a match
+- A generic task like "UPDATES TO MAKE ON TRAFFIC" does NOT match a specific item like "Throttle sump pump campaigns"
+- A broad strategy task does NOT match a specific tactical item unless the PH task description explicitly mentions that tactic
+
+EXAMPLES OF NON-MATCHES:
+- "Develop Facebook ad concepts" ≠ "Getting More Hardwood Leads" (different scope — one is FB creative, one is lead strategy)
+- "Pull CTR and Conversion Rate data" ≠ "AC Ads and Expansion" (reporting task ≠ campaign management)
+- "Throttle sump pump campaigns" ≠ "UPDATES TO MAKE ON TRAFFIC" (specific action ≠ generic bucket)
+
+EXAMPLES OF VALID MATCHES:
+- "Update Google Ads keywords for AC" ≈ "Jacob - Pearce HVAC - Google/Bing Ads For AC" (same specific work)
+- "Launch March 21st webinar Facebook Ads" ≈ "Richard O - March 21st Webinar Facebook Ads" (same event + channel)
+
+CONFIDENCE CALIBRATION:
+- HIGH: PH task title/description explicitly describes this exact work (same platform, same action, same scope)
+- MEDIUM: PH task is clearly related and likely tracks this work, but title is broader than the action item
+- LOW: PH task is in the same area but match is speculative
+- NO MATCH: Default. Only match if you are confident the PH task tracks this specific work
 
 Respond in JSON:
 {
   "match_found": true/false,
   "matched_index": 1-N or null,
   "confidence": "high" | "medium" | "low",
-  "match_reasoning": "brief explanation"
+  "match_reasoning": "one sentence: what specific evidence links these two tasks"
 }`;
 
   // Call GPT-5.4 for matching

@@ -2201,6 +2201,7 @@
 /* Status border colors */
 .ppc-task-card.status-complete { border-left-color: #3fb950; }
 .ppc-task-card.status-tracked { border-left-color: #58a6ff; }
+.ppc-task-card.status-needs-review { border-left-color: #d29922; }
 .ppc-task-card.status-missing { border-left-color: #f85149; }
 .ppc-task-card.status-dismissed { border-left-color: #6e7681; }
 
@@ -2748,6 +2749,11 @@
 }
 .ppc-refresh-btn:hover { border-color: #58a6ff; color: #f0f6fc; }
 .staleness-indicator { font-size: 10px; color: #6e7681; font-style: italic; }
+.btn-verify-accept { background: #238636; border: 1px solid #2ea043; border-radius: 4px; color: #fff; cursor: pointer; font-size: 11px; padding: 4px 10px; margin-right: 6px; }
+.btn-verify-accept:hover { background: #2ea043; }
+.btn-verify-reject { background: #21262d; border: 1px solid #f85149; border-radius: 4px; color: #f85149; cursor: pointer; font-size: 11px; padding: 4px 10px; }
+.btn-verify-reject:hover { background: #30363d; }
+.needs-review-badge { background: #d29922; color: #000; font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-left: 6px; font-weight: 600; }
 
 /* ============ ROADMAP VIEW ============ */
 .roadmap-view {
@@ -9527,9 +9533,15 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         ppcData.atRisk = atRiskRes.ok ? (await atRiskRes.json()).tasks || [] : [];
         ppcData.tracked = trackedRes.ok ? (await trackedRes.json()).tasks || [] : [];
 
-        // Combine all tasks with status info
+        // Combine all tasks with confidence-based status info
         ppcData.allTasks = [
-          ...ppcData.tracked.map(t => ({ ...t, _status: t.proofhub_status === 'complete' ? 'complete' : 'tracked' })),
+          ...ppcData.tracked.map(t => {
+            let _status;
+            if (t.proofhub_status === 'complete') _status = 'complete';
+            else if (t.match_status === 'needs_review') _status = 'needs_review';
+            else _status = 'tracked';
+            return { ...t, _status };
+          }),
           ...ppcData.atRisk.map(t => ({ ...t, _status: t.disposition === 'cancelled' || t.disposition === 'deprioritized' ? 'dismissed' : 'missing' }))
         ].sort((a, b) => new Date(b.meeting_date) - new Date(a.meeting_date));
 
@@ -9543,6 +9555,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
 
     function getPPCStatusInfo(task) {
       if (task._status === 'complete') return { icon: '✅', class: 'status-complete', label: 'Complete' };
+      if (task._status === 'needs_review') return { icon: '⚠️', class: 'status-needs-review', label: 'Needs Review' };
       if (task._status === 'tracked') return { icon: '⏳', class: 'status-tracked', label: 'Tracked' };
       if (task._status === 'dismissed') return { icon: '⊘', class: 'status-dismissed', label: 'Dismissed' };
       return { icon: '❌', class: 'status-missing', label: 'Missing' };
@@ -9692,8 +9705,12 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         <div class="ppc-task-detail" data-detail-id="${task.id}">
           <!-- Action buttons -->
           <div class="ppc-task-actions">
+            ${task._status === 'needs_review' ? `
+              <button class="btn-verify-accept" onclick="event.stopPropagation(); verifyPPCMatch(${task.id}, 'accept');">✓ Accept Match</button>
+              <button class="btn-verify-reject" onclick="event.stopPropagation(); verifyPPCMatch(${task.id}, 'reject');">✗ Reject Match</button>
+            ` : ''}
             ${!isMatched ? '<button class="btn-create-ph" disabled title="Coming soon">Create PH Task</button>' : ''}
-            ${isMatched && task.proofhub_status !== 'complete' ? '<button class="btn-mark-complete" onclick="event.stopPropagation();" disabled title="Coming soon">Mark Complete</button>' : ''}
+            ${isMatched && task.proofhub_status !== 'complete' && task._status !== 'needs_review' ? '<button class="btn-mark-complete" onclick="event.stopPropagation();" disabled title="Coming soon">Mark Complete</button>' : ''}
             <button class="btn-dismiss" onclick="event.stopPropagation(); showDispositionModal(${task.id});">Dismiss</button>
             <button class="btn-open-meeting" onclick="event.stopPropagation(); loadMeetingDetail(${task.meeting_id});">View Meeting</button>
           </div>
@@ -9879,6 +9896,35 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       }
     }
 
+    async function verifyPPCMatch(taskId, action) {
+      try {
+        const res = await fetch(API + '/ppc/task/' + taskId + '/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action })
+        });
+        if (!res.ok) throw new Error('Failed to verify');
+
+        // Update local data
+        const task = ppcData.allTasks.find(t => t.id === taskId);
+        if (task) {
+          if (action === 'accept') {
+            task.proofhub_confidence = 'human-verified';
+            task.match_status = 'confirmed';
+            task._status = 'tracked';
+          } else {
+            task.proofhub_match = 0;
+            task.proofhub_confidence = 'rejected';
+            task._status = 'missing';
+          }
+        }
+        ppcExpandedTaskId = null;
+        renderPPCTaskList();
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
     function renderPPCOverview(panel) {
       const status = ppcData.status;
       const trackedPct = status.completion_rate || 0;
@@ -9903,6 +9949,12 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
             <div class="value green">${status.in_proofhub || 0}</div>
             <div class="label">In ProofHub</div>
           </div>
+          ${status.needs_review ? `
+          <div class="ppc-stat-card">
+            <div class="value yellow">${status.needs_review}</div>
+            <div class="label">Needs Review</div>
+          </div>
+          ` : ''}
           <div class="ppc-stat-card">
             <div class="value red">${status.missing || 0}</div>
             <div class="label">Missing</div>
@@ -9972,6 +10024,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
                 <select id="ppcFilterStatus" onchange="renderPPCTaskList()">
                   <option value="all">All Status</option>
                   <option value="missing">❌ Missing</option>
+                  <option value="needs_review">⚠️ Needs Review</option>
                   <option value="tracked">⏳ Tracked</option>
                   <option value="complete">✅ Complete</option>
                   <option value="dismissed">⊘ Dismissed</option>
