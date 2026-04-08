@@ -2185,6 +2185,32 @@ router.get('/session/digest/weekly', (req, res) => {
 
 // ============ PPC TASK ACCOUNTABILITY (Phase 21A) ============
 
+// Helper: resolve ProofHub user IDs to names
+function resolvePHAssignees(rawJson) {
+  const idToName = {
+    "12896349500": "Philip Mutrie",
+    "13652696772": "Bill Soady",
+    "12930841172": "Richard Bonn",
+    "12953229550": "Joaco Malig",
+    "13766931777": "Jacob Hastings",
+    "14513930205": "Vince Lei",
+    "12953338100": "Sarah Young",
+    "12953283825": "Manuel Porras",
+    "12953297394": "Ray Z",
+    "13766918208": "Nicole",
+    "12953324531": "Richard Osterude",
+    "12953134569": "Allysa",
+    "12896430912": "Ric Thompson",
+    "12896335931": "Dan Kuschell"
+  };
+  try {
+    const ids = JSON.parse(rawJson || "[]");
+    return ids.map(id => idToName[String(id)] || String(id));
+  } catch (e) {
+    return [];
+  }
+}
+
 // GET /api/ppc/status - Agency-wide PPC tracking stats
 router.get('/ppc/status', (req, res) => {
   try {
@@ -2301,6 +2327,8 @@ router.get('/ppc/at-risk', (req, res) => {
         action_type: t.action_type,
         ppc_confidence: t.ppc_confidence,
         days_ago: Math.floor((Date.now() - new Date(t.meeting_date).getTime()) / (1000 * 60 * 60 * 24)),
+        ph_assigned_names: resolvePHAssignees(t.ph_assigned_names_raw),
+        ph_assigned_names: resolvePHAssignees(t.ph_assigned_names_raw),
         disposition: t.disposition,
         last_checked: t.last_checked || null,
         transcript_excerpt: null,
@@ -2355,7 +2383,8 @@ router.get('/ppc/tracked', (req, res) => {
              p.proofhub_reasoning, p.completion_score, p.days_to_proofhub,
              p.last_checked,
              c.project_id AS ph_project_id, c.task_list_id AS ph_task_list_id,
-             c.stage_name AS ph_stage_name
+             c.stage_name AS ph_stage_name,
+             c.assigned_names AS ph_assigned_names_raw
       FROM ppc_task_tracking p
       LEFT JOIN ph_task_cache c ON CAST(p.proofhub_task_id AS INTEGER) = c.ph_task_id
       WHERE p.proofhub_match = 1 AND p.meeting_date >= ?
@@ -2370,6 +2399,7 @@ router.get('/ppc/tracked', (req, res) => {
           ? `https://breakthrough3x.proofhub.com/bapplite/#app/todos/project-${t.ph_project_id}/list-${t.ph_task_list_id}/task-${t.proofhub_task_id}`
           : null,
         days_ago: Math.floor((Date.now() - new Date(t.meeting_date).getTime()) / (1000 * 60 * 60 * 24)),
+        ph_assigned_names: resolvePHAssignees(t.ph_assigned_names_raw),
         transcript_excerpt: null,
         priority: null,
         due_date: null
@@ -2495,28 +2525,7 @@ router.get('/ppc/task/:id/detail', (req, res) => {
       ph_stage_name: task.ph_stage_name,
       ph_task_list_name: task.ph_task_list_name,
       ph_comments_count: task.ph_comments_count,
-      ph_assigned_names: (() => {
-        // Resolve PH user IDs to names
-        const idToName = {
-          "12896349500": "Philip Mutrie",
-          "13652696772": "Bill Soady",
-          "12930841172": "Richard Bonn",
-          "12953229550": "Joaco Malig",
-          "13766931777": "Jacob Hastings",
-          "14513930205": "Vince Lei",
-          "12953338100": "Sarah Young",
-          "12953283825": "Manuel Porras",
-          "12953297394": "Ray Z",
-          "13766918208": "Nicole",
-          "12896335931": "Joe Boland"
-        };
-        try {
-          const ids = JSON.parse(task.ph_assigned_names || "[]");
-          return ids.map(id => idToName[String(id)] || String(id));
-        } catch(e) {
-          return task.ph_assigned_names;
-        }
-      })(),
+      ph_assigned_names: resolvePHAssignees(task.ph_assigned_names),
       ph_due_date: task.ph_due_date,
       ph_scope_summary: task.ph_scope_summary
     });
