@@ -2755,6 +2755,72 @@
 .btn-verify-reject:hover { background: #30363d; }
 .needs-review-badge { background: #d29922; color: #000; font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-left: 6px; font-weight: 600; }
 
+/* Category pills */
+.task-category-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+.task-category-pills .pill { background: #21262d; border: 1px solid #30363d; border-radius: 20px; color: #8b949e; cursor: pointer; font-size: 12px; padding: 5px 12px; transition: all 0.2s; }
+.task-category-pills .pill:hover { border-color: #58a6ff; color: #f0f6fc; }
+.task-category-pills .pill.active { background: var(--pill-color, #58a6ff); border-color: var(--pill-color, #58a6ff); color: #fff; font-weight: 600; }
+.pill-count { font-size: 10px; opacity: 0.8; margin-left: 3px; }
+.pill[data-category="all"] { --pill-color: #58a6ff; }
+.pill[data-category="ads"] { --pill-color: #4285F4; }
+.pill[data-category="content"] { --pill-color: #7B1FA2; }
+.pill[data-category="admin"] { --pill-color: #6B7280; }
+.pill[data-category="follow-up"] { --pill-color: #F59E0B; }
+.pill[data-category="deliverable"] { --pill-color: #10B981; }
+.pill[data-category="dev"] { --pill-color: #06B6D4; }
+.pill[data-category="design"] { --pill-color: #EC4899; }
+.pill[data-category="seo"] { --pill-color: #D97706; }
+.pill[data-category="other"] { --pill-color: #64748B; }
+.pill[data-category="decision"] { --pill-color: #64748B; }
+
+/* My Tasks button */
+.my-tasks-btn { background: #21262d; border: 1px solid #30363d; border-radius: 20px; color: #8b949e; cursor: pointer; font-size: 12px; padding: 5px 14px; margin-left: auto; }
+.my-tasks-btn:hover { border-color: #58a6ff; color: #f0f6fc; }
+.my-tasks-btn.active { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+
+/* Show All toggle */
+.show-all-btn { background: #21262d; border: 1px solid #30363d; border-radius: 6px; color: #8b949e; cursor: pointer; font-size: 11px; padding: 4px 10px; }
+.show-all-btn:hover { border-color: #58a6ff; }
+.show-all-btn.active { background: #30363d; color: #f0f6fc; }
+
+/* Category badges */
+.category-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; text-transform: capitalize; font-weight: 500; }
+.category-badge.content { background: #7B1FA220; color: #CE93D8; border: 1px solid #7B1FA240; }
+.category-badge.admin { background: #6B728020; color: #9CA3AF; border: 1px solid #6B728040; }
+.category-badge.follow-up { background: #F59E0B20; color: #FCD34D; border: 1px solid #F59E0B40; }
+.category-badge.deliverable { background: #10B98120; color: #6EE7B7; border: 1px solid #10B98140; }
+.category-badge.dev { background: #06B6D420; color: #67E8F9; border: 1px solid #06B6D440; }
+.category-badge.design { background: #EC489920; color: #F9A8D4; border: 1px solid #EC489940; }
+.category-badge.seo { background: #D9770620; color: #FCD34D; border: 1px solid #D9770640; }
+.category-badge.ads { background: #4285F420; color: #93C5FD; border: 1px solid #4285F440; }
+.category-badge.other, .category-badge.decision { background: #64748B20; color: #94A3B8; border: 1px solid #64748B40; }
+
+/* Stale + NA indicators */
+.ppc-task-card.stale { opacity: 0.55; }
+.stale-badge { font-size: 9px; color: #6e7681; background: #21262d; padding: 1px 5px; border-radius: 3px; margin-left: 6px; }
+.ppc-task-card.not-applicable { opacity: 0.45; border-left-color: #30363d !important; }
+.na-badge { font-size: 9px; color: #6e7681; font-style: italic; margin-left: 6px; }
+
+/* View toggle */
+.view-toggle { display: flex; gap: 2px; margin-bottom: 12px; }
+.view-toggle button { background: #21262d; border: 1px solid #30363d; color: #8b949e; cursor: pointer; font-size: 12px; padding: 6px 14px; }
+.view-toggle button:first-child { border-radius: 6px 0 0 6px; }
+.view-toggle button:last-child { border-radius: 0 6px 6px 0; }
+.view-toggle button.active { background: #30363d; color: #f0f6fc; border-color: #58a6ff; }
+
+/* Meeting group card */
+.meeting-group { background: #161b22; border: 1px solid #30363d; border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+.meeting-group-header { padding: 12px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+.meeting-group-header:hover { background: #1c2128; }
+.meeting-group-title { font-size: 14px; color: #f0f6fc; font-weight: 500; }
+.meeting-group-meta { font-size: 12px; color: #8b949e; }
+.meeting-group-stats { display: flex; gap: 10px; font-size: 11px; }
+.meeting-group-stats .stat-green { color: #3fb950; }
+.meeting-group-stats .stat-yellow { color: #d29922; }
+.meeting-group-stats .stat-red { color: #f85149; }
+.meeting-group-tasks { border-top: 1px solid #30363d; padding: 8px; display: none; }
+.meeting-group.expanded .meeting-group-tasks { display: block; }
+
 /* ============ ROADMAP VIEW ============ */
 .roadmap-view {
   flex: 1;
@@ -4932,7 +4998,7 @@
       <button class="tab-btn" onclick="switchTab('roadmap')" data-tab="roadmap" role="tab" aria-selected="false" aria-controls="roadmapView">Roadmap</button>
       <button class="tab-btn" onclick="switchTab('prep')" data-tab="prep" role="tab" aria-selected="false" aria-controls="prepView">Meeting Prep</button>
       <button class="tab-btn" onclick="switchTab('session')" data-tab="session" role="tab" aria-selected="false" aria-controls="sessionView">Session Intelligence</button>
-      <button class="tab-btn" onclick="switchTab('ppc')" data-tab="ppc" role="tab" aria-selected="false" aria-controls="ppcView">PPC Tasks</button>
+      <button class="tab-btn" onclick="switchTab('ppc')" data-tab="ppc" role="tab" aria-selected="false" aria-controls="ppcView">Task Accountability</button>
     </div>
 
     <div class="main tab-content active" id="meetingsView" role="tabpanel" aria-labelledby="tab-meetings">
@@ -9511,42 +9577,46 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
 
     // ============ PPC TASK ACCOUNTABILITY FUNCTIONS ============
 
-    // Store PPC data globally for filtering
-    let ppcData = { status: null, atRisk: [], tracked: [], allTasks: [] };
+    // Store task data globally for filtering
+    let ppcData = { status: null, atRisk: [], tracked: [], allTasks: [], byMeeting: [] };
     let ppcExpandedTaskId = null;
     let ppcEvidenceShown = new Set();
+    let taskActiveCategory = 'all';
+    let taskMyTasksActive = false;
+    let taskShowAll = false;
+    let taskViewMode = 'list'; // 'list' or 'meeting'
 
     async function loadPPCOverview() {
       const panel = document.getElementById('ppcOverview');
-      panel.innerHTML = '<div class="loading">Loading PPC accountability data...</div>';
+      panel.innerHTML = '<div class="loading">Loading task accountability data...</div>';
 
       try {
-        const [statusRes, atRiskRes, trackedRes] = await Promise.all([
-          fetch(API + '/ppc/status'),
-          fetch(API + '/ppc/at-risk'),
-          fetch(API + '/ppc/tracked')
+        const days = taskShowAll ? 9999 : 14;
+        const [statusRes, allTasksRes, byMeetingRes] = await Promise.all([
+          fetch(API + '/ppc/status?days=' + days),
+          fetch(API + '/ppc/all-tasks?days=' + days),
+          fetch(API + '/ppc/by-meeting?days=' + days)
         ]);
 
-        if (!statusRes.ok) throw new Error('Failed to load PPC status');
+        if (!statusRes.ok) throw new Error('Failed to load status');
 
         ppcData.status = await statusRes.json();
-        ppcData.atRisk = atRiskRes.ok ? (await atRiskRes.json()).tasks || [] : [];
-        ppcData.tracked = trackedRes.ok ? (await trackedRes.json()).tasks || [] : [];
+        const allTasksData = allTasksRes.ok ? await allTasksRes.json() : { tasks: [] };
+        ppcData.byMeeting = byMeetingRes.ok ? (await byMeetingRes.json()).meetings || [] : [];
 
-        // Combine all tasks with confidence-based status info
-        ppcData.allTasks = [
-          ...ppcData.tracked.map(t => {
-            let _status;
-            if (t.proofhub_status === 'complete') _status = 'complete';
-            else if (t.match_status === 'needs_review') _status = 'needs_review';
-            else _status = 'tracked';
-            return { ...t, _status };
-          }),
-          ...ppcData.atRisk.map(t => ({ ...t, _status: t.disposition === 'cancelled' || t.disposition === 'deprioritized' ? 'dismissed' : 'missing' }))
-        ].sort((a, b) => new Date(b.meeting_date) - new Date(a.meeting_date));
+        // Assign _status to all tasks
+        ppcData.allTasks = allTasksData.tasks.map(t => {
+          let _status;
+          if (t.trackable === 0) _status = 'not_applicable';
+          else if (t.proofhub_status === 'complete') _status = 'complete';
+          else if (t.proofhub_match === 1 && (t.proofhub_confidence === 'high' || t.proofhub_confidence === 'human-verified')) _status = 'tracked';
+          else if (t.proofhub_match === 1 && t.proofhub_confidence === 'medium') _status = 'needs_review';
+          else if (t.disposition === 'cancelled' || t.disposition === 'deprioritized') _status = 'dismissed';
+          else _status = 'missing';
+          return { ...t, _status };
+        }).sort((a, b) => new Date(b.meeting_date) - new Date(a.meeting_date));
 
         renderPPCOverview(panel);
-        // Trigger background refresh after rendering stale data
         triggerPPCRefresh();
       } catch (err) {
         panel.innerHTML = `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
@@ -9632,6 +9702,113 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       setTimeout(() => { if (banner.parentNode) banner.remove(); }, 5000);
     }
 
+    function selectCategoryPill(category) {
+      taskActiveCategory = category;
+      document.querySelectorAll('.task-category-pills .pill').forEach(p => {
+        p.classList.toggle('active', p.dataset.category === category);
+      });
+      renderPPCTaskList();
+      updateScorecard();
+    }
+
+    function toggleMyTasks() {
+      taskMyTasksActive = !taskMyTasksActive;
+      document.querySelector('.my-tasks-btn')?.classList.toggle('active', taskMyTasksActive);
+      renderPPCTaskList();
+      updateScorecard();
+    }
+
+    function toggleShowAll() {
+      taskShowAll = !taskShowAll;
+      document.querySelector('.show-all-btn')?.classList.toggle('active', taskShowAll);
+      // Reload with new date range
+      loadPPCOverview();
+    }
+
+    function showTaskList() {
+      taskViewMode = 'list';
+      document.querySelectorAll('.view-toggle button').forEach((b, i) => b.classList.toggle('active', i === 0));
+      document.getElementById('ppcTaskList').style.display = '';
+      document.getElementById('ppcByMeetingList')?.style.display && (document.getElementById('ppcByMeetingList').style.display = 'none');
+      renderPPCTaskList();
+    }
+
+    function showByMeeting() {
+      taskViewMode = 'meeting';
+      document.querySelectorAll('.view-toggle button').forEach((b, i) => b.classList.toggle('active', i === 1));
+      document.getElementById('ppcTaskList').style.display = 'none';
+      renderByMeetingView();
+    }
+
+    function renderByMeetingView() {
+      let container = document.getElementById('ppcByMeetingList');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'ppcByMeetingList';
+        document.getElementById('ppcTaskList')?.parentNode?.appendChild(container);
+      }
+      container.style.display = '';
+
+      if (!ppcData.byMeeting || ppcData.byMeeting.length === 0) {
+        container.innerHTML = '<div class="ppc-empty"><p>No meetings in this period.</p></div>';
+        return;
+      }
+
+      container.innerHTML = ppcData.byMeeting.map(m => `
+        <div class="meeting-group" onclick="this.classList.toggle('expanded')">
+          <div class="meeting-group-header">
+            <div>
+              <div class="meeting-group-title">${escapeHtml(m.topic)}</div>
+              <div class="meeting-group-meta">${escapeHtml(m.client_name)} · ${formatPPCRelativeDate(m.meeting_date)} · ${m.total_items} items</div>
+            </div>
+            <div class="meeting-group-stats">
+              <span class="stat-green">${m.in_proofhub} ✅</span>
+              ${m.needs_review ? `<span class="stat-yellow">${m.needs_review} ⚠️</span>` : ''}
+              <span class="stat-red">${m.missing} ❌</span>
+              ${m.not_applicable ? `<span style="color:#6e7681">${m.not_applicable} N/A</span>` : ''}
+            </div>
+          </div>
+          <div class="meeting-group-tasks">
+            ${m.tasks.map(t => {
+              const isMatched = t.proofhub_match === 1 && (t.proofhub_confidence === 'high' || t.proofhub_confidence === 'human-verified');
+              const isReview = t.proofhub_match === 1 && t.proofhub_confidence === 'medium';
+              const isNA = t.trackable === 0;
+              const icon = isNA ? '—' : isMatched ? '✅' : isReview ? '⚠️' : '❌';
+              return `<div style="padding:4px 8px;font-size:12px;color:${isNA ? '#6e7681' : '#c9d1d9'};display:flex;gap:8px;">
+                <span>${icon}</span>
+                <span>${escapeHtml(t.task_title)}</span>
+                <span class="category-badge ${t.category || 'other'}" style="margin-left:auto">${t.category || 'other'}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateScorecard() {
+      // Recalculate scorecard based on current filters
+      let tasks = ppcData.allTasks;
+      if (taskActiveCategory !== 'all') tasks = tasks.filter(t => t.category === taskActiveCategory);
+      if (taskMyTasksActive) tasks = tasks.filter(t => t.owner === 'Philip Mutrie');
+
+      const trackable = tasks.filter(t => t.trackable !== 0);
+      const confirmed = trackable.filter(t => t._status === 'tracked' || t._status === 'complete');
+      const needsReview = trackable.filter(t => t._status === 'needs_review');
+      const missing = trackable.length - confirmed.length - needsReview.length;
+      const na = tasks.filter(t => t.trackable === 0);
+      const rate = trackable.length > 0 ? Math.round((confirmed.length / trackable.length) * 100) : 0;
+
+      const sc = document.getElementById('taskScorecard');
+      if (sc) {
+        sc.querySelector('[data-stat="trackable"]').textContent = trackable.length;
+        sc.querySelector('[data-stat="in_ph"]').textContent = confirmed.length;
+        sc.querySelector('[data-stat="review"]').textContent = needsReview.length;
+        sc.querySelector('[data-stat="missing"]').textContent = missing;
+        sc.querySelector('[data-stat="rate"]').textContent = rate + '%';
+        sc.querySelector('[data-stat="na"]').textContent = na.length;
+      }
+    }
+
     async function refreshSinglePPCTask(taskId, event) {
       event.stopPropagation();
       const btn = event.target;
@@ -9656,15 +9833,33 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     }
 
     function filterPPCTasks() {
-      const statusFilter = document.getElementById('ppcFilterStatus')?.value || 'all';
+      const statusFilter = document.getElementById('ppcFilterStatus')?.value || 'actionable';
       const clientFilter = document.getElementById('ppcFilterClient')?.value || 'all';
-      const platformFilter = document.getElementById('ppcFilterPlatform')?.value || 'all';
+      const ownerFilter = document.getElementById('ppcFilterOwner')?.value || 'all';
+      const priorityFilter = document.getElementById('ppcFilterPriority')?.value || 'all';
       const searchQuery = (document.getElementById('ppcSearch')?.value || '').toLowerCase();
 
       return ppcData.allTasks.filter(task => {
-        if (statusFilter !== 'all' && task._status !== statusFilter) return false;
+        // Category pill filter
+        if (taskActiveCategory !== 'all' && task.category !== taskActiveCategory) return false;
+
+        // My Tasks filter
+        if (taskMyTasksActive && task.owner !== 'Philip Mutrie') return false;
+
+        // Status filter
+        if (statusFilter === 'actionable') {
+          if (task._status !== 'missing' && task._status !== 'needs_review') return false;
+        } else if (statusFilter === 'not_applicable') {
+          if (task._status !== 'not_applicable') return false;
+        } else if (statusFilter === 'confirmed') {
+          if (task._status !== 'tracked' && task._status !== 'complete') return false;
+        } else if (statusFilter !== 'all' && task._status !== statusFilter) {
+          return false;
+        }
+
         if (clientFilter !== 'all' && task.client_id !== clientFilter) return false;
-        if (platformFilter !== 'all' && task.platform !== platformFilter) return false;
+        if (ownerFilter !== 'all' && task.owner !== ownerFilter) return false;
+        if (priorityFilter !== 'all' && task.priority !== priorityFilter) return false;
         if (searchQuery && !task.task_title.toLowerCase().includes(searchQuery) &&
             !(task.owner || '').toLowerCase().includes(searchQuery)) return false;
         return true;
@@ -9674,18 +9869,28 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     function renderPPCTaskCard(task) {
       const statusInfo = getPPCStatusInfo(task);
       const isExpanded = ppcExpandedTaskId === task.id;
+      const isStale = task.days_ago > 14 && task.proofhub_match !== 1 && task.trackable !== 0;
+      const isNA = task.trackable === 0;
+
+      // Category badge: PPC tasks show platform, others show category
+      let badge;
+      if (task.category === 'ads' && task.platform) {
+        badge = `<span class="platform-badge ${task.platform}">${(task.platform || 'unknown').replace('_', ' ')}</span>`;
+      } else {
+        badge = `<span class="category-badge ${task.category || 'other'}">${task.category || 'other'}</span>`;
+      }
 
       return `
-        <div class="ppc-task-card ${statusInfo.class} ${isExpanded ? 'expanded' : ''}"
+        <div class="ppc-task-card ${statusInfo.class} ${isExpanded ? 'expanded' : ''} ${isStale ? 'stale' : ''} ${isNA ? 'not-applicable' : ''}"
              onclick="togglePPCTask(${task.id})" data-task-id="${task.id}">
-          <div class="ppc-task-status">${statusInfo.icon}</div>
+          <div class="ppc-task-status">${isNA ? '—' : statusInfo.icon}</div>
           <div class="ppc-task-summary">
-            <div class="ppc-task-title">${escapeHtml(task.task_title)}</div>
-            <div class="ppc-task-meta">${escapeHtml(task.owner || 'Unassigned')} · ${formatPPCRelativeDate(task.meeting_date)} · ${escapeHtml(task.client_name || task.client_id)} <span class="staleness-indicator">${task.last_checked ? 'Checked ' + formatPPCRelativeDate(task.last_checked) : 'Never checked'}</span></div>
+            <div class="ppc-task-title">${escapeHtml(task.task_title)}${isStale ? ' <span class="stale-badge">Stale</span>' : ''}${isNA ? ' <span class="na-badge">N/A</span>' : ''}</div>
+            <div class="ppc-task-meta">${escapeHtml(task.owner || 'Unassigned')} · ${formatPPCRelativeDate(task.meeting_date)} · ${escapeHtml(task.client_name || task.client_id)}</div>
           </div>
           <div class="ppc-task-badges">
-            <span class="platform-badge ${task.platform || 'unknown'}">${(task.platform || 'unknown').replace('_', ' ')}</span>
-            ${task.proofhub_match || task._status === 'tracked' || task._status === 'complete' ? '<span class="ph-badge">PH</span>' : ''}
+            ${badge}
+            ${task.proofhub_match === 1 ? '<span class="ph-badge">PH</span>' : ''}
           </div>
         </div>
         ${isExpanded ? renderPPCTaskDetail(task) : ''}
@@ -9927,143 +10132,122 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
 
     function renderPPCOverview(panel) {
       const status = ppcData.status;
-      const trackedPct = status.completion_rate || 0;
-      const missingPct = 100 - trackedPct;
+      const rate = status.accountability_rate || 0;
 
-      // Build unique client list for filter
+      // Build unique lists for filters
       const clients = [...new Set(ppcData.allTasks.map(t => t.client_id))].filter(Boolean).sort();
+      const owners = [...new Set(ppcData.allTasks.map(t => t.owner).filter(Boolean))].sort();
+
+      // Category pill counts (actionable = missing + needs_review per category)
+      const catCounts = {};
+      let allActionable = 0;
+      for (const t of ppcData.allTasks) {
+        const cat = t.category || 'other';
+        if (!catCounts[cat]) catCounts[cat] = 0;
+        if (t._status === 'missing' || t._status === 'needs_review') {
+          catCounts[cat]++;
+          allActionable++;
+        }
+      }
+
+      const categoryOrder = ['all', 'ads', 'content', 'admin', 'follow-up', 'deliverable', 'dev', 'design', 'seo'];
+      const categoryLabels = { all: 'ALL', ads: 'PPC', content: 'Content', admin: 'Admin', 'follow-up': 'Follow-up', deliverable: 'Deliverable', dev: 'Dev', design: 'Design', seo: 'SEO' };
 
       let html = `
         <div class="ppc-header">
-          <h2>PPC Task Accountability</h2>
+          <h2>Task Accountability</h2>
           <button class="ppc-refresh-btn" onclick="triggerPPCRefresh()">🔄 Refresh PH Status</button>
-          <span style="color: #8b949e; font-size: 13px;">Last ${status.period_days} days</span>
+          <button class="show-all-btn ${taskShowAll ? 'active' : ''}" onclick="toggleShowAll()">${taskShowAll ? 'Last 14 Days' : 'Show All Time'}</button>
         </div>
 
-        <div class="ppc-stats-grid">
+        <!-- Category Pills -->
+        <div class="task-category-pills">
+          ${categoryOrder.map(cat => {
+            const count = cat === 'all' ? allActionable : (catCounts[cat] || 0);
+            const label = categoryLabels[cat] || cat;
+            return `<button class="pill ${taskActiveCategory === cat ? 'active' : ''}" data-category="${cat}" onclick="selectCategoryPill('${cat}')">${label} <span class="pill-count">${count}</span></button>`;
+          }).join('')}
+          <button class="my-tasks-btn ${taskMyTasksActive ? 'active' : ''}" onclick="toggleMyTasks()">👤 My Tasks</button>
+        </div>
+
+        <!-- Scorecard -->
+        <div class="ppc-stats-grid" id="taskScorecard">
           <div class="ppc-stat-card">
-            <div class="value">${status.total_ppc_tasks || 0}</div>
-            <div class="label">Total PPC Tasks</div>
+            <div class="value" data-stat="trackable">${status.total_trackable || 0}</div>
+            <div class="label">Trackable Tasks</div>
           </div>
           <div class="ppc-stat-card">
-            <div class="value green">${status.in_proofhub || 0}</div>
+            <div class="value green" data-stat="in_ph">${status.in_proofhub || 0}</div>
             <div class="label">In ProofHub</div>
           </div>
-          ${status.needs_review ? `
           <div class="ppc-stat-card">
-            <div class="value yellow">${status.needs_review}</div>
+            <div class="value yellow" data-stat="review">${status.needs_review || 0}</div>
             <div class="label">Needs Review</div>
           </div>
-          ` : ''}
           <div class="ppc-stat-card">
-            <div class="value red">${status.missing || 0}</div>
+            <div class="value red" data-stat="missing">${status.missing || 0}</div>
             <div class="label">Missing</div>
           </div>
           <div class="ppc-stat-card">
-            <div class="value ${trackedPct >= 80 ? 'green' : trackedPct >= 50 ? 'yellow' : 'red'}">${trackedPct}%</div>
-            <div class="label">Completion Rate</div>
+            <div class="value ${rate >= 80 ? 'green' : rate >= 50 ? 'yellow' : 'red'}" data-stat="rate">${rate}%</div>
+            <div class="label">Accountability Rate</div>
           </div>
           <div class="ppc-stat-card">
-            <div class="value">${status.avg_score || 0}%</div>
-            <div class="label">Avg Score</div>
+            <div class="value" style="color:#6e7681" data-stat="na">${status.not_applicable || 0}</div>
+            <div class="label">N/A</div>
           </div>
-          ${status.avg_days_to_proofhub ? `
-          <div class="ppc-stat-card">
-            <div class="value">${status.avg_days_to_proofhub}</div>
-            <div class="label">Avg Days to PH</div>
-          </div>
-          ` : ''}
         </div>
 
-        <div class="ppc-funnel">
-          <h3>Drop-off Funnel</h3>
-          <div class="ppc-funnel-bar">
-            <div class="tracked" style="width: ${trackedPct}%;"></div>
-            <div class="missing" style="width: ${missingPct}%;"></div>
+        <!-- View Toggle + Filters -->
+        <div class="ppc-section">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <div class="view-toggle">
+              <button class="${taskViewMode === 'list' ? 'active' : ''}" onclick="showTaskList()">Task List</button>
+              <button class="${taskViewMode === 'meeting' ? 'active' : ''}" onclick="showByMeeting()">By Meeting</button>
+            </div>
+            <div class="ppc-count" id="ppcFilterCount"></div>
           </div>
-          <div class="ppc-funnel-label">${trackedPct}% tracked in ProofHub</div>
+
+          <div class="ppc-controls">
+            <div class="ppc-filters">
+              <select id="ppcFilterStatus" onchange="renderPPCTaskList()">
+                <option value="actionable">Missing + Needs Review</option>
+                <option value="all">All Status</option>
+                <option value="missing">❌ Missing</option>
+                <option value="needs_review">⚠️ Needs Review</option>
+                <option value="confirmed">✅ In ProofHub</option>
+                <option value="not_applicable">N/A (not trackable)</option>
+                <option value="dismissed">⊘ Dismissed</option>
+              </select>
+              <select id="ppcFilterClient" onchange="renderPPCTaskList()">
+                <option value="all">All Clients</option>
+                ${clients.map(c => `<option value="${c}">${escapeHtml(c)}</option>`).join('')}
+              </select>
+              <select id="ppcFilterOwner" onchange="renderPPCTaskList()">
+                <option value="all">All Owners</option>
+                ${owners.map(o => `<option value="${o}">${escapeHtml(o)}</option>`).join('')}
+              </select>
+              <select id="ppcFilterPriority" onchange="renderPPCTaskList()">
+                <option value="all">All Priority</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+              <input type="text" id="ppcSearch" placeholder="Search tasks..." oninput="renderPPCTaskList()">
+            </div>
+          </div>
+
+          <div class="ppc-task-list" id="ppcTaskList"></div>
         </div>
       `;
 
-      // Per-client cards (existing)
-      if (status.clients && status.clients.length > 0) {
-        html += `<div class="ppc-section">
-          <h3>By Client</h3>
-          <div class="ppc-client-grid">
-        `;
-
-        status.clients
-          .filter(c => c.total > 0)
-          .sort((a, b) => b.total - a.total)
-          .forEach(client => {
-            const rate = client.completion_rate || 0;
-            const cardClass = rate >= 80 ? 'healthy' : rate >= 50 ? 'warning' : 'critical';
-            const rateClass = rate >= 80 ? 'green' : rate >= 50 ? 'yellow' : 'red';
-
-            html += `
-              <div class="ppc-client-card ${cardClass}">
-                <div class="name">${escapeHtml(client.client_name || client.client_id)}</div>
-                <div class="stats">${client.total} PPC tasks | ${client.tracked} in PH | ${client.missing} missing</div>
-                <div class="rate ${rateClass}">${rate}%</div>
-              </div>
-            `;
-          });
-
-        html += '</div></div>';
-      }
-
-      // Task list with filters
-      if (ppcData.allTasks.length > 0) {
-        html += `
-          <div class="ppc-section">
-            <h3>All PPC Tasks</h3>
-
-            <!-- Filter Controls -->
-            <div class="ppc-controls">
-              <div class="ppc-filters">
-                <select id="ppcFilterStatus" onchange="renderPPCTaskList()">
-                  <option value="all">All Status</option>
-                  <option value="missing">❌ Missing</option>
-                  <option value="needs_review">⚠️ Needs Review</option>
-                  <option value="tracked">⏳ Tracked</option>
-                  <option value="complete">✅ Complete</option>
-                  <option value="dismissed">⊘ Dismissed</option>
-                </select>
-                <select id="ppcFilterClient" onchange="renderPPCTaskList()">
-                  <option value="all">All Clients</option>
-                  ${clients.map(c => `<option value="${c}">${escapeHtml(c)}</option>`).join('')}
-                </select>
-                <select id="ppcFilterPlatform" onchange="renderPPCTaskList()">
-                  <option value="all">All Platforms</option>
-                  <option value="google_ads">Google Ads</option>
-                  <option value="google_lsa">Google LSA</option>
-                  <option value="meta">Meta</option>
-                  <option value="bing">Bing</option>
-                </select>
-                <input type="text" id="ppcSearch" placeholder="Search tasks..." oninput="renderPPCTaskList()">
-              </div>
-              <div class="ppc-count" id="ppcFilterCount">Showing ${ppcData.allTasks.length} of ${ppcData.allTasks.length} tasks</div>
-            </div>
-
-            <!-- Task List -->
-            <div class="ppc-task-list" id="ppcTaskList"></div>
-          </div>
-        `;
-      } else {
-        html += `
-          <div class="ppc-empty">
-            <div class="ppc-empty-icon">📋</div>
-            <p>No PPC tasks found in the last ${status.period_days} days.</p>
-            <p style="font-size: 12px; margin-top: 8px;">Run the backfill to analyze existing meetings.</p>
-          </div>
-        `;
-      }
-
       panel.innerHTML = html;
 
-      // Render task cards
-      if (ppcData.allTasks.length > 0) {
+      if (taskViewMode === 'list') {
         renderPPCTaskList();
+      } else {
+        document.getElementById('ppcTaskList').style.display = 'none';
+        renderByMeetingView();
       }
     }
 

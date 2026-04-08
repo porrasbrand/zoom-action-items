@@ -2211,36 +2211,64 @@ function resolvePHAssignees(rawJson) {
   }
 }
 
-// GET /api/ppc/status - Agency-wide PPC tracking stats
+// GET /api/ppc/status - Universal task accountability stats
 router.get('/ppc/status', (req, res) => {
   try {
     const days = parseInt(req.query.days) || 30;
     const database = getDatabase();
     initPPCTrackingTable(database);
-    const report = getPPCReport(database, { days });
 
-    // Confidence-based counts: HIGH/human-verified = confirmed, MEDIUM = needs_review, rest = missing
-    const allTasks = report.all_tasks || [];
-    const confirmedCount = allTasks.filter(t => t.proofhub_match === 1 && (t.proofhub_confidence === 'high' || t.proofhub_confidence === 'human-verified')).length;
-    const needsReviewCount = allTasks.filter(t => t.proofhub_match === 1 && t.proofhub_confidence === 'medium').length;
-    const missingCount = report.total_ppc_tasks - confirmedCount - needsReviewCount;
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+    const dateStr = cutoffDate.toISOString();
+
+    const allTasks = database.prepare('SELECT * FROM ppc_task_tracking WHERE meeting_date >= ?').all(dateStr);
+    const trackableTasks = allTasks.filter(t => t.trackable !== 0);  // trackable=1 or NULL (PPC items before classification)
+    const naTasks = allTasks.filter(t => t.trackable === 0);
+
+    const confirmed = trackableTasks.filter(t => t.proofhub_match === 1 && (t.proofhub_confidence === 'high' || t.proofhub_confidence === 'human-verified'));
+    const needsReview = trackableTasks.filter(t => t.proofhub_match === 1 && t.proofhub_confidence === 'medium');
+    const missing = trackableTasks.length - confirmed.length - needsReview.length;
+
+    // By category breakdown
+    const categories = {};
+    for (const t of allTasks) {
+      const cat = t.category || 'other';
+      if (!categories[cat]) categories[cat] = { total: 0, trackable: 0, matched: 0, needs_review: 0, missing: 0, not_applicable: 0 };
+      categories[cat].total++;
+      if (t.trackable === 0) { categories[cat].not_applicable++; continue; }
+      categories[cat].trackable++;
+      if (t.proofhub_match === 1 && (t.proofhub_confidence === 'high' || t.proofhub_confidence === 'human-verified')) categories[cat].matched++;
+      else if (t.proofhub_match === 1 && t.proofhub_confidence === 'medium') categories[cat].needs_review++;
+      else categories[cat].missing++;
+    }
+
+    // By client
+    const clientMap = {};
+    for (const t of trackableTasks) {
+      if (!clientMap[t.client_id]) clientMap[t.client_id] = { client_name: t.client_name, total: 0, tracked: 0, missing: 0 };
+      clientMap[t.client_id].total++;
+      if (t.proofhub_match === 1 && (t.proofhub_confidence === 'high' || t.proofhub_confidence === 'human-verified')) clientMap[t.client_id].tracked++;
+      else clientMap[t.client_id].missing++;
+    }
 
     res.json({
-      period_days: report.period_days,
-      total_ppc_tasks: report.total_ppc_tasks,
-      in_proofhub: confirmedCount,
-      needs_review: needsReviewCount,
-      missing: missingCount,
-      completion_rate: report.total_ppc_tasks > 0 ? Math.round((confirmedCount / report.total_ppc_tasks) * 100) : 0,
-      avg_score: report.avg_score,
-      avg_days_to_proofhub: report.avg_days_to_proofhub,
-      clients: Object.entries(report.by_client).map(([id, data]) => ({
+      period_days: days,
+      total_tasks: allTasks.length,
+      total_trackable: trackableTasks.length,
+      not_applicable: naTasks.length,
+      in_proofhub: confirmed.length,
+      needs_review: needsReview.length,
+      missing,
+      accountability_rate: trackableTasks.length > 0 ? Math.round((confirmed.length / trackableTasks.length) * 100) : 0,
+      by_category: categories,
+      clients: Object.entries(clientMap).map(([id, data]) => ({
         client_id: id,
         client_name: data.client_name,
         total: data.total,
         tracked: data.tracked,
         missing: data.missing,
-        completion_rate: data.completion_rate
+        completion_rate: data.total > 0 ? Math.round((data.tracked / data.total) * 100) : 0
       }))
     });
   } catch (err) {
@@ -2443,6 +2471,131 @@ router.get('/ppc/tracked', (req, res) => {
   }
 });
 
+
+// GET /api/ppc/all-tasks - Universal task list with all filters
+router.get('/ppc/all-tasks', (req, res) => {
+  try {
+    const days = parseInt(req.query.days) || 30;
+    const category = req.query.category || null;
+    const owner = req.query.owner || null;
+    const database = getDatabase();
+    initPPCTrackingTable(database);
+
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+
+    let sql = `
+      SELECT p.*, c.project_id AS ph_project_id, c.task_list_id AS ph_task_list_id,
+             c.stage_name AS ph_stage_name, c.assigned_names AS ph_assigned_names_raw
+      FROM ppc_task_tracking p
+      LEFT JOIN ph_task_cache c ON CAST(p.proofhub_task_id AS INTEGER) = c.ph_task_id
+      WHERE p.meeting_date >= ?`;
+    const params = [cutoffDate.toISOString()];
+
+    if (category && category !== 'all') {
+      sql += ' AND p.category = ?';
+      params.push(category);
+    }
+    if (owner) {
+      sql += ' AND p.owner = ?';
+      params.push(owner);
+    }
+    sql += ' ORDER BY p.meeting_date DESC';
+
+    const tasks = database.prepare(sql).all(...params);
+
+    const enriched = tasks.map(t => {
+      const task = {
+        ...t,
+        match_status: t.proofhub_match === 1 && (t.proofhub_confidence === 'high' || t.proofhub_confidence === 'human-verified') ? 'confirmed'
+                    : t.proofhub_match === 1 && t.proofhub_confidence === 'medium' ? 'needs_review'
+                    : 'unconfirmed',
+        ph_url: t.ph_project_id && t.ph_task_list_id
+          ? `https://breakthrough3x.proofhub.com/bapplite/#app/todos/project-${t.ph_project_id}/list-${t.ph_task_list_id}/task-${t.proofhub_task_id}`
+          : null,
+        days_ago: Math.floor((Date.now() - new Date(t.meeting_date).getTime()) / (1000 * 60 * 60 * 24)),
+        ph_assigned_names: resolvePHAssignees(t.ph_assigned_names_raw),
+        transcript_excerpt: null, priority: null, due_date: null
+      };
+
+      const meeting = database.prepare('SELECT ai_extraction FROM meetings WHERE id = ?').get(t.meeting_id);
+      if (meeting?.ai_extraction) {
+        try {
+          const ext = JSON.parse(meeting.ai_extraction);
+          const items = ext.action_items || (ext[0]?.action_items) || [];
+          const item = items[t.action_item_index];
+          if (item) {
+            task.transcript_excerpt = item.transcript_excerpt || null;
+            task.priority = item.priority || null;
+            task.due_date = item.due_date || null;
+          }
+        } catch {}
+      }
+      return task;
+    });
+
+    res.json({ period_days: days, total: enriched.length, tasks: enriched });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/ppc/by-meeting - Tasks grouped by meeting
+router.get('/ppc/by-meeting', (req, res) => {
+  try {
+    const days = parseInt(req.query.days) || 14;
+    const database = getDatabase();
+    initPPCTrackingTable(database);
+
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+
+    const tasks = database.prepare(`
+      SELECT p.*, m.topic
+      FROM ppc_task_tracking p
+      JOIN meetings m ON p.meeting_id = m.id
+      WHERE p.meeting_date >= ?
+      ORDER BY p.meeting_date DESC, p.meeting_id, p.action_item_index
+    `).all(cutoffDate.toISOString());
+
+    // Group by meeting
+    const meetingMap = {};
+    for (const t of tasks) {
+      if (!meetingMap[t.meeting_id]) {
+        meetingMap[t.meeting_id] = {
+          meeting_id: t.meeting_id,
+          topic: t.topic || 'Unknown',
+          client_name: t.client_name,
+          meeting_date: t.meeting_date,
+          total_items: 0,
+          in_proofhub: 0,
+          needs_review: 0,
+          missing: 0,
+          not_applicable: 0,
+          tasks: []
+        };
+      }
+      const m = meetingMap[t.meeting_id];
+      m.total_items++;
+      if (t.trackable === 0) m.not_applicable++;
+      else if (t.proofhub_match === 1 && (t.proofhub_confidence === 'high' || t.proofhub_confidence === 'human-verified')) m.in_proofhub++;
+      else if (t.proofhub_match === 1 && t.proofhub_confidence === 'medium') m.needs_review++;
+      else m.missing++;
+      m.tasks.push({
+        id: t.id, task_title: t.task_title, category: t.category, owner: t.owner,
+        proofhub_match: t.proofhub_match, proofhub_confidence: t.proofhub_confidence,
+        proofhub_task_title: t.proofhub_task_title, trackable: t.trackable
+      });
+    }
+
+    res.json({
+      period_days: days,
+      meetings: Object.values(meetingMap).sort((a, b) => new Date(b.meeting_date) - new Date(a.meeting_date))
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // GET /api/ppc/task/:id/detail - Full task detail with transcript and PH enrichment
 router.get('/ppc/task/:id/detail', (req, res) => {
