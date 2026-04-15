@@ -4933,6 +4933,87 @@
     grid-template-columns: 1fr;
   }
 }
+    /* === CHAT PANEL === */
+    .chat-toggle-btn {
+      position: fixed; bottom: 24px; right: 24px; z-index: 1000;
+      background: #238636; color: #fff; border: none; border-radius: 24px;
+      padding: 12px 20px; font-size: 14px; font-weight: 600; cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4); transition: background 0.2s;
+    }
+    .chat-toggle-btn:hover { background: #2ea043; }
+    .chat-toggle-btn.has-session { background: #58a6ff; }
+
+    .chat-panel {
+      position: fixed; right: 0; top: 0; bottom: 0; width: 420px; z-index: 999;
+      background: #0d1117; border-left: 1px solid #30363d;
+      display: flex; flex-direction: column;
+      transform: translateX(100%); transition: transform 0.3s ease;
+    }
+    .chat-panel.open { transform: translateX(0); }
+    @media (max-width: 768px) { .chat-panel { width: 100%; } }
+
+    .chat-header {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 16px; border-bottom: 1px solid #30363d; background: #161b22;
+    }
+    .chat-header h3 { flex: 1; font-size: 14px; color: #f0f6fc; margin: 0; }
+    .chat-scope { font-size: 12px; color: #8b949e; display: flex; align-items: center; gap: 4px; }
+    .chat-close-btn { background: none; border: none; color: #8b949e; font-size: 18px; cursor: pointer; padding: 4px; }
+    .chat-close-btn:hover { color: #f0f6fc; }
+
+    .chat-messages {
+      flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px;
+    }
+
+    .chat-welcome { text-align: center; color: #8b949e; padding: 40px 20px; }
+    .chat-welcome p { margin-bottom: 16px; }
+    .chat-suggestions { display: flex; flex-direction: column; gap: 8px; }
+    .chat-suggestions button {
+      background: #21262d; border: 1px solid #30363d; border-radius: 8px;
+      color: #c9d1d9; padding: 8px 12px; font-size: 12px; cursor: pointer; text-align: left;
+    }
+    .chat-suggestions button:hover { background: #30363d; border-color: #58a6ff; }
+
+    .chat-msg { max-width: 90%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; word-wrap: break-word; }
+    .chat-msg.user { align-self: flex-end; background: #1f6feb; color: #fff; border-bottom-right-radius: 4px; }
+    .chat-msg.assistant { align-self: flex-start; background: #161b22; color: #c9d1d9; border: 1px solid #30363d; border-bottom-left-radius: 4px; }
+    .chat-msg.assistant p { margin: 0 0 8px 0; }
+    .chat-msg.assistant ul, .chat-msg.assistant ol { margin: 4px 0; padding-left: 20px; }
+    .chat-msg.error { align-self: center; background: #f8514922; color: #f85149; font-size: 12px; }
+
+    .chat-citations { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
+    .chat-citation {
+      background: #21262d; border: 1px solid #30363d; border-radius: 4px;
+      padding: 2px 8px; font-size: 11px; color: #58a6ff; cursor: pointer;
+    }
+    .chat-citation:hover { background: #30363d; }
+
+    .chat-meta { font-size: 10px; color: #484f58; margin-top: 4px; }
+
+    .typing-indicator { display: flex; gap: 4px; padding: 10px 14px; align-self: flex-start; }
+    .typing-indicator span {
+      width: 6px; height: 6px; background: #8b949e; border-radius: 50%;
+      animation: typingDot 1.2s infinite ease-in-out;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingDot { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+
+    .chat-input-area {
+      display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #30363d; background: #161b22;
+    }
+    .chat-input-area input {
+      flex: 1; background: #0d1117; border: 1px solid #30363d; border-radius: 8px;
+      padding: 10px 12px; color: #c9d1d9; font-size: 13px; outline: none;
+    }
+    .chat-input-area input:focus { border-color: #58a6ff; }
+    .chat-input-area button {
+      background: #238636; border: none; border-radius: 8px;
+      padding: 10px 16px; color: #fff; font-size: 13px; cursor: pointer;
+    }
+    .chat-input-area button:hover { background: #2ea043; }
+    .chat-input-area button:disabled { background: #21262d; color: #484f58; cursor: not-allowed; }
+
     </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
@@ -5474,6 +5555,12 @@
       // Update active state
       document.querySelectorAll('#clientPills .filter-pill').forEach(p => p.classList.remove('active'));
       el.classList.add('active');
+
+      // Scope chat concierge to selected client
+      if (typeof setChatScope === 'function') {
+        const clientName = cid ? el.textContent.trim() : null;
+        setChatScope(cid || null, clientName);
+      }
 
       applyFilters();
     }
@@ -10448,6 +10535,182 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     }
 
     init();
+  </script>
+  <!-- Chat Panel -->
+  <button id="chat-toggle" class="chat-toggle-btn" onclick="toggleChatPanel()">💬 AI Concierge</button>
+  <div id="chat-panel" class="chat-panel">
+    <div class="chat-header">
+      <h3>🤖 Transcripts AI Concierge</h3>
+      <div class="chat-scope">
+        <span id="chat-scope-label">All Clients</span>
+        <button onclick="clearChatScope()" id="chat-clear-scope" style="display:none">✕</button>
+      </div>
+      <button class="chat-close-btn" onclick="toggleChatPanel()">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-welcome" id="chat-welcome">
+        <p>Ask me anything about your meetings, action items, or client history.</p>
+        <div class="chat-suggestions">
+          <button onclick="askSuggestion(this)">What was discussed in the last meeting?</button>
+          <button onclick="askSuggestion(this)">What action items are still open?</button>
+          <button onclick="askSuggestion(this)">Brief me on this client</button>
+        </div>
+      </div>
+    </div>
+    <div class="typing-indicator" id="chat-typing" style="display:none">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="chat-input-area">
+      <input type="text" id="chat-input" placeholder="Ask about meetings, action items, sentiment..." onkeydown="if(event.key==='Enter'&&!event.shiftKey)sendChat()">
+      <button onclick="sendChat()" id="chat-send-btn">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // === CHAT CONCIERGE ===
+    let currentChatSession = null;
+    let currentChatClientId = null;
+    let currentChatClientName = null;
+    let chatPanelOpen = false;
+
+    function toggleChatPanel() {
+      chatPanelOpen = !chatPanelOpen;
+      document.getElementById('chat-panel').classList.toggle('open', chatPanelOpen);
+      if (chatPanelOpen) {
+        document.getElementById('chat-input').focus();
+      }
+    }
+
+    function setChatScope(clientId, clientName) {
+      currentChatClientId = clientId;
+      currentChatClientName = clientName;
+      currentChatSession = null; // new session for new client
+      document.getElementById('chat-scope-label').textContent = clientName || 'All Clients';
+      document.getElementById('chat-clear-scope').style.display = clientId ? 'inline' : 'none';
+      // Clear messages for new scope
+      const msgs = document.getElementById('chat-messages');
+      msgs.innerHTML = document.getElementById('chat-welcome') ? '' : '';
+      msgs.innerHTML = `<div class="chat-welcome"><p>Ask me anything about ${clientName || 'your meetings'}.</p><div class="chat-suggestions"><button onclick="askSuggestion(this)">What was discussed in the last meeting?</button><button onclick="askSuggestion(this)">What action items are still open?</button><button onclick="askSuggestion(this)">Brief me on this client</button></div></div>`;
+    }
+
+    function clearChatScope() {
+      setChatScope(null, null);
+      document.getElementById('chat-scope-label').textContent = 'All Clients';
+    }
+
+    function askSuggestion(btn) {
+      document.getElementById('chat-input').value = btn.textContent;
+      sendChat();
+    }
+
+    function simpleMarkdown(text) {
+      return text
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/^- (.+)$/gm, '<li>$1</li>')
+        .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+        .replace(/\n{2,}/g, '</p><p>')
+        .replace(/\n/g, '<br>')
+        .replace(/^/, '<p>').replace(/$/, '</p>');
+    }
+
+    function renderMessage(role, content, citations, meta) {
+      const msgs = document.getElementById('chat-messages');
+      // Hide welcome on first message
+      const welcome = msgs.querySelector('.chat-welcome');
+      if (welcome) welcome.style.display = 'none';
+
+      const div = document.createElement('div');
+      div.className = 'chat-msg ' + role;
+
+      if (role === 'assistant') {
+        div.innerHTML = simpleMarkdown(content);
+        if (citations && citations.length > 0) {
+          const citDiv = document.createElement('div');
+          citDiv.className = 'chat-citations';
+          citations.forEach(c => {
+            const pill = document.createElement('span');
+            pill.className = 'chat-citation';
+            pill.textContent = '📎 ' + (c.date || c.raw || 'Source');
+            if (c.meeting_id) {
+              pill.onclick = () => {
+                loadMeetingDetail(c.meeting_id);
+                toggleChatPanel();
+              };
+            }
+            citDiv.appendChild(pill);
+          });
+          div.appendChild(citDiv);
+        }
+        if (meta) {
+          const metaDiv = document.createElement('div');
+          metaDiv.className = 'chat-meta';
+          metaDiv.textContent = `${meta.query_type} · ${meta.tokens_used} tokens · ${(meta.latency_ms/1000).toFixed(1)}s`;
+          div.appendChild(metaDiv);
+        }
+      } else if (role === 'error') {
+        div.className = 'chat-msg error';
+        div.textContent = content;
+      } else {
+        div.textContent = content;
+      }
+
+      msgs.appendChild(div);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    async function sendChat() {
+      const input = document.getElementById('chat-input');
+      const question = input.value.trim();
+      if (!question) return;
+
+      input.value = '';
+      renderMessage('user', question);
+
+      // Show typing
+      const typing = document.getElementById('chat-typing');
+      typing.style.display = 'flex';
+      document.getElementById('chat-send-btn').disabled = true;
+
+      try {
+        const body = { question };
+        if (currentChatClientId) body.client_id = currentChatClientId;
+        if (currentChatSession) body.session_id = currentChatSession;
+
+        const res = await fetch(API + '/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+
+        typing.style.display = 'none';
+        document.getElementById('chat-send-btn').disabled = false;
+
+        if (res.status === 429) {
+          renderMessage('error', 'Too many questions — wait a moment.');
+          return;
+        }
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          renderMessage('error', err.error || 'Sorry, I had trouble with that. Try again.');
+          return;
+        }
+
+        const data = await res.json();
+        currentChatSession = data.session_id;
+        document.getElementById('chat-toggle').classList.add('has-session');
+
+        renderMessage('assistant', data.answer, data.citations, {
+          query_type: data.query_type,
+          tokens_used: data.tokens_used,
+          latency_ms: data.latency_ms
+        });
+      } catch (err) {
+        typing.style.display = 'none';
+        document.getElementById('chat-send-btn').disabled = false;
+        renderMessage('error', 'Connection error. Try again.');
+      }
+    }
   </script>
 </body>
 </html>
