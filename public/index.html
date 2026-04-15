@@ -5605,6 +5605,37 @@
       }
     }
 
+    // Create a scoped datalist for a meeting's participants + internal team
+    function createMeetingOwnersList(meetingId, attendees, actionItems) {
+      const dlId = 'ownersList-' + meetingId;
+      let datalist = document.getElementById(dlId);
+      if (!datalist) {
+        datalist = document.createElement('datalist');
+        datalist.id = dlId;
+        document.body.appendChild(datalist);
+      }
+      datalist.innerHTML = '';
+      const internalNames = INTERNAL_TEAM.map(t => t.name.toLowerCase());
+      // Internal team first
+      INTERNAL_TEAM.forEach(member => {
+        const opt = document.createElement('option');
+        opt.value = member.label;
+        datalist.appendChild(opt);
+      });
+      // Collect meeting participants from attendees + action item owners
+      const participants = new Set();
+      (attendees || []).forEach(a => { if (a) participants.add(a); });
+      (actionItems || []).forEach(item => { if (item.owner_name) participants.add(item.owner_name); });
+      // Add non-internal participants
+      [...participants].sort().forEach(name => {
+        if (!internalNames.includes(name.toLowerCase().split(' ')[0])) {
+          const opt = document.createElement('option');
+          opt.value = name;
+          datalist.appendChild(opt);
+        }
+      });
+    }
+
     // Render meeting detail
     function renderMeetingDetail(data) {
       const { meeting, action_items, decisions } = data;
@@ -5619,6 +5650,9 @@
 
       const attendees = extraction.attendees || [];
       const summary = extraction.summary || '';
+
+      // Create scoped datalist for this meeting's participants
+      createMeetingOwnersList(meeting.id, attendees, action_items);
 
       panel.innerHTML = `
         <div class="meeting-detail">
@@ -5664,11 +5698,11 @@
               </div>
               <div class="form-row">
                 <label>Owner</label>
-                <input type="text" id="manual-owner-${meeting.id}" placeholder="Owner name" list="ownersList">
+                <input type="text" id="manual-owner-${meeting.id}" placeholder="Owner name" list="ownersList-${meeting.id}">
               </div>
               <div class="form-row">
                 <label>Also Involved</label>
-                <input type="text" id="manual-collaborators-${meeting.id}" placeholder="e.g., Manuel, Juan" list="ownersList">
+                <input type="text" id="manual-collaborators-${meeting.id}" placeholder="e.g., Manuel, Juan" list="ownersList-${meeting.id}">
               </div>
               <div class="form-row">
                 <label>Due Date</label>
@@ -5872,7 +5906,7 @@
       const clientId = meeting?.client_id || '';
 
       return `
-        <div class="action-item ${statusClass}" id="action-${item.id}">
+        <div class="action-item ${statusClass}" id="action-${item.id}" data-meeting-id="${item.meeting_id || meeting?.id || ''}">
           <div class="item-content">
             <div class="item-row">
               <div class="item-title inline-edit" onclick="startEdit(${item.id}, 'title', this)">${escapeHtml(item.title)}</div>
@@ -6255,7 +6289,10 @@
         input.type = 'text';
         input.className = 'inline-edit-input';
         input.value = field === 'collaborators' && currentValue === '+ Add collaborators' ? '' : currentValue;
-        input.setAttribute('list', 'ownersList');
+        // Use scoped per-meeting datalist
+        const actionItemEl = element.closest('.action-item');
+        const meetingId = actionItemEl?.dataset?.meetingId || '';
+        input.setAttribute('list', meetingId ? 'ownersList-' + meetingId : 'ownersList');
         if (field === 'collaborators') input.placeholder = 'e.g., Manuel, Juan';
       } else {
         input = document.createElement('input');
@@ -10327,22 +10364,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       await renderWeekPills(); // Render week pills first (sets default week)
       await loadMeetings(); // Then load meetings for selected week
 
-      // Create owners datalist with internal team first
-      const datalist = document.createElement('datalist');
-      datalist.id = 'ownersList';
-      const internalNames = INTERNAL_TEAM.map(t => t.name.toLowerCase());
-      INTERNAL_TEAM.forEach(member => {
-        const opt = document.createElement('option');
-        opt.value = member.label;
-        datalist.appendChild(opt);
-      });
-      owners.filter(o => !internalNames.includes(o.toLowerCase().split(' ')[0]))
-        .forEach(owner => {
-          const opt = document.createElement('option');
-          opt.value = owner;
-          datalist.appendChild(opt);
-        });
-      document.body.appendChild(datalist);
+      // Per-meeting datalists are created in renderMeetingDetail() via createMeetingOwnersList()
 
       // Initialize tab from URL hash
       initTabFromHash();
