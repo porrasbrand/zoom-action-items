@@ -45,6 +45,30 @@ import { readdirSync, readFileSync as fsReadFileSync, writeFileSync, existsSync,
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
 
+// B3X internal team names (must match frontend INTERNAL_TEAM)
+const B3X_TEAM = ['Dan', 'Juan', 'Manuel', 'Phil', 'Richard', 'Vince'];
+
+// Resolve collaborators to PH assignee IDs (B3X only) and client names
+function resolveCollaborators(collaboratorsStr) {
+  const assignedIds = [];
+  const clientNames = [];
+  if (!collaboratorsStr) return { assignedIds, clientNames };
+
+  const names = collaboratorsStr.split(',').map(n => n.trim()).filter(Boolean);
+  for (const name of names) {
+    const isInternal = B3X_TEAM.some(t => name.toLowerCase().includes(t.toLowerCase()));
+    if (isInternal) {
+      const resolved = resolvePerson(name);
+      if (resolved?.ph_id && !assignedIds.includes(parseInt(resolved.ph_id))) {
+        assignedIds.push(parseInt(resolved.ph_id));
+      }
+    } else {
+      clientNames.push(name);
+    }
+  }
+  return { assignedIds, clientNames };
+}
+
 // ============ MEETINGS ============
 
 // GET /api/meetings - List meetings with filters
@@ -424,14 +448,28 @@ router.post('/action-items/:id/push-ph', async (req, res) => {
       }
     }
 
+    // Build assignee list: owner + B3X collaborators
+    const assignedIds = [];
+    if (assigneeId) assignedIds.push(parseInt(assigneeId));
+
+    const { assignedIds: collabIds, clientNames } = resolveCollaborators(item.collaborators);
+    for (const cid of collabIds) {
+      if (!assignedIds.includes(cid)) assignedIds.push(cid);
+    }
+
     // Build task data
+    let desc = description || item.description || '';
+    if (clientNames.length > 0) {
+      desc += '\n\nClient contacts: ' + clientNames.join(', ');
+    }
+
     const taskData = {
       title: title || item.title,
-      description: description || item.description || ''
+      description: desc
     };
 
-    if (assigneeId) {
-      taskData.assigned = [parseInt(assigneeId)];
+    if (assignedIds.length > 0) {
+      taskData.assigned = assignedIds;
     }
 
     if (item.due_date) {
@@ -516,14 +554,28 @@ router.post('/meetings/:id/push-all-ph', async (req, res) => {
           }
         }
 
+        // Build assignee list: owner + B3X collaborators
+        const assignedIds = [];
+        if (assigneeId) assignedIds.push(parseInt(assigneeId));
+
+        const { assignedIds: collabIds, clientNames } = resolveCollaborators(item.collaborators);
+        for (const cid of collabIds) {
+          if (!assignedIds.includes(cid)) assignedIds.push(cid);
+        }
+
         // Build task data
+        let desc = item.description || '';
+        if (clientNames.length > 0) {
+          desc += '\n\nClient contacts: ' + clientNames.join(', ');
+        }
+
         const taskData = {
           title: item.title,
-          description: item.description || ''
+          description: desc
         };
 
-        if (assigneeId) {
-          taskData.assigned = [parseInt(assigneeId)];
+        if (assignedIds.length > 0) {
+          taskData.assigned = assignedIds;
         }
 
         if (item.due_date) {

@@ -6126,6 +6126,20 @@
           resolvedInfo.innerHTML = `<span style="color:#ffd43b">⚠ "${escapeHtml(ownerName)}" not a PH member — select team member</span>`;
         }
       }
+
+      // Show collaborator assignment preview
+      const itemEl = document.getElementById('action-' + itemId);
+      const collabText = itemEl?.querySelector('.collaborators')?.textContent || '';
+      const collabMatch = collabText.match(/Also:\s*(.+)/);
+      if (collabMatch) {
+        const names = collabMatch[1].split(',').map(n => n.trim());
+        const b3xNames = names.filter(n => INTERNAL_TEAM.some(t => n.toLowerCase().includes(t.name.toLowerCase())));
+        const clientNames = names.filter(n => !INTERNAL_TEAM.some(t => n.toLowerCase().includes(t.name.toLowerCase())));
+        let collabInfo = '';
+        if (b3xNames.length) collabInfo += `<div style="font-size:12px;color:#51cf66;margin-top:4px">👥 Also assigned: ${b3xNames.join(', ')}</div>`;
+        if (clientNames.length) collabInfo += `<div style="font-size:12px;color:#d29922;margin-top:2px">📝 In description: ${clientNames.join(', ')}</div>`;
+        resolvedInfo.innerHTML += collabInfo;
+      }
     }
 
     // Hide push panel
