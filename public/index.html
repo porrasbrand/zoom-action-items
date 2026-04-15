@@ -899,7 +899,8 @@
     }
 
     .inline-edit:hover {
-      background: #30363d;
+      background: #ffffff08;
+      cursor: text;
     }
 
     .inline-edit-input {
@@ -5649,7 +5650,7 @@
               </div>
               <div class="form-row">
                 <label>Owner</label>
-                <input type="text" id="manual-owner-${meeting.id}" placeholder="Assignee name" list="ownersList">
+                <input type="text" id="manual-owner-${meeting.id}" placeholder="Owner name" list="ownersList">
               </div>
               <div class="form-row">
                 <label>Due Date</label>
@@ -5862,7 +5863,7 @@
               ${showPromote ? `<button class="promote-btn" onclick="promoteToRecap(${item.id})">↑ Promote to Recap</button>` : ''}
             </div>
             <div class="item-desc ${item.description ? '' : 'empty'} inline-edit" onclick="startEdit(${item.id}, 'description', this)">
-              ${item.description ? escapeHtml(item.description) : 'Click to add description...'}
+              ${item.description ? escapeHtml(item.description) : '✏️ Click to add description...'}
             </div>
             <div class="item-meta">
               <span class="owner inline-edit" onclick="startEdit(${item.id}, 'owner_name', this)">👤 ${escapeHtml(item.owner_name || 'TBD')}</span>
@@ -5889,7 +5890,7 @@
                 </select>
               </div>
               <div class="form-row">
-                <label>Assignee</label>
+                <label>Owner</label>
                 <select id="ph-assignee-${item.id}">
                   <option value="">Loading...</option>
                 </select>
@@ -9967,7 +9968,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
                 <div class="detail-field"><label>Status</label><span>${task.proofhub_status || '—'} ${task.ph_stage_name ? `(${task.ph_stage_name})` : ''} <button class="btn-refresh-task" onclick="refreshSinglePPCTask(${task.id}, event)" title="Check ProofHub now">🔄</button></span></div>
                 <div class="detail-field"><label>Created</label><span>${phCreated || '—'}</span></div>
                 <div class="detail-field"><label>Task List</label><span>${escapeHtml(task.ph_task_list_name || '—')}</span></div>
-                <div class="detail-field"><label>Assignee</label><span>${escapeHtml(task.proofhub_assignee || task.ph_assigned_names || '—')}</span></div>
+                <div class="detail-field"><label>Owner</label><span>${escapeHtml(task.proofhub_assignee || task.ph_assigned_names || '—')}</span></div>
                 <div class="detail-field"><label>Comments</label><span>${task.ph_comments_count ?? '—'}</span></div>
                 <div class="detail-field"><label>Match Confidence</label><span>${getConfidenceDots(task.proofhub_confidence)}</span></div>
               ` : `
