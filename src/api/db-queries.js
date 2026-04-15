@@ -42,6 +42,7 @@ export function runMigrations() {
     { name: 'source', type: "TEXT DEFAULT 'llm_extracted'" },
     { name: 'confidence_tier', type: "TEXT DEFAULT 'conversation'" },
     { name: 'collaborators', type: "TEXT DEFAULT ''" },
+    { name: 'task_type', type: "TEXT DEFAULT NULL" },
   ];
 
   for (const col of actionItemsNewCols) {
@@ -255,7 +256,7 @@ export function updateActionItem(id, updates) {
   const allowedFields = [
     'title', 'description', 'owner_name', 'due_date', 'priority', 'status', 'category',
     'transcript_excerpt', 'ph_project_id', 'ph_task_list_id', 'ph_assignee_id', 'ph_task_id',
-    'confidence_tier', 'collaborators'
+    'confidence_tier', 'collaborators', 'task_type'
   ];
   const sets = [];
   const params = [];

@@ -387,6 +387,12 @@
     .priority-medium { color: #d29922 !important; }
     .priority-low { color: #8b949e !important; }
 
+    .client-task-badge { background: #d2992222; color: #d29922; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; cursor: pointer; }
+    .client-task-badge:hover { background: #d2992244; }
+    .b3x-task-badge { background: #58a6ff22; color: #58a6ff; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; cursor: pointer; opacity: 0.6; }
+    .b3x-task-badge:hover { background: #58a6ff44; }
+    .action-item.client-task { border-left: 3px solid #d29922; }
+
     .action-item .item-actions {
       display: flex;
       gap: 6px;
@@ -5203,6 +5209,17 @@
       {name: 'Vince', label: '★ Vince - B3X Tech'},
     ];
 
+    // Classify task as B3X (internal) or Client
+    function getTaskType(item) {
+      if (item.task_type === 'b3x') return 'b3x';
+      if (item.task_type === 'client') return 'client';
+      if (!item.owner_name || item.owner_name === 'TBD') return 'b3x';
+      const isInternal = INTERNAL_TEAM.some(t =>
+        item.owner_name.toLowerCase().includes(t.name.toLowerCase())
+      );
+      return isInternal ? 'b3x' : 'client';
+    }
+
     let meetings = [];
     let allMeetings = []; // All meetings for current week (for client-side filtering)
     let clients = [];
@@ -5687,7 +5704,12 @@
           ` : ''}
 
           <div class="section">
-            <h3>✅ Action Items (${action_items.length})</h3>
+            <h3 style="display:inline">✅ Action Items (${action_items.length})</h3>
+            <select id="taskTypeFilter-${meeting.id}" onchange="filterActionItemsByType(${meeting.id})" style="margin-left:12px;background:#21262d;color:#c9d1d9;border:1px solid #30363d;border-radius:4px;padding:2px 8px;font-size:12px;">
+              <option value="all">All Types</option>
+              <option value="b3x">B3X Only</option>
+              <option value="client">Client Only</option>
+            </select>
 
             ${renderTieredActionItems(action_items, meeting)}
             <button class="add-manual-btn" onclick="showManualItemForm(${meeting.id})">+ Add Manual Item</button>
@@ -5898,18 +5920,21 @@
                           item.status === 'rejected' ? 'rejected' :
                           item.status === 'on-agenda' ? 'on-agenda' : '';
       const priority = item.priority || 'medium';
+      const taskType = getTaskType(item);
+      const isClientTask = taskType === 'client';
       const hasExcerpt = item.transcript_excerpt && item.transcript_excerpt.length > 0;
       const isPushed = item.pushed_at || item.ph_task_id;
-      const canPush = item.status === 'open' && !isPushed;
+      const canPush = item.status === 'open' && !isPushed && !isClientTask;
       const meetingTopic = meeting?.topic || '';
       const meetingDate = meeting?.start_time || '';
       const clientId = meeting?.client_id || '';
 
       return `
-        <div class="action-item ${statusClass}" id="action-${item.id}" data-meeting-id="${item.meeting_id || meeting?.id || ''}">
+        <div class="action-item ${statusClass}${isClientTask ? ' client-task' : ''}" id="action-${item.id}" data-meeting-id="${item.meeting_id || meeting?.id || ''}">
           <div class="item-content">
             <div class="item-row">
               <div class="item-title inline-edit" onclick="startEdit(${item.id}, 'title', this)">${escapeHtml(item.title)}</div>
+              ${isClientTask ? `<span class="client-task-badge" onclick="toggleTaskType(${item.id}, 'client')" title="Click to mark as B3X task">Client Task</span>` : (item.task_type === 'b3x' ? `<span class="b3x-task-badge" onclick="toggleTaskType(${item.id}, 'b3x')" title="Click to mark as Client task">B3X</span>` : '')}
               ${isPushed ? `<span class="pushed-badge">Pushed</span>` : ''}
               ${item.ph_task_id ? `<a class="ph-link" href="https://breakthrough3x.proofhub.com/bapplite/#app/todos/project-${item.ph_project_id}/list-${item.ph_task_list_id}/task-${item.ph_task_id}" target="_blank">View in PH</a>` : ''}
               ${showPromote ? `<button class="promote-btn" onclick="promoteToRecap(${item.id})">↑ Promote to Recap</button>` : ''}
@@ -7065,6 +7090,35 @@
       }
     }
 
+
+    // Filter action items by task type (B3X/Client)
+    function filterActionItemsByType(meetingId) {
+      const filter = document.getElementById('taskTypeFilter-' + meetingId)?.value || 'all';
+      document.querySelectorAll('.action-item[data-meeting-id="' + meetingId + '"]').forEach(el => {
+        if (filter === 'all') {
+          el.style.display = '';
+        } else {
+          const isClient = el.classList.contains('client-task');
+          el.style.display = (filter === 'client') === isClient ? '' : 'none';
+        }
+      });
+    }
+
+    // Toggle task type between B3X and Client
+    async function toggleTaskType(id, currentType) {
+      const newType = currentType === 'client' ? 'b3x' : 'client';
+      try {
+        await fetch(`${API}/action-items/${id}`, {
+          method: 'PUT',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({task_type: newType})
+        });
+        showToast(`Marked as ${newType === 'client' ? 'Client' : 'B3X'} task`);
+        refreshActionItem(id);
+      } catch (err) {
+        showToast('Failed to update task type', true);
+      }
+    }
 
     // Assign client
     async function assignClient(meetingId, clientId) {
