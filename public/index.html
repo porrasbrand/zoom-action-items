@@ -10576,6 +10576,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     function toggleChatPanel() {
       chatPanelOpen = !chatPanelOpen;
       document.getElementById('chat-panel').classList.toggle('open', chatPanelOpen);
+      document.getElementById('chat-toggle').style.display = chatPanelOpen ? 'none' : '';
       if (chatPanelOpen) {
         document.getElementById('chat-input').focus();
       }
