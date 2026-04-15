@@ -55,25 +55,74 @@ export function classifyQuery(question) {
 export async function retrieveContext(db, question, queryType, { clientId = null, topK = 10 } = {}) {
   const context = {};
 
+  // Detect recency intent
+  const qLower = question.toLowerCase();
+  const wantsRecent = /last|latest|most recent|previous|yesterday|this week|today/.test(qLower);
+
   // Vector search for transcript-based queries
   if (queryType === 'transcript_search' || queryType === 'client_brief' || queryType === 'cross_client') {
-    const index = ensureIndex(db);
-    if (index.size > 0) {
-      const queryEmbed = await embedChunk(question);
-      const similar = searchSimilar(queryEmbed, index, topK, clientId);
 
-      context.chunks = similar.map(s => {
-        const chunk = db.prepare('SELECT * FROM transcript_chunks WHERE id = ?').get(s.chunkId);
-        if (!chunk) return null;
-        const meeting = db.prepare('SELECT topic, start_time, client_name, client_id FROM meetings WHERE id = ?').get(chunk.meeting_id);
-        return {
+    // If user asks about "last meeting" and we have a client, skip vector search
+    // and directly fetch chunks from the most recent meeting
+    if (wantsRecent && clientId) {
+      const recentMeeting = db.prepare(
+        'SELECT id, topic, start_time, client_name FROM meetings WHERE client_id = ? AND transcript_raw IS NOT NULL ORDER BY start_time DESC LIMIT 1'
+      ).get(clientId);
+
+      if (recentMeeting) {
+        const recentChunks = db.prepare(
+          'SELECT * FROM transcript_chunks WHERE meeting_id = ? ORDER BY chunk_index ASC'
+        ).all(recentMeeting.id);
+
+        context.chunks = recentChunks.map(chunk => ({
           ...chunk,
-          meeting_topic: meeting?.topic || 'Unknown',
-          meeting_date: meeting?.start_time || '',
-          client_name: meeting?.client_name || '',
-          similarity: s.similarity
-        };
-      }).filter(Boolean);
+          meeting_topic: recentMeeting.topic || 'Unknown',
+          meeting_date: recentMeeting.start_time || '',
+          client_name: recentMeeting.client_name || '',
+          similarity: 1.0
+        }));
+
+        // Also add a few vector-matched chunks for broader context
+        const index = ensureIndex(db);
+        if (index.size > 0) {
+          const queryEmbed = await embedChunk(question);
+          const similar = searchSimilar(queryEmbed, index, 5, clientId);
+          for (const s of similar) {
+            const chunk = db.prepare('SELECT * FROM transcript_chunks WHERE id = ?').get(s.chunkId);
+            if (!chunk || chunk.meeting_id === recentMeeting.id) continue; // skip dupes
+            const meeting = db.prepare('SELECT topic, start_time, client_name FROM meetings WHERE id = ?').get(chunk.meeting_id);
+            context.chunks.push({
+              ...chunk,
+              meeting_topic: meeting?.topic || 'Unknown',
+              meeting_date: meeting?.start_time || '',
+              client_name: meeting?.client_name || '',
+              similarity: s.similarity
+            });
+          }
+        }
+      }
+    }
+
+    // Standard vector search (when not recency-focused or no client)
+    if (!context.chunks || context.chunks.length === 0) {
+      const index = ensureIndex(db);
+      if (index.size > 0) {
+        const queryEmbed = await embedChunk(question);
+        const similar = searchSimilar(queryEmbed, index, topK, clientId);
+
+        context.chunks = similar.map(s => {
+          const chunk = db.prepare('SELECT * FROM transcript_chunks WHERE id = ?').get(s.chunkId);
+          if (!chunk) return null;
+          const meeting = db.prepare('SELECT topic, start_time, client_name, client_id FROM meetings WHERE id = ?').get(chunk.meeting_id);
+          return {
+            ...chunk,
+            meeting_topic: meeting?.topic || 'Unknown',
+            meeting_date: meeting?.start_time || '',
+            client_name: meeting?.client_name || '',
+            similarity: s.similarity
+          };
+        }).filter(Boolean);
+      }
     }
   }
 
