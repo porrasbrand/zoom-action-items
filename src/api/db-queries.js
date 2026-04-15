@@ -79,6 +79,21 @@ export function runMigrations() {
     }
   }
 
+  // Meeting summary column
+  if (!meetingsCols.has('meeting_summary')) {
+    console.log('[Migration] Adding meetings column: meeting_summary');
+    d.exec('ALTER TABLE meetings ADD COLUMN meeting_summary TEXT DEFAULT NULL');
+  }
+
+  // Meeting-level embeddings
+  d.exec(`
+    CREATE TABLE IF NOT EXISTS meeting_embeddings (
+      meeting_id INTEGER PRIMARY KEY REFERENCES meetings(id),
+      embedding BLOB NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   // Transcript chunks + embeddings tables (Concierge RAG)
   d.exec(`
     CREATE TABLE IF NOT EXISTS transcript_chunks (

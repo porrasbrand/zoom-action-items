@@ -118,3 +118,40 @@ export function searchSimilar(queryEmbedding, allEmbeddings, topK = 10, clientId
   scores.sort((a, b) => b.similarity - a.similarity);
   return scores.slice(0, topK);
 }
+
+// ============ MEETING-LEVEL EMBEDDINGS ============
+
+/**
+ * Generate and store a meeting-level embedding from summary text
+ */
+export async function embedMeetingSummary(db, meetingId, summaryText) {
+  const embedding = await embedChunk(summaryText);
+  const buffer = Buffer.from(embedding.buffer);
+  db.prepare('INSERT OR REPLACE INTO meeting_embeddings (meeting_id, embedding) VALUES (?, ?)').run(meetingId, buffer);
+}
+
+/**
+ * Load all meeting-level embeddings into memory
+ */
+export function loadMeetingEmbeddings(db) {
+  const rows = db.prepare('SELECT meeting_id, embedding FROM meeting_embeddings').all();
+  const map = new Map();
+  for (const row of rows) {
+    const arr = new Float32Array(row.embedding.buffer, row.embedding.byteOffset, EMBEDDING_DIM);
+    map.set(row.meeting_id, arr);
+  }
+  return map;
+}
+
+/**
+ * Search for most relevant meetings using meeting-level embeddings
+ */
+export function searchMeetings(queryEmbedding, meetingEmbeddings, topK = 5) {
+  const results = [];
+  for (const [meetingId, embedding] of meetingEmbeddings) {
+    const sim = cosineSimilarity(queryEmbedding, embedding);
+    results.push({ meetingId, similarity: sim });
+  }
+  results.sort((a, b) => b.similarity - a.similarity);
+  return results.slice(0, topK);
+}
