@@ -6367,6 +6367,9 @@
       element.innerHTML = '';
       element.appendChild(input);
       input.focus();
+      if (field === 'owner_name' || field === 'collaborators') {
+        input.select();
+      }
 
       // Initialize Flatpickr for date fields
       if (field === 'due_date') {
