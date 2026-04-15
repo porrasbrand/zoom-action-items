@@ -104,6 +104,32 @@ export function runMigrations() {
     )
   `);
 
+  // Chat sessions + messages tables (Concierge)
+  d.exec(`
+    CREATE TABLE IF NOT EXISTS chat_sessions (
+      id TEXT PRIMARY KEY,
+      user_email TEXT NOT NULL,
+      client_id TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  d.exec(`
+    CREATE TABLE IF NOT EXISTS chat_messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      session_id TEXT NOT NULL REFERENCES chat_sessions(id),
+      role TEXT NOT NULL,
+      content TEXT NOT NULL,
+      citations TEXT,
+      query_type TEXT,
+      model_used TEXT,
+      tokens_used INTEGER,
+      chunks_used INTEGER,
+      latency_ms INTEGER,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  d.exec('CREATE INDEX IF NOT EXISTS idx_chat_messages_session ON chat_messages(session_id)');
+
   console.log('[Migration] Database schema up to date');
 }
 

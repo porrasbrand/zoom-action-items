@@ -3,6 +3,7 @@
  */
 
 import { Router } from 'express';
+import crypto from 'crypto';
 import * as db from './db-queries.js';
 import { getDatabase } from './db-queries.js';
 import { readFileSync } from 'fs';
@@ -2836,6 +2837,151 @@ router.post('/ppc/task/:id/disposition', (req, res) => {
     res.json({ success: true, task_id: taskId, disposition });
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+});
+
+// ============ CHAT / CONCIERGE API ============
+
+import { ask } from '../lib/rag-engine.js';
+
+// Simple rate limiter: max 30 requests/min per user
+const rateLimits = new Map();
+function checkRateLimit(email) {
+  const now = Date.now();
+  const entry = rateLimits.get(email) || { count: 0, resetAt: now + 60000 };
+  if (now > entry.resetAt) { entry.count = 0; entry.resetAt = now + 60000; }
+  entry.count++;
+  rateLimits.set(email, entry);
+  return entry.count <= 30;
+}
+
+// POST /api/chat - Ask a question
+router.post('/chat', async (req, res) => {
+  try {
+    const userEmail = req.user?.email || 'anonymous';
+    if (!checkRateLimit(userEmail)) {
+      return res.status(429).json({ error: 'Rate limit exceeded (30/min)' });
+    }
+
+    const { question, client_id, session_id } = req.body;
+    if (!question?.trim()) {
+      return res.status(400).json({ error: 'question is required' });
+    }
+
+    const d = db.getDatabase();
+
+    // Get or create session
+    let sid = session_id;
+    if (!sid) {
+      sid = crypto.randomUUID();
+      d.prepare('INSERT INTO chat_sessions (id, user_email, client_id) VALUES (?, ?, ?)').run(sid, userEmail, client_id || null);
+    } else {
+      const existing = d.prepare('SELECT id FROM chat_sessions WHERE id = ?').get(sid);
+      if (!existing) {
+        return res.status(404).json({ error: 'Session not found' });
+      }
+    }
+
+    // Load chat history (last 6 messages)
+    const history = d.prepare(
+      'SELECT role, content FROM chat_messages WHERE session_id = ? ORDER BY created_at DESC LIMIT 6'
+    ).all(sid).reverse();
+
+    // Call RAG engine
+    const result = await ask(d, question.trim(), {
+      clientId: client_id || null,
+      chatHistory: history,
+      topK: 10
+    });
+
+    // Save user message
+    d.prepare(
+      'INSERT INTO chat_messages (session_id, role, content) VALUES (?, ?, ?)'
+    ).run(sid, 'user', question.trim());
+
+    // Save assistant response
+    d.prepare(
+      'INSERT INTO chat_messages (session_id, role, content, citations, query_type, model_used, tokens_used, chunks_used, latency_ms) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    ).run(sid, 'assistant', result.answer, JSON.stringify(result.citations), result.queryType, result.model, result.tokensUsed, result.chunksUsed, result.latencyMs);
+
+    res.json({
+      answer: result.answer,
+      citations: result.citations,
+      query_type: result.queryType,
+      model_used: result.model,
+      tokens_used: result.tokensUsed,
+      chunks_used: result.chunksUsed,
+      latency_ms: result.latencyMs,
+      session_id: sid
+    });
+  } catch (err) {
+    console.error('[Chat] Error:', err.message);
+    res.status(503).json({ error: 'Chat service unavailable: ' + err.message });
+  }
+});
+
+// GET /api/chat/sessions - List user's recent sessions
+router.get('/chat/sessions', (req, res) => {
+  try {
+    const userEmail = req.user?.email || 'anonymous';
+    const d = db.getDatabase();
+    const sessions = d.prepare(`
+      SELECT cs.id, cs.client_id, cs.created_at,
+        (SELECT content FROM chat_messages WHERE session_id = cs.id ORDER BY created_at DESC LIMIT 1) as last_message
+      FROM chat_sessions cs
+      WHERE cs.user_email = ?
+      ORDER BY cs.created_at DESC
+      LIMIT 20
+    `).all(userEmail);
+    res.json(sessions);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/chat/sessions/:id/messages - Get messages for a session
+router.get('/chat/sessions/:id/messages', (req, res) => {
+  try {
+    const d = db.getDatabase();
+    const messages = d.prepare(
+      'SELECT id, role, content, citations, query_type, model_used, tokens_used, chunks_used, latency_ms, created_at FROM chat_messages WHERE session_id = ? ORDER BY created_at'
+    ).all(req.params.id);
+    res.json(messages);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE /api/chat/sessions/:id - Delete a session and its messages
+router.delete('/chat/sessions/:id', (req, res) => {
+  try {
+    const d = db.getDatabase();
+    d.prepare('DELETE FROM chat_messages WHERE session_id = ?').run(req.params.id);
+    d.prepare('DELETE FROM chat_sessions WHERE id = ?').run(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/chat/stats - Usage statistics
+router.get('/chat/stats', (req, res) => {
+  try {
+    const d = db.getDatabase();
+    const stats = {
+      total_sessions: d.prepare('SELECT COUNT(*) as c FROM chat_sessions').get().c,
+      total_messages: d.prepare('SELECT COUNT(*) as c FROM chat_messages').get().c,
+      total_tokens: d.prepare('SELECT COALESCE(SUM(tokens_used), 0) as c FROM chat_messages WHERE tokens_used IS NOT NULL').get().c,
+      avg_latency_ms: d.prepare('SELECT COALESCE(AVG(latency_ms), 0) as c FROM chat_messages WHERE latency_ms IS NOT NULL').get().c,
+      queries_by_type: {}
+    };
+    const byType = d.prepare('SELECT query_type, COUNT(*) as c FROM chat_messages WHERE query_type IS NOT NULL GROUP BY query_type').all();
+    for (const row of byType) {
+      stats.queries_by_type[row.query_type] = row.c;
+    }
+    res.json(stats);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
