@@ -188,6 +188,19 @@ router.post('/action-items/:id/reject', (req, res) => {
   }
 });
 
+// POST /api/action-items/:id/agenda - Add to agenda
+router.post('/action-items/:id/agenda', (req, res) => {
+  try {
+    const updated = db.setActionItemStatus(parseInt(req.params.id), 'on-agenda');
+    if (!updated) {
+      return res.status(404).json({ error: 'Action item not found' });
+    }
+    res.json({ success: true, status: 'on-agenda' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // POST /api/action-items/:id/reopen - Reopen item
 router.post('/action-items/:id/reopen', (req, res) => {
   try {

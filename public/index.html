@@ -554,6 +554,15 @@
       background: #f85149;
     }
 
+    .action-btn.agenda-btn {
+      background: #a371f722;
+      color: #a371f7;
+    }
+
+    .action-btn.agenda-btn:hover {
+      background: #a371f744;
+    }
+
     .action-btn.reopen-btn {
       background: #30363d;
       color: #8b949e;
@@ -583,6 +592,7 @@
     .status-open { background: #58a6ff22; color: #58a6ff; }
     .status-complete { background: #3fb95022; color: #3fb950; }
     .status-rejected { background: #f8514922; color: #f85149; }
+    .status-on-agenda { background: #a371f722; color: #a371f7; }
 
     /* Decisions */
     .decisions-list {
@@ -5832,7 +5842,8 @@
     // Render action item with inline editing
     function renderActionItem(item, meeting, showPromote = false) {
       const statusClass = item.status === 'complete' ? 'complete' :
-                          item.status === 'rejected' ? 'rejected' : '';
+                          item.status === 'rejected' ? 'rejected' :
+                          item.status === 'on-agenda' ? 'on-agenda' : '';
       const priority = item.priority || 'medium';
       const hasExcerpt = item.transcript_excerpt && item.transcript_excerpt.length > 0;
       const isPushed = item.pushed_at || item.ph_task_id;
@@ -5857,7 +5868,7 @@
               <span class="owner inline-edit" onclick="startEdit(${item.id}, 'owner_name', this)">👤 ${escapeHtml(item.owner_name || 'TBD')}</span>
               <span class="inline-edit" onclick="startEdit(${item.id}, 'due_date', this)">📅 ${item.due_date ? escapeHtml(formatShortDate(item.due_date)) : 'No date'}</span>
               <span class="priority-badge ${priority}" onclick="cyclePriority(${item.id}, '${priority}')">${escapeHtml(priority)}</span>
-              <span class="status-badge status-${item.status || 'open'}">${escapeHtml(item.status || 'open')}</span>
+              <span class="status-badge status-${item.status || 'open'}">${item.status === 'on-agenda' ? 'On Agenda' : escapeHtml(item.status || 'open')}</span>
             </div>
             ${hasExcerpt ? `
               <div class="view-context-link" onclick="toggleExcerpt(${item.id})">▶ View context</div>
@@ -5905,8 +5916,12 @@
           <div class="item-actions">
             ${item.status === 'open' ? `
               <button class="action-btn complete-btn" onclick="completeItem(${item.id})">✓</button>
+              <button class="action-btn agenda-btn" onclick="agendaItem(${item.id})" title="Add to agenda">📋</button>
               <button class="action-btn reject-btn" onclick="rejectItem(${item.id})">✕</button>
               ${canPush ? `<button class="action-btn push-btn" onclick="showPushPanel(${item.id}, '${escapeHtml(clientId)}', '${escapeHtml(item.owner_name || '')}')">Push to PH</button>` : ''}
+            ` : item.status === 'on-agenda' ? `
+              <button class="action-btn complete-btn" onclick="completeItem(${item.id})">✓</button>
+              <button class="action-btn reopen-btn" onclick="reopenItem(${item.id})">↩</button>
             ` : `
               <button class="action-btn reopen-btn" onclick="reopenItem(${item.id})">↩</button>
             `}
@@ -6934,6 +6949,18 @@
       try {
         await fetch(`${API}/action-items/${id}/complete`, { method: 'POST' });
         showToast('Action item marked as complete');
+        refreshActionItem(id);
+        loadStats();
+      } catch (err) {
+        showToast('Failed to update action item', true);
+      }
+    }
+
+    // Add to agenda
+    async function agendaItem(id) {
+      try {
+        await fetch(`${API}/action-items/${id}/agenda`, { method: 'POST' });
+        showToast('Action item added to agenda');
         refreshActionItem(id);
         loadStats();
       } catch (err) {
