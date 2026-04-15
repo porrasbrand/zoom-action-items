@@ -41,6 +41,7 @@ export function runMigrations() {
     { name: 'pushed_at', type: 'TEXT' },
     { name: 'source', type: "TEXT DEFAULT 'llm_extracted'" },
     { name: 'confidence_tier', type: "TEXT DEFAULT 'conversation'" },
+    { name: 'collaborators', type: "TEXT DEFAULT ''" },
   ];
 
   for (const col of actionItemsNewCols) {
@@ -254,7 +255,7 @@ export function updateActionItem(id, updates) {
   const allowedFields = [
     'title', 'description', 'owner_name', 'due_date', 'priority', 'status', 'category',
     'transcript_excerpt', 'ph_project_id', 'ph_task_list_id', 'ph_assignee_id', 'ph_task_id',
-    'confidence_tier'
+    'confidence_tier', 'collaborators'
   ];
   const sets = [];
   const params = [];
@@ -632,8 +633,8 @@ export function markSpotChecked(id) {
 export function insertManualActionItem(meetingId, clientId, data) {
   const d = getDb();
   const result = d.prepare(`
-    INSERT INTO action_items (meeting_id, client_id, title, description, owner_name, due_date, priority, category, source, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, 'other', 'manual_added', 'open')
+    INSERT INTO action_items (meeting_id, client_id, title, description, owner_name, due_date, priority, category, source, status, collaborators)
+    VALUES (?, ?, ?, ?, ?, ?, ?, 'other', 'manual_added', 'open', ?)
   `).run(
     meetingId,
     clientId,
@@ -641,7 +642,8 @@ export function insertManualActionItem(meetingId, clientId, data) {
     data.description || null,
     data.owner_name || null,
     data.due_date || null,
-    data.priority || 'medium'
+    data.priority || 'medium',
+    data.collaborators || ''
   );
 
   return d.prepare('SELECT * FROM action_items WHERE id = ?').get(result.lastInsertRowid);

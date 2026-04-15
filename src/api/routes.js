@@ -961,7 +961,7 @@ router.post('/meetings/:id/action-items', (req, res) => {
       return res.status(404).json({ error: 'Meeting not found' });
     }
 
-    const { title, owner_name, due_date, priority, description } = req.body;
+    const { title, owner_name, due_date, priority, description, collaborators } = req.body;
 
     if (!title) {
       return res.status(400).json({ error: 'Title is required' });
@@ -972,7 +972,8 @@ router.post('/meetings/:id/action-items', (req, res) => {
       owner_name,
       due_date,
       priority,
-      description
+      description,
+      collaborators
     });
 
     res.json(item);

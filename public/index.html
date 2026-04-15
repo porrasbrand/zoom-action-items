@@ -378,6 +378,11 @@
       color: #58a6ff;
     }
 
+    .action-item .item-meta .collaborators {
+      font-size: 0.8em;
+      color: #8b949e;
+    }
+
     .priority-high { color: #f85149 !important; }
     .priority-medium { color: #d29922 !important; }
     .priority-low { color: #8b949e !important; }
@@ -5662,6 +5667,10 @@
                 <input type="text" id="manual-owner-${meeting.id}" placeholder="Owner name" list="ownersList">
               </div>
               <div class="form-row">
+                <label>Also Involved</label>
+                <input type="text" id="manual-collaborators-${meeting.id}" placeholder="e.g., Manuel, Juan" list="ownersList">
+              </div>
+              <div class="form-row">
                 <label>Due Date</label>
                 <input type="text" id="manual-due-${meeting.id}" placeholder="Select date...">
               </div>
@@ -5876,6 +5885,7 @@
             </div>
             <div class="item-meta">
               <span class="owner inline-edit" onclick="startEdit(${item.id}, 'owner_name', this)">👤 ${escapeHtml(item.owner_name || 'TBD')}</span>
+              <span class="collaborators inline-edit" onclick="startEdit(${item.id}, 'collaborators', this)">${item.collaborators ? '👥 Also: ' + escapeHtml(item.collaborators) : '+ Add collaborators'}</span>
               <span class="inline-edit" onclick="startEdit(${item.id}, 'due_date', this)">📅 ${item.due_date ? escapeHtml(formatShortDate(item.due_date)) : 'No date'}</span>
               <span class="priority-badge ${priority}" onclick="cyclePriority(${item.id}, '${priority}')">${escapeHtml(priority)}</span>
               <span class="status-badge status-${item.status || 'open'}">${item.status === 'on-agenda' ? 'On Agenda' : escapeHtml(item.status || 'open')}</span>
@@ -5911,7 +5921,7 @@
               </div>
               <div class="form-row">
                 <label>Description</label>
-                <textarea id="ph-desc-${item.id}">${escapeHtml(item.description || '')}${hasExcerpt ? '\n\n---\nFrom meeting: ' + escapeHtml(meetingTopic) + '\n' + escapeHtml(item.transcript_excerpt || '') : ''}</textarea>
+                <textarea id="ph-desc-${item.id}">${escapeHtml(item.description || '')}${item.collaborators ? '\n\nAlso involved: ' + escapeHtml(item.collaborators) : ''}${hasExcerpt ? '\n\n---\nFrom meeting: ' + escapeHtml(meetingTopic) + '\n' + escapeHtml(item.transcript_excerpt || '') : ''}</textarea>
               </div>
               <div class="form-row">
                 <label>Due Date</label>
@@ -6222,10 +6232,11 @@
       // Read current value from the clicked element's text content
       let currentValue = element.textContent.trim();
       // Clean up placeholder text
-      if (currentValue === 'Click to add description...' || currentValue === 'TBD' || currentValue === 'No date') currentValue = '';
-      // Strip emoji prefixes from owner/date fields
+      if (currentValue === 'Click to add description...' || currentValue === '✏️ Click to add description...' || currentValue === 'TBD' || currentValue === 'No date' || currentValue === '+ Add collaborators') currentValue = '';
+      // Strip emoji prefixes from owner/date/collaborators fields
       if (field === 'owner_name') currentValue = currentValue.replace(/^\u{1F464}\s*/u, '');
       if (field === 'due_date') currentValue = currentValue.replace(/^\u{1F4C5}\s*/u, '');
+      if (field === 'collaborators') currentValue = currentValue.replace(/^👥\s*Also:\s*/u, '');
 
       let input;
       if (field === 'description') {
@@ -6239,12 +6250,13 @@
         input.className = 'inline-edit-input flatpickr-input';
         input.placeholder = 'Pick a date...';
         input.value = currentValue ? currentValue.slice(0, 10) : '';
-      } else if (field === 'owner_name') {
+      } else if (field === 'owner_name' || field === 'collaborators') {
         input = document.createElement('input');
         input.type = 'text';
         input.className = 'inline-edit-input';
-        input.value = currentValue;
+        input.value = field === 'collaborators' && currentValue === '+ Add collaborators' ? '' : currentValue;
         input.setAttribute('list', 'ownersList');
+        if (field === 'collaborators') input.placeholder = 'e.g., Manuel, Juan';
       } else {
         input = document.createElement('input');
         input.type = 'text';
@@ -6298,10 +6310,13 @@
       const { id, field, element } = currentEditField;
       currentEditField = null;
 
-      // Strip ★ label from owner name selections (e.g., "★ Dan - B3X Leadership" → "Dan")
-      if (field === 'owner_name' && newValue && newValue.startsWith('★ ')) {
-        const match = INTERNAL_TEAM.find(t => t.label === newValue);
-        if (match) newValue = match.name;
+      // Strip ★ labels from owner/collaborator selections (e.g., "★ Dan - B3X Leadership" → "Dan")
+      if ((field === 'owner_name' || field === 'collaborators') && newValue && newValue.includes('★')) {
+        newValue = newValue.split(',').map(part => {
+          part = part.trim();
+          const match = INTERNAL_TEAM.find(t => t.label === part);
+          return match ? match.name : part;
+        }).join(', ');
       }
 
       // Show saving indicator
@@ -7187,6 +7202,7 @@
       }
       const dueDate = document.getElementById(`manual-due-${meetingId}`).value;
       const priority = document.getElementById(`manual-priority-${meetingId}`).value;
+      const collaborators = (document.getElementById(`manual-collaborators-${meetingId}`)?.value || '').trim();
 
       if (!title) {
         showToast('Title is required', true);
@@ -7202,6 +7218,7 @@
             owner_name: ownerName || null,
             due_date: dueDate || null,
             priority,
+            collaborators: collaborators || '',
             source: 'manual_added'
           })
         });
