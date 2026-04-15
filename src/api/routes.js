@@ -46,7 +46,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
 
 // B3X internal team names (must match frontend INTERNAL_TEAM)
-const B3X_TEAM = ['Dan', 'Juan', 'Manuel', 'Phil', 'Richard', 'Vince'];
+const B3X_TEAM = ['Bill', 'Dan', 'Jacob', 'Joaco', 'Juan', 'Manuel', 'Nicole', 'Phil', 'Ray', 'Richard', 'Sarah', 'Vince'];
 
 // Resolve collaborators to PH assignee IDs (B3X only) and client names
 function resolveCollaborators(collaboratorsStr) {
