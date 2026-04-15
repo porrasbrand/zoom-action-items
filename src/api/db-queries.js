@@ -79,6 +79,31 @@ export function runMigrations() {
     }
   }
 
+  // Transcript chunks + embeddings tables (Concierge RAG)
+  d.exec(`
+    CREATE TABLE IF NOT EXISTS transcript_chunks (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      meeting_id INTEGER NOT NULL REFERENCES meetings(id),
+      client_id TEXT,
+      chunk_index INTEGER NOT NULL,
+      start_time TEXT,
+      end_time TEXT,
+      speakers TEXT,
+      text TEXT NOT NULL,
+      token_count INTEGER,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  d.exec('CREATE INDEX IF NOT EXISTS idx_chunks_meeting ON transcript_chunks(meeting_id)');
+  d.exec('CREATE INDEX IF NOT EXISTS idx_chunks_client ON transcript_chunks(client_id)');
+  d.exec(`
+    CREATE TABLE IF NOT EXISTS transcript_embeddings (
+      chunk_id INTEGER PRIMARY KEY REFERENCES transcript_chunks(id),
+      embedding BLOB NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   console.log('[Migration] Database schema up to date');
 }
 
