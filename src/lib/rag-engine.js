@@ -480,10 +480,59 @@ export async function generateClientBrief(db, clientId) {
   };
 }
 
+// ============ Q&A CACHE ============
+
+function mapQueryToQAType(question) {
+  const q = question.toLowerCase();
+  if (/what was discussed|what happened|summary|overview|what.+meeting about/.test(q)) return 'summary';
+  if (/action item|task|todo|open item|what.+came out/.test(q)) return 'action_items';
+  if (/sentiment|mood|feeling|happy|upset|how.+feel/.test(q)) return 'sentiment';
+  if (/decision|decided|agreed/.test(q)) return 'key_decisions';
+  if (/next step|follow.?up|what.?s next/.test(q)) return 'next_steps';
+  if (/commit|promise|pledg/.test(q)) return 'commitments';
+  return null;
+}
+
+function checkQACache(db, question, clientId) {
+  if (!clientId) return null;
+  if (!detectRecency(question)) return null;
+
+  const qaType = mapQueryToQAType(question);
+  if (!qaType) return null;
+
+  // Find the most recent meeting for this client
+  const recentMeeting = db.prepare(
+    'SELECT id FROM meetings WHERE client_id = ? ORDER BY start_time DESC LIMIT 1'
+  ).get(clientId);
+  if (!recentMeeting) return null;
+
+  const cached = db.prepare(
+    'SELECT answer FROM meeting_qa_cache WHERE meeting_id = ? AND question_type = ?'
+  ).get(recentMeeting.id, qaType);
+
+  return cached?.answer || null;
+}
+
 // ============ MAIN INTERFACE ============
 
 export async function ask(db, question, { clientId = null, chatHistory = [], topK = 10 } = {}) {
   const queryType = classifyQuery(question);
+
+  // Check Q&A cache first (instant, zero tokens)
+  const cachedAnswer = checkQACache(db, question, clientId);
+  if (cachedAnswer) {
+    return {
+      answer: cachedAnswer,
+      citations: [],
+      queryType,
+      model: 'cache',
+      tokensUsed: 0,
+      chunksUsed: 0,
+      latencyMs: 0,
+      cached: true
+    };
+  }
+
   const context = await retrieveContext(db, question, queryType, { clientId, topK });
   const result = await generateAnswer(question, context, chatHistory, queryType);
   return result;

@@ -158,6 +158,20 @@ export function runMigrations() {
   `);
   d.exec('CREATE INDEX IF NOT EXISTS idx_briefs_client ON client_briefs(client_id)');
 
+  // Meeting Q&A cache (Concierge instant responses)
+  d.exec(`
+    CREATE TABLE IF NOT EXISTS meeting_qa_cache (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      meeting_id INTEGER NOT NULL REFERENCES meetings(id),
+      question_type TEXT NOT NULL,
+      question TEXT NOT NULL,
+      answer TEXT NOT NULL,
+      generated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(meeting_id, question_type)
+    )
+  `);
+  d.exec('CREATE INDEX IF NOT EXISTS idx_qa_meeting ON meeting_qa_cache(meeting_id)');
+
   console.log('[Migration] Database schema up to date');
 }
 
