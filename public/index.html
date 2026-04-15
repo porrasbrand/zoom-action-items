@@ -5189,6 +5189,15 @@
     // Load user info on page load
     loadUserInfo();
 
+    const INTERNAL_TEAM = [
+      {name: 'Dan', label: '★ Dan - B3X Leadership'},
+      {name: 'Juan', label: '★ Juan - B3X Tech'},
+      {name: 'Manuel', label: '★ Manuel - B3X Tech'},
+      {name: 'Phil', label: '★ Phil - B3X Leadership'},
+      {name: 'Richard', label: '★ Richard - B3X'},
+      {name: 'Vince', label: '★ Vince - B3X Tech'},
+    ];
+
     let meetings = [];
     let allMeetings = []; // All meetings for current week (for client-side filtering)
     let clients = [];
@@ -6031,10 +6040,13 @@
         }
       }
 
-      // Load people and resolve owner
+      // Load people and resolve owner — group internal team first
       const people = await fetchPHPeople();
+      const internalPH = people.filter(p => INTERNAL_TEAM.some(t => p.name.toLowerCase().startsWith(t.name.toLowerCase())));
+      const otherPH = people.filter(p => !INTERNAL_TEAM.some(t => p.name.toLowerCase().startsWith(t.name.toLowerCase())));
       assigneeSelect.innerHTML = '<option value="">Unassigned</option>' +
-        people.map(p => `<option value="${p.ph_id || ''}">${escapeHtml(p.name)} (${escapeHtml(p.email)})</option>`).join('');
+        (internalPH.length ? `<optgroup label="B3X Internal">${internalPH.map(p => `<option value="${p.ph_id || ''}">${escapeHtml(p.name)} (${escapeHtml(p.email)})</option>`).join('')}</optgroup>` : '') +
+        (otherPH.length ? `<optgroup label="Other Members">${otherPH.map(p => `<option value="${p.ph_id || ''}">${escapeHtml(p.name)} (${escapeHtml(p.email)})</option>`).join('')}</optgroup>` : '');
 
       if (ownerName) {
         const resolved = await resolveOwner(ownerName);
@@ -6285,6 +6297,12 @@
 
       const { id, field, element } = currentEditField;
       currentEditField = null;
+
+      // Strip ★ label from owner name selections (e.g., "★ Dan - B3X Leadership" → "Dan")
+      if (field === 'owner_name' && newValue && newValue.startsWith('★ ')) {
+        const match = INTERNAL_TEAM.find(t => t.label === newValue);
+        if (match) newValue = match.name;
+      }
 
       // Show saving indicator
       element.innerHTML = '<span class=saving-indicator>Saving...</span>';
@@ -7161,7 +7179,12 @@
     // Add manual item
     async function addManualItem(meetingId, clientId) {
       const title = document.getElementById(`manual-title-${meetingId}`).value.trim();
-      const ownerName = document.getElementById(`manual-owner-${meetingId}`).value.trim();
+      let ownerName = document.getElementById(`manual-owner-${meetingId}`).value.trim();
+      // Strip ★ label if internal team member was selected from datalist
+      if (ownerName.startsWith('★ ')) {
+        const match = INTERNAL_TEAM.find(t => t.label === ownerName);
+        if (match) ownerName = match.name;
+      }
       const dueDate = document.getElementById(`manual-due-${meetingId}`).value;
       const priority = document.getElementById(`manual-priority-${meetingId}`).value;
 
@@ -10287,14 +10310,21 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       await renderWeekPills(); // Render week pills first (sets default week)
       await loadMeetings(); // Then load meetings for selected week
 
-      // Create owners datalist
+      // Create owners datalist with internal team first
       const datalist = document.createElement('datalist');
       datalist.id = 'ownersList';
-      owners.forEach(owner => {
+      const internalNames = INTERNAL_TEAM.map(t => t.name.toLowerCase());
+      INTERNAL_TEAM.forEach(member => {
         const opt = document.createElement('option');
-        opt.value = owner;
+        opt.value = member.label;
         datalist.appendChild(opt);
       });
+      owners.filter(o => !internalNames.includes(o.toLowerCase().split(' ')[0]))
+        .forEach(owner => {
+          const opt = document.createElement('option');
+          opt.value = owner;
+          datalist.appendChild(opt);
+        });
       document.body.appendChild(datalist);
 
       // Initialize tab from URL hash
