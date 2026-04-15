@@ -399,6 +399,22 @@ export async function ask(db, question, { clientId = null, chatHistory = [], top
   // Step 1: Classify
   const queryType = classifyQuery(question);
 
+  // Step 1.5: Auto-detect client from question if not explicitly scoped
+  if (!clientId) {
+    const clients = db.prepare("SELECT DISTINCT client_id, client_name FROM meetings WHERE client_id IS NOT NULL AND client_id != 'unmatched'").all();
+    const qLower = question.toLowerCase();
+    for (const c of clients) {
+      if (c.client_name && qLower.includes(c.client_name.toLowerCase())) {
+        clientId = c.client_id;
+        break;
+      }
+      if (c.client_id && qLower.includes(c.client_id.replace(/-/g, ' '))) {
+        clientId = c.client_id;
+        break;
+      }
+    }
+  }
+
   // Step 2: Retrieve
   const context = await retrieveContext(db, question, queryType, { clientId, topK });
 
