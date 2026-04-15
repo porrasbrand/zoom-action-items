@@ -130,6 +130,19 @@ export function runMigrations() {
   `);
   d.exec('CREATE INDEX IF NOT EXISTS idx_chat_messages_session ON chat_messages(session_id)');
 
+  // Client briefs cache (Concierge meeting prep)
+  d.exec(`
+    CREATE TABLE IF NOT EXISTS client_briefs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      client_id TEXT NOT NULL,
+      brief_text TEXT NOT NULL,
+      model_used TEXT,
+      tokens_used INTEGER,
+      generated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  d.exec('CREATE INDEX IF NOT EXISTS idx_briefs_client ON client_briefs(client_id)');
+
   console.log('[Migration] Database schema up to date');
 }
 

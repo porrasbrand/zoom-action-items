@@ -236,6 +236,156 @@ function extractCitations(text, context) {
   return citations;
 }
 
+// ============ CLIENT BRIEF GENERATION ============
+
+const BRIEF_SYSTEM_PROMPT = `You are preparing a client meeting brief for a B3X team member. Generate a structured, actionable brief using ONLY the provided data.
+
+Format:
+## Client Brief
+### Meeting History
+- Date, topic, duration, key takeaway
+
+### Sentiment Trend
+- Scores over time (improving/declining/stable)
+- Current composite score and key dimensions
+- Areas of strength and concern
+
+### Open Action Items
+- Grouped by owner: B3X items vs Client items
+- Highlight overdue or on-agenda items
+
+### Key Themes from Recent Meetings
+- What the client keeps bringing up
+- Unresolved topics
+- Commitments made by both sides
+
+### Suggested Talking Points for Next Meeting
+- Based on open items, sentiment trends, and unresolved topics
+- 3-5 bullet points, prioritized
+
+### Risk Flags
+- Declining sentiment? Overdue items? Repeated complaints? Long gaps?`;
+
+/**
+ * Generate a comprehensive client brief
+ */
+export async function generateClientBrief(db, clientId) {
+  const startTime = Date.now();
+
+  // 1. Get client info and meetings
+  const meetings = db.prepare(
+    'SELECT id, topic, start_time, duration_minutes, client_name FROM meetings WHERE client_id = ? ORDER BY start_time DESC LIMIT 10'
+  ).all(clientId);
+
+  if (meetings.length === 0) {
+    return { brief: 'No meetings found for this client.', cached: false, tokens_used: 0, data_sources: {} };
+  }
+
+  const clientName = meetings[0]?.client_name || clientId;
+
+  // 2. Get open action items
+  const openItems = db.prepare(
+    "SELECT title, owner_name, status, due_date, priority, collaborators FROM action_items WHERE client_id = ? AND status IN ('open', 'on-agenda') ORDER BY priority DESC"
+  ).all(clientId);
+
+  // 3. Get session evaluations
+  const evals = db.prepare(
+    'SELECT se.composite_score, se.client_sentiment, se.accountability, se.value_delivery, se.meeting_structure, se.wins, se.improvements, m.topic, m.start_time FROM session_evaluations se JOIN meetings m ON se.meeting_id = m.id WHERE m.client_id = ? ORDER BY m.start_time DESC LIMIT 5'
+  ).all(clientId);
+
+  // 4. Get transcript highlights via vector search
+  let transcriptChunks = [];
+  try {
+    const index = ensureIndex(db);
+    if (index.size > 0) {
+      const keyQueries = ['key decisions', 'client concerns', 'commitments and promises', 'budget and timeline'];
+      const seen = new Set();
+      for (const q of keyQueries) {
+        const qEmbed = await embedChunk(q);
+        const results = searchSimilar(qEmbed, index, 3, clientId);
+        for (const r of results) {
+          if (!seen.has(r.chunkId)) {
+            seen.add(r.chunkId);
+            const chunk = db.prepare('SELECT text, start_time FROM transcript_chunks WHERE id = ?').get(r.chunkId);
+            if (chunk) transcriptChunks.push({ text: chunk.text, time: chunk.start_time, topic: q, score: r.similarity });
+          }
+        }
+      }
+      transcriptChunks.sort((a, b) => b.score - a.score);
+      transcriptChunks = transcriptChunks.slice(0, 8);
+    }
+  } catch (e) {
+    console.warn('[Brief] Transcript search failed:', e.message);
+  }
+
+  // 5. Get decisions
+  const decisions = db.prepare(
+    'SELECT d.decision, d.context, m.start_time FROM decisions d JOIN meetings m ON d.meeting_id = m.id WHERE d.client_id = ? ORDER BY m.start_time DESC LIMIT 10'
+  ).all(clientId);
+
+  // 6. Build context
+  const contextParts = [`Client: ${clientName} (ID: ${clientId})\n`];
+
+  contextParts.push('=== Meetings (last 10) ===');
+  meetings.forEach(m => contextParts.push(`- ${formatDate(m.start_time)}: ${m.topic} (${m.duration_minutes || '?'} min)`));
+
+  if (openItems.length > 0) {
+    contextParts.push(`\n=== Open Action Items (${openItems.length}) ===`);
+    openItems.forEach(i => {
+      const due = i.due_date ? ` Due: ${formatDate(i.due_date)}` : '';
+      const collab = i.collaborators ? ` (Also: ${i.collaborators})` : '';
+      contextParts.push(`- [${i.status.toUpperCase()}] ${i.title} (Owner: ${i.owner_name || 'TBD'}${due}${collab})`);
+    });
+  }
+
+  if (evals.length > 0) {
+    contextParts.push('\n=== Session Evaluations ===');
+    evals.forEach(e => {
+      contextParts.push(`- ${formatDate(e.start_time)}: composite ${e.composite_score}/100, sentiment ${e.client_sentiment}/100, accountability ${e.accountability}/100, value ${e.value_delivery}/100`);
+      if (e.wins) contextParts.push(`  Wins: ${e.wins}`);
+      if (e.improvements) contextParts.push(`  Improvements: ${e.improvements}`);
+    });
+  }
+
+  if (transcriptChunks.length > 0) {
+    contextParts.push('\n=== Transcript Highlights ===');
+    transcriptChunks.forEach(c => contextParts.push(`[Topic: ${c.topic}]\n${c.text}\n`));
+  }
+
+  if (decisions.length > 0) {
+    contextParts.push('\n=== Decisions ===');
+    decisions.forEach(d => contextParts.push(`- ${formatDate(d.start_time)}: ${d.decision}`));
+  }
+
+  // 7. Generate brief with Claude
+  const response = await anthropic.messages.create({
+    model: RAG_MODEL,
+    max_tokens: 2500,
+    system: BRIEF_SYSTEM_PROMPT,
+    messages: [{ role: 'user', content: `Generate a meeting prep brief for this client:\n\n${contextParts.join('\n')}` }]
+  });
+
+  const brief = response.content[0].text;
+  const tokensUsed = response.usage.input_tokens + response.usage.output_tokens;
+  const latencyMs = Date.now() - startTime;
+
+  return {
+    brief,
+    client_name: clientName,
+    cached: false,
+    tokens_used: tokensUsed,
+    latency_ms: latencyMs,
+    model: RAG_MODEL,
+    data_sources: {
+      meetings: meetings.length,
+      action_items: openItems.length,
+      evaluations: evals.length,
+      transcript_chunks: transcriptChunks.length,
+      decisions: decisions.length
+    }
+  };
+}
+
 // ============ MAIN INTERFACE ============
 
 /**

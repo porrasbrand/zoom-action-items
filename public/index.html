@@ -10553,7 +10553,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         <div class="chat-suggestions">
           <button onclick="askSuggestion(this)">What was discussed in the last meeting?</button>
           <button onclick="askSuggestion(this)">What action items are still open?</button>
-          <button onclick="askSuggestion(this)">Brief me on this client</button>
+          <button onclick="generateBrief()">📋 Brief me on this client</button>
         </div>
       </div>
     </div>
@@ -10656,6 +10656,44 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
 
       msgs.appendChild(div);
       msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    async function generateBrief() {
+      if (!currentChatClientId) {
+        if (!chatPanelOpen) toggleChatPanel();
+        renderMessage('error', 'Select a client first to generate a meeting prep brief.');
+        return;
+      }
+      if (!chatPanelOpen) toggleChatPanel();
+
+      renderMessage('user', '📋 Generate meeting prep brief for ' + (currentChatClientName || currentChatClientId));
+      const typing = document.getElementById('chat-typing');
+      typing.style.display = 'flex';
+      document.getElementById('chat-send-btn').disabled = true;
+
+      try {
+        const res = await fetch(API + '/chat/brief', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ client_id: currentChatClientId })
+        });
+        typing.style.display = 'none';
+        document.getElementById('chat-send-btn').disabled = false;
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          renderMessage('error', err.error || 'Failed to generate brief.');
+          return;
+        }
+
+        const data = await res.json();
+        const meta = { query_type: data.cached ? 'cached_brief' : 'brief', tokens_used: data.tokens_used || 0, latency_ms: data.latency_ms || 0 };
+        renderMessage('assistant', data.brief, [], meta);
+      } catch (err) {
+        typing.style.display = 'none';
+        document.getElementById('chat-send-btn').disabled = false;
+        renderMessage('error', 'Connection error. Try again.');
+      }
     }
 
     async function sendChat() {

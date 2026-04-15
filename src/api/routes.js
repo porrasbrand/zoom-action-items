@@ -2842,7 +2842,7 @@ router.post('/ppc/task/:id/disposition', (req, res) => {
 
 // ============ CHAT / CONCIERGE API ============
 
-import { ask } from '../lib/rag-engine.js';
+import { ask, generateClientBrief } from '../lib/rag-engine.js';
 
 // Simple rate limiter: max 30 requests/min per user
 const rateLimits = new Map();
@@ -2961,6 +2961,55 @@ router.delete('/chat/sessions/:id', (req, res) => {
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/chat/brief - Generate client meeting prep brief
+router.post('/chat/brief', async (req, res) => {
+  try {
+    const { client_id } = req.body;
+    if (!client_id) {
+      return res.status(400).json({ error: 'client_id is required' });
+    }
+
+    const d = db.getDatabase();
+
+    // Check cache (24h TTL)
+    const cached = d.prepare(
+      "SELECT * FROM client_briefs WHERE client_id = ? AND generated_at > datetime('now', '-24 hours') ORDER BY generated_at DESC LIMIT 1"
+    ).get(client_id);
+
+    if (cached) {
+      return res.json({
+        brief: cached.brief_text,
+        generated_at: cached.generated_at,
+        cached: true,
+        tokens_used: cached.tokens_used,
+        model_used: cached.model_used,
+        data_sources: {}
+      });
+    }
+
+    // Generate fresh brief
+    const result = await generateClientBrief(d, client_id);
+
+    // Cache it
+    d.prepare(
+      'INSERT INTO client_briefs (client_id, brief_text, model_used, tokens_used) VALUES (?, ?, ?, ?)'
+    ).run(client_id, result.brief, result.model, result.tokens_used);
+
+    res.json({
+      brief: result.brief,
+      generated_at: new Date().toISOString(),
+      cached: false,
+      tokens_used: result.tokens_used,
+      latency_ms: result.latency_ms,
+      model_used: result.model,
+      data_sources: result.data_sources
+    });
+  } catch (err) {
+    console.error('[Brief] Error:', err.message);
+    res.status(503).json({ error: 'Brief generation failed: ' + err.message });
   }
 });
 
