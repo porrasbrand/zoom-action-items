@@ -3,12 +3,20 @@
     {
       "id": "brad-blazar",
       "name": "Brad Blazar",
-      "keywords": ["Blazar", "Brad Blazar", "Capital School"],
+      "keywords": [
+        "Blazar",
+        "Brad Blazar",
+        "Capital School"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "",
       "industry": "coaching",
       "services_active": [],
-      "services_available": ["paid-ads", "email-marketing", "funnel-campaign"],
+      "services_available": [
+        "paid-ads",
+        "email-marketing",
+        "funnel-campaign"
+      ],
       "meeting_cadence": "none",
       "primary_contact": "Brad Blazar",
       "b3x_lead": null
@@ -16,13 +24,22 @@
     {
       "id": "northern-services",
       "name": "Northern Services",
-      "keywords": ["Northern", "Northern Services", "Cathy & Gregg Helin", "Gregg and Cathy Helin"],
+      "keywords": [
+        "Northern",
+        "Northern Services",
+        "Cathy & Gregg Helin",
+        "Gregg and Cathy Helin"
+      ],
       "slack_channel_id": "C0765SH0FCY",
       "slack_channel_name": "int-northern-services-greg-and-cathy-helin",
       "ph_project_id": "",
       "industry": "home-services",
       "services_active": [],
-      "services_available": ["paid-ads", "website", "call-tracking"],
+      "services_available": [
+        "paid-ads",
+        "website",
+        "call-tracking"
+      ],
       "meeting_cadence": "none",
       "primary_contact": "Gregg Helin",
       "b3x_lead": null
@@ -30,12 +47,24 @@
     {
       "id": "prosper-group",
       "name": "Prosper Group",
-      "keywords": ["Prosper", "Prosper Group"],
+      "keywords": [
+        "Prosper",
+        "Prosper Group"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "9066064282",
       "industry": "coaching",
-      "services_active": ["paid-ads", "email-marketing", "funnel-campaign"],
-      "services_available": ["paid-ads", "email-marketing", "funnel-campaign", "website"],
+      "services_active": [
+        "paid-ads",
+        "email-marketing",
+        "funnel-campaign"
+      ],
+      "services_available": [
+        "paid-ads",
+        "email-marketing",
+        "funnel-campaign",
+        "website"
+      ],
       "meeting_cadence": "weekly",
       "primary_contact": null,
       "b3x_lead": "Phil"
@@ -43,13 +72,27 @@
     {
       "id": "1st-choice",
       "name": "1st Choice",
-      "keywords": ["1st Choice", "Brendan"],
+      "keywords": [
+        "1st Choice",
+        "Brendan"
+      ],
       "slack_channel_id": "C07JUKN9Z7W",
       "slack_channel_name": "int-1st-choice-pro-services-brendan",
       "ph_project_id": "8703304705",
       "industry": "home-services",
-      "services_active": ["paid-ads", "email-marketing", "call-tracking", "crm-automation"],
-      "services_available": ["paid-ads", "email-marketing", "call-tracking", "crm-automation", "website"],
+      "services_active": [
+        "paid-ads",
+        "email-marketing",
+        "call-tracking",
+        "crm-automation"
+      ],
+      "services_available": [
+        "paid-ads",
+        "email-marketing",
+        "call-tracking",
+        "crm-automation",
+        "website"
+      ],
       "meeting_cadence": "weekly",
       "primary_contact": "Brendan",
       "b3x_lead": "Phil"
@@ -57,13 +100,31 @@
     {
       "id": "legendary-service",
       "name": "Legendary Service",
-      "keywords": ["Legendary", "Legendary Service"],
+      "keywords": [
+        "Legendary",
+        "Legendary Service"
+      ],
       "slack_channel_id": "C07V3CH2H3Q",
       "slack_channel_name": "int-legendary-service",
       "ph_project_id": "8750225319",
       "industry": "home-services",
-      "services_active": ["paid-ads", "email-marketing", "call-tracking", "website", "crm-automation", "gbp"],
-      "services_available": ["paid-ads", "email-marketing", "call-tracking", "website", "crm-automation", "gbp", "reporting"],
+      "services_active": [
+        "paid-ads",
+        "email-marketing",
+        "call-tracking",
+        "website",
+        "crm-automation",
+        "gbp"
+      ],
+      "services_available": [
+        "paid-ads",
+        "email-marketing",
+        "call-tracking",
+        "website",
+        "crm-automation",
+        "gbp",
+        "reporting"
+      ],
       "meeting_cadence": "weekly",
       "primary_contact": null,
       "b3x_lead": "Phil"
@@ -71,12 +132,27 @@
     {
       "id": "bearcat",
       "name": "Bearcat",
-      "keywords": ["Bearcat", "Bearcat Coaching"],
+      "keywords": [
+        "Bearcat",
+        "Bearcat Coaching"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "8149674025",
       "industry": "coaching",
-      "services_active": ["email-marketing", "funnel-campaign", "creative", "website"],
-      "services_available": ["paid-ads", "email-marketing", "funnel-campaign", "creative", "website", "crm-automation"],
+      "services_active": [
+        "email-marketing",
+        "funnel-campaign",
+        "creative",
+        "website"
+      ],
+      "services_available": [
+        "paid-ads",
+        "email-marketing",
+        "funnel-campaign",
+        "creative",
+        "website",
+        "crm-automation"
+      ],
       "meeting_cadence": "weekly",
       "primary_contact": null,
       "b3x_lead": "Phil"
@@ -84,12 +160,18 @@
     {
       "id": "accelerated-medical",
       "name": "Accelerated Medical Practices",
-      "keywords": ["Accelerated", "Accelerated Medical Practices"],
+      "keywords": [
+        "Accelerated",
+        "Accelerated Medical Practices"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "",
       "industry": "healthcare",
       "services_active": [],
-      "services_available": ["paid-ads", "website"],
+      "services_available": [
+        "paid-ads",
+        "website"
+      ],
       "meeting_cadence": "none",
       "primary_contact": null,
       "b3x_lead": null
@@ -97,13 +179,27 @@
     {
       "id": "echelon",
       "name": "Echelon",
-      "keywords": ["Echelon", "Andrew Williams"],
+      "keywords": [
+        "Echelon",
+        "Andrew Williams"
+      ],
       "slack_channel_id": "C08RTPBLV46",
       "slack_channel_name": "int-echelon",
       "ph_project_id": "9104911511",
       "industry": "home-services",
-      "services_active": ["paid-ads", "email-marketing", "crm-automation", "website"],
-      "services_available": ["paid-ads", "email-marketing", "crm-automation", "website", "call-tracking"],
+      "services_active": [
+        "paid-ads",
+        "email-marketing",
+        "crm-automation",
+        "website"
+      ],
+      "services_available": [
+        "paid-ads",
+        "email-marketing",
+        "crm-automation",
+        "website",
+        "call-tracking"
+      ],
       "meeting_cadence": "weekly",
       "primary_contact": "Andrew Williams",
       "b3x_lead": "Phil"
@@ -111,12 +207,18 @@
     {
       "id": "gail-kinsbury",
       "name": "Gail Kinsbury",
-      "keywords": ["Kinsbury", "Gail Kinsbury"],
+      "keywords": [
+        "Kinsbury",
+        "Gail Kinsbury"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "",
       "industry": "coaching",
       "services_active": [],
-      "services_available": ["email-marketing", "funnel-campaign"],
+      "services_available": [
+        "email-marketing",
+        "funnel-campaign"
+      ],
       "meeting_cadence": "none",
       "primary_contact": "Gail Kinsbury",
       "b3x_lead": null
@@ -124,12 +226,18 @@
     {
       "id": "alphagenix",
       "name": "Alphagenix",
-      "keywords": ["Ross Brand", "Alphagenix"],
+      "keywords": [
+        "Ross Brand",
+        "Alphagenix"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "",
       "industry": "healthcare",
       "services_active": [],
-      "services_available": ["paid-ads", "website"],
+      "services_available": [
+        "paid-ads",
+        "website"
+      ],
       "meeting_cadence": "none",
       "primary_contact": "Ross Brand",
       "b3x_lead": null
@@ -137,12 +245,23 @@
     {
       "id": "tom-ruwitch",
       "name": "Tom Ruwitch",
-      "keywords": ["Tom Ruwitch"],
+      "keywords": [
+        "Tom Ruwitch"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "8586749449",
       "industry": "coaching",
-      "services_active": ["paid-ads", "email-marketing", "funnel-campaign"],
-      "services_available": ["paid-ads", "email-marketing", "funnel-campaign", "creative"],
+      "services_active": [
+        "paid-ads",
+        "email-marketing",
+        "funnel-campaign"
+      ],
+      "services_available": [
+        "paid-ads",
+        "email-marketing",
+        "funnel-campaign",
+        "creative"
+      ],
       "meeting_cadence": "weekly",
       "primary_contact": "Tom Ruwitch",
       "b3x_lead": "Phil"
@@ -150,12 +269,17 @@
     {
       "id": "mike-mcvety",
       "name": "Mike McVety",
-      "keywords": ["Mike McVety"],
+      "keywords": [
+        "Mike McVety"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "8316677760",
       "industry": "coaching",
       "services_active": [],
-      "services_available": ["paid-ads", "email-marketing"],
+      "services_available": [
+        "paid-ads",
+        "email-marketing"
+      ],
       "meeting_cadence": "monthly",
       "primary_contact": "Mike McVety",
       "b3x_lead": "Phil"
@@ -163,12 +287,19 @@
     {
       "id": "relaunch-life",
       "name": "ReLaunch Life",
-      "keywords": ["Hilary", "Hilary/ReLaunch Life", "ReLaunch Life"],
+      "keywords": [
+        "Hilary",
+        "Hilary/ReLaunch Life",
+        "ReLaunch Life"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "",
       "industry": "coaching",
       "services_active": [],
-      "services_available": ["email-marketing", "funnel-campaign"],
+      "services_available": [
+        "email-marketing",
+        "funnel-campaign"
+      ],
       "meeting_cadence": "none",
       "primary_contact": "Hilary",
       "b3x_lead": null
@@ -176,12 +307,17 @@
     {
       "id": "dr-matthew-loop",
       "name": "Dr Matthew Loop",
-      "keywords": ["Matthew Loop"],
+      "keywords": [
+        "Matthew Loop"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "",
       "industry": "healthcare",
       "services_active": [],
-      "services_available": ["paid-ads", "website"],
+      "services_available": [
+        "paid-ads",
+        "website"
+      ],
       "meeting_cadence": "none",
       "primary_contact": "Dr Matthew Loop",
       "b3x_lead": null
@@ -189,12 +325,19 @@
     {
       "id": "jtservices",
       "name": "JTServices",
-      "keywords": ["JTServices", "Jason/Erin"],
+      "keywords": [
+        "JTServices",
+        "Jason/Erin"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "",
       "industry": "home-services",
       "services_active": [],
-      "services_available": ["paid-ads", "website", "call-tracking"],
+      "services_available": [
+        "paid-ads",
+        "website",
+        "call-tracking"
+      ],
       "meeting_cadence": "none",
       "primary_contact": "Jason",
       "b3x_lead": null
@@ -202,12 +345,18 @@
     {
       "id": "plumbing-connection",
       "name": "Plumbing Connection",
-      "keywords": ["Plumbing Connection"],
+      "keywords": [
+        "Plumbing Connection"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "",
       "industry": "home-services",
       "services_active": [],
-      "services_available": ["paid-ads", "website", "call-tracking"],
+      "services_available": [
+        "paid-ads",
+        "website",
+        "call-tracking"
+      ],
       "meeting_cadence": "none",
       "primary_contact": null,
       "b3x_lead": null
@@ -215,12 +364,18 @@
     {
       "id": "classic-homes",
       "name": "Classic Homes",
-      "keywords": ["Nick Fulciniti", "Classic Homes"],
+      "keywords": [
+        "Nick Fulciniti",
+        "Classic Homes"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "",
       "industry": "home-services",
       "services_active": [],
-      "services_available": ["paid-ads", "website"],
+      "services_available": [
+        "paid-ads",
+        "website"
+      ],
       "meeting_cadence": "none",
       "primary_contact": "Nick Fulciniti",
       "b3x_lead": null
@@ -228,12 +383,17 @@
     {
       "id": "reiw",
       "name": "Real Estate Investing Women",
-      "keywords": ["REIW"],
+      "keywords": [
+        "REIW"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "",
       "industry": "real-estate",
       "services_active": [],
-      "services_available": ["paid-ads", "email-marketing"],
+      "services_available": [
+        "paid-ads",
+        "email-marketing"
+      ],
       "meeting_cadence": "none",
       "primary_contact": null,
       "b3x_lead": null
@@ -241,7 +401,10 @@
     {
       "id": "b3x-leadership",
       "name": "B3X Team Leadership Huddle",
-      "keywords": ["Leadership Huddle", "B3X Team & Leadership Huddle"],
+      "keywords": [
+        "Leadership Huddle",
+        "B3X Team & Leadership Huddle"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "",
       "internal": true,
@@ -255,7 +418,10 @@
     {
       "id": "b3x-internal",
       "name": "B3X Internal",
-      "keywords": ["B3X Internal", "Internal"],
+      "keywords": [
+        "B3X Internal",
+        "Internal"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "8173459981",
       "internal": true,
@@ -269,13 +435,28 @@
     {
       "id": "pearce-hvac",
       "name": "Pearce HVAC",
-      "keywords": ["Pearce HVAC", "Pearce"],
+      "keywords": [
+        "Pearce HVAC",
+        "Pearce"
+      ],
       "slack_channel_id": "C09LKD22ZMZ",
       "slack_channel_name": "int-pearce-hvac",
       "ph_project_id": "9353273257",
       "industry": "home-services",
-      "services_active": ["paid-ads", "email-marketing", "call-tracking", "funnel-campaign"],
-      "services_available": ["paid-ads", "email-marketing", "call-tracking", "funnel-campaign", "website", "reporting"],
+      "services_active": [
+        "paid-ads",
+        "email-marketing",
+        "call-tracking",
+        "funnel-campaign"
+      ],
+      "services_available": [
+        "paid-ads",
+        "email-marketing",
+        "call-tracking",
+        "funnel-campaign",
+        "website",
+        "reporting"
+      ],
       "meeting_cadence": "weekly",
       "primary_contact": null,
       "b3x_lead": "Phil"
@@ -283,12 +464,24 @@
     {
       "id": "conner-marketing",
       "name": "Jay Conner / Conner Marketing",
-      "keywords": ["Conner Marketing", "Conner", "Jay Conner", "Jay"],
+      "keywords": [
+        "Conner Marketing",
+        "Conner",
+        "Jay Conner",
+        "Jay"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "9369677832",
       "industry": "real-estate",
-      "services_active": ["paid-ads", "email-marketing"],
-      "services_available": ["paid-ads", "email-marketing", "funnel-campaign"],
+      "services_active": [
+        "paid-ads",
+        "email-marketing"
+      ],
+      "services_available": [
+        "paid-ads",
+        "email-marketing",
+        "funnel-campaign"
+      ],
       "meeting_cadence": "weekly",
       "primary_contact": "Jay Conner",
       "b3x_lead": "Phil"
@@ -296,13 +489,26 @@
     {
       "id": "gs-home-services",
       "name": "GS Home Services",
-      "keywords": ["GS Home", "GS Home Services"],
+      "keywords": [
+        "GS Home",
+        "GS Home Services"
+      ],
       "slack_channel_id": "C09KYEXUQMQ",
       "slack_channel_name": "int-gs-home-services",
       "ph_project_id": "9330152168",
       "industry": "home-services",
-      "services_active": ["paid-ads", "call-tracking", "crm-automation"],
-      "services_available": ["paid-ads", "call-tracking", "crm-automation", "website", "reporting"],
+      "services_active": [
+        "paid-ads",
+        "call-tracking",
+        "crm-automation"
+      ],
+      "services_available": [
+        "paid-ads",
+        "call-tracking",
+        "crm-automation",
+        "website",
+        "reporting"
+      ],
       "meeting_cadence": "weekly",
       "primary_contact": null,
       "b3x_lead": "Phil"
@@ -310,12 +516,17 @@
     {
       "id": "george-siegfried",
       "name": "George Siegfried",
-      "keywords": ["George Siegfried", "Siegfried"],
+      "keywords": [
+        "George Siegfried",
+        "Siegfried"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "",
       "industry": "coaching",
       "services_active": [],
-      "services_available": ["email-marketing"],
+      "services_available": [
+        "email-marketing"
+      ],
       "meeting_cadence": "none",
       "primary_contact": "George Siegfried",
       "b3x_lead": null
@@ -323,13 +534,26 @@
     {
       "id": "jerry-levinson",
       "name": "Jerry Levinson",
-      "keywords": ["Jerry Levinson", "Levinson", "Shane Levinson", "Profit Now"],
+      "keywords": [
+        "Jerry Levinson",
+        "Levinson",
+        "Shane Levinson",
+        "Profit Now"
+      ],
       "slack_channel_id": "C09PAC3G39N",
       "slack_channel_name": "int-jerry-levinson-profit-now",
       "ph_project_id": "9330179305",
       "industry": "coaching",
-      "services_active": ["email-marketing", "crm-automation"],
-      "services_available": ["paid-ads", "email-marketing", "crm-automation", "funnel-campaign"],
+      "services_active": [
+        "email-marketing",
+        "crm-automation"
+      ],
+      "services_available": [
+        "paid-ads",
+        "email-marketing",
+        "crm-automation",
+        "funnel-campaign"
+      ],
       "meeting_cadence": "weekly",
       "primary_contact": "Jerry Levinson",
       "b3x_lead": "Phil"
@@ -337,13 +561,23 @@
     {
       "id": "empower",
       "name": "Empower",
-      "keywords": ["Empower"],
+      "keywords": [
+        "Empower"
+      ],
       "slack_channel_id": "C09KR0XRW3V",
       "slack_channel_name": "int-empower-home-services",
       "ph_project_id": "9330165736",
       "industry": "home-services",
-      "services_active": ["paid-ads", "call-tracking"],
-      "services_available": ["paid-ads", "call-tracking", "website", "reporting"],
+      "services_active": [
+        "paid-ads",
+        "call-tracking"
+      ],
+      "services_available": [
+        "paid-ads",
+        "call-tracking",
+        "website",
+        "reporting"
+      ],
       "meeting_cadence": "weekly",
       "primary_contact": null,
       "b3x_lead": "Phil"
@@ -351,12 +585,16 @@
     {
       "id": "lisa-jones",
       "name": "Lisa Jones",
-      "keywords": ["Lisa Jones"],
+      "keywords": [
+        "Lisa Jones"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "",
       "industry": "coaching",
       "services_active": [],
-      "services_available": ["email-marketing"],
+      "services_available": [
+        "email-marketing"
+      ],
       "meeting_cadence": "none",
       "primary_contact": "Lisa Jones",
       "b3x_lead": null
@@ -364,12 +602,17 @@
     {
       "id": "brenda-byers",
       "name": "Brenda K Byers",
-      "keywords": ["Brenda K Byers", "Byers"],
+      "keywords": [
+        "Brenda K Byers",
+        "Byers"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "",
       "industry": "coaching",
       "services_active": [],
-      "services_available": ["email-marketing"],
+      "services_available": [
+        "email-marketing"
+      ],
       "meeting_cadence": "none",
       "primary_contact": "Brenda K Byers",
       "b3x_lead": null
@@ -377,12 +620,21 @@
     {
       "id": "raider-flooring",
       "name": "Raider Flooring",
-      "keywords": ["Raider Flooring", "Mike Anderson"],
+      "keywords": [
+        "Raider Flooring",
+        "Mike Anderson"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "9385295423",
       "industry": "home-services",
-      "services_active": ["paid-ads"],
-      "services_available": ["paid-ads", "website", "call-tracking"],
+      "services_active": [
+        "paid-ads"
+      ],
+      "services_available": [
+        "paid-ads",
+        "website",
+        "call-tracking"
+      ],
       "meeting_cadence": "weekly",
       "primary_contact": "Mike Anderson",
       "b3x_lead": "Phil"
@@ -390,12 +642,23 @@
     {
       "id": "vision-flooring",
       "name": "Vision Flooring AZ",
-      "keywords": ["Vision Flooring AZ", "Shane"],
+      "keywords": [
+        "Vision Flooring AZ",
+        "Shane"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "9353286826",
       "industry": "home-services",
-      "services_active": ["paid-ads", "email-marketing"],
-      "services_available": ["paid-ads", "email-marketing", "website", "call-tracking"],
+      "services_active": [
+        "paid-ads",
+        "email-marketing"
+      ],
+      "services_available": [
+        "paid-ads",
+        "email-marketing",
+        "website",
+        "call-tracking"
+      ],
       "meeting_cadence": "weekly",
       "primary_contact": "Shane",
       "b3x_lead": "Phil"
@@ -403,12 +666,23 @@
     {
       "id": "london-flooring",
       "name": "London Flooring",
-      "keywords": ["London Flooring", "London's Flooring Canada", "London's Flooring"],
+      "keywords": [
+        "London Flooring",
+        "London's Flooring Canada",
+        "London's Flooring"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "9431293364",
       "industry": "home-services",
-      "services_active": ["paid-ads", "call-tracking"],
-      "services_available": ["paid-ads", "call-tracking", "website"],
+      "services_active": [
+        "paid-ads",
+        "call-tracking"
+      ],
+      "services_available": [
+        "paid-ads",
+        "call-tracking",
+        "website"
+      ],
       "meeting_cadence": "weekly",
       "primary_contact": null,
       "b3x_lead": "Phil"
@@ -416,12 +690,18 @@
     {
       "id": "the-collective-genius",
       "name": "The Collective Genius",
-      "keywords": ["Collective Genius", "TCG"],
+      "keywords": [
+        "Collective Genius",
+        "TCG"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "",
       "industry": "real-estate",
       "services_active": [],
-      "services_available": ["paid-ads", "email-marketing"],
+      "services_available": [
+        "paid-ads",
+        "email-marketing"
+      ],
       "meeting_cadence": "none",
       "primary_contact": null,
       "b3x_lead": null
@@ -429,12 +709,18 @@
     {
       "id": "regen-profits",
       "name": "Regen Profits",
-      "keywords": ["Regen Profits", "Regen"],
+      "keywords": [
+        "Regen Profits",
+        "Regen"
+      ],
       "slack_channel_id": "",
       "ph_project_id": "",
       "industry": "healthcare",
       "services_active": [],
-      "services_available": ["paid-ads", "website"],
+      "services_available": [
+        "paid-ads",
+        "website"
+      ],
       "meeting_cadence": "none",
       "primary_contact": null,
       "b3x_lead": null
@@ -442,15 +728,65 @@
     {
       "id": "bec-cfo",
       "name": "BEC CFO",
-      "keywords": ["BEC CFO", "BEC", "BECCFO"],
+      "keywords": [
+        "BEC CFO",
+        "BEC",
+        "BECCFO"
+      ],
       "slack_channel_id": "C0AJJJ8AEUA",
       "ph_project_id": "9544836365",
       "industry": "financial-services",
-      "services_active": ["website"],
-      "services_available": ["paid-ads", "website", "email-marketing"],
+      "services_active": [
+        "website"
+      ],
+      "services_available": [
+        "paid-ads",
+        "website",
+        "email-marketing"
+      ],
       "meeting_cadence": "weekly",
       "primary_contact": null,
       "b3x_lead": "Phil"
+    },
+    {
+      "id": "incontrera-consulting",
+      "name": "Incontrera Consulting",
+      "keywords": [
+        "Incontrera",
+        "Marie Incontrera",
+        "Incontrera Consulting",
+        "Marie"
+      ],
+      "slack_channel_id": "",
+      "ph_project_id": "9463804003",
+      "ph_list_id": "270410709182",
+      "industry": "consulting",
+      "services_active": [],
+      "services_available": [],
+      "meeting_cadence": "none",
+      "primary_contact": "Marie",
+      "b3x_lead": null
+    },
+    {
+      "id": "wagner-chiro",
+      "name": "Dr. Ramah Wagner",
+      "keywords": [
+        "Wagner",
+        "Ramah",
+        "Ramah Wagner",
+        "Dr. Ramah Wagner",
+        "wagnerchiro"
+      ],
+      "slack_channel_id": "",
+      "ph_project_id": "9522624380",
+      "ph_list_id": "270643901106",
+      "industry": "chiropractic",
+      "services_active": [],
+      "services_available": [],
+      "meeting_cadence": "weekly",
+      "primary_contact": "Dr. Ramah Wagner",
+      "b3x_lead": null,
+      "website": "https://www.wagnerchiro.com"
     }
   ]
 }
