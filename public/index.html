@@ -4981,6 +4981,15 @@
     .chat-msg.assistant ul, .chat-msg.assistant ol { margin: 4px 0; padding-left: 20px; }
     .chat-msg.error { align-self: center; background: #f8514922; color: #f85149; font-size: 12px; }
 
+    .chat-inline-cite {
+      font-size: 10px; color: #484f58; font-style: normal; 
+      background: #21262d; border-radius: 3px; padding: 1px 5px;
+      margin: 0 2px; white-space: nowrap; vertical-align: super;
+      cursor: help; border: none;
+    }
+    .chat-inline-cite:hover { color: #58a6ff; background: #30363d; }
+    .chat-msg.assistant h4 { font-size: 14px; margin: 12px 0 4px 0; color: #e6edf3; border-bottom: 1px solid #21262d; padding-bottom: 4px; }
+    .chat-msg.assistant h5 { font-size: 13px; margin: 8px 0 4px 0; color: #c9d1d9; }
     .chat-citations { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
     .chat-citation {
       background: #21262d; border: 1px solid #30363d; border-radius: 4px;
@@ -10630,10 +10639,33 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     }
 
     function simpleMarkdown(text) {
+      // Strip repetitive inline citations — keep first occurrence as subtle ref, remove duplicates
+      const seenCitations = new Set();
+      text = text.replace(/\[Meeting:\s*([^\]]+)\]/g, (match, inner) => {
+        const key = inner.replace(/\s+/g, ' ').trim().toLowerCase();
+        if (seenCitations.has(key)) return ''; // remove duplicate
+        seenCitations.add(key);
+        // Extract just the date for a compact reference
+        const datePart = inner.split('|')[0]?.trim() || inner;
+        return '<cite class="chat-inline-cite" title="' + inner.trim() + '">' + datePart + '</cite>';
+      });
+      // Clean up orphaned whitespace from removed citations
+      text = text.replace(/\s*<cite/g, ' <cite');
+      text = text.replace(/(\s*\n){3,}/g, '\n\n');
+      return text
+        .replace(/## (.+)/g, '<h4>$1</h4>')
+        .replace(/### (.+)/g, '<h5>$1</h5>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/^- (.+)$/gm, '<li>$1</li>')
+        .replace(/(<li>.*<\/li>\n?)+/g, '<ul>    function simpleMarkdown(text) {
       return text
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/^- (.+)$/gm, '<li>$1</li>')
         .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+        .replace(/\n{2,}/g, '</p><p>')
+        .replace(/\n/g, '<br>')
+        .replace(/^/, '<p>').replace(/$/, '</p>');
+    }</ul>')
         .replace(/\n{2,}/g, '</p><p>')
         .replace(/\n/g, '<br>')
         .replace(/^/, '<p>').replace(/$/, '</p>');
