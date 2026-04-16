@@ -711,10 +711,12 @@
       "name": "Regen Profits",
       "keywords": [
         "Regen Profits",
-        "Regen"
+        "Regen",
+        "Scot Gray",
+        "Dr. Scot Gray"
       ],
       "slack_channel_id": "",
-      "ph_project_id": "",
+      "ph_project_id": "9391645581",
       "industry": "healthcare",
       "services_active": [],
       "services_available": [
@@ -722,7 +724,7 @@
         "website"
       ],
       "meeting_cadence": "none",
-      "primary_contact": null,
+      "primary_contact": "Dr. Scot Gray",
       "b3x_lead": null
     },
     {
@@ -787,6 +789,24 @@
       "primary_contact": "Dr. Ramah Wagner",
       "b3x_lead": null,
       "website": "https://www.wagnerchiro.com"
+    },
+    {
+      "id": "jerseyville-flooring",
+      "name": "Jerseyville Flooring & Furniture",
+      "keywords": [
+        "Jarrod Capps",
+        "Jerseyville",
+        "Jerseyville Flooring"
+      ],
+      "slack_channel_id": "",
+      "ph_project_id": "9577618379",
+      "ph_list_id": "",
+      "industry": "flooring",
+      "services_active": [],
+      "services_available": [],
+      "meeting_cadence": "weekly",
+      "primary_contact": "Jarrod Capps",
+      "b3x_lead": null
     }
   ]
 }
