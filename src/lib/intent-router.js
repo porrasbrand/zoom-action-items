@@ -109,7 +109,30 @@ Categories:
 Known clients (use EXACTLY these names in your response):
 ${clientNames}
 
-IMPORTANT: For the "client" field, return the EXACT client name from the list above. If the user says a partial name or abbreviation, match to the closest client. If using pronouns (their/those/that), resolve from conversation context. If no client matches, return null.`;
+IMPORTANT: For the "client" field, return the EXACT client name from the list above. If the user says a partial name or abbreviation, match to the closest client. If using pronouns (their/those/that), resolve from conversation context. If no client matches, return null.
+
+Additional fields to include in your JSON response:
+- "count_entity": For count_query intent, what entity is being counted? One of: "clients", "meetings", "action_items", "overdue", or null. Use "clients" when user asks how many clients/accounts/customers. Use "meetings" for meetings/sessions/calls. Use "action_items" for tasks/items/todos. Use "overdue" when user asks about overdue/late/past-due items.
+- "format_hint": Suggest a display format. One of: "priority_list", "comparison", "table", or null.
+- "comparison_clients": If the user is comparing two or more clients, list their EXACT names as an array. Otherwise null.
+
+Examples:
+Q: "How many total clients?" → {"intent":"count_query","client":null,"confidence":0.99,"count_entity":"clients","format_hint":null,"comparison_clients":null}
+Q: "How many meetings with Echelon?" → {"intent":"count_query","client":"Echelon","confidence":0.95,"count_entity":"meetings","format_hint":null,"comparison_clients":null}
+Q: "How many overdue items?" → {"intent":"count_query","client":null,"confidence":0.95,"count_entity":"overdue","format_hint":null,"comparison_clients":null}
+Q: "Compare Echelon and Zuma sentiment" → {"intent":"sentiment_analysis","client":null,"confidence":0.9,"count_entity":null,"format_hint":"comparison","comparison_clients":["Echelon","Zuma"]}`;
+}
+
+// ============ TOPIC NORMALIZATION ============
+
+function normalizeTopic(topic) {
+  if (!topic) return null;
+  const t = topic.toLowerCase();
+  if (/client|account|customer/.test(t)) return 'clients';
+  if (/meeting|session|call|huddle/.test(t)) return 'meetings';
+  if (/action|item|task|todo/.test(t)) return 'action_items';
+  if (/overdue|late|past.?due/.test(t)) return 'overdue';
+  return t;
 }
 
 // ============ LLM INTENT CLASSIFICATION ============
@@ -129,7 +152,7 @@ async function classifyWithLLM(question, chatHistory, db) {
     }
   }
 
-  const prompt = buildClassifierPrompt(db) + contextMessages + '\nQuestion: "' + question + '"\n\nRespond with JSON: {"intent": "<category>", "client": "<EXACT name from Known clients or null>", "confidence": <0.0-1.0>}';
+  const prompt = buildClassifierPrompt(db) + contextMessages + '\nQuestion: "' + question + '"\n\nRespond with JSON: {"intent": "<category>", "client": "<EXACT name from Known clients or null>", "confidence": <0.0-1.0>, "count_entity": "<clients|meetings|action_items|null>", "format_hint": "<priority_list|comparison|table|null>", "comparison_clients": ["<client names>"] or null}';
 
   try {
     const result = await model.generateContent(prompt);
@@ -137,7 +160,13 @@ async function classifyWithLLM(question, chatHistory, db) {
     const parsed = JSON.parse(text);
 
     if (INTENT_CATEGORIES.includes(parsed.intent)) {
-      return { intent: parsed.intent, confidence: parsed.confidence || 0.8, method: 'llm', client: parsed.client || null };
+      return {
+        intent: parsed.intent,
+        confidence: parsed.confidence || 0.8,
+        method: 'llm',
+        client: parsed.client || null,
+        classifierOutput: parsed
+      };
     }
   } catch (err) {
     console.warn('[IntentRouter] LLM classification failed:', err.message);
@@ -193,43 +222,61 @@ function preFetchClientData(db, clientId) {
 
 // ============ INTENT HANDLERS ============
 
-function handleCountQuery(db, question, clientId) {
+function handleCountQuery(db, question, clientId, classifierOutput) {
   const q = question.toLowerCase();
 
-  // Overdue items (check BEFORE generic action items)
-  if (/overdue|past.?due|late|behind/.test(q)) {
+  // Determine entity from classifier output first, then normalizeTopic, then regex fallback
+  let entity = classifierOutput?.count_entity || null;
+  if (!entity && classifierOutput?.topic) {
+    entity = normalizeTopic(classifierOutput.topic);
+  }
+  // Regex fallback only if classifier didn't resolve
+  if (!entity) {
+    if (/overdue|past.?due|late|behind/.test(q)) entity = 'overdue';
+    else if (/client|account|customer/.test(q)) entity = 'clients';
+    else if (/meeting|session|call/.test(q)) entity = 'meetings';
+    else if (/action.?item|task|todo/.test(q)) entity = 'action_items';
+  }
+
+  const clientLabel = clientId ? ` for ${clientId}` : '';
+
+  // Handle each entity type
+  if (entity === 'overdue') {
     const query = clientId
       ? "SELECT COUNT(*) as count FROM action_items WHERE client_id = ? AND status = 'open' AND due_date IS NOT NULL AND due_date < date('now')"
       : "SELECT COUNT(*) as count FROM action_items WHERE status = 'open' AND due_date IS NOT NULL AND due_date < date('now')";
     const row = db.prepare(query).get(...(clientId ? [clientId] : []));
-    const clientLabel = clientId ? ` for ${clientId}` : '';
     return { answer: `There are **${row.count}** overdue action items${clientLabel}.`, tokensUsed: 0 };
   }
 
-  // Determine what to count
-  if (/meeting|session|call/.test(q)) {
+  if (entity === 'clients') {
+    const row = db.prepare(
+      "SELECT COUNT(DISTINCT client_id) as count FROM meetings WHERE client_id IS NOT NULL AND client_id != 'unmatched'"
+    ).get();
+    return { answer: `There are **${row.count}** clients in the system.`, tokensUsed: 0 };
+  }
+
+  if (entity === 'meetings') {
     const query = clientId
       ? 'SELECT COUNT(*) as count FROM meetings WHERE client_id = ?'
       : 'SELECT COUNT(*) as count FROM meetings';
     const row = db.prepare(query).get(...(clientId ? [clientId] : []));
-    const clientLabel = clientId ? ` for ${clientId}` : '';
     return { answer: `There are **${row.count}** meetings${clientLabel} in the system.`, tokensUsed: 0 };
   }
 
-  if (/action item|task|todo/.test(q)) {
+  if (entity === 'action_items') {
     const query = clientId
       ? "SELECT COUNT(*) as count FROM action_items WHERE client_id = ? AND status IN ('open', 'on-agenda')"
       : "SELECT COUNT(*) as count FROM action_items WHERE status IN ('open', 'on-agenda')";
     const row = db.prepare(query).get(...(clientId ? [clientId] : []));
-    const clientLabel = clientId ? ` for ${clientId}` : '';
     return { answer: `There are **${row.count}** open action items${clientLabel}.`, tokensUsed: 0 };
   }
 
-  // Generic count
+  // Default fallback: count meetings
   const meetingCount = db.prepare(
     clientId ? 'SELECT COUNT(*) as count FROM meetings WHERE client_id = ?' : 'SELECT COUNT(*) as count FROM meetings'
   ).get(...(clientId ? [clientId] : []));
-  return { answer: `There are **${meetingCount.count}** meetings${clientId ? ` for ${clientId}` : ''}.`, tokensUsed: 0 };
+  return { answer: `There are **${meetingCount.count}** meetings${clientLabel}.`, tokensUsed: 0 };
 }
 
 async function handleActionItems(db, question, clientId, intentFilters) {
@@ -348,7 +395,7 @@ async function handleTemporalSearch(db, question, clientId, topK) {
 async function routeAndRetrieve(db, question, intent, clientId, meetingId, topK, intentResult) {
   switch (intent) {
     case 'count_query': {
-      const result = handleCountQuery(db, question, clientId);
+      const result = handleCountQuery(db, question, clientId, intentResult?.classifierOutput);
       return { directAnswer: result.answer, tokensUsed: 0, skipLLM: true };
     }
 
@@ -560,10 +607,15 @@ export async function handleChat(db, question, { clientId = null, meetingId = nu
       resolvedClient = llmResolved;
     }
   }
-  // 2c. If regex fast-path was used and no client yet, run LLM classifier just for client extraction
-  if (!resolvedClient.clientId && intentResult.method === 'regex') {
+  // 2c. If regex fast-path was used, run LLM classifier for client extraction AND structured fields
+  if (intentResult.method === 'regex') {
     const llmResult = await classifyWithLLM(question, chatHistory, db);
-    if (llmResult?.client) {
+    // Always capture classifierOutput for structured fields (count_entity, etc.)
+    if (llmResult?.classifierOutput) {
+      intentResult.classifierOutput = llmResult.classifierOutput;
+      intentResult.client = llmResult.client || intentResult.client;
+    }
+    if (!resolvedClient.clientId && llmResult?.client) {
       const llmResolved = resolveClientId(db, llmResult.client, null);
       if (llmResolved.clientId) {
         resolvedClient = llmResolved;
@@ -572,9 +624,16 @@ export async function handleChat(db, question, { clientId = null, meetingId = nu
     }
   }
   // 2d. If still no client, restore session-inherited client
+  // BUT: for count_query where the classifier found NO client, do NOT inherit session client.
+  // e.g., "How many total clients?" should never scope to a session client.
   if (!resolvedClient.clientId && sessionClientId) {
-    resolvedClient = { clientId: sessionClientId, method: 'session_restore' };
-    console.log('[v3] Restored session client:', sessionClientId);
+    const classifierFoundNoClient = intentResult.client === null || intentResult.client === undefined;
+    if (intent === 'count_query' && classifierFoundNoClient) {
+      console.log('[v3] count_query with no classifier client — skipping session restore');
+    } else {
+      resolvedClient = { clientId: sessionClientId, method: 'session_restore' };
+      console.log('[v3] Restored session client:', sessionClientId);
+    }
   }
   const effectiveClientIdFinal = resolvedClient.clientId;
 
