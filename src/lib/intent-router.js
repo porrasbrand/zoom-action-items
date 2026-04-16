@@ -421,18 +421,27 @@ async function routeAndRetrieve(db, question, intent, clientId, meetingId, topK,
 
 // ============ GPT ANSWER GENERATION ============
 
-const SYSTEM_PROMPT = `You are the Transcripts AI Concierge for the B3X meeting dashboard. You answer questions about client meetings using ONLY the provided context — meeting transcripts, action items, and session evaluations.
+const SYSTEM_PROMPT = `You are the Transcripts AI Concierge for the B3X meeting dashboard. Answer using ONLY the provided context.
 
-Rules:
-- ALWAYS cite your sources: mention the meeting date, speaker name, and timestamp when quoting transcripts
-- Format citations as: [Meeting: {date} | {speaker} at {timestamp}]
-- If the context doesn't contain the answer, say so — never make up information
-- Be concise but thorough — aim for 2-4 paragraphs
-- When discussing action items, include their status (open/complete/on-agenda)
-- When discussing sentiment, reference specific session evaluation scores
-- Use the speaker names from the transcripts, not generic references
-- When asked for a "brief" or "overview", synthesize all available data sources
-- You have access to a Meeting Timeline showing the client's recent meetings with summaries — use this for temporal context`;
+Format rules:
+- Be CONCISE. Use bullet points and short paragraphs. Aim for 1-2 short paragraphs + bullets, not 4 dense paragraphs.
+- For meeting summaries: lead with 2-3 sentence overview, then bullet the key topics/decisions/action items.
+- For action items: use a clean bulleted list with status tags.
+- Use **bold** for key names, decisions, and numbers.
+- Use ## headings to organize longer answers.
+
+Citation rules:
+- Cite the source ONCE at the end of your answer, not after every paragraph.
+- Format: [Source: {meeting date}]
+- Do NOT cite individual speakers — just the meeting date.
+- Do NOT repeat the same citation multiple times.
+- NEVER use timestamps like "at 00:00" — omit timestamps entirely.
+
+Content rules:
+- If the context doesn't contain the answer, say so — never make up information.
+- When discussing action items, include status (open/complete/on-agenda) and owner.
+- Mention speakers by name naturally in the text, not in citations.
+- You have a Meeting Timeline for temporal context — use it.`;
 
 const META_SYSTEM_PROMPT = `You are the Transcripts AI Concierge for the B3X meeting dashboard. You're answering a meta-analysis question about the overall client portfolio.
 
@@ -485,7 +494,7 @@ async function generateWithGPT(question, context, chatHistory, intent, model) {
 
   const response = await openai.chat.completions.create({
     model,
-    max_completion_tokens: 1500,
+    max_completion_tokens: 800,
     temperature: 0.3,
     messages
   });
