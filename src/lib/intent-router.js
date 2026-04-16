@@ -366,6 +366,71 @@ async function handleMetaAnalysis(db) {
   return { overdue, declining, gaps };
 }
 
+async function handleComparison(db, comparisonClients) {
+  const sections = [];
+
+  for (const clientName of comparisonClients) {
+    const resolved = resolveClientId(db, clientName, null);
+    const clientId = resolved.clientId;
+    if (!clientId) {
+      sections.push(`## ${clientName}\n_Client not found in database._`);
+      continue;
+    }
+
+    // Meetings (last 5 with summaries)
+    const meetings = db.prepare(
+      'SELECT topic, start_time, duration_minutes, meeting_summary FROM meetings WHERE client_id = ? ORDER BY start_time DESC LIMIT 5'
+    ).all(clientId);
+
+    // Open action items
+    const openItems = db.prepare(
+      "SELECT title, owner_name, due_date, priority FROM action_items WHERE client_id = ? AND status IN ('open', 'on-agenda') ORDER BY due_date ASC LIMIT 5"
+    ).all(clientId);
+    const openCount = db.prepare(
+      "SELECT COUNT(*) as count FROM action_items WHERE client_id = ? AND status IN ('open', 'on-agenda')"
+    ).get(clientId);
+
+    // Overdue count
+    const overdueCount = db.prepare(
+      "SELECT COUNT(*) as count FROM action_items WHERE client_id = ? AND status = 'open' AND due_date IS NOT NULL AND due_date < date('now')"
+    ).get(clientId);
+
+    // Session scores (last 5)
+    const scores = db.prepare(
+      'SELECT se.composite_score, se.client_sentiment, m.start_time FROM session_evaluations se JOIN meetings m ON se.meeting_id = m.id WHERE m.client_id = ? ORDER BY m.start_time DESC LIMIT 5'
+    ).all(clientId);
+
+    const avgSentiment = scores.length > 0 ? (scores.reduce((s, r) => s + (r.client_sentiment || 0), 0) / scores.length).toFixed(1) : 'N/A';
+    const avgComposite = scores.length > 0 ? (scores.reduce((s, r) => s + (r.composite_score || 0), 0) / scores.length).toFixed(1) : 'N/A';
+    const trend = scores.length >= 2 ? (scores[0].composite_score > scores[1].composite_score ? 'improving' : scores[0].composite_score < scores[1].composite_score ? 'declining' : 'stable') : 'insufficient data';
+
+    // Build section
+    let section = `## ${clientName}\n`;
+    section += `**Meetings (last 5):**\n`;
+    for (const m of meetings) {
+      section += `- ${m.start_time?.substring(0, 10) || '?'}: ${m.topic || 'Untitled'}${m.meeting_summary ? ' — ' + m.meeting_summary.substring(0, 120) : ''}\n`;
+    }
+    if (meetings.length === 0) section += `- _No meetings found._\n`;
+
+    section += `\n**Action Items:** ${openCount.count} open`;
+    if (overdueCount.count > 0) section += ` (${overdueCount.count} overdue)`;
+    section += `\n`;
+    for (const item of openItems) {
+      section += `- ${item.title} (${item.owner_name || 'TBD'}${item.due_date ? ', Due: ' + item.due_date : ''})\n`;
+    }
+
+    section += `\n**Session Scores (last ${scores.length}):** Avg sentiment: ${avgSentiment}, Avg composite: ${avgComposite}, Trend: ${trend}\n`;
+    for (const sc of scores) {
+      section += `- ${sc.start_time?.substring(0, 10) || '?'}: composite=${sc.composite_score}, sentiment=${sc.client_sentiment}\n`;
+    }
+
+    sections.push(section);
+  }
+
+  const formattedContext = `=== Client Comparison ===\n\n${sections.join('\n---\n\n')}`;
+  return { formattedContext };
+}
+
 async function handleTemporalSearch(db, question, clientId, topK) {
   const { chunkIndex } = ensureIndex(db);
   if (chunkIndex.size === 0) return { chunks: [] };
@@ -409,6 +474,15 @@ async function routeAndRetrieve(db, question, intent, clientId, meetingId, topK,
     }
 
     case 'sentiment_analysis': {
+      // Check for comparison_clients from classifier
+      const compClients = intentResult?.classifierOutput?.comparison_clients;
+      if (Array.isArray(compClients) && compClients.length >= 2) {
+        const { formattedContext } = await handleComparison(db, compClients);
+        return {
+          context: { formattedContext },
+          model: COMPLEX_ANSWER_MODEL
+        };
+      }
       const { sessions } = await handleSentimentAnalysis(db, question, clientId);
       const preFetched = preFetchClientData(db, clientId);
       return {
@@ -440,6 +514,15 @@ async function routeAndRetrieve(db, question, intent, clientId, meetingId, topK,
     }
 
     case 'meta_analysis': {
+      // Check for comparison_clients from classifier
+      const compClients = intentResult?.classifierOutput?.comparison_clients;
+      if (Array.isArray(compClients) && compClients.length >= 2) {
+        const { formattedContext } = await handleComparison(db, compClients);
+        return {
+          context: { formattedContext },
+          model: COMPLEX_ANSWER_MODEL
+        };
+      }
       const { overdue, declining, gaps } = await handleMetaAnalysis(db);
       return {
         context: { overdue, declining, gaps },
@@ -540,10 +623,19 @@ function formatMetaContext(context) {
   return parts.join('\n') || 'No risk flags found.';
 }
 
-async function generateWithGPT(question, context, chatHistory, intent, model) {
+async function generateWithGPT(question, context, chatHistory, intent, model, formatHint) {
   const isMetaAnalysis = intent === 'meta_analysis';
-  const systemPrompt = isMetaAnalysis ? META_SYSTEM_PROMPT : SYSTEM_PROMPT;
-  const contextBlock = isMetaAnalysis ? formatMetaContext(context) : formatContext(context);
+  let systemPrompt = isMetaAnalysis ? META_SYSTEM_PROMPT : SYSTEM_PROMPT;
+
+  // Wire format_hint for priority lists
+  if (formatHint === 'priority_list') {
+    systemPrompt += '\n\nFormat as a numbered priority list (max 5). Each: **[Client]** — Action — Why urgent.';
+  }
+
+  // Use formattedContext directly if available (e.g. from comparison handler)
+  const contextBlock = context.formattedContext
+    ? context.formattedContext
+    : isMetaAnalysis ? formatMetaContext(context) : formatContext(context);
 
   const messages = [
     { role: 'system', content: systemPrompt },
@@ -638,7 +730,9 @@ export async function handleChat(db, question, { clientId = null, meetingId = nu
   const effectiveClientIdFinal = resolvedClient.clientId;
 
   // 3. Fallback clarification for client-specific intents without a client
-  if (!effectiveClientIdFinal && ['sentiment_analysis', 'meeting_prep', 'meeting_summary'].includes(intent)) {
+  //    Skip if comparison_clients is present — the comparison handler resolves clients itself
+  const hasComparisonClients = Array.isArray(intentResult?.classifierOutput?.comparison_clients) && intentResult.classifierOutput.comparison_clients.length >= 2;
+  if (!effectiveClientIdFinal && !hasComparisonClients && ['sentiment_analysis', 'meeting_prep', 'meeting_summary'].includes(intent)) {
     const recentClients = db.prepare(
       "SELECT DISTINCT client_name FROM meetings WHERE client_id IS NOT NULL AND client_id != 'unmatched' ORDER BY start_time DESC LIMIT 5"
     ).all();
@@ -687,8 +781,9 @@ export async function handleChat(db, question, { clientId = null, meetingId = nu
 
   // 6. Generate answer with GPT
   const model = routeResult.model || ANSWER_MODEL;
+  const formatHint = intentResult?.classifierOutput?.format_hint || null;
   const { answer, tokensUsed, latencyMs: gptLatency } = await generateWithGPT(
-    question, routeResult.context, chatHistory, intent, model
+    question, routeResult.context, chatHistory, intent, model, formatHint
   );
 
   const totalLatency = Date.now() - startTime;
