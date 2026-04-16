@@ -196,6 +196,16 @@ function preFetchClientData(db, clientId) {
 function handleCountQuery(db, question, clientId) {
   const q = question.toLowerCase();
 
+  // Overdue items (check BEFORE generic action items)
+  if (/overdue|past.?due|late|behind/.test(q)) {
+    const query = clientId
+      ? "SELECT COUNT(*) as count FROM action_items WHERE client_id = ? AND status = 'open' AND due_date IS NOT NULL AND due_date < date('now')"
+      : "SELECT COUNT(*) as count FROM action_items WHERE status = 'open' AND due_date IS NOT NULL AND due_date < date('now')";
+    const row = db.prepare(query).get(...(clientId ? [clientId] : []));
+    const clientLabel = clientId ? ` for ${clientId}` : '';
+    return { answer: `There are **${row.count}** overdue action items${clientLabel}.`, tokensUsed: 0 };
+  }
+
   // Determine what to count
   if (/meeting|session|call/.test(q)) {
     const query = clientId
@@ -222,11 +232,37 @@ function handleCountQuery(db, question, clientId) {
   return { answer: `There are **${meetingCount.count}** meetings${clientId ? ` for ${clientId}` : ''}.`, tokensUsed: 0 };
 }
 
-async function handleActionItems(db, question, clientId) {
-  const query = clientId
-    ? "SELECT title, owner_name, status, due_date, priority, collaborators FROM action_items WHERE client_id = ? AND status IN ('open', 'on-agenda') ORDER BY created_at DESC LIMIT 20"
-    : "SELECT title, owner_name, status, due_date, priority, collaborators FROM action_items WHERE status IN ('open', 'on-agenda') ORDER BY created_at DESC LIMIT 20";
-  const items = db.prepare(query).all(...(clientId ? [clientId] : []));
+async function handleActionItems(db, question, clientId, intentFilters) {
+  let sql = "SELECT title, owner_name, status, due_date, priority, collaborators, client_id FROM action_items WHERE 1=1";
+  const params = [];
+
+  if (clientId) { sql += ' AND client_id = ?'; params.push(clientId); }
+
+  // Overdue filter
+  const q = question.toLowerCase();
+  if (/overdue|past.?due|late|behind/.test(q) || intentFilters?.status === 'overdue') {
+    sql += " AND status = 'open' AND due_date IS NOT NULL AND due_date < date('now')";
+  } else {
+    const status = intentFilters?.status || 'open';
+    if (status !== 'all') { sql += " AND status IN ('open', 'on-agenda')"; }
+  }
+
+  // Owner filter from intent or question
+  const owner = intentFilters?.owner || null;
+  if (owner) {
+    sql += ' AND LOWER(owner_name) LIKE ?';
+    params.push('%' + owner.toLowerCase() + '%');
+  } else {
+    // Check question for owner patterns: "Dan's items", "Manuel's tasks"
+    const ownerMatch = question.match(/(\w+)(?:'s|s')\s*(?:action|item|task|todo|open|overdue)/i);
+    if (ownerMatch) {
+      sql += ' AND LOWER(owner_name) LIKE ?';
+      params.push('%' + ownerMatch[1].toLowerCase() + '%');
+    }
+  }
+
+  sql += ' ORDER BY due_date ASC, created_at DESC LIMIT 25';
+  const items = db.prepare(sql).all(...params);
   return { actionItems: items };
 }
 
@@ -309,7 +345,7 @@ async function handleTemporalSearch(db, question, clientId, topK) {
 
 // ============ SMART ROUTER ============
 
-async function routeAndRetrieve(db, question, intent, clientId, meetingId, topK) {
+async function routeAndRetrieve(db, question, intent, clientId, meetingId, topK, intentResult) {
   switch (intent) {
     case 'count_query': {
       const result = handleCountQuery(db, question, clientId);
@@ -317,7 +353,7 @@ async function routeAndRetrieve(db, question, intent, clientId, meetingId, topK)
     }
 
     case 'action_items': {
-      const { actionItems } = await handleActionItems(db, question, clientId);
+      const { actionItems } = await handleActionItems(db, question, clientId, intentResult?.filters);
       const preFetched = preFetchClientData(db, clientId);
       return {
         context: { actionItems, preFetched, meetingTimeline: preFetched?.meetings },
@@ -519,7 +555,7 @@ export async function handleChat(db, question, { clientId = null, meetingId = nu
   const effectiveClientIdFinal = resolvedClient.clientId;
 
   // 3. Fallback clarification for client-specific intents without a client
-  if (!effectiveClientIdFinal && ['action_items', 'sentiment_analysis', 'meeting_prep', 'meeting_summary'].includes(intent)) {
+  if (!effectiveClientIdFinal && ['sentiment_analysis', 'meeting_prep', 'meeting_summary'].includes(intent)) {
     const recentClients = db.prepare(
       "SELECT DISTINCT client_name FROM meetings WHERE client_id IS NOT NULL AND client_id != 'unmatched' ORDER BY start_time DESC LIMIT 5"
     ).all();
@@ -544,7 +580,7 @@ export async function handleChat(db, question, { clientId = null, meetingId = nu
   }
 
   // 4. Route and retrieve data
-  const routeResult = await routeAndRetrieve(db, question, intent, effectiveClientIdFinal, meetingId, topK);
+  const routeResult = await routeAndRetrieve(db, question, intent, effectiveClientIdFinal, meetingId, topK, intentResult);
 
   // 5. If direct answer (count_query), return immediately
   if (routeResult.skipLLM) {
