@@ -55,7 +55,12 @@ function logQuery(entry) {
 function regexFastPath(question, meetingId) {
   const q = question.toLowerCase();
 
-  // Count queries
+  // "When" questions about meetings are temporal, not count
+  if (/\bwhen('s| is| was| will)\b/.test(q) && /\b(next|last|upcoming|previous|recent)\b/.test(q) && /\bmeeting|call|session\b/.test(q)) {
+    return 'temporal_search';
+  }
+
+  // Count queries - but NOT if user says "show me" or "list" (they want the actual items, not a count)
   if (/^how many\b/.test(q) && /meeting|session|call/.test(q)) {
     return 'count_query';
   }
@@ -70,10 +75,16 @@ function regexFastPath(question, meetingId) {
   }
 
   // Strong signal patterns (no meetingId)
+  // "Show me" / "list" patterns should NOT be count_query — they want the actual items
+  if (/^(show|list|display|give me|what are)\b/.test(q) && /\b(overdue|action|item|task|open)\b/.test(q)) return 'action_items';
   if (/^(count|total|number of)\b/.test(q) || /\bhow many\b/.test(q)) return 'count_query';
   if (/\b(brief|prep me|prepare me|catch me up|what do i need to know)\b/.test(q)) return 'meeting_prep';
   if (/\b(which clients? need|who needs attention|at risk|neglected|stale)\b/.test(q)) return 'meta_analysis';
   if (/\b(ever discuss|first mention|history of|timeline|when was.*first|has.*come up|did we.*discuss)\b/.test(q)) return 'temporal_search';
+
+  // Cross-client / portfolio-level analysis patterns
+  if (/\b(across all|across clients?|all clients?|portfolio|most common|churn risk|trending|patterns?)\b/.test(q) && /\b(topic|theme|frustrat|sentiment|risk|pattern|common)\b/.test(q)) return 'meta_analysis';
+  if (/\btop \d+\b.*\b(calls?|meetings?|important)\b/.test(q)) return 'meta_analysis';
 
   return null;
 }
@@ -257,11 +268,29 @@ function handleCountQuery(db, question, clientId, classifierOutput) {
   }
 
   if (entity === 'meetings') {
+    // Check for time-scoped queries
+    let timeFilter = '';
+    let timeLabel = '';
+    if (/this month|current month/.test(q)) {
+      timeFilter = " AND start_time >= date('now', 'start of month')";
+      timeLabel = ' this month';
+    } else if (/this week|current week/.test(q)) {
+      timeFilter = " AND start_time >= date('now', 'weekday 0', '-7 days')";
+      timeLabel = ' this week';
+    } else if (/today/.test(q)) {
+      timeFilter = " AND date(start_time) = date('now')";
+      timeLabel = ' today';
+    } else if (/last month|previous month/.test(q)) {
+      timeFilter = " AND start_time >= date('now', 'start of month', '-1 month') AND start_time < date('now', 'start of month')";
+      timeLabel = ' last month';
+    }
+
     const query = clientId
-      ? 'SELECT COUNT(*) as count FROM meetings WHERE client_id = ?'
-      : 'SELECT COUNT(*) as count FROM meetings';
+      ? `SELECT COUNT(*) as count FROM meetings WHERE client_id = ?${timeFilter}`
+      : `SELECT COUNT(*) as count FROM meetings WHERE 1=1${timeFilter}`;
     const row = db.prepare(query).get(...(clientId ? [clientId] : []));
-    return { answer: `There are **${row.count}** meetings${clientLabel} in the system.`, tokensUsed: 0 };
+    const scopeLabel = timeLabel || ' in the system';
+    return { answer: `There are **${row.count}** meetings${clientLabel}${scopeLabel}.`, tokensUsed: 0 };
   }
 
   if (entity === 'action_items') {
@@ -552,30 +581,35 @@ async function routeAndRetrieve(db, question, intent, clientId, meetingId, topK,
 // ============ GPT ANSWER GENERATION ============
 
 const INTENT_TOKEN_CAPS = {
-  count_query: 100,
+  count_query: 80,
   action_items: 600,
-  meeting_summary: 800,
-  sentiment_analysis: 500,
-  transcript_search: 800,
-  temporal_search: 800,
-  meeting_prep: 1500,
-  meta_analysis: 1200,
+  meeting_summary: 500,
+  sentiment_analysis: 400,
+  transcript_search: 500,
+  temporal_search: 500,
+  meeting_prep: 1000,
+  meta_analysis: 800,
 };
 
 const SYSTEM_PROMPT = `You are the Transcripts AI Concierge for the B3X meeting dashboard. Answer using ONLY the provided context.
 
-Format rules:
-- Be CONCISE. Short paragraphs + bullet points. No walls of text.
-- Use **bold** for key names, numbers, and decisions.
-- Use bullet lists for action items, not prose.
+CRITICAL — BREVITY IS YOUR #1 PRIORITY:
+- Every response must be as short as possible while still answering the question.
+- If the user asks a simple question, give a simple answer. Do NOT add unrequested context.
 
-Response length (STRICT):
-- Count queries: 1 sentence only
-- Action item lists: bullet points only. Format: - [STATUS] Title (Owner, Due: date)
-- Meeting summaries: 2-3 sentence overview + 3-5 bullet points. Max 150 words.
-- Sentiment analysis: 1 paragraph with scores + 2-3 bullets. Max 100 words.
-- Client briefs: structured with headers. Max 400 words.
-- Complex analysis: structured with headers. Max 300 words.
+Format rules:
+- Use **bold** for key names, numbers, and decisions.
+- Use bullet lists for action items, not numbered prose.
+- Never use numbered lists for action items — always use "- " bullets.
+
+Response length (STRICT — exceeding these limits is a failure):
+- Count queries: 1 sentence ONLY. No follow-up, no context. Just the number.
+- Action item lists: bullets only. Format: - **[STATUS]** Title (Owner, Due: date). No prose between bullets.
+- Meeting summaries: 1-2 sentence overview + 3-5 bullet points. Max 120 words total.
+- Sentiment analysis: score + 2-3 bullets. Max 80 words total.
+- Client briefs: structured with headers. Max 300 words.
+- Complex/meta analysis: structured with headers + bullets. Max 250 words. Lead with the direct answer.
+- Transcript search: answer the specific question in 2-4 sentences + bullets if needed. Max 150 words.
 
 Citation rules:
 - Cite source ONCE at the end: [Source: meeting date]
@@ -583,18 +617,29 @@ Citation rules:
 - Mention speaker names naturally in text.
 
 Content rules:
-- Never make up information. Say "I don't have data on that" if insufficient.
+- Never make up information. Say "I don't have data on that" if context is insufficient.
 - When listing action items, always include status and owner.
-- Be proactive: suggest next steps when relevant.`;
+- Be proactive: suggest 1 brief next step when relevant (1 sentence max).
+- IMPORTANT: Answer the EXACT question asked. If user asks "which client has the most X", answer with the client name first, then brief supporting data.
+- When the user asks about a SPECIFIC client by name, only discuss that client. Never substitute a different client.
+- If the question mentions a client name (e.g., "Echelon"), your answer MUST be about that client, even if the context contains data about other clients. Ignore irrelevant client data.
+- If context doesn't contain data about the asked client, say "I don't have data on [client name]" — do NOT answer about a different client instead. This is a HARD RULE.
+- For "across all clients" or "most common" questions, synthesize data from ALL clients in context, not just one.
+- When listing action items, include ALL items from context. Do not truncate or summarize — show complete list with status, owner, and due date for each.
+- If the user asks for action items WITHOUT specifying a client, show ALL available action items from context. Do NOT refuse just because a previously mentioned client doesn't exist.
+- If the question cannot be answered with available data (e.g., asking for a metric you can't compute), clearly state what data is missing and suggest what would be needed.`;
 
 const META_SYSTEM_PROMPT = `You are the Transcripts AI Concierge for the B3X meeting dashboard. You're answering a meta-analysis question about the overall client portfolio.
 
-Rules:
-- Summarize findings clearly with specific numbers
-- Flag urgent items first (overdue tasks, declining scores)
-- Group information by client
-- Suggest prioritized actions
-- Be direct and actionable`;
+CRITICAL — BREVITY FIRST:
+- Lead with the direct answer to the question in the FIRST sentence.
+- Max 200 words total. Use short bullets, not paragraphs.
+- Flag urgent items first (overdue tasks, declining scores).
+- Group information by client using **bold** names.
+- End with 1 actionable next step (1 sentence).
+- Do NOT repeat data the user didn't ask for. Stay focused on the question.
+- For "top N" questions, list exactly N items. For "which client" questions, name the client first.
+- For cross-client topic/theme questions, list the topics as bullets — do NOT organize by client unless asked.`;
 
 function formatMetaContext(context) {
   const parts = [];
@@ -637,9 +682,12 @@ async function generateWithGPT(question, context, chatHistory, intent, model, fo
     ? context.formattedContext
     : isMetaAnalysis ? formatMetaContext(context) : formatContext(context);
 
+  // Limit chat history and add a reminder about the current question
+  const historyMessages = chatHistory.slice(-6).map(m => ({ role: m.role, content: m.content }));
+
   const messages = [
     { role: 'system', content: systemPrompt },
-    ...chatHistory.slice(-6).map(m => ({ role: m.role, content: m.content })),
+    ...historyMessages,
     { role: 'user', content: `${question}\n\n---\nContext:\n${contextBlock}` }
   ];
 
@@ -732,7 +780,7 @@ export async function handleChat(db, question, { clientId = null, meetingId = nu
   // 3. Fallback clarification for client-specific intents without a client
   //    Skip if comparison_clients is present — the comparison handler resolves clients itself
   const hasComparisonClients = Array.isArray(intentResult?.classifierOutput?.comparison_clients) && intentResult.classifierOutput.comparison_clients.length >= 2;
-  if (!effectiveClientIdFinal && !hasComparisonClients && ['sentiment_analysis', 'meeting_prep', 'meeting_summary'].includes(intent)) {
+  if (!effectiveClientIdFinal && !hasComparisonClients && ['meeting_prep', 'meeting_summary'].includes(intent)) {
     const recentClients = db.prepare(
       "SELECT DISTINCT client_name FROM meetings WHERE client_id IS NOT NULL AND client_id != 'unmatched' ORDER BY start_time DESC LIMIT 5"
     ).all();

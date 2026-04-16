@@ -1,0 +1,220 @@
+{
+  "totalCycles": 5,
+  "convergenceReached": false,
+  "finalScore": 4.2,
+  "scoreProgression": [
+    3.95,
+    4.05,
+    4.11,
+    4.19,
+    4.17,
+    4.2
+  ],
+  "cycles": [
+    {
+      "cycle": 0,
+      "score": 3.95,
+      "note": "Baseline before any changes"
+    },
+    {
+      "cycle": 1,
+      "score": 4.05,
+      "delta": 0.1,
+      "worstQuestions": [
+        "Show me action items (1.45) - clarification instead of showing all",
+        "What is the latest Echelon update? (1.55) - wrong client mapping",
+        "How many meetings this month? (2.65) - no time filtering"
+      ],
+      "fixesApplied": [
+        "System prompt: added strict brevity rules with word limits per query type",
+        "System prompt: added rule to answer about asked entity, never substitute clients",
+        "Removed action_items from clarification-required intents list",
+        "Reduced INTENT_TOKEN_CAPS across all intents for conciseness",
+        "Added time-scoped count_query handling (this month/week/today/last month)",
+        "META_SYSTEM_PROMPT: added brevity-first rules"
+      ]
+    },
+    {
+      "cycle": 2,
+      "score": 4.11,
+      "delta": 0.06,
+      "worstQuestions": [
+        "What topics come up most commonly across all client meetings? (1.95) - routed as transcript_search",
+        "What is the latest Echelon update? (2.15) - session context bleed",
+        "What were the top 3 most important calls today? (2.50) - routed as meeting_summary"
+      ],
+      "fixesApplied": [
+        "Added regex fast-path for cross-client analysis patterns -> meta_analysis",
+        "Added regex for top N calls/meetings -> meta_analysis",
+        "System prompt: stronger instruction about answering exact question asked",
+        "META_SYSTEM_PROMPT: tightened to 200 words max, topic-based formatting for cross-client questions"
+      ]
+    },
+    {
+      "cycle": 3,
+      "score": 4.19,
+      "delta": 0.08,
+      "worstQuestions": [
+        "Show me all overdue action items (2.55) - routed as count_query instead of action_items",
+        "How has Bearcat been feeling? (2.10) - answers about Echelon",
+        "What were the top 3 most important calls today? (2.50) - only one client data"
+      ],
+      "fixesApplied": [
+        "Added regex fast-path: show/list/display/give me + overdue/action/item -> action_items",
+        "Increased action_items token cap to 600, sentiment to 400",
+        "System prompt: added rule to show ALL items when no client specified",
+        "System prompt: added rule about missing data explanation"
+      ]
+    },
+    {
+      "cycle": 4,
+      "score": 4.17,
+      "delta": -0.02,
+      "worstQuestions": [
+        "What is our average response time? (1.80) - session context bleed",
+        "Show me action items (2.20) - too terse response",
+        "When's the next meeting with them? (2.65) - misrouted as count_query"
+      ],
+      "fixesApplied": [
+        "Added REMINDER instruction in user message to answer about asked entity (regressed - reverted in C5)",
+        "Added regex fast-path for when+next/last+meeting -> temporal_search"
+      ]
+    },
+    {
+      "cycle": 5,
+      "score": 4.2,
+      "delta": 0.03,
+      "worstQuestions": [
+        "How has Bearcat been feeling? (2.20) - still answers about Echelon sometimes",
+        "What is the latest Echelon update? (2.80) - session context still bleeds",
+        "What is our average response time? (3.20) - metric unavailable"
+      ],
+      "fixesApplied": [
+        "Reverted REMINDER instruction (caused over-terse responses)",
+        "Added regex for when temporal questions about meetings",
+        "System prompt: added instruction for showing all action items without client",
+        "System prompt: added instruction for explaining missing data and what would be needed"
+      ]
+    }
+  ],
+  "persistentWeakSpots": [
+    {
+      "question": "What is the latest Echelon update?",
+      "issue": "Session context bleed: after discussing Pearce HVAC, the model continues about Pearce instead of switching to Echelon. RAG retrieval also returns Pearce data because it was the most recent context.",
+      "scores": [
+        1.55,
+        2.15,
+        2.2,
+        3.05,
+        2.8
+      ],
+      "rootCause": "Chat history + RAG context both favor the previously-discussed client. Would require changes to rag-engine.js (out of scope) to fix properly."
+    },
+    {
+      "question": "How has Bearcat been feeling in recent meetings?",
+      "issue": "Bearcat is not in the database. Model sometimes answers about Echelon (session context) instead of saying no data.",
+      "scores": [
+        null,
+        null,
+        2.1,
+        4.45,
+        2.2
+      ],
+      "rootCause": "Non-deterministic LLM behavior. System prompt rule is followed ~50% of the time. The sentiment_analysis handler returns session-context data which confuses the model."
+    },
+    {
+      "question": "What is our average response time on action items?",
+      "issue": "This metric is not computable from available data. Model handles it inconsistently.",
+      "scores": [
+        null,
+        3.3,
+        3.15,
+        1.8,
+        3.2
+      ],
+      "rootCause": "No completion timestamps in the database. Would need schema changes to support this query."
+    }
+  ],
+  "sessionProgressions": {
+    "A_ExecutiveBrief": [
+      3.52,
+      3.67,
+      3.82,
+      3.54,
+      3.65,
+      3.65
+    ],
+    "B_LondonFlooring": [
+      4.14,
+      4.22,
+      3.98,
+      4.42,
+      4.17,
+      4.46
+    ],
+    "C_Accountability": [
+      3.76,
+      3.89,
+      3.69,
+      3.82,
+      3.64,
+      3.66
+    ],
+    "D_Sentiment": [
+      3.88,
+      4.33,
+      3.79,
+      3.7,
+      4.42,
+      3.97
+    ],
+    "E_QuickFacts": [
+      3.92,
+      3.92,
+      3.97,
+      4.19,
+      4.25,
+      4.35
+    ],
+    "F_ComplexAnalysis": [
+      3.99,
+      3.35,
+      4.36,
+      4.47,
+      4.56,
+      4.33
+    ],
+    "G_MeetingScoped": [
+      4.56,
+      4.59,
+      4.53,
+      4.29,
+      4.63,
+      4.3
+    ],
+    "H_EdgeCases": [
+      3.95,
+      4.27,
+      4.29,
+      4.48,
+      3.92,
+      4.32
+    ],
+    "I_NaturalConversation": [
+      3.49,
+      4.35,
+      4.59,
+      4.74,
+      4.16,
+      4.58
+    ],
+    "J_DataValidation": [
+      4.38,
+      4.2,
+      4.5,
+      4.57,
+      4.45,
+      4.62
+    ]
+  }
+}
