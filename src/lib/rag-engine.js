@@ -561,9 +561,18 @@ function checkQACache(db, question, clientId) {
 
 // ============ MAIN INTERFACE ============
 
-export async function ask(db, question, { clientId = null, chatHistory = [], topK = 10 } = {}) {
+export async function ask(db, question, { clientId = null, meetingId = null, chatHistory = [], topK = 10 } = {}) {
   const queryType = classifyQuery(question);
   let detectionMethod = clientId ? 'provided' : 'none';
+
+  // If meeting_id provided, resolve client from meeting
+  if (meetingId && !clientId) {
+    const meeting = db.prepare('SELECT client_id, client_name FROM meetings WHERE id = ?').get(meetingId);
+    if (meeting?.client_id && meeting.client_id !== 'unmatched') {
+      clientId = meeting.client_id;
+      detectionMethod = 'meeting_scope';
+    }
+  }
 
   // Auto-detect client from question text if not provided
   if (!clientId) {
@@ -572,6 +581,61 @@ export async function ask(db, question, { clientId = null, chatHistory = [], top
       clientId = detected.clientId;
       detectionMethod = detected.method;
       console.log(`[RAG] Auto-detected client: ${detected.clientId} via ${detected.method} (matched: "${detected.matched}")`);
+    }
+  }
+
+  // Meeting-scoped retrieval: user clicked on a specific meeting
+  if (meetingId) {
+    const qaType = mapQueryToQAType(question);
+    if (qaType) {
+      const cached = db.prepare('SELECT answer FROM meeting_qa_cache WHERE meeting_id = ? AND question_type = ?').get(meetingId, qaType);
+      if (cached?.answer) {
+        logQuery({ query: question, clientDetected: clientId, meetingId, detectionMethod: 'meeting_scope', classification: queryType, retrievalPath: 'meeting_cache', cacheHit: true });
+        return { answer: cached.answer, citations: [], queryType, model: 'cache', tokensUsed: 0, chunksUsed: 0, latencyMs: 0, cached: true, clientDetected: clientId };
+      }
+    }
+
+    const mtg = db.prepare('SELECT id, topic, start_time, duration_minutes, meeting_summary, client_name, client_id FROM meetings WHERE id = ?').get(meetingId);
+    if (mtg) {
+      const chunks = db.prepare('SELECT * FROM transcript_chunks WHERE meeting_id = ? ORDER BY chunk_index ASC').all(meetingId);
+      const items = db.prepare('SELECT title, owner_name, status, due_date, priority, collaborators FROM action_items WHERE meeting_id = ?').all(meetingId);
+      const score = db.prepare('SELECT composite_score, client_sentiment, accountability, wins, improvements FROM session_evaluations WHERE meeting_id = ?').get(meetingId);
+
+      let contextChunks = chunks.map(c => ({ ...c, meeting_topic: mtg.topic, meeting_date: mtg.start_time, client_name: mtg.client_name || '', similarity: 1.0 }));
+
+      // If too many chunks, keep first 5 + last 5 + vector-best 5
+      if (contextChunks.length > 15) {
+        const first5 = contextChunks.slice(0, 5);
+        const last5 = contextChunks.slice(-5);
+        const kept = new Set([...first5.map(c => c.id), ...last5.map(c => c.id)]);
+        const { chunkIndex: ci } = ensureIndex(db);
+        if (ci.size > 0) {
+          const qEmbed = await embedChunk(question);
+          const scores = [];
+          for (const [cid, data] of ci) {
+            if (data.meeting_id !== meetingId) continue;
+            scores.push({ chunkId: cid, sim: cosineSimilarity(qEmbed, data.embedding) });
+          }
+          scores.sort((a, b) => b.sim - a.sim);
+          const middle = scores.filter(s => !kept.has(s.chunkId)).slice(0, 5);
+          const middleChunks = middle.map(s => chunks.find(c => c.id === s.chunkId)).filter(Boolean).map(c => ({ ...c, meeting_topic: mtg.topic, meeting_date: mtg.start_time, client_name: mtg.client_name || '', similarity: 1.0 }));
+          contextChunks = [...first5, ...middleChunks, ...last5];
+        } else {
+          contextChunks = [...first5, ...contextChunks.slice(Math.floor(contextChunks.length / 2) - 2, Math.floor(contextChunks.length / 2) + 3), ...last5];
+        }
+      }
+
+      const context = {
+        recentMeeting: mtg, meetingTimeline: [mtg], chunks: contextChunks,
+        actionItems: items,
+        sessions: score ? [{ ...score, topic: mtg.topic, start_time: mtg.start_time }] : [],
+        preFetched: { clientName: mtg.client_name || mtg.topic?.split('|')[0]?.trim() || 'Unknown' }
+      };
+
+      const result = await generateAnswer(question, context, chatHistory, queryType);
+      result.clientDetected = clientId;
+      logQuery({ query: question, clientDetected: clientId, meetingId, detectionMethod: 'meeting_scope', classification: queryType, retrievalPath: 'meeting_direct', cacheHit: false, chunksReturned: contextChunks.length, model: result.model, tokensUsed: result.tokensUsed, latencyMs: result.latencyMs });
+      return result;
     }
   }
 

@@ -5709,6 +5709,25 @@
         const res = await fetch(`${API}/meetings/${id}`);
         const data = await res.json();
         renderMeetingDetail(data);
+
+        // Scope chat concierge to this meeting
+        if (typeof setChatScope === 'function') {
+          const meeting = data.meeting;
+          currentChatMeetingId = meeting.id;
+          currentChatMeetingTopic = meeting.topic;
+          const cid = (meeting.client_id && meeting.client_id !== 'unmatched') ? meeting.client_id : null;
+          const cname = (meeting.client_name && meeting.client_name !== 'Unmatched') ? meeting.client_name : null;
+          if (cid) {
+            setChatScope(cid, cname);
+            currentChatMeetingId = meeting.id; // re-set after setChatScope clears it
+          } else {
+            currentChatClientId = null;
+            currentChatClientName = null;
+            currentChatSession = null;
+            document.getElementById('chat-scope-label').textContent = meeting.topic?.split('|')[0]?.trim() || 'This Meeting';
+            document.getElementById('chat-clear-scope').style.display = 'inline';
+          }
+        }
       } catch (err) {
         console.error('Failed to load meeting:', err);
         panel.innerHTML = '<div class="empty-state">Failed to load meeting details</div>';
@@ -10571,6 +10590,8 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     let currentChatSession = null;
     let currentChatClientId = null;
     let currentChatClientName = null;
+    let currentChatMeetingId = null;
+    let currentChatMeetingTopic = null;
     let chatPanelOpen = false;
 
     function toggleChatPanel() {
@@ -10585,7 +10606,9 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     function setChatScope(clientId, clientName) {
       currentChatClientId = clientId;
       currentChatClientName = clientName;
-      currentChatSession = null; // new session for new client
+      currentChatMeetingId = null;
+      currentChatMeetingTopic = null;
+      currentChatSession = null; // new session for new scope
       document.getElementById('chat-scope-label').textContent = clientName || 'All Clients';
       document.getElementById('chat-clear-scope').style.display = clientId ? 'inline' : 'none';
       // Clear messages for new scope
@@ -10595,6 +10618,8 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     }
 
     function clearChatScope() {
+      currentChatMeetingId = null;
+      currentChatMeetingTopic = null;
       setChatScope(null, null);
       document.getElementById('chat-scope-label').textContent = 'All Clients';
     }
@@ -10713,6 +10738,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       try {
         const body = { question };
         if (currentChatClientId) body.client_id = currentChatClientId;
+        if (currentChatMeetingId) body.meeting_id = currentChatMeetingId;
         if (currentChatSession) body.session_id = currentChatSession;
 
         const res = await fetch(API + '/chat', {

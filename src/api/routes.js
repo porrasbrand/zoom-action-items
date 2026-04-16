@@ -2863,7 +2863,7 @@ router.post('/chat', async (req, res) => {
       return res.status(429).json({ error: 'Rate limit exceeded (30/min)' });
     }
 
-    const { question, client_id, session_id } = req.body;
+    const { question, client_id, session_id, meeting_id } = req.body;
     if (!question?.trim()) {
       return res.status(400).json({ error: 'question is required' });
     }
@@ -2897,6 +2897,7 @@ router.post('/chat', async (req, res) => {
     // Call RAG engine (auto-detects client from question text if resolvedClientId is null)
     const result = await ask(d, question.trim(), {
       clientId: resolvedClientId,
+      meetingId: meeting_id ? parseInt(meeting_id) : null,
       chatHistory: history,
       topK: 10
     });
