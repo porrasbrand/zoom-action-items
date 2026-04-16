@@ -78,28 +78,23 @@ function regexFastPath(question, meetingId) {
   return null;
 }
 
-// ============ LLM INTENT CLASSIFICATION ============
+// ============ DYNAMIC CLIENT LIST ============
 
-async function classifyWithLLM(question, clientId, chatHistory) {
-  const model = genAI.getGenerativeModel({
-    model: CLASSIFIER_MODEL,
-    generationConfig: {
-      responseMimeType: 'application/json',
-      temperature: 0
-    }
-  });
+let cachedClientList = null;
 
-  // Include recent conversation for coreference resolution
-  let contextMessages = '';
-  if (chatHistory && chatHistory.length > 0) {
-    const recent = chatHistory.slice(-4);
-    contextMessages = '\n\nRecent conversation (use this to resolve pronouns like their/those/that/them/it):\n';
-    for (const m of recent) {
-      contextMessages += m.role + ': ' + (m.content || '').substring(0, 300) + '\n';
-    }
-  }
+function getClientList(db) {
+  if (cachedClientList) return cachedClientList;
+  cachedClientList = db.prepare("SELECT DISTINCT client_id, client_name FROM meetings WHERE client_id IS NOT NULL AND client_id != 'unmatched' ORDER BY client_name").all();
+  return cachedClientList;
+}
 
-  const prompt = `Classify this user question into exactly one intent category.
+export function invalidateClientCache() {
+  cachedClientList = null;
+}
+
+function buildClassifierPrompt(db) {
+  const clientNames = getClientList(db).map(c => c.client_name).join(', ');
+  return `Classify this user question into exactly one intent category.
 
 Categories:
 - count_query: User wants a numeric count (how many meetings, total items, etc.)
@@ -111,13 +106,30 @@ Categories:
 - transcript_search: User asks about specific topics discussed in meetings
 - meeting_summary: User wants a summary of what was discussed in a specific meeting
 
-If the user uses pronouns (their, those, that, them, it, same, this) or says "what about" / "more details" / "tell me more", resolve them using the recent conversation context. Extract the actual client/person name, not the pronoun.
+Known clients (use EXACTLY these names in your response):
+${clientNames}
 
-Context: ${clientId ? `Client context is set (client_id: ${clientId})` : 'No specific client context'}
-${contextMessages}
-Question: "${question}"
+IMPORTANT: For the "client" field, return the EXACT client name from the list above. If the user says a partial name or abbreviation, match to the closest client. If using pronouns (their/those/that), resolve from conversation context. If no client matches, return null.`;
+}
 
-Respond with JSON: {"intent": "<category>", "client": "<resolved client name or null>", "confidence": <0.0-1.0>}`;
+// ============ LLM INTENT CLASSIFICATION ============
+
+async function classifyWithLLM(question, chatHistory, db) {
+  const model = genAI.getGenerativeModel({
+    model: CLASSIFIER_MODEL,
+    generationConfig: { responseMimeType: 'application/json', temperature: 0, maxOutputTokens: 200 }
+  });
+
+  let contextMessages = '';
+  if (chatHistory && chatHistory.length > 0) {
+    const recent = chatHistory.slice(-4);
+    contextMessages = '\n\nRecent conversation (resolve pronouns using this):\n';
+    for (const m of recent) {
+      contextMessages += m.role + ': ' + (m.content || '').substring(0, 300) + '\n';
+    }
+  }
+
+  const prompt = buildClassifierPrompt(db) + contextMessages + '\nQuestion: "' + question + '"\n\nRespond with JSON: {"intent": "<category>", "client": "<EXACT name from Known clients or null>", "confidence": <0.0-1.0>}';
 
   try {
     const result = await model.generateContent(prompt);
@@ -131,20 +143,30 @@ Respond with JSON: {"intent": "<category>", "client": "<resolved client name or 
     console.warn('[IntentRouter] LLM classification failed:', err.message);
   }
 
-  // Fallback to transcript_search
   return { intent: 'transcript_search', confidence: 0.3, method: 'llm_fallback' };
 }
 
 // ============ CLIENT RESOLUTION ============
 
-function resolveClientId(db, question, providedClientId) {
+function resolveClientId(db, clientNameOrQuestion, providedClientId) {
   if (providedClientId) return { clientId: providedClientId, method: 'provided' };
+  if (!clientNameOrQuestion) return { clientId: null, method: 'none' };
 
-  // Try client_contacts table first via detectClient
-  const detected = detectClient(db, question);
-  if (detected) {
-    return { clientId: detected.clientId, clientName: detected.clientName, method: detected.method };
-  }
+  // Direct match on client_name (classifier returns exact canonical name)
+  const direct = db.prepare("SELECT DISTINCT client_id FROM meetings WHERE client_name = ? AND client_id IS NOT NULL AND client_id != 'unmatched' LIMIT 1").get(clientNameOrQuestion);
+  if (direct) return { clientId: direct.client_id, method: 'canonical_match' };
+
+  // Case-insensitive match
+  const ci = db.prepare("SELECT DISTINCT client_id FROM meetings WHERE LOWER(client_name) = LOWER(?) AND client_id IS NOT NULL AND client_id != 'unmatched' LIMIT 1").get(clientNameOrQuestion);
+  if (ci) return { clientId: ci.client_id, method: 'ci_match' };
+
+  // Contact map fallback
+  const contact = db.prepare('SELECT client_id FROM client_contacts WHERE LOWER(contact_name) = LOWER(?) LIMIT 1').get(clientNameOrQuestion);
+  if (contact) return { clientId: contact.client_id, method: 'contact_match' };
+
+  // detectClient substring fallback
+  const detected = detectClient(db, clientNameOrQuestion);
+  if (detected) return { clientId: detected.clientId, clientName: detected.clientName, method: detected.method };
 
   return { clientId: null, method: 'none' };
 }
@@ -466,19 +488,30 @@ export async function handleChat(db, question, { clientId = null, meetingId = nu
   if (fastIntent) {
     intentResult = { intent: fastIntent, confidence: 1.0, method: 'regex' };
   } else {
-    intentResult = await classifyWithLLM(question, effectiveClientId, chatHistory);
+    intentResult = await classifyWithLLM(question, chatHistory, db);
   }
 
   const { intent } = intentResult;
 
   // 2b. If LLM classifier resolved a client from context, use it
-  if (!effectiveClientId && intentResult.client) {
+  if (!resolvedClient.clientId && intentResult.client) {
     const llmResolved = resolveClientId(db, intentResult.client, null);
     if (llmResolved.clientId) {
       resolvedClient = llmResolved;
     }
   }
-  // 2c. If still no client, restore session-inherited client
+  // 2c. If regex fast-path was used and no client yet, run LLM classifier just for client extraction
+  if (!resolvedClient.clientId && intentResult.method === 'regex') {
+    const llmResult = await classifyWithLLM(question, chatHistory, db);
+    if (llmResult?.client) {
+      const llmResolved = resolveClientId(db, llmResult.client, null);
+      if (llmResolved.clientId) {
+        resolvedClient = llmResolved;
+        console.log('[v3] LLM resolved client after regex fast-path:', llmResolved.clientId);
+      }
+    }
+  }
+  // 2d. If still no client, restore session-inherited client
   if (!resolvedClient.clientId && sessionClientId) {
     resolvedClient = { clientId: sessionClientId, method: 'session_restore' };
     console.log('[v3] Restored session client:', sessionClientId);
