@@ -44,6 +44,10 @@ const NAME_ALIASES = {
   'ric thompson': 'Ric@doneforyousolutions.com',
 };
 
+
+// ProofHub group IDs
+const PH_GROUP_B3X_INTERNAL = 1525671947;
+const PH_GROUP_TRAFFIC = 1515563255;
 /**
  * Fetch people from ProofHub API
  */
@@ -69,6 +73,9 @@ async function fetchPeopleFromPH() {
       last_name: p.last_name || '',
       name: ((p.first_name || '') + ' ' + (p.last_name || '')).trim() || p.email.split('@')[0],
       suspended: p.suspended || false,
+      groups: p.groups || [],
+      is_b3x: (p.groups || []).includes(PH_GROUP_B3X_INTERNAL),
+      is_traffic: (p.groups || []).includes(PH_GROUP_TRAFFIC),
       last_active: p.last_active,
     }));
 
@@ -181,7 +188,10 @@ export async function getAllPeople() {
     aliases: [],
     ph_id: p.ph_id,
     email: p.email,
-    note: p.suspended ? 'suspended' : null
+    note: p.suspended ? 'suspended' : null,
+    is_b3x: p.is_b3x || false,
+    is_traffic: p.is_traffic || false,
+    groups: p.groups || []
   }));
 }
 
@@ -199,10 +209,41 @@ export function getAllPeopleSync() {
   }));
 }
 
+
+/**
+ * Get B3X internal team members (from PH group)
+ */
+export function getB3xTeamSync() {
+  if (!peopleCache) return [];
+  return peopleCache.filter(p => p.is_b3x).map(p => ({
+    name: p.first_name || p.name.split(" ")[0],
+    fullName: p.name,
+    ph_id: p.ph_id,
+    email: p.email,
+    label: "★ " + (p.first_name || p.name.split(" ")[0]) + " - B3X"
+  }));
+}
+
+/**
+ * Check if a name is B3X internal
+ */
+export function isB3xInternal(name) {
+  if (!peopleCache || !name) return false;
+  const input = name.toLowerCase().trim();
+  return peopleCache.some(p => {
+    if (!p.is_b3x) return false;
+    const first = (p.first_name || "").toLowerCase();
+    const full = p.name.toLowerCase();
+    return input === first || input === full || input.startsWith(first) || full.startsWith(input);
+  });
+}
+
 export default {
   resolvePerson,
   resolvePersonSync,
   getAllPeople,
   getAllPeopleSync,
-  refreshPeopleCache
+  refreshPeopleCache,
+  getB3xTeamSync,
+  isB3xInternal
 };

@@ -5294,20 +5294,45 @@
     // Load user info on page load
     loadUserInfo();
 
-    const INTERNAL_TEAM = [
-      {name: 'Bill', label: '★ Bill Soady - B3X'},
-      {name: 'Dan', label: '★ Dan Kuschell - B3X Leadership'},
-      {name: 'Jacob', label: '★ Jacob - B3X'},
-      {name: 'Joaco', label: '★ Joaco - B3X Tech'},
-      {name: 'Juan', label: '★ Juan - B3X Tech'},
-      {name: 'Manuel', label: '★ Manuel - B3X Tech'},
-      {name: 'Nicole', label: '★ Nicole - B3X'},
-      {name: 'Phil', label: '★ Phil - B3X Leadership'},
-      {name: 'Ray', label: '★ Ray Z - B3X'},
-      {name: 'Richard', label: '★ Richard - B3X'},
-      {name: 'Sarah', label: '★ Sarah - B3X'},
-      {name: 'Vince', label: '★ Vince - B3X Tech'},
-    ];
+    // INTERNAL_TEAM loaded from ProofHub API groups
+    let INTERNAL_TEAM = [];
+
+    async function loadTeamFromAPI() {
+      try {
+        const res = await fetch(API + '/team');
+        const data = await res.json();
+        if (data.b3x_internal && data.b3x_internal.length > 0) {
+          INTERNAL_TEAM = data.b3x_internal.map(p => ({
+            name: p.name,
+            label: p.label,
+            ph_id: p.ph_id,
+            email: p.email
+          }));
+          console.log('[Team] Loaded', INTERNAL_TEAM.length, 'B3X team members from ProofHub');
+        } else {
+          // Fallback if API fails
+          INTERNAL_TEAM = [
+            {name: 'Bill', label: '★ Bill Soady - B3X'},
+            {name: 'Dan', label: '★ Dan Kuschell - B3X Leadership'},
+            {name: 'Jacob', label: '★ Jacob - B3X'},
+            {name: 'Juan', label: '★ Juan - B3X Tech'},
+            {name: 'Manuel', label: '★ Manuel - B3X Tech'},
+            {name: 'Nicole', label: '★ Nicole - B3X'},
+            {name: 'Phil', label: '★ Phil - B3X Leadership'},
+            {name: 'Ray', label: '★ Ray Z - B3X'},
+            {name: 'Richard', label: '★ Richard - B3X'},
+            {name: 'Sarah', label: '★ Sarah - B3X'},
+            {name: 'Vince', label: '★ Vince - B3X Tech'},
+          ];
+          console.log('[Team] Using fallback team list');
+        }
+      } catch (e) {
+        console.error('[Team] Failed to load from API:', e.message);
+      }
+    }
+
+    // Load team on page init
+    loadTeamFromAPI()
 
     // Classify task as B3X (internal) or Client
     function getTaskType(item) {

@@ -10,7 +10,7 @@ import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import * as proofhub from '../lib/proofhub-client.js';
-import { resolvePersonSync as resolvePerson, getAllPeopleSync as getAllPeople, refreshPeopleCache } from '../lib/people-resolver.js';
+import { resolvePersonSync as resolvePerson, getAllPeopleSync as getAllPeople, refreshPeopleCache, getB3xTeamSync, isB3xInternal } from '../lib/people-resolver.js';
 import { scanTranscript } from '../lib/keyword-scanner.js';
 import { calculateConfidence } from '../lib/confidence-calculator.js';
 import { verifyExtraction } from '../lib/adversarial-verifier.js';
@@ -47,7 +47,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
 
 // B3X internal team names (must match frontend INTERNAL_TEAM)
-const B3X_TEAM = ['Bill', 'Dan', 'Jacob', 'Joaco', 'Juan', 'Manuel', 'Nicole', 'Phil', 'Ray', 'Richard', 'Sarah', 'Vince'];
+// B3X team loaded dynamically from ProofHub groups
+function getB3xTeamNames() {
+  const team = getB3xTeamSync();
+  return team.length > 0 ? team.map(t => t.name) : ['Bill', 'Dan', 'Jacob', 'Joaco', 'Juan', 'Manuel', 'Nicole', 'Phil', 'Ray', 'Richard', 'Sarah', 'Vince']; // fallback
+}
 
 // Resolve collaborators to PH assignee IDs (B3X only) and client names
 function resolveCollaborators(collaboratorsStr) {
@@ -57,6 +61,7 @@ function resolveCollaborators(collaboratorsStr) {
 
   const names = collaboratorsStr.split(',').map(n => n.trim()).filter(Boolean);
   for (const name of names) {
+    const B3X_TEAM = getB3xTeamNames();
     const isInternal = B3X_TEAM.some(t => name.toLowerCase().includes(t.toLowerCase()));
     if (isInternal) {
       const resolved = resolvePerson(name);
@@ -375,6 +380,17 @@ router.get('/proofhub/people', (req, res) => {
   // Use people resolver (has real names) instead of raw PH API (returns 'no name')
   const people = getAllPeople();
   res.json({ people });
+});
+
+// GET /api/team - Get B3X team from PH groups (for frontend INTERNAL_TEAM replacement)
+router.get('/team', (req, res) => {
+  const team = getB3xTeamSync();
+  const all = getAllPeople();
+  res.json({
+    b3x_internal: team,
+    all_people: all,
+    source: team.length > 0 ? 'proofhub_api' : 'fallback'
+  });
 });
 
 // GET /api/proofhub/resolve-owner/:name - Resolve an owner name to PH user
