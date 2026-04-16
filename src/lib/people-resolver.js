@@ -1,54 +1,169 @@
 /**
  * People Resolver
  * Maps transcript speaker names to ProofHub user IDs
+ * Pulls from ProofHub API on first use, caches in memory
  */
 
-const PEOPLE_MAP = [
-  { names: ['Philip Mutrie', 'Phil', 'Phil Mutrie'], ph_id: '12896349500', email: 'Phil@breakthrough3x.com' },
-  { names: ['Bill Soady', 'Bill'], ph_id: '13652696772', email: 'bill@breakthrough3x.com' },
-  { names: ['Richard', 'Richard Bonn', 'Richard Osterude', 'Richard O'], ph_id: '12930841172', email: 'richard@breakthrough3x.com' },
-  { names: ['Joaco', 'Joaco Malig'], ph_id: '12953229550', email: 'jmejia@breakthrough3x.com' },
-  { names: ['Jacob', 'Jacob Hastings', 'Jacob/Traffic Team'], ph_id: '13766931777', email: 'jacob.traffic@breakthrough3x.com' },
-  { names: ['Vince', 'Vince Lei'], ph_id: '14513930205', email: 'vince@breakthrough3x.com' },
-  { names: ['Sarah', 'Sarah Young'], ph_id: '12953338100', email: 'sarah.young@breakthrough3x.com' },
-  { names: ['Manuel', 'Manuel Porras'], ph_id: '12953283825', email: 'minisite911@gmail.com' },
-  { names: ['Juan', 'Juan Mejia'], ph_id: '12953229550', email: 'jmejia@breakthrough3x.com' },
-  { names: ['Ray Z', 'Ray'], ph_id: '12953297394', email: 'rayz@breakthrough3x.com' },
-  { names: ['Nicole'], ph_id: '13766918208', email: 'nicole.traffic@breakthrough3x.com' },
-  { names: ['Dan Kuschell', 'Dan', "Dan's Team"], ph_id: null, email: 'help@breakthrough3x.com', note: 'CEO - usually delegates' },
-];
+import 'dotenv/config';
+
+let peopleCache = null;
+let lastFetch = 0;
+const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
+// Aliases: map common transcript names to PH email or first name
+const NAME_ALIASES = {
+  'phil': 'Phil@breakthrough3x.com',
+  'phil mutrie': 'Phil@breakthrough3x.com',
+  'philip mutrie': 'Phil@breakthrough3x.com',
+  'dan': 'help@breakthrough3x.com',
+  'dan kuschell': 'help@breakthrough3x.com',
+  "dan's team": 'help@breakthrough3x.com',
+  'ray z': 'rayz@breakthrough3x.com',
+  'ray': 'rayz@breakthrough3x.com',
+  'richard': 'richard@breakthrough3x.com',
+  'richard bonn': 'richard@breakthrough3x.com',
+  'richard o': 'osterude@gmail.com',
+  'richard osterude': 'osterude@gmail.com',
+  'manuel': 'manuel@breakthrough3x.com',
+  'manuel porras': 'manuel@breakthrough3x.com',
+  'juan': 'jmejia@breakthrough3x.com',
+  'juan mejia': 'jmejia@breakthrough3x.com',
+  'joaco': 'jmejia@breakthrough3x.com',
+  'joaco malig': 'jmejia@breakthrough3x.com',
+  'jacob': 'jacob.traffic@breakthrough3x.com',
+  'jacob hastings': 'jacob.traffic@breakthrough3x.com',
+  'vince': 'vince@breakthrough3x.com',
+  'vince lei': 'vince@breakthrough3x.com',
+  'bill': 'bill@breakthrough3x.com',
+  'bill soady': 'bill@breakthrough3x.com',
+  'sarah': 'sarah.young@breakthrough3x.com',
+  'sarah young': 'sarah.young@breakthrough3x.com',
+  'nicole': 'nicole@breakthrough3x.com',
+  'allysa': 'allysa@breakthrough3x.com',
+  'ric': 'Ric@doneforyousolutions.com',
+  'ric thompson': 'Ric@doneforyousolutions.com',
+};
+
+/**
+ * Fetch people from ProofHub API
+ */
+async function fetchPeopleFromPH() {
+  const apiKey = process.env.PROOFHUB_API_KEY;
+  const companyUrl = process.env.PROOFHUB_COMPANY_URL;
+  if (!apiKey || !companyUrl) {
+    console.warn('[People] ProofHub not configured, using empty people list');
+    return [];
+  }
+
+  try {
+    const res = await fetch(`https://${companyUrl}/api/v3/people`, {
+      headers: { 'X-API-KEY': apiKey, 'Content-Type': 'application/json' }
+    });
+    if (!res.ok) throw new Error(`PH API ${res.status}`);
+    const data = await res.json();
+
+    const people = data.map(p => ({
+      ph_id: String(p.id),
+      email: p.email,
+      first_name: p.first_name || '',
+      last_name: p.last_name || '',
+      name: ((p.first_name || '') + ' ' + (p.last_name || '')).trim() || p.email.split('@')[0],
+      suspended: p.suspended || false,
+      last_active: p.last_active,
+    }));
+
+    console.log(`[People] Loaded ${people.length} people from ProofHub`);
+    return people;
+  } catch (err) {
+    console.error('[People] Failed to fetch from ProofHub:', err.message);
+    return [];
+  }
+}
+
+/**
+ * Get people list (cached, refreshes every 24h)
+ */
+async function getPeople() {
+  if (peopleCache && (Date.now() - lastFetch) < CACHE_TTL) return peopleCache;
+  peopleCache = await fetchPeopleFromPH();
+  lastFetch = Date.now();
+  return peopleCache;
+}
+
+/**
+ * Force refresh the people cache
+ */
+export async function refreshPeopleCache() {
+  peopleCache = null;
+  lastFetch = 0;
+  return await getPeople();
+}
 
 /**
  * Resolve a person by name
  * Returns { ph_id, email, name, note } or null
  */
-export function resolvePerson(ownerName) {
+export async function resolvePerson(ownerName) {
   if (!ownerName) return null;
+  const people = await getPeople();
+  const input = ownerName.toLowerCase().trim();
 
-  const normalizedInput = ownerName.toLowerCase().trim();
+  // 1. Check aliases first (maps transcript names to PH emails)
+  const aliasEmail = NAME_ALIASES[input];
+  if (aliasEmail) {
+    const person = people.find(p => p.email.toLowerCase() === aliasEmail.toLowerCase());
+    if (person) return { ph_id: person.ph_id, email: person.email, name: person.name, note: null };
+  }
 
-  for (const person of PEOPLE_MAP) {
-    for (const name of person.names) {
-      const normalizedName = name.toLowerCase().trim();
+  // 2. Exact match on name
+  for (const p of people) {
+    if (p.name.toLowerCase() === input || p.first_name.toLowerCase() === input) {
+      return { ph_id: p.ph_id, email: p.email, name: p.name, note: null };
+    }
+  }
 
-      // Exact match
-      if (normalizedName === normalizedInput) {
-        return {
-          ph_id: person.ph_id,
-          email: person.email,
-          name: person.names[0],
-          note: person.note || null
-        };
+  // 3. Partial match (input starts with first name)
+  for (const p of people) {
+    const firstName = p.first_name.toLowerCase();
+    if (firstName && (input.startsWith(firstName) || firstName.startsWith(input))) {
+      return { ph_id: p.ph_id, email: p.email, name: p.name, note: null };
+    }
+  }
+
+  // 4. Email match
+  for (const p of people) {
+    if (input.includes('@') && p.email.toLowerCase() === input) {
+      return { ph_id: p.ph_id, email: p.email, name: p.name, note: null };
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Synchronous resolve for backward compatibility (uses cached data)
+ * Falls back to alias lookup if cache not loaded
+ */
+export function resolvePersonSync(ownerName) {
+  if (!ownerName) return null;
+  const input = ownerName.toLowerCase().trim();
+
+  // Use cache if available
+  if (peopleCache) {
+    const aliasEmail = NAME_ALIASES[input];
+    if (aliasEmail) {
+      const person = peopleCache.find(p => p.email.toLowerCase() === aliasEmail.toLowerCase());
+      if (person) return { ph_id: person.ph_id, email: person.email, name: person.name, note: null };
+    }
+    for (const p of peopleCache) {
+      if (p.name.toLowerCase() === input || p.first_name.toLowerCase() === input) {
+        return { ph_id: p.ph_id, email: p.email, name: p.name, note: null };
       }
-
-      // Partial match (input is prefix of name or vice versa)
-      if (normalizedName.startsWith(normalizedInput) || normalizedInput.startsWith(normalizedName)) {
-        return {
-          ph_id: person.ph_id,
-          email: person.email,
-          name: person.names[0],
-          note: person.note || null
-        };
+    }
+    for (const p of peopleCache) {
+      const firstName = p.first_name.toLowerCase();
+      if (firstName && (input.startsWith(firstName) || firstName.startsWith(input))) {
+        return { ph_id: p.ph_id, email: p.email, name: p.name, note: null };
       }
     }
   }
@@ -59,17 +174,35 @@ export function resolvePerson(ownerName) {
 /**
  * Get all people for dropdowns
  */
-export function getAllPeople() {
-  return PEOPLE_MAP.map(person => ({
-    name: person.names[0],
-    aliases: person.names.slice(1),
-    ph_id: person.ph_id,
-    email: person.email,
-    note: person.note || null
+export async function getAllPeople() {
+  const people = await getPeople();
+  return people.map(p => ({
+    name: p.name,
+    aliases: [],
+    ph_id: p.ph_id,
+    email: p.email,
+    note: p.suspended ? 'suspended' : null
+  }));
+}
+
+/**
+ * Get all people synchronously (from cache, for dropdowns)
+ */
+export function getAllPeopleSync() {
+  if (!peopleCache) return [];
+  return peopleCache.map(p => ({
+    name: p.name,
+    aliases: [],
+    ph_id: p.ph_id,
+    email: p.email,
+    note: p.suspended ? 'suspended' : null
   }));
 }
 
 export default {
   resolvePerson,
-  getAllPeople
+  resolvePersonSync,
+  getAllPeople,
+  getAllPeopleSync,
+  refreshPeopleCache
 };

@@ -11,7 +11,7 @@
  */
 
 import * as proofhub from './proofhub-client.js';
-import { resolvePerson } from './people-resolver.js';
+import { resolvePersonSync as resolvePerson } from './people-resolver.js';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';

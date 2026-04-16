@@ -10,7 +10,7 @@ import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import * as proofhub from '../lib/proofhub-client.js';
-import { resolvePerson, getAllPeople } from '../lib/people-resolver.js';
+import { resolvePersonSync as resolvePerson, getAllPeopleSync as getAllPeople, refreshPeopleCache } from '../lib/people-resolver.js';
 import { scanTranscript } from '../lib/keyword-scanner.js';
 import { calculateConfidence } from '../lib/confidence-calculator.js';
 import { verifyExtraction } from '../lib/adversarial-verifier.js';

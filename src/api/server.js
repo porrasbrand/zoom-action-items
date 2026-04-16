@@ -230,6 +230,10 @@ app.get('/', (req, res) => {
 });
 
 // Start server
+// Preload PH people cache
+import { refreshPeopleCache } from '../lib/people-resolver.js';
+refreshPeopleCache().catch(e => console.warn('[Startup] People cache preload:', e.message));
+
 app.listen(PORT, () => {
   console.log(`[${new Date().toISOString()}] Zoom Dashboard API running on port ${PORT}`);
   console.log(`  Local:    http://localhost:${PORT}${BASE_PATH}/`);
