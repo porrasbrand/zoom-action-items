@@ -2843,6 +2843,7 @@ router.post('/ppc/task/:id/disposition', (req, res) => {
 // ============ CHAT / CONCIERGE API ============
 
 import { ask, generateClientBrief } from '../lib/rag-engine.js';
+import { handleChat } from '../lib/intent-router.js';
 
 // Simple rate limiter: max 30 requests/min per user
 const rateLimits = new Map();
@@ -2894,8 +2895,8 @@ router.post('/chat', async (req, res) => {
       'SELECT role, content FROM chat_messages WHERE session_id = ? ORDER BY created_at DESC LIMIT 6'
     ).all(sid).reverse();
 
-    // Call RAG engine (auto-detects client from question text if resolvedClientId is null)
-    const result = await ask(d, question.trim(), {
+    // Call Concierge v3 intent router (LLM classification + GPT-5.4 generation)
+    const result = await handleChat(d, question.trim(), {
       clientId: resolvedClientId,
       meetingId: meeting_id ? parseInt(meeting_id) : null,
       chatHistory: history,
