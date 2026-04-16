@@ -73,13 +73,14 @@ function regexFastPath(question, meetingId) {
   if (/^(count|total|number of)\b/.test(q) || /\bhow many\b/.test(q)) return 'count_query';
   if (/\b(brief|prep me|prepare me|catch me up|what do i need to know)\b/.test(q)) return 'meeting_prep';
   if (/\b(which clients? need|who needs attention|at risk|neglected|stale)\b/.test(q)) return 'meta_analysis';
+  if (/\b(ever discuss|first mention|history of|timeline|when was.*first|has.*come up|did we.*discuss)\b/.test(q)) return 'temporal_search';
 
   return null;
 }
 
 // ============ LLM INTENT CLASSIFICATION ============
 
-async function classifyWithLLM(question, clientId) {
+async function classifyWithLLM(question, clientId, chatHistory) {
   const model = genAI.getGenerativeModel({
     model: CLASSIFIER_MODEL,
     generationConfig: {
@@ -87,6 +88,16 @@ async function classifyWithLLM(question, clientId) {
       temperature: 0
     }
   });
+
+  // Include recent conversation for coreference resolution
+  let contextMessages = '';
+  if (chatHistory && chatHistory.length > 0) {
+    const recent = chatHistory.slice(-4);
+    contextMessages = '\n\nRecent conversation (use this to resolve pronouns like their/those/that/them/it):\n';
+    for (const m of recent) {
+      contextMessages += m.role + ': ' + (m.content || '').substring(0, 300) + '\n';
+    }
+  }
 
   const prompt = `Classify this user question into exactly one intent category.
 
@@ -100,11 +111,13 @@ Categories:
 - transcript_search: User asks about specific topics discussed in meetings
 - meeting_summary: User wants a summary of what was discussed in a specific meeting
 
-Context: ${clientId ? `Client context is set (client_id: ${clientId})` : 'No specific client context'}
+If the user uses pronouns (their, those, that, them, it, same, this) or says "what about" / "more details" / "tell me more", resolve them using the recent conversation context. Extract the actual client/person name, not the pronoun.
 
+Context: ${clientId ? `Client context is set (client_id: ${clientId})` : 'No specific client context'}
+${contextMessages}
 Question: "${question}"
 
-Respond with JSON: {"intent": "<category>", "confidence": <0.0-1.0>}`;
+Respond with JSON: {"intent": "<category>", "client": "<resolved client name or null>", "confidence": <0.0-1.0>}`;
 
   try {
     const result = await model.generateContent(prompt);
@@ -112,7 +125,7 @@ Respond with JSON: {"intent": "<category>", "confidence": <0.0-1.0>}`;
     const parsed = JSON.parse(text);
 
     if (INTENT_CATEGORIES.includes(parsed.intent)) {
-      return { intent: parsed.intent, confidence: parsed.confidence || 0.8, method: 'llm' };
+      return { intent: parsed.intent, confidence: parsed.confidence || 0.8, method: 'llm', client: parsed.client || null };
     }
   } catch (err) {
     console.warn('[IntentRouter] LLM classification failed:', err.message);
@@ -445,19 +458,35 @@ export async function handleChat(db, question, { clientId = null, meetingId = nu
   }
   const effectiveClientId = resolvedClient.clientId;
 
+  const sessionClientId = effectiveClientId; // save session-inherited client
+
   // 2. Classify intent — try regex fast-path first
   let intentResult;
   const fastIntent = regexFastPath(question, meetingId);
   if (fastIntent) {
     intentResult = { intent: fastIntent, confidence: 1.0, method: 'regex' };
   } else {
-    intentResult = await classifyWithLLM(question, effectiveClientId);
+    intentResult = await classifyWithLLM(question, effectiveClientId, chatHistory);
   }
 
   const { intent } = intentResult;
 
+  // 2b. If LLM classifier resolved a client from context, use it
+  if (!effectiveClientId && intentResult.client) {
+    const llmResolved = resolveClientId(db, intentResult.client, null);
+    if (llmResolved.clientId) {
+      resolvedClient = llmResolved;
+    }
+  }
+  // 2c. If still no client, restore session-inherited client
+  if (!resolvedClient.clientId && sessionClientId) {
+    resolvedClient = { clientId: sessionClientId, method: 'session_restore' };
+    console.log('[v3] Restored session client:', sessionClientId);
+  }
+  const effectiveClientIdFinal = resolvedClient.clientId;
+
   // 3. Fallback clarification for client-specific intents without a client
-  if (!effectiveClientId && ['action_items', 'sentiment_analysis', 'meeting_prep', 'meeting_summary'].includes(intent)) {
+  if (!effectiveClientIdFinal && ['action_items', 'sentiment_analysis', 'meeting_prep', 'meeting_summary'].includes(intent)) {
     const recentClients = db.prepare(
       "SELECT DISTINCT client_name FROM meetings WHERE client_id IS NOT NULL AND client_id != 'unmatched' ORDER BY start_time DESC LIMIT 5"
     ).all();
@@ -482,13 +511,13 @@ export async function handleChat(db, question, { clientId = null, meetingId = nu
   }
 
   // 4. Route and retrieve data
-  const routeResult = await routeAndRetrieve(db, question, intent, effectiveClientId, meetingId, topK);
+  const routeResult = await routeAndRetrieve(db, question, intent, effectiveClientIdFinal, meetingId, topK);
 
   // 5. If direct answer (count_query), return immediately
   if (routeResult.skipLLM) {
     logQuery({
       query: question, intent, intentMethod: intentResult.method, intentConfidence: intentResult.confidence,
-      clientDetected: effectiveClientId, clientMethod: resolvedClient.method, retrievalPath: 'sql_direct',
+      clientDetected: effectiveClientIdFinal, clientMethod: resolvedClient.method, retrievalPath: 'sql_direct',
       model: 'none', tokensUsed: 0, latencyMs: Date.now() - startTime
     });
 
@@ -500,7 +529,7 @@ export async function handleChat(db, question, { clientId = null, meetingId = nu
       tokensUsed: 0,
       chunksUsed: 0,
       latencyMs: Date.now() - startTime,
-      clientDetected: effectiveClientId
+      clientDetected: effectiveClientIdFinal
     };
   }
 
@@ -514,7 +543,7 @@ export async function handleChat(db, question, { clientId = null, meetingId = nu
 
   logQuery({
     query: question, intent, intentMethod: intentResult.method, intentConfidence: intentResult.confidence,
-    clientDetected: effectiveClientId, clientMethod: resolvedClient.method,
+    clientDetected: effectiveClientIdFinal, clientMethod: resolvedClient.method,
     retrievalPath: intent, model, tokensUsed, latencyMs: totalLatency,
     chunksReturned: routeResult.context?.chunks?.length || 0
   });
@@ -527,6 +556,6 @@ export async function handleChat(db, question, { clientId = null, meetingId = nu
     tokensUsed,
     chunksUsed: routeResult.context?.chunks?.length || 0,
     latencyMs: totalLatency,
-    clientDetected: effectiveClientId
+    clientDetected: effectiveClientIdFinal
   };
 }
