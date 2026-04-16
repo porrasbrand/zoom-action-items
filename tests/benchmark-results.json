@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-04-16T10:59:59.696Z",
-  "elapsedMinutes": 9.6,
+  "timestamp": "2026-04-16T11:17:51.588Z",
+  "elapsedMinutes": 17.4,
   "smokeTest": [
     {
       "provider": "google",
@@ -27,6 +27,18 @@
       "id": "gpt-4o-mini"
     },
     {
+      "provider": "openai",
+      "id": "o4-mini"
+    },
+    {
+      "provider": "openai",
+      "id": "gpt-5"
+    },
+    {
+      "provider": "openai",
+      "id": "gpt-5-mini"
+    },
+    {
       "provider": "anthropic",
       "id": "claude-3-haiku-20240307"
     }
@@ -39,7 +51,7 @@
     },
     {
       "model": "anthropic/claude-3-haiku-20240307",
-      "avgScore": 0.9636363636363637,
+      "avgScore": 0.9545454545454547,
       "tests": 44
     },
     {
@@ -54,29 +66,44 @@
     },
     {
       "model": "google/gemini-2.0-flash-lite",
-      "avgScore": 0.9181818181818183,
+      "avgScore": 0.9090909090909093,
       "tests": 44
     },
     {
       "model": "google/gemini-2.5-flash",
-      "avgScore": 0.6204545454545455,
+      "avgScore": 0.6454545454545455,
+      "tests": 44
+    },
+    {
+      "model": "openai/o4-mini",
+      "avgScore": 0.42045454545454547,
+      "tests": 44
+    },
+    {
+      "model": "openai/gpt-5-mini",
+      "avgScore": 0.2636363636363636,
+      "tests": 44
+    },
+    {
+      "model": "openai/gpt-5",
+      "avgScore": 0.06818181818181818,
       "tests": 44
     },
     {
       "model": "google/gemini-2.5-pro",
-      "avgScore": 0.06818181818181818,
+      "avgScore": 0.045454545454545456,
       "tests": 44
     }
   ],
   "generatorRankings": [
     {
       "model": "anthropic/claude-3-haiku-20240307",
-      "avgScore": 0.9450000000000002,
+      "avgScore": 0.961,
       "tests": 25
     },
     {
       "model": "openai/gpt-4o-mini",
-      "avgScore": 0.9046000000000002,
+      "avgScore": 0.9096000000000002,
       "tests": 25
     },
     {
@@ -649,24 +676,17 @@
             "intent": "meeting_prep",
             "client": "Bearcat"
           },
-          "predicted": {
-            "intent": "meeting_prep",
-            "client": "Bearcat",
-            "person": null,
-            "time_scope": null,
-            "topic": null,
-            "filters": null
-          },
-          "raw": "```json\n{\n  \"intent\": \"meeting_prep\",\n  \"client\": \"Bearcat\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}\n```",
+          "predicted": null,
+          "raw": "",
           "error": null,
           "scores": {
-            "intent_correct": 1,
-            "client_correct": 1,
-            "json_valid": 1,
-            "person_correct": 1,
-            "time_scope_correct": 1
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
           },
-          "weighted": 1,
+          "weighted": 0,
           "edge": null
         },
         {
@@ -969,8 +989,8 @@
           "edge": "all-client prep"
         }
       ],
-      "totalScore": 3,
-      "avgScore": 0.06818181818181818
+      "totalScore": 2,
+      "avgScore": 0.045454545454545456
     },
     "google/gemini-2.5-flash": {
       "model": "gemini-2.5-flash",
@@ -1091,24 +1111,17 @@
             "client": "Prosper Group",
             "time_scope": "latest"
           },
-          "predicted": {
-            "intent": "meeting_summary",
-            "client": "Prosper Group",
-            "person": null,
-            "time_scope": null,
-            "topic": null,
-            "filters": null
-          },
-          "raw": "```json\n{\n  \"intent\": \"meeting_summary\",\n  \"client\": \"Prosper Group\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}\n```",
+          "predicted": null,
+          "raw": "```json\n{\n  \"intent\": \"meeting_summary\",\n  \"client\": \"Prosper Group",
           "error": null,
           "scores": {
-            "intent_correct": 1,
-            "client_correct": 1,
-            "json_valid": 1,
-            "person_correct": 1,
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
             "time_scope_correct": 0
           },
-          "weighted": 0.9,
+          "weighted": 0,
           "edge": null
         },
         {
@@ -1126,7 +1139,7 @@
             "topic": null,
             "filters": null
           },
-          "raw": "```json\n{\n  \"intent\": \"meeting_summary\",\n  \"client\": \"Jerry Levinson\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}\n```",
+          "raw": "```json\n{\n  \"intent\": \"meeting_summary\",\n  \"client\": \"Jerry Levinson\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}\n",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -1256,17 +1269,24 @@
             "intent": "action_items",
             "client": "Tom Ruwitch"
           },
-          "predicted": null,
-          "raw": "```json\n{\n  \"intent\": \"action_items\",\n  \"client\": \"Tom",
+          "predicted": {
+            "intent": "action_items",
+            "client": "Tom Ruwitch",
+            "person": "Tom Ruwitch",
+            "time_scope": null,
+            "topic": null,
+            "filters": null
+          },
+          "raw": "```json\n{\n  \"intent\": \"action_items\",\n  \"client\": \"Tom Ruwitch\",\n  \"person\": \"Tom Ruwitch\",\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}\n```",
           "error": null,
           "scores": {
-            "intent_correct": 0,
-            "client_correct": 0,
-            "json_valid": 0,
-            "person_correct": 0,
-            "time_scope_correct": 0
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
           },
-          "weighted": 0,
+          "weighted": 1,
           "edge": null
         },
         {
@@ -1330,7 +1350,7 @@
             "client": null
           },
           "predicted": null,
-          "raw": "```json\n{\n  \"intent\": \"count_query\",\n  \"client\": null,\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": \"action items\",\n  \"filters\": {\n",
+          "raw": "```json\n{\n  \"intent",
           "error": null,
           "scores": {
             "intent_correct": 0,
@@ -1492,7 +1512,7 @@
             "topic": "budget cuts"
           },
           "predicted": null,
-          "raw": "```json\n{\n  \"intent\": \"transcript_search\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\":",
+          "raw": "```json\n{\n  \"intent\": \"transcript_search\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n",
           "error": null,
           "scores": {
             "intent_correct": 0,
@@ -1592,7 +1612,7 @@
             "client": "Echelon"
           },
           "predicted": null,
-          "raw": "```json\n{\n  \"intent",
+          "raw": "```json\n{\n  \"intent\": \"temporal_search\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": {\n    \"comparison",
           "error": null,
           "scores": {
             "intent_correct": 0,
@@ -1611,7 +1631,7 @@
             "time_scope": "last_week"
           },
           "predicted": null,
-          "raw": "```json\n{\n  ",
+          "raw": "```json\n{\n  \"",
           "error": null,
           "scores": {
             "intent_correct": 0,
@@ -1656,17 +1676,24 @@
             "intent": "meeting_prep",
             "client": "Echelon"
           },
-          "predicted": null,
-          "raw": "```json\n{\n  \"",
+          "predicted": {
+            "intent": "meeting_prep",
+            "client": "Echelon",
+            "person": null,
+            "time_scope": null,
+            "topic": null,
+            "filters": null
+          },
+          "raw": "```json\n{\n  \"intent\": \"meeting_prep\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}\n```",
           "error": null,
           "scores": {
-            "intent_correct": 0,
-            "client_correct": 0,
-            "json_valid": 0,
-            "person_correct": 0,
-            "time_scope_correct": 0
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
           },
-          "weighted": 0,
+          "weighted": 1,
           "edge": null
         },
         {
@@ -1745,7 +1772,7 @@
             "intent": "meta_analysis"
           },
           "predicted": null,
-          "raw": "```json\n{\n  \"",
+          "raw": "```json\n{\n  \"intent",
           "error": null,
           "scores": {
             "intent_correct": 0,
@@ -1842,7 +1869,7 @@
             "client": "GS Home Services"
           },
           "predicted": null,
-          "raw": "```json\n{\n",
+          "raw": "```json\n{\n  \"intent\": \"meeting_summary\",\n  \"client\": \"GS Home Services\",\n  \"person\": null,\n  \"time_scope\": null,\n",
           "error": null,
           "scores": {
             "intent_correct": 0,
@@ -1899,7 +1926,7 @@
             "client": "1st Choice"
           },
           "predicted": null,
-          "raw": "```json\n{\n  \"intent",
+          "raw": "```json\n{\n  ",
           "error": null,
           "scores": {
             "intent_correct": 0,
@@ -1989,7 +2016,7 @@
             "client": "Jay Conner / Conner Marketing"
           },
           "predicted": null,
-          "raw": "```json\n{\n  \"intent",
+          "raw": "```json\n{\n  \"",
           "error": null,
           "scores": {
             "intent_correct": 0,
@@ -2028,8 +2055,8 @@
           "edge": "all-client prep"
         }
       ],
-      "totalScore": 27.3,
-      "avgScore": 0.6204545454545455
+      "totalScore": 28.400000000000002,
+      "avgScore": 0.6454545454545455
     },
     "google/gemini-2.5-flash-lite": {
       "model": "gemini-2.5-flash-lite",
@@ -4765,10 +4792,10 @@
             "topic": null,
             "filters": {
               "status": "open",
-              "count": "total"
+              "count": true
             }
           },
-          "raw": "```json\n{\n  \"intent\": \"action_items\",\n  \"client\": null,\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": {\n    \"status\": \"open\",\n    \"count\": \"total\"\n  }\n}\n```",
+          "raw": "```json\n{\n  \"intent\": \"action_items\",\n  \"client\": null,\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": {\n    \"status\": \"open\",\n    \"count\": true\n  }\n}\n```",
           "error": null,
           "scores": {
             "intent_correct": 0,
@@ -5057,10 +5084,10 @@
             "time_scope": null,
             "topic": null,
             "filters": {
-              "time_comparison": "this month vs last month"
+              "time_comparison": "month_over_month"
             }
           },
-          "raw": "```json\n{\n  \"intent\": \"temporal_search\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": {\n    \"time_comparison\": \"this month vs last month\"\n  }\n}\n```",
+          "raw": "```json\n{\n  \"intent\": \"temporal_search\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": {\n    \"time_comparison\": \"month_over_month\"\n  }\n}\n```",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -5392,23 +5419,23 @@
             "client": "Bearcat"
           },
           "predicted": {
-            "intent": "meeting_summary",
+            "intent": "transcript_search",
             "client": "Bearcat",
             "person": null,
             "time_scope": null,
             "topic": null,
             "filters": null
           },
-          "raw": "```json\n{\n  \"intent\": \"meeting_summary\",\n  \"client\": \"Bearcat\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}\n```",
+          "raw": "```json\n{\n  \"intent\": \"transcript_search\",\n  \"client\": \"Bearcat\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}\n```",
           "error": null,
           "scores": {
-            "intent_correct": 1,
+            "intent_correct": 0,
             "client_correct": 1,
             "json_valid": 1,
             "person_correct": 1,
             "time_scope_correct": 1
           },
-          "weighted": 1,
+          "weighted": 0.6,
           "edge": "slang"
         },
         {
@@ -5573,8 +5600,8 @@
           "edge": "all-client prep"
         }
       ],
-      "totalScore": 40.400000000000006,
-      "avgScore": 0.9181818181818183
+      "totalScore": 40.00000000000001,
+      "avgScore": 0.9090909090909093
     },
     "openai/gpt-4o-mini": {
       "model": "gpt-4o-mini",
@@ -5862,7 +5889,7 @@
             "topic": null,
             "filters": null
           },
-          "raw": "{\n  \"intent\": \"action_items\",\n  \"client\": null,\n  \"person\": \"Tom Ruwitch\",\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}",
+          "raw": "```json\n{\n  \"intent\": \"action_items\",\n  \"client\": null,\n  \"person\": \"Tom Ruwitch\",\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}\n```",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -6067,10 +6094,10 @@
             "client": "London Flooring",
             "person": null,
             "time_scope": null,
-            "topic": null,
+            "topic": "engagement scores",
             "filters": null
           },
-          "raw": "```json\n{\n  \"intent\": \"sentiment_analysis\",\n  \"client\": \"London Flooring\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}\n```",
+          "raw": "```json\n{\n  \"intent\": \"sentiment_analysis\",\n  \"client\": \"London Flooring\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": \"engagement scores\",\n  \"filters\": null\n}\n```",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -6743,6 +6770,2805 @@
       "totalScore": 40.65000000000001,
       "avgScore": 0.9238636363636367
     },
+    "openai/o4-mini": {
+      "model": "o4-mini",
+      "provider": "openai",
+      "tests": [
+        {
+          "question": "Summarize the last Echelon meeting",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Echelon",
+            "time_scope": "latest"
+          },
+          "predicted": {
+            "intent": "meeting_summary",
+            "client": "Echelon",
+            "person": null,
+            "time_scope": "latest",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\"intent\":\"meeting_summary\",\"client\":\"Echelon\",\"person\":null,\"time_scope\":\"latest\",\"topic\":null,\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "What happened in the most recent Bearcat call?",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Bearcat",
+            "time_scope": "latest"
+          },
+          "predicted": {
+            "intent": "meeting_summary",
+            "client": "Bearcat",
+            "person": null,
+            "time_scope": "latest",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\"intent\":\"meeting_summary\",\"client\":\"Bearcat\",\"person\":null,\"time_scope\":\"latest\",\"topic\":null,\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "Give me a recap of the London Flooring session",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "London Flooring",
+            "time_scope": "latest"
+          },
+          "predicted": {
+            "intent": "meeting_summary",
+            "client": "London Flooring",
+            "person": null,
+            "time_scope": null,
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\"intent\":\"meeting_summary\",\"client\":\"London Flooring\",\"person\":null,\"time_scope\":null,\"topic\":null,\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 0
+          },
+          "weighted": 0.9,
+          "edge": null
+        },
+        {
+          "question": "Summary of last week's GS Home Services meeting",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "GS Home Services",
+            "time_scope": "last_week"
+          },
+          "predicted": {
+            "intent": "meeting_summary",
+            "client": "GS Home Services",
+            "person": null,
+            "time_scope": "last_week",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\"intent\":\"meeting_summary\",\"client\":\"GS Home Services\",\"person\":null,\"time_scope\":\"last_week\",\"topic\":null,\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "What did we cover in the Prosper Group call?",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Prosper Group",
+            "time_scope": "latest"
+          },
+          "predicted": {
+            "intent": "meeting_summary",
+            "client": "Prosper Group",
+            "person": null,
+            "time_scope": "latest",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\"intent\":\"meeting_summary\",\"client\":\"Prosper Group\",\"person\":null,\"time_scope\":\"latest\",\"topic\":null,\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "Tell me about the Jerry Levinson meeting",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Jerry Levinson",
+            "time_scope": "latest"
+          },
+          "predicted": {
+            "intent": "meeting_summary",
+            "client": "Jerry Levinson",
+            "person": null,
+            "time_scope": "latest",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\"intent\":\"meeting_summary\",\"client\":\"Jerry Levinson\",\"person\":null,\"time_scope\":\"latest\",\"topic\":null,\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "What are the open action items for Echelon?",
+          "expected": {
+            "intent": "action_items",
+            "client": "Echelon"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Show me pending tasks for Bearcat",
+          "expected": {
+            "intent": "action_items",
+            "client": "Bearcat"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Any overdue items for GS Home Services?",
+          "expected": {
+            "intent": "action_items",
+            "client": "GS Home Services"
+          },
+          "predicted": {
+            "intent": "action_items",
+            "client": "GS Home Services",
+            "person": null,
+            "time_scope": null,
+            "topic": null,
+            "filters": {
+              "status": "overdue"
+            }
+          },
+          "raw": "{\"intent\":\"action_items\",\"client\":\"GS Home Services\",\"person\":null,\"time_scope\":null,\"topic\":null,\"filters\":{\"status\":\"overdue\"}}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "List all open tasks across all clients",
+          "expected": {
+            "intent": "action_items",
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What action items does Tom Ruwitch have?",
+          "expected": {
+            "intent": "action_items",
+            "client": "Tom Ruwitch"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Show me Pearce HVAC's pending items",
+          "expected": {
+            "intent": "action_items",
+            "client": "Pearce HVAC"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "How many meetings have we had with Echelon?",
+          "expected": {
+            "intent": "count_query",
+            "client": "Echelon"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "How many open action items total?",
+          "expected": {
+            "intent": "count_query",
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "How many clients do we have?",
+          "expected": {
+            "intent": "count_query",
+            "client": null
+          },
+          "predicted": {
+            "intent": "count_query",
+            "client": null,
+            "person": null,
+            "time_scope": null,
+            "topic": "clients",
+            "filters": null
+          },
+          "raw": "{\"intent\":\"count_query\",\"client\":null,\"person\":null,\"time_scope\":null,\"topic\":\"clients\",\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "How many meetings happened last week?",
+          "expected": {
+            "intent": "count_query",
+            "time_scope": "last_week"
+          },
+          "predicted": {
+            "intent": "count_query",
+            "client": null,
+            "person": null,
+            "time_scope": "last_week",
+            "topic": "meetings",
+            "filters": null
+          },
+          "raw": "{\"intent\":\"count_query\",\"client\":null,\"person\":null,\"time_scope\":\"last_week\",\"topic\":\"meetings\",\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "What's the sentiment score for Echelon?",
+          "expected": {
+            "intent": "sentiment_analysis",
+            "client": "Echelon"
+          },
+          "predicted": {
+            "intent": "sentiment_analysis",
+            "client": "Echelon",
+            "person": null,
+            "time_scope": "all_time",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\"intent\":\"sentiment_analysis\",\"client\":\"Echelon\",\"person\":null,\"time_scope\":\"all_time\",\"topic\":null,\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "How is Bearcat feeling about our work?",
+          "expected": {
+            "intent": "sentiment_analysis",
+            "client": "Bearcat"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Show me engagement scores for London Flooring",
+          "expected": {
+            "intent": "sentiment_analysis",
+            "client": "London Flooring"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What's the mood trend across all clients?",
+          "expected": {
+            "intent": "sentiment_analysis",
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Did anyone mention budget cuts in the Echelon meeting?",
+          "expected": {
+            "intent": "transcript_search",
+            "client": "Echelon",
+            "topic": "budget cuts"
+          },
+          "predicted": {
+            "intent": "transcript_search",
+            "client": "Echelon",
+            "person": null,
+            "time_scope": "latest",
+            "topic": "budget cuts",
+            "filters": null
+          },
+          "raw": "{\"intent\":\"transcript_search\",\"client\":\"Echelon\",\"person\":null,\"time_scope\":\"latest\",\"topic\":\"budget cuts\",\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "Search for discussions about SEO in Bearcat transcripts",
+          "expected": {
+            "intent": "transcript_search",
+            "client": "Bearcat",
+            "topic": "SEO"
+          },
+          "predicted": {
+            "intent": "transcript_search",
+            "client": "Bearcat",
+            "person": null,
+            "time_scope": null,
+            "topic": "SEO",
+            "filters": null
+          },
+          "raw": "{\"intent\":\"transcript_search\",\"client\":\"Bearcat\",\"person\":null,\"time_scope\":null,\"topic\":\"SEO\",\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "Find where we talked about onboarding with GS Home Services",
+          "expected": {
+            "intent": "transcript_search",
+            "client": "GS Home Services",
+            "topic": "onboarding"
+          },
+          "predicted": {
+            "intent": "transcript_search",
+            "client": "GS Home Services",
+            "person": null,
+            "time_scope": null,
+            "topic": "onboarding",
+            "filters": null
+          },
+          "raw": "{\"intent\":\"transcript_search\",\"client\":\"GS Home Services\",\"person\":null,\"time_scope\":null,\"topic\":\"onboarding\",\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "What did Mike say about the landing page?",
+          "expected": {
+            "intent": "transcript_search",
+            "person": "Mike",
+            "topic": "landing page"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Compare Echelon meetings from this month vs last month",
+          "expected": {
+            "intent": "temporal_search",
+            "client": "Echelon"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Show me all meetings from last week",
+          "expected": {
+            "intent": "temporal_search",
+            "time_scope": "last_week"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What changed in Bearcat's sentiment over the past month?",
+          "expected": {
+            "intent": "temporal_search",
+            "client": "Bearcat",
+            "time_scope": "last_month"
+          },
+          "predicted": {
+            "intent": "sentiment_analysis",
+            "client": "Bearcat",
+            "person": null,
+            "time_scope": "last_month",
+            "topic": "sentiment",
+            "filters": null
+          },
+          "raw": "{\"intent\":\"sentiment_analysis\",\"client\":\"Bearcat\",\"person\":null,\"time_scope\":\"last_month\",\"topic\":\"sentiment\",\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 0.6,
+          "edge": null
+        },
+        {
+          "question": "Prep me for the Echelon meeting tomorrow",
+          "expected": {
+            "intent": "meeting_prep",
+            "client": "Echelon"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What do I need to know before the Bearcat call?",
+          "expected": {
+            "intent": "meeting_prep",
+            "client": "Bearcat"
+          },
+          "predicted": {
+            "intent": "meeting_prep",
+            "client": "Bearcat",
+            "person": null,
+            "time_scope": null,
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\"intent\":\"meeting_prep\",\"client\":\"Bearcat\",\"person\":null,\"time_scope\":null,\"topic\":null,\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "Brief me on London Flooring before our session",
+          "expected": {
+            "intent": "meeting_prep",
+            "client": "London Flooring"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Which clients have the most overdue items?",
+          "expected": {
+            "intent": "meta_analysis"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Compare engagement scores across all clients",
+          "expected": {
+            "intent": "meta_analysis"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "echelon action items",
+          "expected": {
+            "intent": "action_items",
+            "client": "Echelon"
+          },
+          "predicted": {
+            "intent": "action_items",
+            "client": "Echelon",
+            "person": null,
+            "time_scope": null,
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\"intent\":\"action_items\",\"client\":\"Echelon\",\"person\":null,\"time_scope\":null,\"topic\":null,\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": "lowercase, no question mark"
+        },
+        {
+          "question": "summarize",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": null
+          },
+          "predicted": {
+            "intent": "meeting_summary",
+            "client": null,
+            "person": null,
+            "time_scope": "latest",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\"intent\":\"meeting_summary\",\"client\":null,\"person\":null,\"time_scope\":\"latest\",\"topic\":null,\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": "single word"
+        },
+        {
+          "question": "How's Bearcat doing?",
+          "expected": {
+            "intent": "sentiment_analysis",
+            "client": "Bearcat"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "vague sentiment"
+        },
+        {
+          "question": "What about GS Home Services?",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "GS Home Services"
+          },
+          "predicted": {
+            "intent": "meeting_summary",
+            "client": "GS Home Services",
+            "person": null,
+            "time_scope": "all_time",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\"intent\":\"meeting_summary\",\"client\":\"GS Home Services\",\"person\":null,\"time_scope\":\"all_time\",\"topic\":null,\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": "ambiguous intent"
+        },
+        {
+          "question": "Tell me everything about Echelon",
+          "expected": {
+            "intent": "meeting_prep",
+            "client": "Echelon"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "broad request"
+        },
+        {
+          "question": "yo whats up with bearcat",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Bearcat"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "slang"
+        },
+        {
+          "question": "1st Choice open items and sentiment",
+          "expected": {
+            "intent": "action_items",
+            "client": "1st Choice"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "multi-intent"
+        },
+        {
+          "question": "",
+          "expected": {
+            "intent": null,
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "empty input"
+        },
+        {
+          "question": "asdfghjkl qwerty",
+          "expected": {
+            "intent": null,
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "gibberish"
+        },
+        {
+          "question": "What is the meaning of life?",
+          "expected": {
+            "intent": null,
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "off-topic"
+        },
+        {
+          "question": "Jay Conner meeting summary and action items",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Jay Conner / Conner Marketing"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "partial client name"
+        },
+        {
+          "question": "Prep me for ALL meetings tomorrow",
+          "expected": {
+            "intent": "meeting_prep",
+            "client": null
+          },
+          "predicted": {
+            "intent": "meeting_prep",
+            "client": null,
+            "person": null,
+            "time_scope": "specific_date",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\"intent\":\"meeting_prep\",\"client\":null,\"person\":null,\"time_scope\":\"specific_date\",\"topic\":null,\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": "all-client prep"
+        }
+      ],
+      "totalScore": 18.5,
+      "avgScore": 0.42045454545454547
+    },
+    "openai/gpt-5": {
+      "model": "gpt-5",
+      "provider": "openai",
+      "tests": [
+        {
+          "question": "Summarize the last Echelon meeting",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Echelon",
+            "time_scope": "latest"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What happened in the most recent Bearcat call?",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Bearcat",
+            "time_scope": "latest"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Give me a recap of the London Flooring session",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "London Flooring",
+            "time_scope": "latest"
+          },
+          "predicted": {
+            "intent": "meeting_summary",
+            "client": "London Flooring",
+            "person": null,
+            "time_scope": "latest",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\n  \"intent\": \"meeting_summary\",\n  \"client\": \"London Flooring\",\n  \"person\": null,\n  \"time_scope\": \"latest\",\n  \"topic\": null,\n  \"filters\": null\n}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "Summary of last week's GS Home Services meeting",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "GS Home Services",
+            "time_scope": "last_week"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What did we cover in the Prosper Group call?",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Prosper Group",
+            "time_scope": "latest"
+          },
+          "predicted": {
+            "intent": "meeting_summary",
+            "client": "Prosper Group",
+            "person": null,
+            "time_scope": "latest",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\n  \"intent\": \"meeting_summary\",\n  \"client\": \"Prosper Group\",\n  \"person\": null,\n  \"time_scope\": \"latest\",\n  \"topic\": null,\n  \"filters\": null\n}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "Tell me about the Jerry Levinson meeting",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Jerry Levinson",
+            "time_scope": "latest"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What are the open action items for Echelon?",
+          "expected": {
+            "intent": "action_items",
+            "client": "Echelon"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Show me pending tasks for Bearcat",
+          "expected": {
+            "intent": "action_items",
+            "client": "Bearcat"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Any overdue items for GS Home Services?",
+          "expected": {
+            "intent": "action_items",
+            "client": "GS Home Services"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "List all open tasks across all clients",
+          "expected": {
+            "intent": "action_items",
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What action items does Tom Ruwitch have?",
+          "expected": {
+            "intent": "action_items",
+            "client": "Tom Ruwitch"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Show me Pearce HVAC's pending items",
+          "expected": {
+            "intent": "action_items",
+            "client": "Pearce HVAC"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "How many meetings have we had with Echelon?",
+          "expected": {
+            "intent": "count_query",
+            "client": "Echelon"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "How many open action items total?",
+          "expected": {
+            "intent": "count_query",
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "How many clients do we have?",
+          "expected": {
+            "intent": "count_query",
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "How many meetings happened last week?",
+          "expected": {
+            "intent": "count_query",
+            "time_scope": "last_week"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What's the sentiment score for Echelon?",
+          "expected": {
+            "intent": "sentiment_analysis",
+            "client": "Echelon"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "How is Bearcat feeling about our work?",
+          "expected": {
+            "intent": "sentiment_analysis",
+            "client": "Bearcat"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Show me engagement scores for London Flooring",
+          "expected": {
+            "intent": "sentiment_analysis",
+            "client": "London Flooring"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What's the mood trend across all clients?",
+          "expected": {
+            "intent": "sentiment_analysis",
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Did anyone mention budget cuts in the Echelon meeting?",
+          "expected": {
+            "intent": "transcript_search",
+            "client": "Echelon",
+            "topic": "budget cuts"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Search for discussions about SEO in Bearcat transcripts",
+          "expected": {
+            "intent": "transcript_search",
+            "client": "Bearcat",
+            "topic": "SEO"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Find where we talked about onboarding with GS Home Services",
+          "expected": {
+            "intent": "transcript_search",
+            "client": "GS Home Services",
+            "topic": "onboarding"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What did Mike say about the landing page?",
+          "expected": {
+            "intent": "transcript_search",
+            "person": "Mike",
+            "topic": "landing page"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Compare Echelon meetings from this month vs last month",
+          "expected": {
+            "intent": "temporal_search",
+            "client": "Echelon"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Show me all meetings from last week",
+          "expected": {
+            "intent": "temporal_search",
+            "time_scope": "last_week"
+          },
+          "predicted": {
+            "intent": "temporal_search",
+            "client": null,
+            "person": null,
+            "time_scope": "last_week",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\"intent\":\"temporal_search\",\"client\":null,\"person\":null,\"time_scope\":\"last_week\",\"topic\":null,\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "What changed in Bearcat's sentiment over the past month?",
+          "expected": {
+            "intent": "temporal_search",
+            "client": "Bearcat",
+            "time_scope": "last_month"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Prep me for the Echelon meeting tomorrow",
+          "expected": {
+            "intent": "meeting_prep",
+            "client": "Echelon"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What do I need to know before the Bearcat call?",
+          "expected": {
+            "intent": "meeting_prep",
+            "client": "Bearcat"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Brief me on London Flooring before our session",
+          "expected": {
+            "intent": "meeting_prep",
+            "client": "London Flooring"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Which clients have the most overdue items?",
+          "expected": {
+            "intent": "meta_analysis"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Compare engagement scores across all clients",
+          "expected": {
+            "intent": "meta_analysis"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "echelon action items",
+          "expected": {
+            "intent": "action_items",
+            "client": "Echelon"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "lowercase, no question mark"
+        },
+        {
+          "question": "summarize",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "single word"
+        },
+        {
+          "question": "How's Bearcat doing?",
+          "expected": {
+            "intent": "sentiment_analysis",
+            "client": "Bearcat"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "vague sentiment"
+        },
+        {
+          "question": "What about GS Home Services?",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "GS Home Services"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "ambiguous intent"
+        },
+        {
+          "question": "Tell me everything about Echelon",
+          "expected": {
+            "intent": "meeting_prep",
+            "client": "Echelon"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "broad request"
+        },
+        {
+          "question": "yo whats up with bearcat",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Bearcat"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "slang"
+        },
+        {
+          "question": "1st Choice open items and sentiment",
+          "expected": {
+            "intent": "action_items",
+            "client": "1st Choice"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "multi-intent"
+        },
+        {
+          "question": "",
+          "expected": {
+            "intent": null,
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "empty input"
+        },
+        {
+          "question": "asdfghjkl qwerty",
+          "expected": {
+            "intent": null,
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "gibberish"
+        },
+        {
+          "question": "What is the meaning of life?",
+          "expected": {
+            "intent": null,
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "off-topic"
+        },
+        {
+          "question": "Jay Conner meeting summary and action items",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Jay Conner / Conner Marketing"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "partial client name"
+        },
+        {
+          "question": "Prep me for ALL meetings tomorrow",
+          "expected": {
+            "intent": "meeting_prep",
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "all-client prep"
+        }
+      ],
+      "totalScore": 3,
+      "avgScore": 0.06818181818181818
+    },
+    "openai/gpt-5-mini": {
+      "model": "gpt-5-mini",
+      "provider": "openai",
+      "tests": [
+        {
+          "question": "Summarize the last Echelon meeting",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Echelon",
+            "time_scope": "latest"
+          },
+          "predicted": {
+            "intent": "meeting_summary",
+            "client": "Echelon",
+            "person": null,
+            "time_scope": "latest",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\n  \"intent\": \"meeting_summary\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": \"latest\",\n  \"topic\": null,\n  \"filters\": null\n}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "What happened in the most recent Bearcat call?",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Bearcat",
+            "time_scope": "latest"
+          },
+          "predicted": {
+            "intent": "meeting_summary",
+            "client": "Bearcat",
+            "person": null,
+            "time_scope": "latest",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\n  \"intent\": \"meeting_summary\",\n  \"client\": \"Bearcat\",\n  \"person\": null,\n  \"time_scope\": \"latest\",\n  \"topic\": null,\n  \"filters\": null\n}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "Give me a recap of the London Flooring session",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "London Flooring",
+            "time_scope": "latest"
+          },
+          "predicted": {
+            "intent": "meeting_summary",
+            "client": "London Flooring",
+            "person": null,
+            "time_scope": "latest",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\n  \"intent\": \"meeting_summary\",\n  \"client\": \"London Flooring\",\n  \"person\": null,\n  \"time_scope\": \"latest\",\n  \"topic\": null,\n  \"filters\": null\n}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "Summary of last week's GS Home Services meeting",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "GS Home Services",
+            "time_scope": "last_week"
+          },
+          "predicted": {
+            "intent": "meeting_summary",
+            "client": "GS Home Services",
+            "person": null,
+            "time_scope": "last_week",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\n  \"intent\": \"meeting_summary\",\n  \"client\": \"GS Home Services\",\n  \"person\": null,\n  \"time_scope\": \"last_week\",\n  \"topic\": null,\n  \"filters\": null\n}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "What did we cover in the Prosper Group call?",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Prosper Group",
+            "time_scope": "latest"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Tell me about the Jerry Levinson meeting",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Jerry Levinson",
+            "time_scope": "latest"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What are the open action items for Echelon?",
+          "expected": {
+            "intent": "action_items",
+            "client": "Echelon"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Show me pending tasks for Bearcat",
+          "expected": {
+            "intent": "action_items",
+            "client": "Bearcat"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Any overdue items for GS Home Services?",
+          "expected": {
+            "intent": "action_items",
+            "client": "GS Home Services"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "List all open tasks across all clients",
+          "expected": {
+            "intent": "action_items",
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What action items does Tom Ruwitch have?",
+          "expected": {
+            "intent": "action_items",
+            "client": "Tom Ruwitch"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Show me Pearce HVAC's pending items",
+          "expected": {
+            "intent": "action_items",
+            "client": "Pearce HVAC"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "How many meetings have we had with Echelon?",
+          "expected": {
+            "intent": "count_query",
+            "client": "Echelon"
+          },
+          "predicted": {
+            "intent": "count_query",
+            "client": "Echelon",
+            "person": null,
+            "time_scope": "all_time",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\n  \"intent\": \"count_query\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": \"all_time\",\n  \"topic\": null,\n  \"filters\": null\n}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "How many open action items total?",
+          "expected": {
+            "intent": "count_query",
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "How many clients do we have?",
+          "expected": {
+            "intent": "count_query",
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "How many meetings happened last week?",
+          "expected": {
+            "intent": "count_query",
+            "time_scope": "last_week"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What's the sentiment score for Echelon?",
+          "expected": {
+            "intent": "sentiment_analysis",
+            "client": "Echelon"
+          },
+          "predicted": {
+            "intent": "sentiment_analysis",
+            "client": "Echelon",
+            "person": null,
+            "time_scope": "all_time",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\n  \"intent\": \"sentiment_analysis\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": \"all_time\",\n  \"topic\": null,\n  \"filters\": null\n}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "How is Bearcat feeling about our work?",
+          "expected": {
+            "intent": "sentiment_analysis",
+            "client": "Bearcat"
+          },
+          "predicted": {
+            "intent": "sentiment_analysis",
+            "client": "Bearcat",
+            "person": null,
+            "time_scope": "latest",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\"intent\":\"sentiment_analysis\",\"client\":\"Bearcat\",\"person\":null,\"time_scope\":\"latest\",\"topic\":null,\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "Show me engagement scores for London Flooring",
+          "expected": {
+            "intent": "sentiment_analysis",
+            "client": "London Flooring"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What's the mood trend across all clients?",
+          "expected": {
+            "intent": "sentiment_analysis",
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Did anyone mention budget cuts in the Echelon meeting?",
+          "expected": {
+            "intent": "transcript_search",
+            "client": "Echelon",
+            "topic": "budget cuts"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Search for discussions about SEO in Bearcat transcripts",
+          "expected": {
+            "intent": "transcript_search",
+            "client": "Bearcat",
+            "topic": "SEO"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Find where we talked about onboarding with GS Home Services",
+          "expected": {
+            "intent": "transcript_search",
+            "client": "GS Home Services",
+            "topic": "onboarding"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What did Mike say about the landing page?",
+          "expected": {
+            "intent": "transcript_search",
+            "person": "Mike",
+            "topic": "landing page"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Compare Echelon meetings from this month vs last month",
+          "expected": {
+            "intent": "temporal_search",
+            "client": "Echelon"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Show me all meetings from last week",
+          "expected": {
+            "intent": "temporal_search",
+            "time_scope": "last_week"
+          },
+          "predicted": {
+            "intent": "temporal_search",
+            "client": null,
+            "person": null,
+            "time_scope": "last_week",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\n  \"intent\": \"temporal_search\",\n  \"client\": null,\n  \"person\": null,\n  \"time_scope\": \"last_week\",\n  \"topic\": null,\n  \"filters\": null\n}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "What changed in Bearcat's sentiment over the past month?",
+          "expected": {
+            "intent": "temporal_search",
+            "client": "Bearcat",
+            "time_scope": "last_month"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Prep me for the Echelon meeting tomorrow",
+          "expected": {
+            "intent": "meeting_prep",
+            "client": "Echelon"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "What do I need to know before the Bearcat call?",
+          "expected": {
+            "intent": "meeting_prep",
+            "client": "Bearcat"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Brief me on London Flooring before our session",
+          "expected": {
+            "intent": "meeting_prep",
+            "client": "London Flooring"
+          },
+          "predicted": {
+            "intent": "meeting_prep",
+            "client": "London Flooring",
+            "person": null,
+            "time_scope": null,
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\n  \"intent\": \"meeting_prep\",\n  \"client\": \"London Flooring\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "Which clients have the most overdue items?",
+          "expected": {
+            "intent": "meta_analysis"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": null
+        },
+        {
+          "question": "Compare engagement scores across all clients",
+          "expected": {
+            "intent": "meta_analysis"
+          },
+          "predicted": {
+            "intent": "meta_analysis",
+            "client": null,
+            "person": null,
+            "time_scope": "all_time",
+            "topic": "engagement scores",
+            "filters": null
+          },
+          "raw": "{\n  \"intent\": \"meta_analysis\",\n  \"client\": null,\n  \"person\": null,\n  \"time_scope\": \"all_time\",\n  \"topic\": \"engagement scores\",\n  \"filters\": null\n}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": null
+        },
+        {
+          "question": "echelon action items",
+          "expected": {
+            "intent": "action_items",
+            "client": "Echelon"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "lowercase, no question mark"
+        },
+        {
+          "question": "summarize",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": null
+          },
+          "predicted": {
+            "intent": "meeting_summary",
+            "client": null,
+            "person": null,
+            "time_scope": null,
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\"intent\":\"meeting_summary\",\"client\":null,\"person\":null,\"time_scope\":null,\"topic\":null,\"filters\":null}",
+          "error": null,
+          "scores": {
+            "intent_correct": 1,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 1,
+          "edge": "single word"
+        },
+        {
+          "question": "How's Bearcat doing?",
+          "expected": {
+            "intent": "sentiment_analysis",
+            "client": "Bearcat"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "vague sentiment"
+        },
+        {
+          "question": "What about GS Home Services?",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "GS Home Services"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "ambiguous intent"
+        },
+        {
+          "question": "Tell me everything about Echelon",
+          "expected": {
+            "intent": "meeting_prep",
+            "client": "Echelon"
+          },
+          "predicted": {
+            "intent": "meta_analysis",
+            "client": "Echelon",
+            "person": null,
+            "time_scope": "all_time",
+            "topic": null,
+            "filters": null
+          },
+          "raw": "{\n  \"intent\": \"meta_analysis\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": \"all_time\",\n  \"topic\": null,\n  \"filters\": null\n}",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 1,
+            "json_valid": 1,
+            "person_correct": 1,
+            "time_scope_correct": 1
+          },
+          "weighted": 0.6,
+          "edge": "broad request"
+        },
+        {
+          "question": "yo whats up with bearcat",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Bearcat"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "slang"
+        },
+        {
+          "question": "1st Choice open items and sentiment",
+          "expected": {
+            "intent": "action_items",
+            "client": "1st Choice"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "multi-intent"
+        },
+        {
+          "question": "",
+          "expected": {
+            "intent": null,
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "empty input"
+        },
+        {
+          "question": "asdfghjkl qwerty",
+          "expected": {
+            "intent": null,
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "gibberish"
+        },
+        {
+          "question": "What is the meaning of life?",
+          "expected": {
+            "intent": null,
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "off-topic"
+        },
+        {
+          "question": "Jay Conner meeting summary and action items",
+          "expected": {
+            "intent": "meeting_summary",
+            "client": "Jay Conner / Conner Marketing"
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "partial client name"
+        },
+        {
+          "question": "Prep me for ALL meetings tomorrow",
+          "expected": {
+            "intent": "meeting_prep",
+            "client": null
+          },
+          "predicted": null,
+          "raw": "",
+          "error": null,
+          "scores": {
+            "intent_correct": 0,
+            "client_correct": 0,
+            "json_valid": 0,
+            "person_correct": 0,
+            "time_scope_correct": 0
+          },
+          "weighted": 0,
+          "edge": "all-client prep"
+        }
+      ],
+      "totalScore": 11.6,
+      "avgScore": 0.2636363636363636
+    },
     "anthropic/claude-3-haiku-20240307": {
       "model": "claude-3-haiku-20240307",
       "provider": "anthropic",
@@ -6971,13 +9797,11 @@
             "intent": "action_items",
             "client": "GS Home Services",
             "person": null,
-            "time_scope": "latest",
+            "time_scope": "overdue",
             "topic": null,
-            "filters": {
-              "status": "overdue"
-            }
+            "filters": null
           },
-          "raw": "{\n  \"intent\": \"action_items\",\n  \"client\": \"GS Home Services\",\n  \"person\": null,\n  \"time_scope\": \"latest\",\n  \"topic\": null,\n  \"filters\": {\n    \"status\": \"overdue\"\n  }\n}",
+          "raw": "{\n  \"intent\": \"action_items\",\n  \"client\": \"GS Home Services\",\n  \"person\": null,\n  \"time_scope\": \"overdue\",\n  \"topic\": null,\n  \"filters\": null\n}",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -7001,9 +9825,11 @@
             "person": null,
             "time_scope": "all_time",
             "topic": null,
-            "filters": null
+            "filters": {
+              "status": "open"
+            }
           },
-          "raw": "{\n  \"intent\": \"action_items\",\n  \"client\": null,\n  \"person\": null,\n  \"time_scope\": \"all_time\",\n  \"topic\": null,\n  \"filters\": null\n}",
+          "raw": "{\n  \"intent\": \"action_items\",\n  \"client\": null,\n  \"person\": null, \n  \"time_scope\": \"all_time\",\n  \"topic\": null,\n  \"filters\": {\n    \"status\": \"open\"\n  }\n}",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -7051,11 +9877,13 @@
             "intent": "action_items",
             "client": "Pearce HVAC",
             "person": null,
-            "time_scope": "latest",
+            "time_scope": null,
             "topic": null,
-            "filters": null
+            "filters": {
+              "status": "pending"
+            }
           },
-          "raw": "{\n  \"intent\": \"action_items\",\n  \"client\": \"Pearce HVAC\",\n  \"person\": null,\n  \"time_scope\": \"latest\",\n  \"topic\": null,\n  \"filters\": null\n}",
+          "raw": "{\n  \"intent\": \"action_items\",\n  \"client\": \"Pearce HVAC\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": {\n    \"status\": \"pending\"\n  }\n}",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -7077,11 +9905,11 @@
             "intent": "count_query",
             "client": "Echelon",
             "person": null,
-            "time_scope": "all_time",
+            "time_scope": null,
             "topic": null,
             "filters": null
           },
-          "raw": "{\n  \"intent\": \"count_query\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": \"all_time\",\n  \"topic\": null,\n  \"filters\": null\n}",
+          "raw": "{\n  \"intent\": \"count_query\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -7181,11 +10009,11 @@
             "intent": "sentiment_analysis",
             "client": "Echelon",
             "person": null,
-            "time_scope": null,
+            "time_scope": "latest",
             "topic": null,
             "filters": null
           },
-          "raw": "{\n  \"intent\": \"sentiment_analysis\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}",
+          "raw": "{\n  \"intent\": \"sentiment_analysis\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": \"latest\",\n  \"topic\": null,\n  \"filters\": null\n}",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -7233,11 +10061,11 @@
             "intent": "sentiment_analysis",
             "client": "London Flooring",
             "person": null,
-            "time_scope": null,
+            "time_scope": "latest",
             "topic": null,
             "filters": null
           },
-          "raw": "{\n  \"intent\": \"sentiment_analysis\",\n  \"client\": \"London Flooring\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}",
+          "raw": "{\n  \"intent\": \"sentiment_analysis\",\n  \"client\": \"London Flooring\",\n  \"person\": null,\n  \"time_scope\": \"latest\",\n  \"topic\": null,\n  \"filters\": null\n}",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -7393,11 +10221,14 @@
             "intent": "temporal_search",
             "client": "Echelon",
             "person": null,
-            "time_scope": "last_month",
+            "time_scope": [
+              "last_month",
+              "this_month"
+            ],
             "topic": null,
             "filters": null
           },
-          "raw": "{\n  \"intent\": \"temporal_search\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": \"last_month\",\n  \"topic\": null,\n  \"filters\": null\n}",
+          "raw": "{\n  \"intent\": \"temporal_search\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": [\"last_month\", \"this_month\"],\n  \"topic\": null,\n  \"filters\": null\n}",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -7472,11 +10303,11 @@
             "intent": "meeting_prep",
             "client": "Echelon",
             "person": null,
-            "time_scope": "specific_date",
+            "time_scope": "latest",
             "topic": null,
             "filters": null
           },
-          "raw": "{\n  \"intent\": \"meeting_prep\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": \"specific_date\",\n  \"topic\": null,\n  \"filters\": null\n}",
+          "raw": "{\n  \"intent\": \"meeting_prep\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": \"latest\",\n  \"topic\": null,\n  \"filters\": null\n}",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -7546,16 +10377,16 @@
             "intent": "meta_analysis"
           },
           "predicted": {
-            "intent": "count_query",
+            "intent": "action_items",
             "client": null,
             "person": null,
             "time_scope": "all_time",
-            "topic": "overdue items",
+            "topic": null,
             "filters": {
               "status": "overdue"
             }
           },
-          "raw": "{\n  \"intent\": \"count_query\",\n  \"client\": null,\n  \"person\": null,\n  \"time_scope\": \"all_time\",\n  \"topic\": \"overdue items\",\n  \"filters\": {\n    \"status\": \"overdue\"\n  }\n}",
+          "raw": "{\n  \"intent\": \"action_items\",\n  \"client\": null,\n  \"person\": null,\n  \"time_scope\": \"all_time\",\n  \"topic\": null,\n  \"filters\": {\n    \"status\": \"overdue\"\n  }\n}",
           "error": null,
           "scores": {
             "intent_correct": 0,
@@ -7580,7 +10411,7 @@
             "topic": "engagement scores",
             "filters": null
           },
-          "raw": "{\n  \"intent\": \"meta_analysis\",\n  \"client\": null,\n  \"person\": null,\n  \"time_scope\": \"all_time\",\n  \"topic\": \"engagement scores\",\n  \"filters\": null\n}",
+          "raw": "{\n    \"intent\": \"meta_analysis\",\n    \"client\": null,\n    \"person\": null,\n    \"time_scope\": \"all_time\",\n    \"topic\": \"engagement scores\",\n    \"filters\": null\n}",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -7677,23 +10508,23 @@
             "client": "GS Home Services"
           },
           "predicted": {
-            "intent": "meeting_summary",
+            "intent": "meta_analysis",
             "client": "GS Home Services",
             "person": null,
             "time_scope": null,
             "topic": null,
             "filters": null
           },
-          "raw": "{\n  \"intent\": \"meeting_summary\",\n  \"client\": \"GS Home Services\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}",
+          "raw": "{\n  \"intent\": \"meta_analysis\",\n  \"client\": \"GS Home Services\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}",
           "error": null,
           "scores": {
-            "intent_correct": 1,
+            "intent_correct": 0,
             "client_correct": 1,
             "json_valid": 1,
             "person_correct": 1,
             "time_scope_correct": 1
           },
-          "weighted": 1,
+          "weighted": 0.6,
           "edge": "ambiguous intent"
         },
         {
@@ -7710,7 +10541,7 @@
             "topic": null,
             "filters": null
           },
-          "raw": "{\n    \"intent\": \"meeting_summary\",\n    \"client\": \"Echelon\",\n    \"person\": null,\n    \"time_scope\": \"all_time\",\n    \"topic\": null,\n    \"filters\": null\n}",
+          "raw": "{\n  \"intent\": \"meeting_summary\",\n  \"client\": \"Echelon\",\n  \"person\": null,\n  \"time_scope\": \"all_time\",\n  \"topic\": null,\n  \"filters\": null\n}",
           "error": null,
           "scores": {
             "intent_correct": 0,
@@ -7758,13 +10589,13 @@
             "intent": "action_items",
             "client": "1st Choice",
             "person": null,
-            "time_scope": null,
+            "time_scope": "latest",
             "topic": null,
             "filters": {
               "sentiment_analysis": true
             }
           },
-          "raw": "{\n  \"intent\": \"action_items\",\n  \"client\": \"1st Choice\",\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": {\n    \"sentiment_analysis\": true\n  }\n}",
+          "raw": "{\n  \"intent\": \"action_items\",\n  \"client\": \"1st Choice\",\n  \"person\": null,\n  \"time_scope\": \"latest\",\n  \"topic\": null,\n  \"filters\": {\n    \"sentiment_analysis\": true\n  }\n}",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -7809,14 +10640,14 @@
             "client": null
           },
           "predicted": {
-            "intent": "transcript_search",
+            "intent": "meta_analysis",
             "client": null,
             "person": null,
             "time_scope": null,
-            "topic": "asdfghjkl qwerty",
+            "topic": null,
             "filters": null
           },
-          "raw": "{\n  \"intent\": \"transcript_search\",\n  \"client\": null,\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": \"asdfghjkl qwerty\",\n  \"filters\": null\n}",
+          "raw": "{\n  \"intent\": \"meta_analysis\",\n  \"client\": null,\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -7842,7 +10673,7 @@
             "topic": null,
             "filters": null
           },
-          "raw": "{\n  \"intent\": \"meta_analysis\",\n  \"client\": null, \n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}",
+          "raw": "{\n  \"intent\": \"meta_analysis\",\n  \"client\": null,\n  \"person\": null,\n  \"time_scope\": null,\n  \"topic\": null,\n  \"filters\": null\n}",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -7867,10 +10698,10 @@
             "time_scope": "latest",
             "topic": null,
             "filters": {
-              "include_action_items": true
+              "action_items": true
             }
           },
-          "raw": "{\n  \"intent\": \"meeting_summary\",\n  \"client\": \"Jay Conner / Conner Marketing\",\n  \"person\": null,\n  \"time_scope\": \"latest\",\n  \"topic\": null,\n  \"filters\": {\n    \"include_action_items\": true\n  }\n}",
+          "raw": "{\n  \"intent\": \"meeting_summary\",\n  \"client\": \"Jay Conner / Conner Marketing\",\n  \"person\": null,\n  \"time_scope\": \"latest\",\n  \"topic\": null,\n  \"filters\": {\n    \"action_items\": true\n  }\n}",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -7892,11 +10723,11 @@
             "intent": "meeting_prep",
             "client": null,
             "person": null,
-            "time_scope": "tomorrow",
+            "time_scope": "latest",
             "topic": null,
             "filters": null
           },
-          "raw": "{\n  \"intent\": \"meeting_prep\",\n  \"client\": null,\n  \"person\": null,\n  \"time_scope\": \"tomorrow\",\n  \"topic\": null,\n  \"filters\": null\n}",
+          "raw": "{\n  \"intent\": \"meeting_prep\",\n  \"client\": null,\n  \"person\": null,\n  \"time_scope\": \"latest\",\n  \"topic\": null,\n  \"filters\": null\n}",
           "error": null,
           "scores": {
             "intent_correct": 1,
@@ -7909,8 +10740,8 @@
           "edge": "all-client prep"
         }
       ],
-      "totalScore": 42.400000000000006,
-      "avgScore": 0.9636363636363637
+      "totalScore": 42.00000000000001,
+      "avgScore": 0.9545454545454547
     }
   },
   "generatorDetails": {
@@ -7967,8 +10798,8 @@
           "question": "What was discussed in the London Flooring meeting?",
           "clientId": "london-flooring",
           "intent": "meeting_summary",
-          "responseLength": 399,
-          "responsePreview": "The meetings covered topics such as resolving technical bottlenecks, gaining administrative access to accounts, launching marketing campaigns, and hiring temporary help. See the meeting summaries for:",
+          "responseLength": 388,
+          "responsePreview": "The meetings covered topics such as resolving technical bottlenecks, gaining administrative access to accounts, launching marketing campaigns, and hiring temporary help. See summaries from:\n- 2026-04-",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8132,8 +10963,8 @@
           "question": "Did anyone mention budget in the Echelon meeting?",
           "clientId": "echelon",
           "intent": "transcript_search",
-          "responseLength": 75,
-          "responsePreview": "I don't have information about budget discussions in the provided context.\n",
+          "responseLength": 76,
+          "responsePreview": "I do not have information about budget discussions in the provided context.\n",
           "error": null,
           "scores": {
             "factual": 0,
@@ -8177,8 +11008,8 @@
           "question": "Prep me for the Echelon meeting",
           "clientId": "echelon",
           "intent": "meeting_prep",
-          "responseLength": 1391,
-          "responsePreview": "Here's what I can tell you about the upcoming Echelon meeting, based on the provided context:\n\n**Recent Meetings:**\n\n*   **2026-04-15T20:10:43Z - Breakthrough3x Huddle:** (72 min) Details of this meet",
+          "responseLength": 1136,
+          "responsePreview": "Here's what I know about upcoming meetings with Echelon:\n\n*   **Recent Meetings:** There was a \"Breakthrough3x Huddle\" on April 15, 2026, and two on April 1, 2026, and March 30, 2026.\n*   **March 30, ",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8192,8 +11023,8 @@
           "question": "What do I need to know before the Bearcat call?",
           "clientId": "bearcat",
           "intent": "meeting_prep",
-          "responseLength": 932,
-          "responsePreview": "Based on the 2026-04-06 meeting summary, the call will likely focus on scaling the Bearcat business through client video reviews and a 'show' strategy for networking. Also, the team will discuss hirin",
+          "responseLength": 276,
+          "responsePreview": "Based on the context, here's what you might want to know before the next Bearcat call:\n\n*   **Open Action Items:** Review the 10 open action items to check on their progress.\n*   **Recent Discussions:",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8305,8 +11136,8 @@
           "question": "Summarize the last Echelon meeting",
           "clientId": "echelon",
           "intent": "meeting_summary",
-          "responseLength": 631,
-          "responsePreview": "According to the provided context, the last recorded meeting between the marketing agency and the client Echelon was on 2026-03-30T16:02:19Z and lasted 59 minutes. \n\nDuring this meeting, Andrew and Ph",
+          "responseLength": 591,
+          "responsePreview": "According to the context provided, the last Echelon meeting was on 2026-03-30T16:02:19Z and lasted 59 minutes. During this meeting, Andrew Williams and Philip Mutrie coordinated the launch of an April",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8320,7 +11151,7 @@
           "question": "What happened in the latest Bearcat call?",
           "clientId": "bearcat",
           "intent": "meeting_summary",
-          "responseLength": 708,
+          "responseLength": 699,
           "responsePreview": "Based on the provided context, the latest Bearcat call was the Bearcat Coaching - Breakthrough Session that took place on 2026-04-06T17:12:57Z. The key points from this meeting were:\n\n- Dan Kuschell a",
           "error": null,
           "scores": {
@@ -8335,8 +11166,8 @@
           "question": "Recap the most recent GS Home Services session",
           "clientId": "gs-home-services",
           "intent": "meeting_summary",
-          "responseLength": 629,
-          "responsePreview": "Based on the provided context, the most recent GS Home Services session was the Breakthrough3x Huddle meeting held on 2026-04-14.\n\nThe key details from this meeting are:\n- GS Home Services is transiti",
+          "responseLength": 640,
+          "responsePreview": "Based on the provided context, the most recent GS Home Services session was the \"Breakthrough3x Huddle\" meeting that took place on 2026-04-14.\n\nThe key details from this meeting are:\n\n- GS Home Servic",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8350,8 +11181,8 @@
           "question": "What was discussed in the London Flooring meeting?",
           "clientId": "london-flooring",
           "intent": "meeting_summary",
-          "responseLength": 1117,
-          "responsePreview": "Based on the provided context, the key topics discussed in the London Flooring meetings were:\n\n2026-04-14T20:37:32Z - London's Flooring Canada | Growth Huddle:\n- Resolving technical bottlenecks ('tech",
+          "responseLength": 1031,
+          "responsePreview": "Based on the provided context, the following key topics were discussed in the London Flooring meetings:\n\n2026-04-14 Meeting:\n- Resolving technical bottlenecks ('tech jail') that have delayed email mar",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8365,8 +11196,8 @@
           "question": "What are the open action items for Echelon?",
           "clientId": "echelon",
           "intent": "action_items",
-          "responseLength": 707,
-          "responsePreview": "Based on the provided context, the open action items for Echelon are:\n\n1. Enter website form fills into trackback sheet (Owner: Andrew)\n2. Send Mike's planning and war mapping documents (Owner: Andrew",
+          "responseLength": 770,
+          "responsePreview": "According to the provided context, the open action items for Echelon are:\n\n- [OPEN] Enter website form fills into trackback sheet (Owner: Andrew)\n- [OPEN] Send Mike's planning and war mapping document",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8380,8 +11211,8 @@
           "question": "Show pending tasks for Bearcat",
           "clientId": "bearcat",
           "intent": "action_items",
-          "responseLength": 766,
-          "responsePreview": "Based on the provided context, here are the open action items for Bearcat:\n\n- [OPEN] Change back office ownership (Owner: Philip Mutrie)\n- [OPEN] Resolve scheduling issue with Richard (Owner: Philip M",
+          "responseLength": 772,
+          "responsePreview": "Based on the provided context, the following open action items for Bearcat are:\n\n- [OPEN] Change back office ownership (Owner: Philip Mutrie)\n- [OPEN] Resolve scheduling issue with Richard (Owner: Phi",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8395,8 +11226,8 @@
           "question": "Any overdue items for Pearce HVAC?",
           "clientId": "pearce-hvac",
           "intent": "action_items",
-          "responseLength": 592,
-          "responsePreview": "According to the context provided, there are several open action items for Pearce HVAC that appear to be overdue:\n\n- [OPEN] Draft IAQ Book Email Campaign (Owner: Dan Kuschell)\n- [OPEN] Fix Website Typ",
+          "responseLength": 766,
+          "responsePreview": "Based on the provided context, there appear to be several overdue action items for Pearce HVAC:\n\n1. Draft IAQ Book Email Campaign (Owner: Dan Kuschell) - This item is marked as [OPEN] with no indicati",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8425,8 +11256,8 @@
           "question": "How many meetings have we had with Echelon?",
           "clientId": "echelon",
           "intent": "count_query",
-          "responseLength": 346,
-          "responsePreview": "According to the provided context, there have been 3 recorded meetings with the client Echelon:\n\n1. 2026-04-15T20:10:43Z - Andrew Williams/Echelon | Breakthrough3x Huddle (72 min)\n2. 2026-04-01T20:15:",
+          "responseLength": 328,
+          "responsePreview": "Based on the provided context, we have had 3 meetings with the client Echelon:\n\n1. 2026-04-15T20:10:43Z - Andrew Williams/Echelon | Breakthrough3x Huddle (72 min)\n2. 2026-04-01T20:15:22Z - Andrew Will",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8440,8 +11271,8 @@
           "question": "How many open action items total?",
           "clientId": null,
           "intent": "count_query",
-          "responseLength": 80,
-          "responsePreview": "According to the provided context, the total number of open action items is 811.",
+          "responseLength": 67,
+          "responsePreview": "According to the provided context, there are 811 open action items.",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8455,8 +11286,8 @@
           "question": "How many clients do we have?",
           "clientId": null,
           "intent": "count_query",
-          "responseLength": 124,
-          "responsePreview": "According to the context provided, we have 15 clients that have had meetings with the agency and have transcripts available.",
+          "responseLength": 365,
+          "responsePreview": "According to the context provided, the marketing agency has 15 clients listed:\n1. B3X Internal\n2. Prosper Group\n3. London Flooring\n4. Jay Conner / Conner Marketing\n5. GS Home Services\n6. BEC CFO\n7. Pe",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8470,23 +11301,23 @@
           "question": "What's the sentiment score for Echelon?",
           "clientId": "echelon",
           "intent": "sentiment_analysis",
-          "responseLength": 307,
-          "responsePreview": "Based on the provided context, the sentiment scores for the Echelon client meetings are:\n\n2026-04-01T20:15:22Z: sentiment score of 3/100\n2026-03-30T16:02:19Z: sentiment score of 3/100\n\nThe context doe",
+          "responseLength": 339,
+          "responsePreview": "According to the provided context, the sentiment scores for the Echelon meetings are:\n\n2026-04-01T20:15:22Z: sentiment 1/100\n2026-04-01T20:15:22Z: sentiment 3/100\n2026-03-30T16:02:19Z: sentiment 3/100",
           "error": null,
           "scores": {
             "factual": 1,
-            "noHallucination": 0.5,
+            "noHallucination": 1,
             "citationPresent": 1,
             "lengthOk": 1,
-            "total": 0.875
+            "total": 1
           }
         },
         {
           "question": "How is Bearcat feeling about our work?",
           "clientId": "bearcat",
           "intent": "sentiment_analysis",
-          "responseLength": 883,
-          "responsePreview": "Based on the provided context, Bearcat seems to be generally satisfied with the work being done. The meeting summaries indicate that the team is providing strategic coaching and support to Cathy and G",
+          "responseLength": 1165,
+          "responsePreview": "Based on the provided context, the Bearcat team seems generally positive about the work being done, but there are some concerns and areas for improvement:\n\n- The session scores show a range of composi",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8500,7 +11331,7 @@
           "question": "Show engagement scores for London Flooring",
           "clientId": "london-flooring",
           "intent": "sentiment_analysis",
-          "responseLength": 343,
+          "responseLength": 409,
           "responsePreview": "Based on the provided context, here are the session scores for London Flooring:\n\n- 2026-03-31T20:39:36Z: composite score of 1.825/100, sentiment score of 2/100\n- 2026-04-07T20:38:16Z: composite score ",
           "error": null,
           "scores": {
@@ -8515,8 +11346,8 @@
           "question": "Did anyone mention budget in the Echelon meeting?",
           "clientId": "echelon",
           "intent": "transcript_search",
-          "responseLength": 267,
-          "responsePreview": "Based on the provided context, there is no mention of any budget discussion or budget-related topics in the Echelon meeting transcripts. The context only covers meeting summaries, action items, and se",
+          "responseLength": 115,
+          "responsePreview": "Based on the provided context, there is no mention of budget being discussed in any of the Echelon client meetings.",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8530,23 +11361,23 @@
           "question": "Search for SEO discussions in Bearcat transcripts",
           "clientId": "bearcat",
           "intent": "transcript_search",
-          "responseLength": 219,
-          "responsePreview": "There are no explicit discussions about SEO (Search Engine Optimization) in the provided context. The transcripts do not mention anything related to SEO or search engine optimization strategies for th",
+          "responseLength": 374,
+          "responsePreview": "The provided context does not contain any discussion about SEO or search engine optimization for the Bearcat client. The meeting summaries and transcripts are focused on topics such as staffing transi",
           "error": null,
           "scores": {
             "factual": 1,
             "noHallucination": 1,
-            "citationPresent": 0,
+            "citationPresent": 1,
             "lengthOk": 1,
-            "total": 0.8
+            "total": 1
           }
         },
         {
           "question": "Find where we talked about onboarding with GS Home Services",
           "clientId": "gs-home-services",
           "intent": "transcript_search",
-          "responseLength": 241,
-          "responsePreview": "Based on the provided context, there is no mention of onboarding with GS Home Services. The context focuses on meeting summaries, action items, and performance metrics related to GS Home Services, but",
+          "responseLength": 627,
+          "responsePreview": "Based on the provided context, there is no mention of onboarding with GS Home Services. The context focuses on a series of meetings between GS Home Services, Amy, and Ryan, discussing various marketin",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8560,8 +11391,8 @@
           "question": "Prep me for the Echelon meeting",
           "clientId": "echelon",
           "intent": "meeting_prep",
-          "responseLength": 1308,
-          "responsePreview": "Based on the provided context, here is a summary to prepare for the Echelon meeting:\n\nKey Action Items:\n- Enter website form fills into trackback sheet (Owner: Andrew)\n- Send Mike's planning and war m",
+          "responseLength": 1149,
+          "responsePreview": "Based on the provided context, here are the key points to prepare for the Echelon meeting:\n\n1. Action Items:\n   - Andrew needs to complete the following open action items:\n     - Enter website form fi",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8575,23 +11406,23 @@
           "question": "What do I need to know before the Bearcat call?",
           "clientId": "bearcat",
           "intent": "meeting_prep",
-          "responseLength": 1532,
-          "responsePreview": "Based on the provided context, here are the key things to know before the Bearcat call:\n\n1. Open Action Items:\n   - Change back office ownership (Owner: Philip Mutrie)\n   - Resolve scheduling issue wi",
+          "responseLength": 1591,
+          "responsePreview": "Based on the provided context, here are the key things you need to know before the Bearcat call:\n\n1. Recent Meeting Timeline:\n   - 2026-04-06 - Bearcat Coaching Breakthrough Session (51 min)\n     - Ke",
           "error": null,
           "scores": {
             "factual": 1,
-            "noHallucination": 1,
+            "noHallucination": 0.5,
             "citationPresent": 1,
             "lengthOk": 1,
-            "total": 1
+            "total": 0.875
           }
         },
         {
           "question": "Brief me on London Flooring",
           "clientId": "london-flooring",
           "intent": "meeting_prep",
-          "responseLength": 951,
-          "responsePreview": "Based on the provided context, here are the key points about London Flooring:\n\n- London Flooring is a client of the marketing agency.\n- The agency has been working with London Flooring through a serie",
+          "responseLength": 914,
+          "responsePreview": "Based on the provided context, here are the key points about London Flooring:\n\n- London Flooring is a client of the marketing agency.\n- The agency has been working with London Flooring's Canadian divi",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8605,23 +11436,8 @@
           "question": "Which clients have the most overdue items?",
           "clientId": null,
           "intent": "meta_analysis",
-          "responseLength": 321,
-          "responsePreview": "According to the provided context, the total number of open action items is 811. However, the context does not contain information about which clients have the most overdue items. Without additional d",
-          "error": null,
-          "scores": {
-            "factual": 1,
-            "noHallucination": 0.5,
-            "citationPresent": 0,
-            "lengthOk": 1,
-            "total": 0.675
-          }
-        },
-        {
-          "question": "Compare engagement across clients",
-          "clientId": null,
-          "intent": "meta_analysis",
-          "responseLength": 647,
-          "responsePreview": "Based on the provided context, the client with the most meetings is B3X Internal with 9 meetings, followed by Prosper Group, London Flooring, Jay Conner / Conner Marketing, GS Home Services, and BEC C",
+          "responseLength": 331,
+          "responsePreview": "Based on the context provided, the information about specific overdue action items per client is not available. The context only provides the total number of open action items across all meetings, whi",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8632,11 +11448,26 @@
           }
         },
         {
+          "question": "Compare engagement across clients",
+          "clientId": null,
+          "intent": "meta_analysis",
+          "responseLength": 394,
+          "responsePreview": "According to the provided context, the client with the highest number of meetings with transcripts is B3X Internal, with 9 meetings. The clients with the next highest number of meetings are Prosper Gr",
+          "error": null,
+          "scores": {
+            "factual": 1,
+            "noHallucination": 1,
+            "citationPresent": 1,
+            "lengthOk": 1,
+            "total": 1
+          }
+        },
+        {
           "question": "What are the trends in meeting frequency?",
           "clientId": null,
           "intent": "meta_analysis",
-          "responseLength": 584,
-          "responsePreview": "Based on the provided context, the trends in meeting frequency are:\n\n- The agency has held a total of 131 meetings with clients that have transcripts.\n- The most frequent clients in terms of meeting c",
+          "responseLength": 588,
+          "responsePreview": "Based on the provided context, the trends in meeting frequency are:\n\n- The agency has had a total of 131 meetings with clients.\n- The clients with the highest number of meetings are B3X Internal (9 me",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8650,8 +11481,8 @@
           "question": "How has Echelon sentiment changed over time?",
           "clientId": "echelon",
           "intent": "temporal_search",
-          "responseLength": 525,
-          "responsePreview": "Based on the provided context, the sentiment scores for Echelon's meetings have fluctuated over time. \n\nOn 2026-04-01T20:15:22Z, the sentiment score was 1/100, indicating a very low sentiment.\n\nOn 202",
+          "responseLength": 477,
+          "responsePreview": "Based on the provided context, Echelon's sentiment has varied over the course of the three meetings:\n\n- 2026-04-01T20:15:22Z: Sentiment score of 3/100\n- 2026-04-01T20:15:22Z: Sentiment score of 1/100 ",
           "error": null,
           "scores": {
             "factual": 1,
@@ -8665,20 +11496,20 @@
           "question": "Show me all meetings from last week",
           "clientId": null,
           "intent": "temporal_search",
-          "responseLength": 266,
-          "responsePreview": "Unfortunately, the provided context does not contain any information about specific meeting dates or a \"last week\" timeframe. The context only provides a list of total meetings and a breakdown of meet",
+          "responseLength": 433,
+          "responsePreview": "Unfortunately, the provided context does not include any information about specific meeting dates. The context only provides the total number of meetings with transcripts (131) and the number of open ",
           "error": null,
           "scores": {
             "factual": 1,
-            "noHallucination": 1,
+            "noHallucination": 0.5,
             "citationPresent": 1,
             "lengthOk": 1,
-            "total": 1
+            "total": 0.875
           }
         }
       ],
-      "totalScore": 23.625000000000004,
-      "avgScore": 0.9450000000000002
+      "totalScore": 24.025,
+      "avgScore": 0.961
     },
     "google/gemini-2.5-flash-lite": {
       "model": "gemini-2.5-flash-lite",
@@ -9071,8 +11902,8 @@
           "question": "Summarize the last Echelon meeting",
           "clientId": "echelon",
           "intent": "meeting_summary",
-          "responseLength": 199,
-          "responsePreview": "The last Echelon meeting was on April 15, 2026, titled \"Breakthrough3x Huddle,\" and lasted 72 minutes. The details of the meeting are not provided in the context, so no specific summary can be given.",
+          "responseLength": 205,
+          "responsePreview": "The last Echelon meeting took place on April 15, 2026, during the Breakthrough3x Huddle, lasting 72 minutes. The details of the meeting are not provided in the context, so no specific summary can be g",
           "error": null,
           "scores": {
             "factual": 1,
@@ -9101,8 +11932,8 @@
           "question": "Recap the most recent GS Home Services session",
           "clientId": "gs-home-services",
           "intent": "meeting_summary",
-          "responseLength": 545,
-          "responsePreview": "The most recent GS Home Services session was on April 14, 2026, during the Breakthrough3x Huddle, which lasted 31 minutes. The meeting focused on transitioning to a bi-weekly meeting cadence and scali",
+          "responseLength": 546,
+          "responsePreview": "The most recent GS Home Services session was on April 14, 2026, during the Breakthrough3x Huddle, which lasted 31 minutes. The meeting focused on transitioning to a bi-weekly meeting cadence, scaling ",
           "error": null,
           "scores": {
             "factual": 1,
@@ -9116,8 +11947,8 @@
           "question": "What was discussed in the London Flooring meeting?",
           "clientId": "london-flooring",
           "intent": "meeting_summary",
-          "responseLength": 417,
-          "responsePreview": "The London Flooring meetings focused on resolving technical bottlenecks that delayed email marketing, securing full admin access for the agency, launching Mother's Day/Father's Day social campaigns, a",
+          "responseLength": 415,
+          "responsePreview": "The London Flooring meetings focused on resolving technical bottlenecks that delayed email marketing, gaining administrative access to accounts, launching social campaigns for Mother's Day and Father'",
           "error": null,
           "scores": {
             "factual": 1,
@@ -9146,8 +11977,8 @@
           "question": "Show pending tasks for Bearcat",
           "clientId": "bearcat",
           "intent": "action_items",
-          "responseLength": 676,
-          "responsePreview": "Here are the open action items for Bearcat:\n\n1. Change back office ownership (Owner: Philip Mutrie)\n2. Resolve scheduling issue with Richard (Owner: Philip Mutrie)\n3. Send client interview questions (",
+          "responseLength": 672,
+          "responsePreview": "Here are the pending tasks for Bearcat:\n\n1. Change back office ownership (Owner: Philip Mutrie)\n2. Resolve scheduling issue with Richard (Owner: Philip Mutrie)\n3. Send client interview questions (Owne",
           "error": null,
           "scores": {
             "factual": 1,
@@ -9236,8 +12067,8 @@
           "question": "What's the sentiment score for Echelon?",
           "clientId": "echelon",
           "intent": "sentiment_analysis",
-          "responseLength": 108,
-          "responsePreview": "The sentiment scores for Echelon are as follows:\n- 2026-04-01: 1/100\n- 2026-04-01: 3/100\n- 2026-03-30: 3/100",
+          "responseLength": 221,
+          "responsePreview": "The sentiment scores for Echelon are as follows:\n- 2026-04-01: 1/100\n- 2026-04-01: 3/100\n- 2026-03-30: 3/100\n\nThe scores indicate a range of sentiment, with the most recent meeting on April 1 showing ",
           "error": null,
           "scores": {
             "factual": 1,
@@ -9251,8 +12082,8 @@
           "question": "How is Bearcat feeling about our work?",
           "clientId": "bearcat",
           "intent": "sentiment_analysis",
-          "responseLength": 425,
-          "responsePreview": "The sentiment scores from recent sessions indicate a mixed feeling about the work. The session on 2026-03-23 had a composite score of 2.9958/100 and a sentiment score of 4/100, suggesting some positiv",
+          "responseLength": 428,
+          "responsePreview": "The sentiment scores from the recent sessions indicate mixed feelings about the work. The session on 2026-03-23 had a composite score of 2.9958/100 and a sentiment score of 4/100, suggesting some posi",
           "error": null,
           "scores": {
             "factual": 0,
@@ -9296,8 +12127,8 @@
           "question": "Search for SEO discussions in Bearcat transcripts",
           "clientId": "bearcat",
           "intent": "transcript_search",
-          "responseLength": 71,
-          "responsePreview": "There are no discussions about SEO in the provided Bearcat transcripts.",
+          "responseLength": 96,
+          "responsePreview": "The provided context does not contain any discussions related to SEO in the Bearcat transcripts.",
           "error": null,
           "scores": {
             "factual": 1,
@@ -9326,8 +12157,8 @@
           "question": "Prep me for the Echelon meeting",
           "clientId": "echelon",
           "intent": "meeting_prep",
-          "responseLength": 1453,
-          "responsePreview": "The next Echelon meeting is the Breakthrough3x Huddle scheduled for April 15, 2026. Here are key points to prepare:\n\n1. **Previous Meeting Recap (April 1, 2026)**: This meeting was primarily an audio ",
+          "responseLength": 1364,
+          "responsePreview": "The next Echelon meeting is the Breakthrough3x Huddle scheduled for April 15, 2026. Here are key points to prepare:\n\n1. **Previous Meeting Recap**: \n   - The last productive meeting was on March 30, 2",
           "error": null,
           "scores": {
             "factual": 1,
@@ -9341,8 +12172,8 @@
           "question": "What do I need to know before the Bearcat call?",
           "clientId": "bearcat",
           "intent": "meeting_prep",
-          "responseLength": 1304,
-          "responsePreview": "Before the Bearcat call, you should be aware of the following key points:\n\n1. **Recent Meetings**:\n   - The last meeting was on **April 6, 2026**, focusing on scaling the Bearcat business and hiring c",
+          "responseLength": 1172,
+          "responsePreview": "Before the Bearcat call, you should be aware of the following key points:\n\n1. **Recent Meetings**: The last meeting was on April 6, 2026, focusing on scaling the Bearcat business and hiring criteria f",
           "error": null,
           "scores": {
             "factual": 1,
@@ -9356,8 +12187,8 @@
           "question": "Brief me on London Flooring",
           "clientId": "london-flooring",
           "intent": "meeting_prep",
-          "responseLength": 558,
-          "responsePreview": "London Flooring is currently focused on resolving technical bottlenecks that have delayed their email marketing efforts. Recent meetings have emphasized securing full admin access for the agency, laun",
+          "responseLength": 576,
+          "responsePreview": "London Flooring is currently focused on resolving technical bottlenecks that have delayed their email marketing efforts. Recent meetings have included discussions on securing full admin access for the",
           "error": null,
           "scores": {
             "factual": 1,
@@ -9371,15 +12202,15 @@
           "question": "Which clients have the most overdue items?",
           "clientId": null,
           "intent": "meta_analysis",
-          "responseLength": 159,
-          "responsePreview": "The context does not provide specific information about overdue items for each client. Therefore, I cannot determine which clients have the most overdue items.",
+          "responseLength": 98,
+          "responsePreview": "The context does not provide specific information about which clients have the most overdue items.",
           "error": null,
           "scores": {
             "factual": 1,
-            "noHallucination": 0.5,
+            "noHallucination": 1,
             "citationPresent": 0,
             "lengthOk": 1,
-            "total": 0.675
+            "total": 0.8
           }
         },
         {
@@ -9401,8 +12232,8 @@
           "question": "What are the trends in meeting frequency?",
           "clientId": null,
           "intent": "meta_analysis",
-          "responseLength": 606,
-          "responsePreview": "The meeting frequency trends indicate that B3X Internal has the highest number of meetings with 9, followed by several clients with 7 meetings each, including Prosper Group, London Flooring, Jay Conne",
+          "responseLength": 539,
+          "responsePreview": "The meeting frequency trends show that B3X Internal has the highest number of meetings at 9, followed by several clients with 7 meetings each, including Prosper Group, London Flooring, Jay Conner / Co",
           "error": null,
           "scores": {
             "factual": 1,
@@ -9416,7 +12247,7 @@
           "question": "How has Echelon sentiment changed over time?",
           "clientId": "echelon",
           "intent": "temporal_search",
-          "responseLength": 226,
+          "responseLength": 313,
           "responsePreview": "Echelon's sentiment scores over time are as follows:\n\n- On April 1, 2026, the sentiment score was 1/100.\n- On March 30, 2026, the sentiment score was 3/100.\n\nThis indicates an improvement in sentiment",
           "error": null,
           "scores": {
@@ -9431,8 +12262,8 @@
           "question": "Show me all meetings from last week",
           "clientId": null,
           "intent": "temporal_search",
-          "responseLength": 120,
-          "responsePreview": "The provided context does not include specific dates for the meetings, so I cannot show you all meetings from last week.",
+          "responseLength": 116,
+          "responsePreview": "The provided context does not include specific dates for meetings, so I cannot show you all meetings from last week.",
           "error": null,
           "scores": {
             "factual": 1,
@@ -9443,8 +12274,8 @@
           }
         }
       ],
-      "totalScore": 22.615000000000006,
-      "avgScore": 0.9046000000000002
+      "totalScore": 22.740000000000006,
+      "avgScore": 0.9096000000000002
     },
     "google/gemini-2.0-flash-lite": {
       "model": "gemini-2.0-flash-lite",
@@ -9619,8 +12450,8 @@
           "question": "What's the sentiment score for Echelon?",
           "clientId": "echelon",
           "intent": "sentiment_analysis",
-          "responseLength": 100,
-          "responsePreview": "The sentiment scores are:\n*   2026-04-01T20:15:22Z: 1/100 and 3/100\n*   2026-03-30T16:02:19Z: 3/100\n",
+          "responseLength": 125,
+          "responsePreview": "The sentiment scores are:\n*   1/100 (2026-04-01T20:15:22Z)\n*   3/100 (2026-04-01T20:15:22Z)\n*   3/100 (2026-03-30T16:02:19Z)\n",
           "error": null,
           "scores": {
             "factual": 0,
@@ -9650,7 +12481,7 @@
           "clientId": "london-flooring",
           "intent": "sentiment_analysis",
           "responseLength": 276,
-          "responsePreview": "The context contains session scores for the following dates:\n*   2026-03-31T20:39:36Z: composite 1.825/100, sentiment 2/100\n*   2026-03-31T20:39:36Z: composite 2.5375000000000005/100, sentiment 3/100\n",
+          "responsePreview": "The context provides session scores for the following dates:\n*   2026-03-31T20:39:36Z: composite 1.825/100, sentiment 2/100\n*   2026-03-31T20:39:36Z: composite 2.5375000000000005/100, sentiment 3/100\n",
           "error": null,
           "scores": {
             "factual": 0,
@@ -9709,7 +12540,7 @@
           "question": "Prep me for the Echelon meeting",
           "clientId": "echelon",
           "intent": "meeting_prep",
-          "responseLength": 329,
+          "responseLength": 281,
           "responsePreview": "The meeting on 2026-03-30T16:02:19Z involved coordinating the launch of an April Fool's themed AC maintenance campaign and a month-long lighting promotion. Key decisions were made regarding the April ",
           "error": null,
           "scores": {
@@ -9769,8 +12600,8 @@
           "question": "Compare engagement across clients",
           "clientId": null,
           "intent": "meta_analysis",
-          "responseLength": 87,
-          "responsePreview": "B3X Internal has the most meetings with 9. All other clients have 7 or fewer meetings.\n",
+          "responseLength": 158,
+          "responsePreview": "B3X Internal has the most meetings with 9. Prosper Group, London Flooring, Jay Conner / Conner Marketing, GS Home Services, and BEC CFO each have 7 meetings.\n",
           "error": null,
           "scores": {
             "factual": 1,

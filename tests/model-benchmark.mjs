@@ -42,9 +42,14 @@ async function callModel(provider, modelId, prompt, maxTokens = 200, temperature
   try {
     if (provider === 'google') {
       const model = genAI.getGenerativeModel({ model: modelId });
+      const genConfig = { temperature, maxOutputTokens: maxTokens };
+      // Force JSON output for structured responses
+      if (prompt.includes('Respond with ONLY valid JSON')) {
+        genConfig.responseMimeType = 'application/json';
+      }
       const result = await model.generateContent({
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: { temperature, maxOutputTokens: maxTokens }
+        generationConfig: genConfig
       });
       const text = result.response.text();
       // Some thinking models may return empty text; try candidates fallback
@@ -55,13 +60,33 @@ async function callModel(provider, modelId, prompt, maxTokens = 200, temperature
       }
       return { text: text || '', error: null };
     } else if (provider === 'openai') {
-      const useNew = modelId.startsWith('o') || modelId.startsWith('gpt-5');
+      // o4-mini reasoning model may not support temperature or response_format
+      if (modelId === 'o4-mini') {
+        try {
+          const params = { model: modelId, messages: [{ role: 'user', content: prompt }], max_completion_tokens: maxTokens };
+          const result = await openai.chat.completions.create(params);
+          return { text: result.choices[0].message.content, error: null };
+        } catch (e) {
+          // Fallback: try with minimal params
+          try {
+            const result = await openai.chat.completions.create({ model: modelId, messages: [{ role: 'user', content: prompt }] });
+            return { text: result.choices[0].message.content, error: null };
+          } catch (e2) {
+            return { text: null, error: e2.message || String(e2) };
+          }
+        }
+      }
+      const useNew = modelId.startsWith('gpt-5');
       const params = { model: modelId, messages: [{ role: 'user', content: prompt }] };
       if (useNew) {
         params.max_completion_tokens = maxTokens;
       } else {
         params.max_tokens = maxTokens;
         params.temperature = temperature;
+      }
+      // Force JSON output for structured responses
+      if (prompt.includes('Respond with ONLY valid JSON')) {
+        params.response_format = { type: 'json_object' };
       }
       const result = await openai.chat.completions.create(params);
       return { text: result.choices[0].message.content, error: null };
@@ -78,16 +103,27 @@ async function callModel(provider, modelId, prompt, maxTokens = 200, temperature
 
 // ─── Model definitions ───
 const ALL_MODELS = [
+  // Google Gemini (8)
+  { provider: 'google', id: 'gemini-3.1-pro-preview' },
+  { provider: 'google', id: 'gemini-3-flash-preview' },
+  { provider: 'google', id: 'gemini-3.1-flash-lite-preview' },
   { provider: 'google', id: 'gemini-2.5-pro' },
   { provider: 'google', id: 'gemini-2.5-flash' },
   { provider: 'google', id: 'gemini-2.5-flash-lite' },
   { provider: 'google', id: 'gemini-2.0-flash' },
   { provider: 'google', id: 'gemini-2.0-flash-lite' },
-  { provider: 'openai', id: 'gpt-4o-mini' },
-  { provider: 'openai', id: 'o4-mini' },
+  // OpenAI (8)
+  { provider: 'openai', id: 'gpt-5.4' },
+  { provider: 'openai', id: 'gpt-5.4-mini' },
+  { provider: 'openai', id: 'gpt-5.4-nano' },
   { provider: 'openai', id: 'gpt-5' },
   { provider: 'openai', id: 'gpt-5-mini' },
-  { provider: 'anthropic', id: 'claude-3-haiku-20240307' },
+  { provider: 'openai', id: 'gpt-5-nano' },
+  { provider: 'openai', id: 'gpt-4o-mini' },
+  { provider: 'openai', id: 'o4-mini' },
+  // Anthropic (2)
+  { provider: 'anthropic', id: 'claude-haiku-4-5-20251001' },
+  { provider: 'anthropic', id: 'claude-4-sonnet-20250514' },
 ];
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -509,7 +545,7 @@ function scoreGeneratorResponse(text, tc) {
 
 async function runGeneratorBenchmark(workingModels) {
   // Pick top 3 models (or all if <=3) based on classifier results
-  const modelsToTest = workingModels.slice(0, Math.min(workingModels.length, 5));
+  const modelsToTest = workingModels.slice(0, Math.min(workingModels.length, 10));
   console.log(`\n=== BENCHMARK B: Answer Generator (25 tests x ${modelsToTest.length} models) ===\n`);
 
   // Pre-build contexts
