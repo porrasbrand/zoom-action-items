@@ -16,12 +16,15 @@
 </style></head>
 <body>
 <h1>AI Concierge Model Benchmark Report</h1>
-<p class="meta">Generated: 2026-04-16T11:17:51.601Z | Models tested: 10</p>
+<p class="meta">Generated: 2026-04-16T11:42:48.215Z | Models tested: 18</p>
 
 <div class="card">
 <h2>Smoke Test Results</h2>
 <table>
 <tr><th>Provider</th><th>Model</th><th>Status</th><th>Response</th></tr>
+<tr><td>google</td><td>gemini-3.1-pro-preview</td><td><span class="badge badge-ok">OK</span></td><td class="meta"></td></tr>
+<tr><td>google</td><td>gemini-3-flash-preview</td><td><span class="badge badge-ok">OK</span></td><td class="meta"></td></tr>
+<tr><td>google</td><td>gemini-3.1-flash-lite-preview</td><td><span class="badge badge-ok">OK</span></td><td class="meta">Hello, it is nice meeting.</td></tr>
 <tr><td>google</td><td>gemini-2.5-pro</td><td><span class="badge badge-ok">OK</span></td><td class="meta"></td></tr>
 <tr><td>google</td><td>gemini-2.5-flash</td><td><span class="badge badge-ok">OK</span></td><td class="meta">Hello there</td></tr>
 <tr><td>google</td><td>gemini-2.5-flash-lite</td><td><span class="badge badge-ok">OK</span></td><td class="meta">Hello there, how are you?</td></tr>
@@ -29,11 +32,16 @@
 </td></tr>
 <tr><td>google</td><td>gemini-2.0-flash-lite</td><td><span class="badge badge-ok">OK</span></td><td class="meta">Hello to all you folks!
 </td></tr>
-<tr><td>openai</td><td>gpt-4o-mini</td><td><span class="badge badge-ok">OK</span></td><td class="meta">Hello! How are you today?</td></tr>
-<tr><td>openai</td><td>o4-mini</td><td><span class="badge badge-ok">OK</span></td><td class="meta"></td></tr>
+<tr><td>openai</td><td>gpt-5.4</td><td><span class="badge badge-ok">OK</span></td><td class="meta">Hello there, nice to meet!</td></tr>
+<tr><td>openai</td><td>gpt-5.4-mini</td><td><span class="badge badge-ok">OK</span></td><td class="meta">Hello there, hope you're well.</td></tr>
+<tr><td>openai</td><td>gpt-5.4-nano</td><td><span class="badge badge-ok">OK</span></td><td class="meta">Hello! How can I help today?</td></tr>
 <tr><td>openai</td><td>gpt-5</td><td><span class="badge badge-ok">OK</span></td><td class="meta"></td></tr>
 <tr><td>openai</td><td>gpt-5-mini</td><td><span class="badge badge-ok">OK</span></td><td class="meta"></td></tr>
-<tr><td>anthropic</td><td>claude-3-haiku-20240307</td><td><span class="badge badge-ok">OK</span></td><td class="meta">Hello, how are you?</td></tr>
+<tr><td>openai</td><td>gpt-5-nano</td><td><span class="badge badge-ok">OK</span></td><td class="meta"></td></tr>
+<tr><td>openai</td><td>gpt-4o-mini</td><td><span class="badge badge-ok">OK</span></td><td class="meta">Hello! How are you today?</td></tr>
+<tr><td>openai</td><td>o4-mini</td><td><span class="badge badge-ok">OK</span></td><td class="meta"></td></tr>
+<tr><td>anthropic</td><td>claude-haiku-4-5-20251001</td><td><span class="badge badge-ok">OK</span></td><td class="meta">Hello, how are you today?</td></tr>
+<tr><td>anthropic</td><td>claude-4-sonnet-20250514</td><td><span class="badge badge-ok">OK</span></td><td class="meta">Hello there, how are you?</td></tr>
 </table>
 </div>
 
@@ -42,73 +50,129 @@
 <tr><th>#</th><th>Model</th><th>Score</th><th>Tests</th><th>Breakdown</th></tr>
 <tr>
           <td>1</td>
-          <td><strong>google/gemini-2.0-flash</strong></td>
-          <td style="color:#22c55e; font-weight:bold">96.6%</td>
+          <td><strong>anthropic/claude-haiku-4-5-20251001</strong></td>
+          <td style="color:#22c55e; font-weight:bold">98.2%</td>
+          <td>44</td>
+          <td>Intent: 42/44 | Client: 44/44</td>
+        </tr>
+<tr>
+          <td>2</td>
+          <td><strong>anthropic/claude-4-sonnet-20250514</strong></td>
+          <td style="color:#22c55e; font-weight:bold">97.3%</td>
           <td>44</td>
           <td>Intent: 41/44 | Client: 44/44</td>
         </tr>
 <tr>
-          <td>2</td>
-          <td><strong>anthropic/claude-3-haiku-20240307</strong></td>
-          <td style="color:#22c55e; font-weight:bold">95.5%</td>
+          <td>3</td>
+          <td><strong>google/gemini-3.1-flash-lite-preview</strong></td>
+          <td style="color:#22c55e; font-weight:bold">96.7%</td>
+          <td>44</td>
+          <td>Intent: 41/44 | Client: 43/44</td>
+        </tr>
+<tr>
+          <td>4</td>
+          <td><strong>google/gemini-2.0-flash</strong></td>
+          <td style="color:#22c55e; font-weight:bold">96.0%</td>
+          <td>44</td>
+          <td>Intent: 41/44 | Client: 43/44</td>
+        </tr>
+<tr>
+          <td>5</td>
+          <td><strong>openai/gpt-5.4-nano</strong></td>
+          <td style="color:#22c55e; font-weight:bold">95.0%</td>
           <td>44</td>
           <td>Intent: 39/44 | Client: 44/44</td>
         </tr>
 <tr>
-          <td>3</td>
+          <td>6</td>
+          <td><strong>openai/gpt-5.4</strong></td>
+          <td style="color:#22c55e; font-weight:bold">94.8%</td>
+          <td>44</td>
+          <td>Intent: 39/44 | Client: 44/44</td>
+        </tr>
+<tr>
+          <td>7</td>
+          <td><strong>openai/gpt-5.4-mini</strong></td>
+          <td style="color:#22c55e; font-weight:bold">94.8%</td>
+          <td>44</td>
+          <td>Intent: 39/44 | Client: 44/44</td>
+        </tr>
+<tr>
+          <td>8</td>
           <td><strong>google/gemini-2.5-flash-lite</strong></td>
-          <td style="color:#22c55e; font-weight:bold">94.9%</td>
+          <td style="color:#22c55e; font-weight:bold">94.4%</td>
           <td>44</td>
           <td>Intent: 39/44 | Client: 43/44</td>
         </tr>
 <tr>
-          <td>4</td>
+          <td>9</td>
           <td><strong>openai/gpt-4o-mini</strong></td>
           <td style="color:#22c55e; font-weight:bold">92.4%</td>
           <td>44</td>
           <td>Intent: 37/44 | Client: 43/44</td>
         </tr>
 <tr>
-          <td>5</td>
+          <td>10</td>
           <td><strong>google/gemini-2.0-flash-lite</strong></td>
-          <td style="color:#22c55e; font-weight:bold">90.9%</td>
+          <td style="color:#22c55e; font-weight:bold">92.2%</td>
           <td>44</td>
-          <td>Intent: 36/44 | Client: 42/44</td>
+          <td>Intent: 38/44 | Client: 41/44</td>
         </tr>
 <tr>
-          <td>6</td>
+          <td>11</td>
           <td><strong>google/gemini-2.5-flash</strong></td>
-          <td style="color:#eab308; font-weight:bold">64.5%</td>
+          <td style="color:#eab308; font-weight:bold">63.4%</td>
           <td>44</td>
-          <td>Intent: 28/44 | Client: 29/44</td>
+          <td>Intent: 27/44 | Client: 29/44</td>
         </tr>
 <tr>
-          <td>7</td>
+          <td>12</td>
           <td><strong>openai/o4-mini</strong></td>
-          <td style="color:#ef4444; font-weight:bold">42.0%</td>
+          <td style="color:#ef4444; font-weight:bold">35.5%</td>
           <td>44</td>
-          <td>Intent: 18/44 | Client: 19/44</td>
+          <td>Intent: 15/44 | Client: 16/44</td>
         </tr>
 <tr>
-          <td>8</td>
+          <td>13</td>
           <td><strong>openai/gpt-5-mini</strong></td>
-          <td style="color:#ef4444; font-weight:bold">26.4%</td>
+          <td style="color:#ef4444; font-weight:bold">22.7%</td>
           <td>44</td>
-          <td>Intent: 11/44 | Client: 12/44</td>
+          <td>Intent: 10/44 | Client: 10/44</td>
         </tr>
 <tr>
-          <td>9</td>
+          <td>14</td>
+          <td><strong>google/gemini-2.5-pro</strong></td>
+          <td style="color:#ef4444; font-weight:bold">11.4%</td>
+          <td>44</td>
+          <td>Intent: 5/44 | Client: 5/44</td>
+        </tr>
+<tr>
+          <td>15</td>
           <td><strong>openai/gpt-5</strong></td>
           <td style="color:#ef4444; font-weight:bold">6.8%</td>
           <td>44</td>
           <td>Intent: 3/44 | Client: 3/44</td>
         </tr>
 <tr>
-          <td>10</td>
-          <td><strong>google/gemini-2.5-pro</strong></td>
-          <td style="color:#ef4444; font-weight:bold">4.5%</td>
+          <td>16</td>
+          <td><strong>google/gemini-3.1-pro-preview</strong></td>
+          <td style="color:#ef4444; font-weight:bold">0.0%</td>
           <td>44</td>
-          <td>Intent: 2/44 | Client: 2/44</td>
+          <td>Intent: 0/44 | Client: 0/44</td>
+        </tr>
+<tr>
+          <td>17</td>
+          <td><strong>google/gemini-3-flash-preview</strong></td>
+          <td style="color:#ef4444; font-weight:bold">0.0%</td>
+          <td>44</td>
+          <td>Intent: 0/44 | Client: 0/44</td>
+        </tr>
+<tr>
+          <td>18</td>
+          <td><strong>openai/gpt-5-nano</strong></td>
+          <td style="color:#ef4444; font-weight:bold">0.0%</td>
+          <td>44</td>
+          <td>Intent: 0/44 | Client: 0/44</td>
         </tr>
 </table>
 
@@ -117,44 +181,1135 @@
 <tr><th>#</th><th>Model</th><th>Score</th><th>Tests</th><th>Breakdown</th></tr>
 <tr>
           <td>1</td>
-          <td><strong>anthropic/claude-3-haiku-20240307</strong></td>
-          <td style="color:#22c55e; font-weight:bold">96.1%</td>
+          <td><strong>openai/gpt-5.4</strong></td>
+          <td style="color:#22c55e; font-weight:bold">98.4%</td>
+          <td>25</td>
+          <td>Factual: 100% | Cite: 92%</td>
+        </tr>
+<tr>
+          <td>2</td>
+          <td><strong>openai/gpt-5.4-mini</strong></td>
+          <td style="color:#22c55e; font-weight:bold">97.6%</td>
           <td>25</td>
           <td>Factual: 100% | Cite: 88%</td>
         </tr>
 <tr>
-          <td>2</td>
-          <td><strong>openai/gpt-4o-mini</strong></td>
-          <td style="color:#22c55e; font-weight:bold">91.0%</td>
+          <td>3</td>
+          <td><strong>anthropic/claude-haiku-4-5-20251001</strong></td>
+          <td style="color:#22c55e; font-weight:bold">96.6%</td>
           <td>25</td>
-          <td>Factual: 94% | Cite: 68%</td>
+          <td>Factual: 100% | Cite: 88%</td>
         </tr>
 <tr>
-          <td>3</td>
+          <td>4</td>
+          <td><strong>openai/gpt-5.4-nano</strong></td>
+          <td style="color:#22c55e; font-weight:bold">96.2%</td>
+          <td>25</td>
+          <td>Factual: 96% | Cite: 88%</td>
+        </tr>
+<tr>
+          <td>5</td>
+          <td><strong>anthropic/claude-4-sonnet-20250514</strong></td>
+          <td style="color:#22c55e; font-weight:bold">95.1%</td>
+          <td>25</td>
+          <td>Factual: 100% | Cite: 88%</td>
+        </tr>
+<tr>
+          <td>6</td>
+          <td><strong>openai/gpt-4o-mini</strong></td>
+          <td style="color:#22c55e; font-weight:bold">91.8%</td>
+          <td>25</td>
+          <td>Factual: 94% | Cite: 72%</td>
+        </tr>
+<tr>
+          <td>7</td>
+          <td><strong>google/gemini-3.1-flash-lite-preview</strong></td>
+          <td style="color:#22c55e; font-weight:bold">89.6%</td>
+          <td>25</td>
+          <td>Factual: 84% | Cite: 76%</td>
+        </tr>
+<tr>
+          <td>8</td>
           <td><strong>google/gemini-2.5-flash-lite</strong></td>
           <td style="color:#22c55e; font-weight:bold">89.5%</td>
           <td>25</td>
           <td>Factual: 88% | Cite: 72%</td>
         </tr>
 <tr>
-          <td>4</td>
+          <td>9</td>
           <td><strong>google/gemini-2.0-flash</strong></td>
           <td style="color:#eab308; font-weight:bold">79.9%</td>
           <td>25</td>
           <td>Factual: 66% | Cite: 64%</td>
         </tr>
 <tr>
-          <td>5</td>
+          <td>10</td>
           <td><strong>google/gemini-2.0-flash-lite</strong></td>
-          <td style="color:#eab308; font-weight:bold">72.0%</td>
+          <td style="color:#eab308; font-weight:bold">73.1%</td>
           <td>25</td>
-          <td>Factual: 46% | Cite: 60%</td>
+          <td>Factual: 46% | Cite: 64%</td>
         </tr>
 </table>
 
 <h2>Classifier Detail (per question)</h2>
 <table>
 <tr><th>Model</th><th>Question</th><th>Expected Intent</th><th>Got Intent</th><th>Got Client</th><th>Score</th></tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Summarize the last Echelon meeting</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">What happened in the most recent Bearcat call?</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Give me a recap of the London Flooring session</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Summary of last week's GS Home Services meeting</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">What did we cover in the Prosper Group call?</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Tell me about the Jerry Levinson meeting</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">What are the open action items for Echelon?</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Show me pending tasks for Bearcat</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Any overdue items for GS Home Services?</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">List all open tasks across all clients</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">What action items does Tom Ruwitch have?</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Show me Pearce HVAC's pending items</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">How many meetings have we had with Echelon?</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">How many open action items total?</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">How many clients do we have?</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">How many meetings happened last week?</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">What's the sentiment score for Echelon?</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">How is Bearcat feeling about our work?</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Show me engagement scores for London Flooring</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">What's the mood trend across all clients?</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Did anyone mention budget cuts in the Echelon meeting?</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Search for discussions about SEO in Bearcat transcripts</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Find where we talked about onboarding with GS Home Services</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">What did Mike say about the landing page?</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Compare Echelon meetings from this month vs last month</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Show me all meetings from last week</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">What changed in Bearcat's sentiment over the past month?</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Prep me for the Echelon meeting tomorrow</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">What do I need to know before the Bearcat call?</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Brief me on London Flooring before our session</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Which clients have the most overdue items?</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="">Compare engagement scores across all clients</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="lowercase, no question mark">echelon action items *</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="single word">summarize *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="vague sentiment">How's Bearcat doing? *</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="ambiguous intent">What about GS Home Services? *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="broad request">Tell me everything about Echelon *</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="slang">yo whats up with bearcat *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="multi-intent">1st Choice open items and sentiment *</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="empty input">(empty) *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="gibberish">asdfghjkl qwerty *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="off-topic">What is the meaning of life? *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="partial client name">Jay Conner meeting summary and action items *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3.1-pro-preview</td>
+          <td title="all-client prep">Prep me for ALL meetings tomorrow *</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Summarize the last Echelon meeting</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">What happened in the most recent Bearcat call?</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Give me a recap of the London Flooring session</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Summary of last week's GS Home Services meeting</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">What did we cover in the Prosper Group call?</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Tell me about the Jerry Levinson meeting</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">What are the open action items for Echelon?</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Show me pending tasks for Bearcat</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Any overdue items for GS Home Services?</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">List all open tasks across all clients</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">What action items does Tom Ruwitch have?</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Show me Pearce HVAC's pending items</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">How many meetings have we had with Echelon?</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">How many open action items total?</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">How many clients do we have?</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">How many meetings happened last week?</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">What's the sentiment score for Echelon?</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">How is Bearcat feeling about our work?</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Show me engagement scores for London Flooring</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">What's the mood trend across all clients?</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Did anyone mention budget cuts in the Echelon meeting?</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Search for discussions about SEO in Bearcat transcripts</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Find where we talked about onboarding with GS Home Services</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">What did Mike say about the landing page?</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Compare Echelon meetings from this month vs last month</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Show me all meetings from last week</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">What changed in Bearcat's sentiment over the past month?</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Prep me for the Echelon meeting tomorrow</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">What do I need to know before the Bearcat call?</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Brief me on London Flooring before our session</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Which clients have the most overdue items?</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="">Compare engagement scores across all clients</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="lowercase, no question mark">echelon action items *</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="single word">summarize *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="vague sentiment">How's Bearcat doing? *</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="ambiguous intent">What about GS Home Services? *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="broad request">Tell me everything about Echelon *</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="slang">yo whats up with bearcat *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="multi-intent">1st Choice open items and sentiment *</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="empty input">(empty) *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="gibberish">asdfghjkl qwerty *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="off-topic">What is the meaning of life? *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="partial client name">Jay Conner meeting summary and action items *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>google/gemini-3-flash-preview</td>
+          <td title="all-client prep">Prep me for ALL meetings tomorrow *</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Summarize the last Echelon meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">What happened in the most recent Bearcat call?</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Give me a recap of the London Flooring session</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>London Flooring</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Summary of last week's GS Home Services meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">What did we cover in the Prosper Group call?</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Prosper Group</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Tell me about the Jerry Levinson meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Jerry Levinson</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">What are the open action items for Echelon?</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Show me pending tasks for Bearcat</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Any overdue items for GS Home Services?</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">List all open tasks across all clients</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">What action items does Tom Ruwitch have?</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>75%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Show me Pearce HVAC's pending items</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Pearce HVAC</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">How many meetings have we had with Echelon?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">How many open action items total?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">How many clients do we have?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">How many meetings happened last week?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">What's the sentiment score for Echelon?</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">How is Bearcat feeling about our work?</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Show me engagement scores for London Flooring</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>London Flooring</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">What's the mood trend across all clients?</td>
+          <td>sentiment_analysis</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Did anyone mention budget cuts in the Echelon meeting?</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Search for discussions about SEO in Bearcat transcripts</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Find where we talked about onboarding with GS Home Services</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">What did Mike say about the landing page?</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Compare Echelon meetings from this month vs last month</td>
+          <td>temporal_search</td>
+          <td>temporal_search</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Show me all meetings from last week</td>
+          <td>temporal_search</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">What changed in Bearcat's sentiment over the past month?</td>
+          <td>temporal_search</td>
+          <td>sentiment_analysis</td>
+          <td>Bearcat</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Prep me for the Echelon meeting tomorrow</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">What do I need to know before the Bearcat call?</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Brief me on London Flooring before our session</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>London Flooring</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Which clients have the most overdue items?</td>
+          <td>meta_analysis</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="">Compare engagement scores across all clients</td>
+          <td>meta_analysis</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="lowercase, no question mark">echelon action items *</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="single word">summarize *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="vague sentiment">How's Bearcat doing? *</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="ambiguous intent">What about GS Home Services? *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="broad request">Tell me everything about Echelon *</td>
+          <td>meeting_prep</td>
+          <td>meeting_summary</td>
+          <td>Echelon</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="slang">yo whats up with bearcat *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="multi-intent">1st Choice open items and sentiment *</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>1st Choice</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="empty input">(empty) *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="gibberish">asdfghjkl qwerty *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="off-topic">What is the meaning of life? *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="partial client name">Jay Conner meeting summary and action items *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Jay Conner / Conner Marketing</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>google/gemini-3.1-flash-lite-preview</td>
+          <td title="all-client prep">Prep me for ALL meetings tomorrow *</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
 <tr style="background:#fef2f2">
           <td>google/gemini-2.5-pro</td>
           <td title="">Summarize the last Echelon meeting</td>
@@ -171,21 +1326,21 @@
           <td>-</td>
           <td>0%</td>
         </tr>
-<tr style="background:#fef2f2">
+<tr style="background:#f0fdf4">
           <td>google/gemini-2.5-pro</td>
           <td title="">Give me a recap of the London Flooring session</td>
           <td>meeting_summary</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
+          <td>meeting_summary</td>
+          <td>London Flooring</td>
+          <td>100%</td>
         </tr>
-<tr style="background:#fef2f2">
+<tr style="background:#f0fdf4">
           <td>google/gemini-2.5-pro</td>
           <td title="">Summary of last week's GS Home Services meeting</td>
           <td>meeting_summary</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
+          <td>meeting_summary</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
         </tr>
 <tr style="background:#fef2f2">
           <td>google/gemini-2.5-pro</td>
@@ -251,13 +1406,13 @@
           <td>-</td>
           <td>0%</td>
         </tr>
-<tr style="background:#fef2f2">
+<tr style="background:#f0fdf4">
           <td>google/gemini-2.5-pro</td>
           <td title="">How many meetings have we had with Echelon?</td>
           <td>count_query</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
+          <td>count_query</td>
+          <td>Echelon</td>
+          <td>100%</td>
         </tr>
 <tr style="background:#fef2f2">
           <td>google/gemini-2.5-pro</td>
@@ -347,13 +1502,13 @@
           <td>-</td>
           <td>0%</td>
         </tr>
-<tr style="background:#fef2f2">
+<tr style="background:#f0fdf4">
           <td>google/gemini-2.5-pro</td>
           <td title="">Compare Echelon meetings from this month vs last month</td>
           <td>temporal_search</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
+          <td>temporal_search</td>
+          <td>Echelon</td>
+          <td>100%</td>
         </tr>
 <tr style="background:#fef2f2">
           <td>google/gemini-2.5-pro</td>
@@ -499,13 +1654,13 @@
           <td>-</td>
           <td>0%</td>
         </tr>
-<tr style="background:#f0fdf4">
+<tr style="background:#fef2f2">
           <td>google/gemini-2.5-pro</td>
           <td title="all-client prep">Prep me for ALL meetings tomorrow *</td>
           <td>meeting_prep</td>
-          <td>meeting_prep</td>
           <td>-</td>
-          <td>100%</td>
+          <td>-</td>
+          <td>0%</td>
         </tr>
 <tr style="background:#f0fdf4">
           <td>google/gemini-2.5-flash</td>
@@ -539,13 +1694,13 @@
           <td>GS Home Services</td>
           <td>100%</td>
         </tr>
-<tr style="background:#fef2f2">
+<tr style="background:#f0fdf4">
           <td>google/gemini-2.5-flash</td>
           <td title="">What did we cover in the Prosper Group call?</td>
           <td>meeting_summary</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
+          <td>meeting_summary</td>
+          <td>Prosper Group</td>
+          <td>90%</td>
         </tr>
 <tr style="background:#f0fdf4">
           <td>google/gemini-2.5-flash</td>
@@ -611,13 +1766,13 @@
           <td>Echelon</td>
           <td>100%</td>
         </tr>
-<tr style="background:#fef2f2">
+<tr style="background:#f0fdf4">
           <td>google/gemini-2.5-flash</td>
           <td title="">How many open action items total?</td>
           <td>count_query</td>
+          <td>count_query</td>
           <td>-</td>
-          <td>-</td>
-          <td>0%</td>
+          <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
           <td>google/gemini-2.5-flash</td>
@@ -747,13 +1902,13 @@
           <td>London Flooring</td>
           <td>100%</td>
         </tr>
-<tr style="background:#fef2f2">
+<tr style="background:#fefce8">
           <td>google/gemini-2.5-flash</td>
           <td title="">Which clients have the most overdue items?</td>
           <td>meta_analysis</td>
+          <td>count_query</td>
           <td>-</td>
-          <td>-</td>
-          <td>0%</td>
+          <td>60%</td>
         </tr>
 <tr style="background:#fef2f2">
           <td>google/gemini-2.5-flash</td>
@@ -779,13 +1934,13 @@
           <td>-</td>
           <td>100%</td>
         </tr>
-<tr style="background:#f0fdf4">
+<tr style="background:#fef2f2">
           <td>google/gemini-2.5-flash</td>
           <td title="vague sentiment">How's Bearcat doing? *</td>
           <td>sentiment_analysis</td>
-          <td>sentiment_analysis</td>
-          <td>Bearcat</td>
-          <td>100%</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
         </tr>
 <tr style="background:#fef2f2">
           <td>google/gemini-2.5-flash</td>
@@ -819,13 +1974,13 @@
           <td>-</td>
           <td>0%</td>
         </tr>
-<tr style="background:#f0fdf4">
+<tr style="background:#fef2f2">
           <td>google/gemini-2.5-flash</td>
           <td title="empty input">(empty) *</td>
           <td>-</td>
           <td>-</td>
           <td>-</td>
-          <td>100%</td>
+          <td>0%</td>
         </tr>
 <tr style="background:#fef2f2">
           <td>google/gemini-2.5-flash</td>
@@ -835,13 +1990,13 @@
           <td>-</td>
           <td>0%</td>
         </tr>
-<tr style="background:#f0fdf4">
+<tr style="background:#fef2f2">
           <td>google/gemini-2.5-flash</td>
           <td title="off-topic">What is the meaning of life? *</td>
           <td>-</td>
           <td>-</td>
           <td>-</td>
-          <td>100%</td>
+          <td>0%</td>
         </tr>
 <tr style="background:#fef2f2">
           <td>google/gemini-2.5-flash</td>
@@ -881,7 +2036,7 @@
           <td>meeting_summary</td>
           <td>meeting_summary</td>
           <td>London Flooring</td>
-          <td>100%</td>
+          <td>90%</td>
         </tr>
 <tr style="background:#f0fdf4">
           <td>google/gemini-2.5-flash-lite</td>
@@ -905,7 +2060,7 @@
           <td>meeting_summary</td>
           <td>meeting_summary</td>
           <td>Jerry Levinson</td>
-          <td>100%</td>
+          <td>90%</td>
         </tr>
 <tr style="background:#f0fdf4">
           <td>google/gemini-2.5-flash-lite</td>
@@ -1107,13 +2262,13 @@
           <td>-</td>
           <td>60%</td>
         </tr>
-<tr style="background:#f0fdf4">
+<tr style="background:#fefce8">
           <td>google/gemini-2.5-flash-lite</td>
           <td title="">Compare engagement scores across all clients</td>
           <td>meta_analysis</td>
-          <td>meta_analysis</td>
+          <td>sentiment_analysis</td>
           <td>-</td>
-          <td>100%</td>
+          <td>60%</td>
         </tr>
 <tr style="background:#f0fdf4">
           <td>google/gemini-2.5-flash-lite</td>
@@ -1139,13 +2294,13 @@
           <td>Bearcat</td>
           <td>100%</td>
         </tr>
-<tr style="background:#fefce8">
+<tr style="background:#f0fdf4">
           <td>google/gemini-2.5-flash-lite</td>
           <td title="ambiguous intent">What about GS Home Services? *</td>
           <td>meeting_summary</td>
-          <td>meta_analysis</td>
+          <td>meeting_summary</td>
           <td>GS Home Services</td>
-          <td>60%</td>
+          <td>100%</td>
         </tr>
 <tr style="background:#fefce8">
           <td>google/gemini-2.5-flash-lite</td>
@@ -1159,7 +2314,7 @@
           <td>google/gemini-2.5-flash-lite</td>
           <td title="slang">yo whats up with bearcat *</td>
           <td>meeting_summary</td>
-          <td>meta_analysis</td>
+          <td>transcript_search</td>
           <td>Bearcat</td>
           <td>60%</td>
         </tr>
@@ -1183,7 +2338,7 @@
           <td>google/gemini-2.5-flash-lite</td>
           <td title="gibberish">asdfghjkl qwerty *</td>
           <td>-</td>
-          <td>transcript_search</td>
+          <td>-</td>
           <td>-</td>
           <td>100%</td>
         </tr>
@@ -1291,13 +2446,13 @@
           <td>-</td>
           <td>100%</td>
         </tr>
-<tr style="background:#f0fdf4">
+<tr style="background:#fefce8">
           <td>google/gemini-2.0-flash</td>
           <td title="">What action items does Tom Ruwitch have?</td>
           <td>action_items</td>
           <td>action_items</td>
-          <td>Tom Ruwitch</td>
-          <td>100%</td>
+          <td>-</td>
+          <td>75%</td>
         </tr>
 <tr style="background:#f0fdf4">
           <td>google/gemini-2.0-flash</td>
@@ -1667,13 +2822,13 @@
           <td>Echelon</td>
           <td>100%</td>
         </tr>
-<tr style="background:#fefce8">
+<tr style="background:#f0fdf4">
           <td>google/gemini-2.0-flash-lite</td>
           <td title="">How many open action items total?</td>
           <td>count_query</td>
-          <td>action_items</td>
+          <td>count_query</td>
           <td>-</td>
-          <td>60%</td>
+          <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
           <td>google/gemini-2.0-flash-lite</td>
@@ -1847,7 +3002,7 @@
           <td>google/gemini-2.0-flash-lite</td>
           <td title="ambiguous intent">What about GS Home Services? *</td>
           <td>meeting_summary</td>
-          <td>-</td>
+          <td>transcript_search</td>
           <td>GS Home Services</td>
           <td>60%</td>
         </tr>
@@ -1859,13 +3014,13 @@
           <td>Echelon</td>
           <td>60%</td>
         </tr>
-<tr style="background:#fefce8">
+<tr style="background:#f0fdf4">
           <td>google/gemini-2.0-flash-lite</td>
           <td title="slang">yo whats up with bearcat *</td>
           <td>meeting_summary</td>
-          <td>transcript_search</td>
+          <td>meeting_summary</td>
           <td>Bearcat</td>
-          <td>60%</td>
+          <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
           <td>google/gemini-2.0-flash-lite</td>
@@ -1899,13 +3054,13 @@
           <td>-</td>
           <td>100%</td>
         </tr>
-<tr style="background:#fefce8">
+<tr style="background:#fef2f2">
           <td>google/gemini-2.0-flash-lite</td>
           <td title="partial client name">Jay Conner meeting summary and action items *</td>
           <td>meeting_summary</td>
-          <td>action_items</td>
-          <td>Jay Conner / Conner Marketing</td>
-          <td>60%</td>
+          <td>-</td>
+          <td>-</td>
+          <td>35%</td>
         </tr>
 <tr style="background:#f0fdf4">
           <td>google/gemini-2.0-flash-lite</td>
@@ -1914,6 +3069,2118 @@
           <td>meeting_prep</td>
           <td>-</td>
           <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Summarize the last Echelon meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">What happened in the most recent Bearcat call?</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Give me a recap of the London Flooring session</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>London Flooring</td>
+          <td>90%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Summary of last week's GS Home Services meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">What did we cover in the Prosper Group call?</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Prosper Group</td>
+          <td>90%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Tell me about the Jerry Levinson meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Jerry Levinson</td>
+          <td>90%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">What are the open action items for Echelon?</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Show me pending tasks for Bearcat</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Any overdue items for GS Home Services?</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">List all open tasks across all clients</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">What action items does Tom Ruwitch have?</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Tom Ruwitch</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Show me Pearce HVAC's pending items</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Pearce HVAC</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">How many meetings have we had with Echelon?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">How many open action items total?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">How many clients do we have?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">How many meetings happened last week?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">What's the sentiment score for Echelon?</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">How is Bearcat feeling about our work?</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Show me engagement scores for London Flooring</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>London Flooring</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>openai/gpt-5.4</td>
+          <td title="">What's the mood trend across all clients?</td>
+          <td>sentiment_analysis</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Did anyone mention budget cuts in the Echelon meeting?</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Search for discussions about SEO in Bearcat transcripts</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Find where we talked about onboarding with GS Home Services</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">What did Mike say about the landing page?</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Compare Echelon meetings from this month vs last month</td>
+          <td>temporal_search</td>
+          <td>temporal_search</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Show me all meetings from last week</td>
+          <td>temporal_search</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>openai/gpt-5.4</td>
+          <td title="">What changed in Bearcat's sentiment over the past month?</td>
+          <td>temporal_search</td>
+          <td>sentiment_analysis</td>
+          <td>Bearcat</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Prep me for the Echelon meeting tomorrow</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">What do I need to know before the Bearcat call?</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Brief me on London Flooring before our session</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>London Flooring</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Which clients have the most overdue items?</td>
+          <td>meta_analysis</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="">Compare engagement scores across all clients</td>
+          <td>meta_analysis</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="lowercase, no question mark">echelon action items *</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="single word">summarize *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>openai/gpt-5.4</td>
+          <td title="vague sentiment">How's Bearcat doing? *</td>
+          <td>sentiment_analysis</td>
+          <td>meta_analysis</td>
+          <td>Bearcat</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="ambiguous intent">What about GS Home Services? *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>openai/gpt-5.4</td>
+          <td title="broad request">Tell me everything about Echelon *</td>
+          <td>meeting_prep</td>
+          <td>meeting_summary</td>
+          <td>Echelon</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="slang">yo whats up with bearcat *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>openai/gpt-5.4</td>
+          <td title="multi-intent">1st Choice open items and sentiment *</td>
+          <td>action_items</td>
+          <td>meta_analysis</td>
+          <td>1st Choice</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="empty input">(empty) *</td>
+          <td>-</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="gibberish">asdfghjkl qwerty *</td>
+          <td>-</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="off-topic">What is the meaning of life? *</td>
+          <td>-</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="partial client name">Jay Conner meeting summary and action items *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Jay Conner / Conner Marketing</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4</td>
+          <td title="all-client prep">Prep me for ALL meetings tomorrow *</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Summarize the last Echelon meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">What happened in the most recent Bearcat call?</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Give me a recap of the London Flooring session</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>London Flooring</td>
+          <td>90%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Summary of last week's GS Home Services meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">What did we cover in the Prosper Group call?</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Prosper Group</td>
+          <td>90%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Tell me about the Jerry Levinson meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Jerry Levinson</td>
+          <td>90%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">What are the open action items for Echelon?</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Show me pending tasks for Bearcat</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Any overdue items for GS Home Services?</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">List all open tasks across all clients</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">What action items does Tom Ruwitch have?</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Tom Ruwitch</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Show me Pearce HVAC's pending items</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Pearce HVAC</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">How many meetings have we had with Echelon?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">How many open action items total?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">How many clients do we have?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">How many meetings happened last week?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">What's the sentiment score for Echelon?</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">How is Bearcat feeling about our work?</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Show me engagement scores for London Flooring</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>London Flooring</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">What's the mood trend across all clients?</td>
+          <td>sentiment_analysis</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Did anyone mention budget cuts in the Echelon meeting?</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Search for discussions about SEO in Bearcat transcripts</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Find where we talked about onboarding with GS Home Services</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">What did Mike say about the landing page?</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>Mike McVety</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Compare Echelon meetings from this month vs last month</td>
+          <td>temporal_search</td>
+          <td>temporal_search</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Show me all meetings from last week</td>
+          <td>temporal_search</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">What changed in Bearcat's sentiment over the past month?</td>
+          <td>temporal_search</td>
+          <td>sentiment_analysis</td>
+          <td>Bearcat</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Prep me for the Echelon meeting tomorrow</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">What do I need to know before the Bearcat call?</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Brief me on London Flooring before our session</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>London Flooring</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Which clients have the most overdue items?</td>
+          <td>meta_analysis</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="">Compare engagement scores across all clients</td>
+          <td>meta_analysis</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="lowercase, no question mark">echelon action items *</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="single word">summarize *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="vague sentiment">How's Bearcat doing? *</td>
+          <td>sentiment_analysis</td>
+          <td>meeting_summary</td>
+          <td>Bearcat</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="ambiguous intent">What about GS Home Services? *</td>
+          <td>meeting_summary</td>
+          <td>transcript_search</td>
+          <td>GS Home Services</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="broad request">Tell me everything about Echelon *</td>
+          <td>meeting_prep</td>
+          <td>meeting_summary</td>
+          <td>Echelon</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="slang">yo whats up with bearcat *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="multi-intent">1st Choice open items and sentiment *</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>1st Choice</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="empty input">(empty) *</td>
+          <td>-</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="gibberish">asdfghjkl qwerty *</td>
+          <td>-</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="off-topic">What is the meaning of life? *</td>
+          <td>-</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="partial client name">Jay Conner meeting summary and action items *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Jay Conner / Conner Marketing</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-mini</td>
+          <td title="all-client prep">Prep me for ALL meetings tomorrow *</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Summarize the last Echelon meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">What happened in the most recent Bearcat call?</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Give me a recap of the London Flooring session</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>London Flooring</td>
+          <td>90%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Summary of last week's GS Home Services meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">What did we cover in the Prosper Group call?</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Prosper Group</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Tell me about the Jerry Levinson meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Jerry Levinson</td>
+          <td>90%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">What are the open action items for Echelon?</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Show me pending tasks for Bearcat</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Any overdue items for GS Home Services?</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">List all open tasks across all clients</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">What action items does Tom Ruwitch have?</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Tom Ruwitch</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Show me Pearce HVAC's pending items</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Pearce HVAC</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">How many meetings have we had with Echelon?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">How many open action items total?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">How many clients do we have?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">How many meetings happened last week?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">What's the sentiment score for Echelon?</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">How is Bearcat feeling about our work?</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Show me engagement scores for London Flooring</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>London Flooring</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">What's the mood trend across all clients?</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Did anyone mention budget cuts in the Echelon meeting?</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Search for discussions about SEO in Bearcat transcripts</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Find where we talked about onboarding with GS Home Services</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">What did Mike say about the landing page?</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Compare Echelon meetings from this month vs last month</td>
+          <td>temporal_search</td>
+          <td>temporal_search</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Show me all meetings from last week</td>
+          <td>temporal_search</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">What changed in Bearcat's sentiment over the past month?</td>
+          <td>temporal_search</td>
+          <td>sentiment_analysis</td>
+          <td>Bearcat</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Prep me for the Echelon meeting tomorrow</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">What do I need to know before the Bearcat call?</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Brief me on London Flooring before our session</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>London Flooring</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Which clients have the most overdue items?</td>
+          <td>meta_analysis</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="">Compare engagement scores across all clients</td>
+          <td>meta_analysis</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="lowercase, no question mark">echelon action items *</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="single word">summarize *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="vague sentiment">How's Bearcat doing? *</td>
+          <td>sentiment_analysis</td>
+          <td>meeting_summary</td>
+          <td>Bearcat</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="ambiguous intent">What about GS Home Services? *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="broad request">Tell me everything about Echelon *</td>
+          <td>meeting_prep</td>
+          <td>meta_analysis</td>
+          <td>Echelon</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="slang">yo whats up with bearcat *</td>
+          <td>meeting_summary</td>
+          <td>meta_analysis</td>
+          <td>Bearcat</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="multi-intent">1st Choice open items and sentiment *</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>1st Choice</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="empty input">(empty) *</td>
+          <td>-</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="gibberish">asdfghjkl qwerty *</td>
+          <td>-</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="off-topic">What is the meaning of life? *</td>
+          <td>-</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="partial client name">Jay Conner meeting summary and action items *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Jay Conner / Conner Marketing</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5.4-nano</td>
+          <td title="all-client prep">Prep me for ALL meetings tomorrow *</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">Summarize the last Echelon meeting</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">What happened in the most recent Bearcat call?</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5</td>
+          <td title="">Give me a recap of the London Flooring session</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>London Flooring</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">Summary of last week's GS Home Services meeting</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5</td>
+          <td title="">What did we cover in the Prosper Group call?</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Prosper Group</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">Tell me about the Jerry Levinson meeting</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">What are the open action items for Echelon?</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">Show me pending tasks for Bearcat</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">Any overdue items for GS Home Services?</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">List all open tasks across all clients</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">What action items does Tom Ruwitch have?</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">Show me Pearce HVAC's pending items</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">How many meetings have we had with Echelon?</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">How many open action items total?</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5</td>
+          <td title="">How many clients do we have?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">How many meetings happened last week?</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">What's the sentiment score for Echelon?</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">How is Bearcat feeling about our work?</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">Show me engagement scores for London Flooring</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">What's the mood trend across all clients?</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">Did anyone mention budget cuts in the Echelon meeting?</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">Search for discussions about SEO in Bearcat transcripts</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">Find where we talked about onboarding with GS Home Services</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">What did Mike say about the landing page?</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">Compare Echelon meetings from this month vs last month</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">Show me all meetings from last week</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">What changed in Bearcat's sentiment over the past month?</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">Prep me for the Echelon meeting tomorrow</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">What do I need to know before the Bearcat call?</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">Brief me on London Flooring before our session</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">Which clients have the most overdue items?</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="">Compare engagement scores across all clients</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="lowercase, no question mark">echelon action items *</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="single word">summarize *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="vague sentiment">How's Bearcat doing? *</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="ambiguous intent">What about GS Home Services? *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="broad request">Tell me everything about Echelon *</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="slang">yo whats up with bearcat *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="multi-intent">1st Choice open items and sentiment *</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="empty input">(empty) *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="gibberish">asdfghjkl qwerty *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="off-topic">What is the meaning of life? *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="partial client name">Jay Conner meeting summary and action items *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5</td>
+          <td title="all-client prep">Prep me for ALL meetings tomorrow *</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Summarize the last Echelon meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5-mini</td>
+          <td title="">What happened in the most recent Bearcat call?</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Give me a recap of the London Flooring session</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>London Flooring</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Summary of last week's GS Home Services meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">What did we cover in the Prosper Group call?</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Tell me about the Jerry Levinson meeting</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">What are the open action items for Echelon?</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Show me pending tasks for Bearcat</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Any overdue items for GS Home Services?</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">List all open tasks across all clients</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">What action items does Tom Ruwitch have?</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Show me Pearce HVAC's pending items</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5-mini</td>
+          <td title="">How many meetings have we had with Echelon?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">How many open action items total?</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5-mini</td>
+          <td title="">How many clients do we have?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5-mini</td>
+          <td title="">How many meetings happened last week?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">What's the sentiment score for Echelon?</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">How is Bearcat feeling about our work?</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Show me engagement scores for London Flooring</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">What's the mood trend across all clients?</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Did anyone mention budget cuts in the Echelon meeting?</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Search for discussions about SEO in Bearcat transcripts</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Find where we talked about onboarding with GS Home Services</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">What did Mike say about the landing page?</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Compare Echelon meetings from this month vs last month</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Show me all meetings from last week</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">What changed in Bearcat's sentiment over the past month?</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Prep me for the Echelon meeting tomorrow</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">What do I need to know before the Bearcat call?</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Brief me on London Flooring before our session</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Which clients have the most overdue items?</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="">Compare engagement scores across all clients</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5-mini</td>
+          <td title="lowercase, no question mark">echelon action items *</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/gpt-5-mini</td>
+          <td title="single word">summarize *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="vague sentiment">How's Bearcat doing? *</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="ambiguous intent">What about GS Home Services? *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="broad request">Tell me everything about Echelon *</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="slang">yo whats up with bearcat *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="multi-intent">1st Choice open items and sentiment *</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="empty input">(empty) *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="gibberish">asdfghjkl qwerty *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="off-topic">What is the meaning of life? *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="partial client name">Jay Conner meeting summary and action items *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-mini</td>
+          <td title="all-client prep">Prep me for ALL meetings tomorrow *</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Summarize the last Echelon meeting</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">What happened in the most recent Bearcat call?</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Give me a recap of the London Flooring session</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Summary of last week's GS Home Services meeting</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">What did we cover in the Prosper Group call?</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Tell me about the Jerry Levinson meeting</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">What are the open action items for Echelon?</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Show me pending tasks for Bearcat</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Any overdue items for GS Home Services?</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">List all open tasks across all clients</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">What action items does Tom Ruwitch have?</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Show me Pearce HVAC's pending items</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">How many meetings have we had with Echelon?</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">How many open action items total?</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">How many clients do we have?</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">How many meetings happened last week?</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">What's the sentiment score for Echelon?</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">How is Bearcat feeling about our work?</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Show me engagement scores for London Flooring</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">What's the mood trend across all clients?</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Did anyone mention budget cuts in the Echelon meeting?</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Search for discussions about SEO in Bearcat transcripts</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Find where we talked about onboarding with GS Home Services</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">What did Mike say about the landing page?</td>
+          <td>transcript_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Compare Echelon meetings from this month vs last month</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Show me all meetings from last week</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">What changed in Bearcat's sentiment over the past month?</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Prep me for the Echelon meeting tomorrow</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">What do I need to know before the Bearcat call?</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Brief me on London Flooring before our session</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Which clients have the most overdue items?</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="">Compare engagement scores across all clients</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="lowercase, no question mark">echelon action items *</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="single word">summarize *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="vague sentiment">How's Bearcat doing? *</td>
+          <td>sentiment_analysis</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="ambiguous intent">What about GS Home Services? *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="broad request">Tell me everything about Echelon *</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="slang">yo whats up with bearcat *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="multi-intent">1st Choice open items and sentiment *</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="empty input">(empty) *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="gibberish">asdfghjkl qwerty *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="off-topic">What is the meaning of life? *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="partial client name">Jay Conner meeting summary and action items *</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/gpt-5-nano</td>
+          <td title="all-client prep">Prep me for ALL meetings tomorrow *</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
         </tr>
 <tr style="background:#f0fdf4">
           <td>openai/gpt-4o-mini</td>
@@ -2289,7 +5556,7 @@
           <td>meeting_summary</td>
           <td>meeting_summary</td>
           <td>London Flooring</td>
-          <td>90%</td>
+          <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
           <td>openai/o4-mini</td>
@@ -2299,29 +5566,29 @@
           <td>GS Home Services</td>
           <td>100%</td>
         </tr>
-<tr style="background:#f0fdf4">
+<tr style="background:#fef2f2">
           <td>openai/o4-mini</td>
           <td title="">What did we cover in the Prosper Group call?</td>
           <td>meeting_summary</td>
-          <td>meeting_summary</td>
-          <td>Prosper Group</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#f0fdf4">
-          <td>openai/o4-mini</td>
-          <td title="">Tell me about the Jerry Levinson meeting</td>
-          <td>meeting_summary</td>
-          <td>meeting_summary</td>
-          <td>Jerry Levinson</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/o4-mini</td>
-          <td title="">What are the open action items for Echelon?</td>
-          <td>action_items</td>
           <td>-</td>
           <td>-</td>
           <td>0%</td>
+        </tr>
+<tr style="background:#fef2f2">
+          <td>openai/o4-mini</td>
+          <td title="">Tell me about the Jerry Levinson meeting</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/o4-mini</td>
+          <td title="">What are the open action items for Echelon?</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Echelon</td>
+          <td>100%</td>
         </tr>
 <tr style="background:#fef2f2">
           <td>openai/o4-mini</td>
@@ -2331,21 +5598,21 @@
           <td>-</td>
           <td>0%</td>
         </tr>
-<tr style="background:#f0fdf4">
-          <td>openai/o4-mini</td>
-          <td title="">Any overdue items for GS Home Services?</td>
-          <td>action_items</td>
-          <td>action_items</td>
-          <td>GS Home Services</td>
-          <td>100%</td>
-        </tr>
 <tr style="background:#fef2f2">
           <td>openai/o4-mini</td>
-          <td title="">List all open tasks across all clients</td>
+          <td title="">Any overdue items for GS Home Services?</td>
           <td>action_items</td>
           <td>-</td>
           <td>-</td>
           <td>0%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>openai/o4-mini</td>
+          <td title="">List all open tasks across all clients</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>100%</td>
         </tr>
 <tr style="background:#fef2f2">
           <td>openai/o4-mini</td>
@@ -2387,13 +5654,13 @@
           <td>-</td>
           <td>100%</td>
         </tr>
-<tr style="background:#f0fdf4">
+<tr style="background:#fef2f2">
           <td>openai/o4-mini</td>
           <td title="">How many meetings happened last week?</td>
           <td>count_query</td>
-          <td>count_query</td>
           <td>-</td>
-          <td>100%</td>
+          <td>-</td>
+          <td>0%</td>
         </tr>
 <tr style="background:#f0fdf4">
           <td>openai/o4-mini</td>
@@ -2411,13 +5678,13 @@
           <td>-</td>
           <td>0%</td>
         </tr>
-<tr style="background:#fef2f2">
+<tr style="background:#f0fdf4">
           <td>openai/o4-mini</td>
           <td title="">Show me engagement scores for London Flooring</td>
           <td>sentiment_analysis</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
+          <td>sentiment_analysis</td>
+          <td>London Flooring</td>
+          <td>100%</td>
         </tr>
 <tr style="background:#fef2f2">
           <td>openai/o4-mini</td>
@@ -2427,13 +5694,13 @@
           <td>-</td>
           <td>0%</td>
         </tr>
-<tr style="background:#f0fdf4">
+<tr style="background:#fef2f2">
           <td>openai/o4-mini</td>
           <td title="">Did anyone mention budget cuts in the Echelon meeting?</td>
           <td>transcript_search</td>
-          <td>transcript_search</td>
-          <td>Echelon</td>
-          <td>100%</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
         </tr>
 <tr style="background:#f0fdf4">
           <td>openai/o4-mini</td>
@@ -2499,13 +5766,13 @@
           <td>Bearcat</td>
           <td>100%</td>
         </tr>
-<tr style="background:#fef2f2">
+<tr style="background:#f0fdf4">
           <td>openai/o4-mini</td>
           <td title="">Brief me on London Flooring before our session</td>
           <td>meeting_prep</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
+          <td>meeting_prep</td>
+          <td>London Flooring</td>
+          <td>100%</td>
         </tr>
 <tr style="background:#fef2f2">
           <td>openai/o4-mini</td>
@@ -2547,13 +5814,13 @@
           <td>-</td>
           <td>0%</td>
         </tr>
-<tr style="background:#f0fdf4">
+<tr style="background:#fef2f2">
           <td>openai/o4-mini</td>
           <td title="ambiguous intent">What about GS Home Services? *</td>
           <td>meeting_summary</td>
-          <td>meeting_summary</td>
-          <td>GS Home Services</td>
-          <td>100%</td>
+          <td>-</td>
+          <td>-</td>
+          <td>0%</td>
         </tr>
 <tr style="background:#fef2f2">
           <td>openai/o4-mini</td>
@@ -2611,368 +5878,16 @@
           <td>-</td>
           <td>0%</td>
         </tr>
-<tr style="background:#f0fdf4">
+<tr style="background:#fef2f2">
           <td>openai/o4-mini</td>
           <td title="all-client prep">Prep me for ALL meetings tomorrow *</td>
           <td>meeting_prep</td>
-          <td>meeting_prep</td>
-          <td>-</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">Summarize the last Echelon meeting</td>
-          <td>meeting_summary</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">What happened in the most recent Bearcat call?</td>
-          <td>meeting_summary</td>
           <td>-</td>
           <td>-</td>
           <td>0%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>openai/gpt-5</td>
-          <td title="">Give me a recap of the London Flooring session</td>
-          <td>meeting_summary</td>
-          <td>meeting_summary</td>
-          <td>London Flooring</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">Summary of last week's GS Home Services meeting</td>
-          <td>meeting_summary</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#f0fdf4">
-          <td>openai/gpt-5</td>
-          <td title="">What did we cover in the Prosper Group call?</td>
-          <td>meeting_summary</td>
-          <td>meeting_summary</td>
-          <td>Prosper Group</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">Tell me about the Jerry Levinson meeting</td>
-          <td>meeting_summary</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">What are the open action items for Echelon?</td>
-          <td>action_items</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">Show me pending tasks for Bearcat</td>
-          <td>action_items</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">Any overdue items for GS Home Services?</td>
-          <td>action_items</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">List all open tasks across all clients</td>
-          <td>action_items</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">What action items does Tom Ruwitch have?</td>
-          <td>action_items</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">Show me Pearce HVAC's pending items</td>
-          <td>action_items</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">How many meetings have we had with Echelon?</td>
-          <td>count_query</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">How many open action items total?</td>
-          <td>count_query</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">How many clients do we have?</td>
-          <td>count_query</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">How many meetings happened last week?</td>
-          <td>count_query</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">What's the sentiment score for Echelon?</td>
-          <td>sentiment_analysis</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">How is Bearcat feeling about our work?</td>
-          <td>sentiment_analysis</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">Show me engagement scores for London Flooring</td>
-          <td>sentiment_analysis</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">What's the mood trend across all clients?</td>
-          <td>sentiment_analysis</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">Did anyone mention budget cuts in the Echelon meeting?</td>
-          <td>transcript_search</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">Search for discussions about SEO in Bearcat transcripts</td>
-          <td>transcript_search</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">Find where we talked about onboarding with GS Home Services</td>
-          <td>transcript_search</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">What did Mike say about the landing page?</td>
-          <td>transcript_search</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">Compare Echelon meetings from this month vs last month</td>
-          <td>temporal_search</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#f0fdf4">
-          <td>openai/gpt-5</td>
-          <td title="">Show me all meetings from last week</td>
-          <td>temporal_search</td>
-          <td>temporal_search</td>
-          <td>-</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">What changed in Bearcat's sentiment over the past month?</td>
-          <td>temporal_search</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">Prep me for the Echelon meeting tomorrow</td>
-          <td>meeting_prep</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">What do I need to know before the Bearcat call?</td>
-          <td>meeting_prep</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">Brief me on London Flooring before our session</td>
-          <td>meeting_prep</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">Which clients have the most overdue items?</td>
-          <td>meta_analysis</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="">Compare engagement scores across all clients</td>
-          <td>meta_analysis</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="lowercase, no question mark">echelon action items *</td>
-          <td>action_items</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="single word">summarize *</td>
-          <td>meeting_summary</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="vague sentiment">How's Bearcat doing? *</td>
-          <td>sentiment_analysis</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="ambiguous intent">What about GS Home Services? *</td>
-          <td>meeting_summary</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="broad request">Tell me everything about Echelon *</td>
-          <td>meeting_prep</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="slang">yo whats up with bearcat *</td>
-          <td>meeting_summary</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="multi-intent">1st Choice open items and sentiment *</td>
-          <td>action_items</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="empty input">(empty) *</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="gibberish">asdfghjkl qwerty *</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="off-topic">What is the meaning of life? *</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="partial client name">Jay Conner meeting summary and action items *</td>
-          <td>meeting_summary</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5</td>
-          <td title="all-client prep">Prep me for ALL meetings tomorrow *</td>
-          <td>meeting_prep</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#f0fdf4">
-          <td>openai/gpt-5-mini</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Summarize the last Echelon meeting</td>
           <td>meeting_summary</td>
           <td>meeting_summary</td>
@@ -2980,7 +5895,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>openai/gpt-5-mini</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">What happened in the most recent Bearcat call?</td>
           <td>meeting_summary</td>
           <td>meeting_summary</td>
@@ -2988,7 +5903,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>openai/gpt-5-mini</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Give me a recap of the London Flooring session</td>
           <td>meeting_summary</td>
           <td>meeting_summary</td>
@@ -2996,359 +5911,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>openai/gpt-5-mini</td>
-          <td title="">Summary of last week's GS Home Services meeting</td>
-          <td>meeting_summary</td>
-          <td>meeting_summary</td>
-          <td>GS Home Services</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">What did we cover in the Prosper Group call?</td>
-          <td>meeting_summary</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">Tell me about the Jerry Levinson meeting</td>
-          <td>meeting_summary</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">What are the open action items for Echelon?</td>
-          <td>action_items</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">Show me pending tasks for Bearcat</td>
-          <td>action_items</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">Any overdue items for GS Home Services?</td>
-          <td>action_items</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">List all open tasks across all clients</td>
-          <td>action_items</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">What action items does Tom Ruwitch have?</td>
-          <td>action_items</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">Show me Pearce HVAC's pending items</td>
-          <td>action_items</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#f0fdf4">
-          <td>openai/gpt-5-mini</td>
-          <td title="">How many meetings have we had with Echelon?</td>
-          <td>count_query</td>
-          <td>count_query</td>
-          <td>Echelon</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">How many open action items total?</td>
-          <td>count_query</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">How many clients do we have?</td>
-          <td>count_query</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">How many meetings happened last week?</td>
-          <td>count_query</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#f0fdf4">
-          <td>openai/gpt-5-mini</td>
-          <td title="">What's the sentiment score for Echelon?</td>
-          <td>sentiment_analysis</td>
-          <td>sentiment_analysis</td>
-          <td>Echelon</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#f0fdf4">
-          <td>openai/gpt-5-mini</td>
-          <td title="">How is Bearcat feeling about our work?</td>
-          <td>sentiment_analysis</td>
-          <td>sentiment_analysis</td>
-          <td>Bearcat</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">Show me engagement scores for London Flooring</td>
-          <td>sentiment_analysis</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">What's the mood trend across all clients?</td>
-          <td>sentiment_analysis</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">Did anyone mention budget cuts in the Echelon meeting?</td>
-          <td>transcript_search</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">Search for discussions about SEO in Bearcat transcripts</td>
-          <td>transcript_search</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">Find where we talked about onboarding with GS Home Services</td>
-          <td>transcript_search</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">What did Mike say about the landing page?</td>
-          <td>transcript_search</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">Compare Echelon meetings from this month vs last month</td>
-          <td>temporal_search</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#f0fdf4">
-          <td>openai/gpt-5-mini</td>
-          <td title="">Show me all meetings from last week</td>
-          <td>temporal_search</td>
-          <td>temporal_search</td>
-          <td>-</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">What changed in Bearcat's sentiment over the past month?</td>
-          <td>temporal_search</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">Prep me for the Echelon meeting tomorrow</td>
-          <td>meeting_prep</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">What do I need to know before the Bearcat call?</td>
-          <td>meeting_prep</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#f0fdf4">
-          <td>openai/gpt-5-mini</td>
-          <td title="">Brief me on London Flooring before our session</td>
-          <td>meeting_prep</td>
-          <td>meeting_prep</td>
-          <td>London Flooring</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="">Which clients have the most overdue items?</td>
-          <td>meta_analysis</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#f0fdf4">
-          <td>openai/gpt-5-mini</td>
-          <td title="">Compare engagement scores across all clients</td>
-          <td>meta_analysis</td>
-          <td>meta_analysis</td>
-          <td>-</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="lowercase, no question mark">echelon action items *</td>
-          <td>action_items</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#f0fdf4">
-          <td>openai/gpt-5-mini</td>
-          <td title="single word">summarize *</td>
-          <td>meeting_summary</td>
-          <td>meeting_summary</td>
-          <td>-</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="vague sentiment">How's Bearcat doing? *</td>
-          <td>sentiment_analysis</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="ambiguous intent">What about GS Home Services? *</td>
-          <td>meeting_summary</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fefce8">
-          <td>openai/gpt-5-mini</td>
-          <td title="broad request">Tell me everything about Echelon *</td>
-          <td>meeting_prep</td>
-          <td>meta_analysis</td>
-          <td>Echelon</td>
-          <td>60%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="slang">yo whats up with bearcat *</td>
-          <td>meeting_summary</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="multi-intent">1st Choice open items and sentiment *</td>
-          <td>action_items</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="empty input">(empty) *</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="gibberish">asdfghjkl qwerty *</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="off-topic">What is the meaning of life? *</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="partial client name">Jay Conner meeting summary and action items *</td>
-          <td>meeting_summary</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#fef2f2">
-          <td>openai/gpt-5-mini</td>
-          <td title="all-client prep">Prep me for ALL meetings tomorrow *</td>
-          <td>meeting_prep</td>
-          <td>-</td>
-          <td>-</td>
-          <td>0%</td>
-        </tr>
-<tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
-          <td title="">Summarize the last Echelon meeting</td>
-          <td>meeting_summary</td>
-          <td>meeting_summary</td>
-          <td>Echelon</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
-          <td title="">What happened in the most recent Bearcat call?</td>
-          <td>meeting_summary</td>
-          <td>meeting_summary</td>
-          <td>Bearcat</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
-          <td title="">Give me a recap of the London Flooring session</td>
-          <td>meeting_summary</td>
-          <td>meeting_summary</td>
-          <td>London Flooring</td>
-          <td>100%</td>
-        </tr>
-<tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Summary of last week's GS Home Services meeting</td>
           <td>meeting_summary</td>
           <td>meeting_summary</td>
@@ -3356,7 +5919,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">What did we cover in the Prosper Group call?</td>
           <td>meeting_summary</td>
           <td>meeting_summary</td>
@@ -3364,7 +5927,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Tell me about the Jerry Levinson meeting</td>
           <td>meeting_summary</td>
           <td>meeting_summary</td>
@@ -3372,7 +5935,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">What are the open action items for Echelon?</td>
           <td>action_items</td>
           <td>action_items</td>
@@ -3380,7 +5943,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Show me pending tasks for Bearcat</td>
           <td>action_items</td>
           <td>action_items</td>
@@ -3388,7 +5951,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Any overdue items for GS Home Services?</td>
           <td>action_items</td>
           <td>action_items</td>
@@ -3396,7 +5959,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">List all open tasks across all clients</td>
           <td>action_items</td>
           <td>action_items</td>
@@ -3404,7 +5967,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">What action items does Tom Ruwitch have?</td>
           <td>action_items</td>
           <td>action_items</td>
@@ -3412,7 +5975,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Show me Pearce HVAC's pending items</td>
           <td>action_items</td>
           <td>action_items</td>
@@ -3420,7 +5983,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">How many meetings have we had with Echelon?</td>
           <td>count_query</td>
           <td>count_query</td>
@@ -3428,7 +5991,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">How many open action items total?</td>
           <td>count_query</td>
           <td>count_query</td>
@@ -3436,7 +5999,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">How many clients do we have?</td>
           <td>count_query</td>
           <td>count_query</td>
@@ -3444,7 +6007,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">How many meetings happened last week?</td>
           <td>count_query</td>
           <td>count_query</td>
@@ -3452,7 +6015,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">What's the sentiment score for Echelon?</td>
           <td>sentiment_analysis</td>
           <td>sentiment_analysis</td>
@@ -3460,7 +6023,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">How is Bearcat feeling about our work?</td>
           <td>sentiment_analysis</td>
           <td>sentiment_analysis</td>
@@ -3468,7 +6031,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Show me engagement scores for London Flooring</td>
           <td>sentiment_analysis</td>
           <td>sentiment_analysis</td>
@@ -3476,7 +6039,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#fefce8">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">What's the mood trend across all clients?</td>
           <td>sentiment_analysis</td>
           <td>meta_analysis</td>
@@ -3484,7 +6047,7 @@
           <td>60%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Did anyone mention budget cuts in the Echelon meeting?</td>
           <td>transcript_search</td>
           <td>transcript_search</td>
@@ -3492,7 +6055,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Search for discussions about SEO in Bearcat transcripts</td>
           <td>transcript_search</td>
           <td>transcript_search</td>
@@ -3500,7 +6063,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Find where we talked about onboarding with GS Home Services</td>
           <td>transcript_search</td>
           <td>transcript_search</td>
@@ -3508,15 +6071,15 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">What did Mike say about the landing page?</td>
           <td>transcript_search</td>
           <td>transcript_search</td>
-          <td>Mike McVety</td>
+          <td>-</td>
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Compare Echelon meetings from this month vs last month</td>
           <td>temporal_search</td>
           <td>temporal_search</td>
@@ -3524,23 +6087,23 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Show me all meetings from last week</td>
           <td>temporal_search</td>
           <td>temporal_search</td>
           <td>-</td>
           <td>100%</td>
         </tr>
-<tr style="background:#fefce8">
-          <td>anthropic/claude-3-haiku-20240307</td>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">What changed in Bearcat's sentiment over the past month?</td>
           <td>temporal_search</td>
-          <td>sentiment_analysis</td>
+          <td>temporal_search</td>
           <td>Bearcat</td>
-          <td>60%</td>
+          <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Prep me for the Echelon meeting tomorrow</td>
           <td>meeting_prep</td>
           <td>meeting_prep</td>
@@ -3548,7 +6111,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">What do I need to know before the Bearcat call?</td>
           <td>meeting_prep</td>
           <td>meeting_prep</td>
@@ -3556,23 +6119,23 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Brief me on London Flooring before our session</td>
           <td>meeting_prep</td>
           <td>meeting_prep</td>
           <td>London Flooring</td>
           <td>100%</td>
         </tr>
-<tr style="background:#fefce8">
-          <td>anthropic/claude-3-haiku-20240307</td>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Which clients have the most overdue items?</td>
           <td>meta_analysis</td>
-          <td>action_items</td>
+          <td>meta_analysis</td>
           <td>-</td>
-          <td>60%</td>
+          <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="">Compare engagement scores across all clients</td>
           <td>meta_analysis</td>
           <td>meta_analysis</td>
@@ -3580,7 +6143,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="lowercase, no question mark">echelon action items *</td>
           <td>action_items</td>
           <td>action_items</td>
@@ -3588,7 +6151,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="single word">summarize *</td>
           <td>meeting_summary</td>
           <td>meeting_summary</td>
@@ -3596,23 +6159,23 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="vague sentiment">How's Bearcat doing? *</td>
           <td>sentiment_analysis</td>
           <td>sentiment_analysis</td>
           <td>Bearcat</td>
           <td>100%</td>
         </tr>
-<tr style="background:#fefce8">
-          <td>anthropic/claude-3-haiku-20240307</td>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="ambiguous intent">What about GS Home Services? *</td>
           <td>meeting_summary</td>
-          <td>meta_analysis</td>
+          <td>meeting_summary</td>
           <td>GS Home Services</td>
-          <td>60%</td>
+          <td>100%</td>
         </tr>
 <tr style="background:#fefce8">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="broad request">Tell me everything about Echelon *</td>
           <td>meeting_prep</td>
           <td>meeting_summary</td>
@@ -3620,7 +6183,7 @@
           <td>60%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="slang">yo whats up with bearcat *</td>
           <td>meeting_summary</td>
           <td>meeting_summary</td>
@@ -3628,7 +6191,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="multi-intent">1st Choice open items and sentiment *</td>
           <td>action_items</td>
           <td>action_items</td>
@@ -3636,7 +6199,7 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="empty input">(empty) *</td>
           <td>-</td>
           <td>-</td>
@@ -3644,23 +6207,23 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="gibberish">asdfghjkl qwerty *</td>
           <td>-</td>
-          <td>meta_analysis</td>
+          <td>-</td>
           <td>-</td>
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="off-topic">What is the meaning of life? *</td>
           <td>-</td>
-          <td>meta_analysis</td>
+          <td>-</td>
           <td>-</td>
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
           <td title="partial client name">Jay Conner meeting summary and action items *</td>
           <td>meeting_summary</td>
           <td>meeting_summary</td>
@@ -3668,7 +6231,359 @@
           <td>100%</td>
         </tr>
 <tr style="background:#f0fdf4">
-          <td>anthropic/claude-3-haiku-20240307</td>
+          <td>anthropic/claude-haiku-4-5-20251001</td>
+          <td title="all-client prep">Prep me for ALL meetings tomorrow *</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Summarize the last Echelon meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">What happened in the most recent Bearcat call?</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Give me a recap of the London Flooring session</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>London Flooring</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Summary of last week's GS Home Services meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">What did we cover in the Prosper Group call?</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Prosper Group</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Tell me about the Jerry Levinson meeting</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Jerry Levinson</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">What are the open action items for Echelon?</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Show me pending tasks for Bearcat</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Any overdue items for GS Home Services?</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">List all open tasks across all clients</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">What action items does Tom Ruwitch have?</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Tom Ruwitch</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Show me Pearce HVAC's pending items</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Pearce HVAC</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">How many meetings have we had with Echelon?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">How many open action items total?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">How many clients do we have?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">How many meetings happened last week?</td>
+          <td>count_query</td>
+          <td>count_query</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">What's the sentiment score for Echelon?</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">How is Bearcat feeling about our work?</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Show me engagement scores for London Flooring</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>London Flooring</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">What's the mood trend across all clients?</td>
+          <td>sentiment_analysis</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Did anyone mention budget cuts in the Echelon meeting?</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Search for discussions about SEO in Bearcat transcripts</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Find where we talked about onboarding with GS Home Services</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">What did Mike say about the landing page?</td>
+          <td>transcript_search</td>
+          <td>transcript_search</td>
+          <td>Mike McVety</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Compare Echelon meetings from this month vs last month</td>
+          <td>temporal_search</td>
+          <td>temporal_search</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Show me all meetings from last week</td>
+          <td>temporal_search</td>
+          <td>temporal_search</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">What changed in Bearcat's sentiment over the past month?</td>
+          <td>temporal_search</td>
+          <td>sentiment_analysis</td>
+          <td>Bearcat</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Prep me for the Echelon meeting tomorrow</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">What do I need to know before the Bearcat call?</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Brief me on London Flooring before our session</td>
+          <td>meeting_prep</td>
+          <td>meeting_prep</td>
+          <td>London Flooring</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Which clients have the most overdue items?</td>
+          <td>meta_analysis</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="">Compare engagement scores across all clients</td>
+          <td>meta_analysis</td>
+          <td>meta_analysis</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="lowercase, no question mark">echelon action items *</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>Echelon</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="single word">summarize *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="vague sentiment">How's Bearcat doing? *</td>
+          <td>sentiment_analysis</td>
+          <td>sentiment_analysis</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="ambiguous intent">What about GS Home Services? *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>GS Home Services</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#fefce8">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="broad request">Tell me everything about Echelon *</td>
+          <td>meeting_prep</td>
+          <td>meeting_summary</td>
+          <td>Echelon</td>
+          <td>60%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="slang">yo whats up with bearcat *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Bearcat</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="multi-intent">1st Choice open items and sentiment *</td>
+          <td>action_items</td>
+          <td>action_items</td>
+          <td>1st Choice</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="empty input">(empty) *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="gibberish">asdfghjkl qwerty *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="off-topic">What is the meaning of life? *</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
+          <td title="partial client name">Jay Conner meeting summary and action items *</td>
+          <td>meeting_summary</td>
+          <td>meeting_summary</td>
+          <td>Jay Conner / Conner Marketing</td>
+          <td>100%</td>
+        </tr>
+<tr style="background:#f0fdf4">
+          <td>anthropic/claude-4-sonnet-20250514</td>
           <td title="all-client prep">Prep me for ALL meetings tomorrow *</td>
           <td>meeting_prep</td>
           <td>meeting_prep</td>
