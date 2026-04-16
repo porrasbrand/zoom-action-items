@@ -11,6 +11,7 @@
 
 import 'dotenv/config';
 import Anthropic from '@anthropic-ai/sdk';
+import fs from 'fs';
 import { embedChunk, loadAllEmbeddings, searchSimilar, loadMeetingEmbeddings, searchMeetings, cosineSimilarity } from './transcript-embedder.js';
 
 const anthropic = new Anthropic();
@@ -35,6 +36,51 @@ export function ensureIndex(db) {
 export function invalidateIndex() {
   chunkIndex = null;
   meetingIndex = null;
+  contactMap = null;
+}
+
+// ============ CLIENT AUTO-DETECTION ============
+
+let contactMap = null;
+
+function buildContactMap(db) {
+  const contacts = db.prepare('SELECT contact_name, client_id, client_name FROM client_contacts').all();
+  const clients = db.prepare("SELECT DISTINCT client_id, client_name FROM meetings WHERE client_id IS NOT NULL AND client_id != 'unmatched'").all();
+
+  const entries = [];
+  for (const c of contacts) {
+    entries.push({ name: c.contact_name.toLowerCase(), clientId: c.client_id, clientName: c.client_name || c.client_id });
+  }
+  for (const c of clients) {
+    if (c.client_name) entries.push({ name: c.client_name.toLowerCase(), clientId: c.client_id, clientName: c.client_name });
+    entries.push({ name: c.client_id.replace(/-/g, ' '), clientId: c.client_id, clientName: c.client_name || c.client_id });
+  }
+  // Sort longest first so 'Andrew Williams' matches before 'Andrew'
+  entries.sort((a, b) => b.name.length - a.name.length);
+  return entries;
+}
+
+export function detectClient(db, question) {
+  if (!contactMap) contactMap = buildContactMap(db);
+  const qLower = question.toLowerCase();
+
+  for (const entry of contactMap) {
+    if (entry.name.length >= 3 && qLower.includes(entry.name)) {
+      return { clientId: entry.clientId, clientName: entry.clientName, method: 'substring_match', matched: entry.name };
+    }
+  }
+  return null;
+}
+
+// ============ QUERY LOGGING ============
+
+const LOG_PATH = 'data/concierge-queries.jsonl';
+
+function logQuery(entry) {
+  try {
+    const line = JSON.stringify({ ...entry, timestamp: new Date().toISOString() }) + '\n';
+    fs.appendFileSync(LOG_PATH, line);
+  } catch {}
 }
 
 // ============ QUERY ROUTER ============
@@ -517,10 +563,44 @@ function checkQACache(db, question, clientId) {
 
 export async function ask(db, question, { clientId = null, chatHistory = [], topK = 10 } = {}) {
   const queryType = classifyQuery(question);
+  let detectionMethod = clientId ? 'provided' : 'none';
 
-  // Check Q&A cache first (instant, zero tokens)
+  // Auto-detect client from question text if not provided
+  if (!clientId) {
+    const detected = detectClient(db, question);
+    if (detected) {
+      clientId = detected.clientId;
+      detectionMethod = detected.method;
+      console.log(`[RAG] Auto-detected client: ${detected.clientId} via ${detected.method} (matched: "${detected.matched}")`);
+    }
+  }
+
+  // Fallback clarification: if still no client for client-specific queries, don't silently return wrong data
+  if (!clientId && ['transcript_search', 'client_brief', 'action_items', 'session_analysis'].includes(queryType)) {
+    const recentClients = db.prepare(
+      "SELECT DISTINCT client_name FROM meetings WHERE client_id IS NOT NULL AND client_id != 'unmatched' ORDER BY start_time DESC LIMIT 5"
+    ).all();
+    const suggestions = recentClients.map(c => c.client_name).join(', ');
+
+    logQuery({ query: question, clientDetected: null, detectionMethod: 'none', classification: queryType, retrievalPath: 'clarification', cacheHit: false });
+
+    return {
+      answer: `I couldn't identify which client you're asking about. Could you mention the client name? Recent clients: ${suggestions}`,
+      citations: [],
+      queryType,
+      model: 'system',
+      tokensUsed: 0,
+      chunksUsed: 0,
+      latencyMs: 0,
+      needsClarification: true,
+      clientDetected: null
+    };
+  }
+
+  // Check Q&A cache (instant, zero tokens)
   const cachedAnswer = checkQACache(db, question, clientId);
   if (cachedAnswer) {
+    logQuery({ query: question, clientDetected: clientId, detectionMethod, classification: queryType, retrievalPath: 'cache', cacheHit: true });
     return {
       answer: cachedAnswer,
       citations: [],
@@ -529,11 +609,27 @@ export async function ask(db, question, { clientId = null, chatHistory = [], top
       tokensUsed: 0,
       chunksUsed: 0,
       latencyMs: 0,
-      cached: true
+      cached: true,
+      clientDetected: clientId
     };
   }
 
   const context = await retrieveContext(db, question, queryType, { clientId, topK });
   const result = await generateAnswer(question, context, chatHistory, queryType);
+  result.clientDetected = clientId;
+
+  logQuery({
+    query: question,
+    clientDetected: clientId,
+    detectionMethod,
+    classification: queryType,
+    retrievalPath: context.chunks?.length > 0 ? 'chunks' : 'structured',
+    cacheHit: false,
+    chunksReturned: context.chunks?.length || 0,
+    model: result.model,
+    tokensUsed: result.tokensUsed,
+    latencyMs: result.latencyMs
+  });
+
   return result;
 }

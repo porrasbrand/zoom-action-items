@@ -172,6 +172,17 @@ export function runMigrations() {
   `);
   d.exec('CREATE INDEX IF NOT EXISTS idx_qa_meeting ON meeting_qa_cache(meeting_id)');
 
+  // Client contacts mapping (Concierge auto-detection)
+  d.exec(`
+    CREATE TABLE IF NOT EXISTS client_contacts (
+      contact_name TEXT NOT NULL,
+      client_id TEXT NOT NULL,
+      client_name TEXT,
+      source TEXT DEFAULT 'topic_parse',
+      PRIMARY KEY (contact_name, client_id)
+    )
+  `);
+
   console.log('[Migration] Database schema up to date');
 }
 

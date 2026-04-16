@@ -2882,17 +2882,29 @@ router.post('/chat', async (req, res) => {
       }
     }
 
+    // Resolve client_id: explicit > session inheritance
+    let resolvedClientId = client_id || null;
+    if (!resolvedClientId && sid) {
+      const session = d.prepare('SELECT client_id FROM chat_sessions WHERE id = ?').get(sid);
+      if (session?.client_id) resolvedClientId = session.client_id;
+    }
+
     // Load chat history (last 6 messages)
     const history = d.prepare(
       'SELECT role, content FROM chat_messages WHERE session_id = ? ORDER BY created_at DESC LIMIT 6'
     ).all(sid).reverse();
 
-    // Call RAG engine
+    // Call RAG engine (auto-detects client from question text if resolvedClientId is null)
     const result = await ask(d, question.trim(), {
-      clientId: client_id || null,
+      clientId: resolvedClientId,
       chatHistory: history,
       topK: 10
     });
+
+    // If RAG auto-detected a client, update the session for future messages
+    if (result.clientDetected && !client_id) {
+      d.prepare('UPDATE chat_sessions SET client_id = ? WHERE id = ?').run(result.clientDetected, sid);
+    }
 
     // Save user message
     d.prepare(
