@@ -74,6 +74,14 @@ const webhookHandler = createWebhookHandler({
       const { pollOnce } = await import("../poll.js");
       await pollOnce();
       console.log("[Webhook] Pipeline run complete");
+      // Backfill any gaps (catches eval/summary failures)
+      try {
+        const { runBackfill } = await import('../lib/pipeline-backfill.js');
+        await runBackfill('data/zoom-action-items.db', { maxEvals: 5, quiet: false });
+        console.log("[Webhook] Backfill complete");
+      } catch (bfErr) {
+        console.error("[Webhook] Backfill error:", bfErr.message);
+      }
     } catch (err) {
       console.error("[Webhook] Pipeline error:", err.message);
     }

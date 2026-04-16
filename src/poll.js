@@ -356,6 +356,16 @@ export async function pollOnce() {
   const stats = db.getStats();
   log(`DB: ${stats.total} total meetings`);
 
+  // Auto-backfill: catch gaps from failed processing steps
+  try {
+    const { runBackfill } = await import('./lib/pipeline-backfill.js');
+    const bfr = await runBackfill(db.getDb(), { maxEvals: 5, quiet: true });
+    const bTotal = (bfr.chunks?.processed || 0) + (bfr.summaries?.processed || 0) + (bfr.evals?.processed || 0);
+    if (bTotal > 0) log('[Backfill] Filled: ' + (bfr.chunks?.processed || 0) + ' chunks, ' + (bfr.summaries?.processed || 0) + ' summaries, ' + (bfr.evals?.processed || 0) + ' evals');
+  } catch (err) {
+    log('[Backfill] Error (non-blocking): ' + err.message);
+  }
+
   return { processed, skipped, errors };
 }
 
