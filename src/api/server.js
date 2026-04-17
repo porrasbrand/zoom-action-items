@@ -31,9 +31,90 @@ import {
   apiAuthMiddleware
 } from '../lib/auth.js';
 
+import { getPendingPushItems, updatePushQueueSuccess, updatePushQueueFailed, getActionItemById } from './db-queries.js';
+import * as proofhub from '../lib/proofhub-client.js';
+import { resolvePersonSync as resolvePerson } from '../lib/people-resolver.js';
+
 // Run DB migrations on startup
 runMigrations();
 runAuthMigrations();
+
+// Auto-retry pending pushes from push_queue
+async function retryPendingPushes() {
+  try {
+    const pending = getPendingPushItems();
+    console.log(`[Startup] Found ${pending.length} pending push items in queue`);
+
+    const hour = new Date().getUTCHours();
+    if (hour >= 13 && hour <= 23) {
+      console.log('[Startup] Warning: running during business hours (13:00-23:00 UTC)');
+    }
+
+    if (pending.length === 0) return;
+
+    if (!proofhub.isProofhubConfigured()) {
+      console.log('[Startup] ProofHub not configured, skipping push retries');
+      return;
+    }
+
+    for (const queueItem of pending) {
+      try {
+        console.log(`[Startup Retry] Pushing item ${queueItem.action_item_id}: ${queueItem.item_title}`);
+
+        const item = getActionItemById(queueItem.action_item_id);
+        if (!item) {
+          console.log(`[Startup Retry] Item ${queueItem.action_item_id} not found, skipping`);
+          updatePushQueueFailed(queueItem.action_item_id, 'Action item not found');
+          continue;
+        }
+
+        // Skip if already pushed
+        if (item.ph_task_id) {
+          console.log(`[Startup Retry] Item ${queueItem.action_item_id} already pushed, marking complete`);
+          updatePushQueueSuccess(queueItem.action_item_id);
+          continue;
+        }
+
+        // Resolve assignee
+        let assigneeId = null;
+        if (item.owner_name) {
+          const resolved = resolvePerson(item.owner_name);
+          if (resolved?.ph_id) assigneeId = resolved.ph_id;
+        }
+
+        const taskData = {
+          title: item.title,
+          description: (item.description || '').replace(/\n/g, '<br>')
+        };
+        if (assigneeId) taskData.assigned = [parseInt(assigneeId)];
+        if (item.due_date) taskData.due_date = item.due_date.slice(0, 10);
+
+        const task = await proofhub.createTask(queueItem.ph_project_id, queueItem.ph_task_list_id, taskData);
+        console.log(`[Startup Retry] Success for item ${queueItem.action_item_id}, ph_task_id: ${task.id}`);
+        updatePushQueueSuccess(queueItem.action_item_id);
+
+        // Update action item record
+        const { updateActionItem, setPushedAt } = await import('./db-queries.js');
+        updateActionItem(queueItem.action_item_id, {
+          ph_task_id: task.id.toString(),
+          ph_project_id: queueItem.ph_project_id,
+          ph_task_list_id: queueItem.ph_task_list_id || null,
+          ph_assignee_id: assigneeId?.toString() || null,
+          status: 'pushed'
+        });
+        setPushedAt(queueItem.action_item_id);
+      } catch (err) {
+        console.error(`[Startup Retry] FAILED for item ${queueItem.action_item_id}:`, err.message);
+        updatePushQueueFailed(queueItem.action_item_id, err.message);
+      }
+    }
+  } catch (err) {
+    console.error('[Startup] Push queue retry error:', err.message);
+  }
+}
+
+// Run retry after migrations complete
+retryPendingPushes();
 
 const PORT = process.env.DASHBOARD_PORT || 3875;
 const BASE_PATH = '/zoom';
