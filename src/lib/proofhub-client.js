@@ -168,6 +168,12 @@ export async function getTaskComments(projectId, taskListId, taskId) {
   return request('GET', `/projects/${projectId}/todolists/${taskListId}/tasks/${taskId}/comments`);
 }
 
+export async function addTaskComment(projectId, taskListId, taskId, content) {
+  return request('POST', `/projects/${projectId}/todolists/${taskListId}/tasks/${taskId}/comments`, {
+    description: content
+  });
+}
+
 export default {
   isProofhubConfigured,
   clearCache,
@@ -178,5 +184,6 @@ export default {
   createTask,
   getTask,
   getPeople,
-  getTaskComments
+  getTaskComments,
+  addTaskComment
 };

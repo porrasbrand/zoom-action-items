@@ -502,6 +502,16 @@ router.post('/action-items/:id/push-ph', async (req, res) => {
     // Create the task
     const task = await proofhub.createTask(ph_project_id, taskListId, taskData);
 
+    // AK comment: auto-post acknowledgment request to assignee
+    if (req.body.ak_comment && item.owner_name) {
+      try {
+        await proofhub.addTaskComment(ph_project_id, taskListId, task.id,
+          `${item.owner_name} - Please confirm receipt of this task... Thanks...`);
+      } catch (e) {
+        console.warn('[PH] AK comment failed:', e.message);
+      }
+    }
+
     // Update action item with PH info
     const phTaskUrl = `https://${process.env.PROOFHUB_COMPANY_URL}/#tasks/${task.id}/project-${ph_project_id}`;
     db.updateActionItem(itemId, {
