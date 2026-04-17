@@ -146,8 +146,19 @@ export async function getGoogleUser(accessToken) {
  */
 export function isEmailWhitelisted(email) {
   const d = getDb();
-  const user = d.prepare('SELECT * FROM auth_users WHERE email = ?').get(email.toLowerCase());
-  return user || null;
+  const normalizedEmail = email.toLowerCase();
+  const user = d.prepare('SELECT * FROM auth_users WHERE email = ?').get(normalizedEmail);
+  if (user) return user;
+
+  // Auto-allow any @breakthrough3x.com email
+  if (normalizedEmail.endsWith('@breakthrough3x.com')) {
+    const namePart = normalizedEmail.split('@')[0].replace(/[._]/g, ' ');
+    const name = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+    d.prepare('INSERT OR IGNORE INTO auth_users (email, name, role) VALUES (?, ?, ?)').run(normalizedEmail, name, 'user');
+    return d.prepare('SELECT * FROM auth_users WHERE email = ?').get(normalizedEmail);
+  }
+
+  return null;
 }
 
 /**
@@ -188,7 +199,22 @@ export function validateSession(sessionId) {
     WHERE s.sid = ? AND s.expires_at > datetime('now')
   `).get(sessionId);
 
-  return session || null;
+  if (!session) {
+    // Debug: check if session exists but is expired
+    const expired = d.prepare('SELECT sid, expires_at FROM auth_sessions WHERE sid = ?').get(sessionId);
+    if (expired) {
+      console.log('[Auth] Session expired for sid:', sessionId?.substring(0, 8), '- expired at:', expired.expires_at);
+    } else {
+      console.log('[Auth] Session not found for sid:', sessionId?.substring(0, 8));
+    }
+    return null;
+  }
+
+  // Sliding window: extend session by 7 days on each valid use
+  const newExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  d.prepare('UPDATE auth_sessions SET expires_at = ? WHERE sid = ?').run(newExpiry, sessionId);
+
+  return session;
 }
 
 /**
