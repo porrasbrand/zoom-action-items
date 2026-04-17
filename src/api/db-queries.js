@@ -227,7 +227,8 @@ export function getMeetings({ client_id, status, from, to, limit = 50, offset = 
       LENGTH(m.transcript_raw) as transcript_length,
       (SELECT COUNT(*) FROM action_items WHERE meeting_id = m.id AND source != 'adversarial_added' AND (status IS NULL OR status NOT IN ('superseded'))) as action_item_count,
       (SELECT COUNT(*) FROM action_items WHERE meeting_id = m.id AND source = 'adversarial_added' AND status = 'suggested') as suggested_count,
-      (SELECT COUNT(*) FROM decisions WHERE meeting_id = m.id) as decision_count
+      (SELECT COUNT(*) FROM decisions WHERE meeting_id = m.id) as decision_count,
+      (SELECT COUNT(*) FROM action_items WHERE meeting_id = m.id AND (ph_task_id IS NOT NULL OR status = 'pushed')) as pushed_count
     FROM meetings m
     ${whereClause}
     ORDER BY m.start_time ${orderDir}

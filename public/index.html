@@ -185,6 +185,9 @@
       border-left-color: #3fb950;
     }
 
+    .meeting-card.meeting-processed {
+      border-left: 3px solid #22c55e;
+    }
     .meeting-card.unmatched {
       border-left-color: #d29922;
     }
@@ -5717,7 +5720,7 @@
         const signal = m.confidence_signal || 'pending';
         const suggestedCount = m.suggested_count || 0;
         return `
-          <div class="meeting-card ${isUnmatched ? 'unmatched' : ''} ${isActive ? 'active' : ''}"
+          <div class="meeting-card ${isUnmatched ? 'unmatched' : ''} ${isActive ? 'active' : ''} ${m.pushed_count > 0 ? 'meeting-processed' : ''}"
                onclick="loadMeetingDetail(${m.id})">
             <div class="date"><span class="confidence-dot ${signal}"></span>${escapeHtml(formatDate(m.start_time))}</div>
             <div class="topic">${escapeHtml(m.topic || 'Untitled')}${suggestedCount > 0 ? `<span class="suggested-count-badge">+${suggestedCount}</span>` : ''}</div>
