@@ -183,6 +183,21 @@ export function runMigrations() {
     )
   `);
 
+  // Push queue table (persistent push tracking)
+  d.exec(`
+    CREATE TABLE IF NOT EXISTS push_queue (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      action_item_id INTEGER NOT NULL,
+      ph_project_id TEXT NOT NULL,
+      ph_task_list_id TEXT,
+      status TEXT DEFAULT 'pending',
+      attempts INTEGER DEFAULT 0,
+      last_error TEXT,
+      created_at TEXT DEFAULT (datetime('now')),
+      completed_at TEXT
+    )
+  `);
+
   console.log('[Migration] Database schema up to date');
 }
 
@@ -898,4 +913,63 @@ export function clearRecapItems(meetingId) {
   return d.prepare(`
     DELETE FROM action_items WHERE meeting_id = ? AND confidence_tier = 'recap'
   `).run(meetingId);
+}
+
+// ============ UNPUSHED ITEMS ============
+
+export function getUnpushedItems(meetingId) {
+  const d = getDb();
+  return d.prepare(`
+    SELECT * FROM action_items
+    WHERE meeting_id = ?
+      AND owner_name IS NOT NULL
+      AND ph_task_id IS NULL
+      AND status = 'open'
+    ORDER BY created_at ASC
+  `).all(meetingId);
+}
+
+// ============ PUSH QUEUE ============
+
+export function insertPushQueue(actionItemId, phProjectId, phTaskListId) {
+  const d = getDb();
+  return d.prepare(`
+    INSERT INTO push_queue (action_item_id, ph_project_id, ph_task_list_id, status, attempts)
+    VALUES (?, ?, ?, 'pending', 0)
+  `).run(actionItemId, phProjectId, phTaskListId || null);
+}
+
+export function updatePushQueueSuccess(actionItemId) {
+  const d = getDb();
+  return d.prepare(`
+    UPDATE push_queue SET status = 'completed', completed_at = datetime('now')
+    WHERE action_item_id = ? AND status = 'pending'
+  `).run(actionItemId);
+}
+
+export function updatePushQueueFailed(actionItemId, errorMessage) {
+  const d = getDb();
+  return d.prepare(`
+    UPDATE push_queue SET status = 'failed', last_error = ?, attempts = attempts + 1
+    WHERE action_item_id = ? AND status = 'pending'
+  `).run(errorMessage, actionItemId);
+}
+
+export function getPendingPushItems() {
+  const d = getDb();
+  return d.prepare(`
+    SELECT pq.*, ai.title as item_title, ai.owner_name, ai.description, ai.due_date,
+           ai.meeting_id, ai.collaborators
+    FROM push_queue pq
+    JOIN action_items ai ON ai.id = pq.action_item_id
+    WHERE pq.status = 'pending' AND pq.attempts < 3
+    ORDER BY pq.created_at ASC
+  `).all();
+}
+
+export function resetPushQueueForRetry(id) {
+  const d = getDb();
+  return d.prepare(`
+    UPDATE push_queue SET status = 'pending' WHERE id = ? AND status = 'failed' AND attempts < 3
+  `).run(id);
 }
