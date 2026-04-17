@@ -493,6 +493,12 @@ router.post('/action-items/:id/push-ph', async (req, res) => {
       taskData.due_date = item.due_date.slice(0, 10);
     }
 
+    // Use meeting start_time as start_date if available
+    const meeting = db.getMeetingById(item.meeting_id);
+    if (meeting?.meeting?.start_time) {
+      taskData.start_date = meeting.meeting.start_time.slice(0, 10);
+    }
+
     // Create the task
     const task = await proofhub.createTask(ph_project_id, taskListId, taskData);
 
@@ -597,6 +603,11 @@ router.post('/meetings/:id/push-all-ph', async (req, res) => {
 
         if (item.due_date) {
           taskData.due_date = item.due_date.slice(0, 10);
+        }
+
+        // Use meeting start_time as start_date
+        if (meeting?.start_time) {
+          taskData.start_date = meeting.start_time.slice(0, 10);
         }
 
         // Create task
