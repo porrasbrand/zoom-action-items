@@ -4,6 +4,7 @@
 
 import { Router } from 'express';
 import crypto from 'crypto';
+import multer from 'multer';
 import * as db from './db-queries.js';
 import { getDatabase } from './db-queries.js';
 import { readFileSync } from 'fs';
@@ -423,6 +424,31 @@ router.get('/proofhub/client-project/:clientId', (req, res) => {
       ph_project_id: client.ph_project_id || null
     });
   } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/proofhub/tasks/:taskId/attach - Upload file attachment to PH task
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } }); // 10MB max
+router.post('/proofhub/tasks/:taskId/attach', upload.single('file'), async (req, res) => {
+  try {
+    if (!proofhub.isProofhubConfigured()) {
+      return res.status(503).json({ error: 'ProofHub not configured' });
+    }
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const { taskId } = req.params;
+    const { project_id, task_list_id } = req.body;
+    if (!project_id || !task_list_id) {
+      return res.status(400).json({ error: 'project_id and task_list_id required' });
+    }
+
+    const result = await proofhub.uploadFileToTask(project_id, task_list_id, taskId, req.file.buffer, req.file.originalname);
+    res.json({ success: true, ...result });
+  } catch (err) {
+    console.error('[PH] File upload failed:', err.message);
     res.status(500).json({ error: err.message });
   }
 });

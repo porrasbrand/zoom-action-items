@@ -168,6 +168,45 @@ export async function getTaskComments(projectId, taskListId, taskId) {
   return request('GET', `/projects/${projectId}/todolists/${taskListId}/tasks/${taskId}/comments`);
 }
 
+export async function uploadFileToTask(projectId, taskListId, taskId, fileBuffer, filename) {
+  if (!isProofhubConfigured()) throw new Error('ProofHub not configured');
+
+  const now = Date.now();
+  const elapsed = now - lastRequestTime;
+  if (elapsed < MIN_INTERVAL) await new Promise(r => setTimeout(r, MIN_INTERVAL - elapsed));
+  lastRequestTime = Date.now();
+
+  const baseUrl = `https://${process.env.PROOFHUB_COMPANY_URL}/api/v3`;
+
+  // Step 1: Upload file
+  const boundary = '----FormBoundary' + Date.now();
+  const fileBody = Buffer.concat([
+    Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${filename}"\r\nContent-Type: application/octet-stream\r\n\r\n`),
+    fileBuffer,
+    Buffer.from(`\r\n--${boundary}--\r\n`)
+  ]);
+
+  const uploadRes = await fetch(`${baseUrl}/projects/${projectId}/files`, {
+    method: 'POST',
+    headers: {
+      'X-API-KEY': process.env.PROOFHUB_API_KEY,
+      'User-Agent': 'ZoomPipeline/1.0',
+      'Content-Type': `multipart/form-data; boundary=${boundary}`
+    },
+    body: fileBody
+  });
+
+  if (!uploadRes.ok) throw new Error(`PH file upload failed: ${uploadRes.status}`);
+  const uploaded = await uploadRes.json();
+
+  // Step 2: Attach to task
+  const attachRes = await request('PUT', `/projects/${projectId}/todolists/${taskListId}/tasks/${taskId}`, {
+    attachments: [uploaded.id]
+  });
+
+  return { fileId: uploaded.id, attached: true };
+}
+
 export async function addTaskComment(projectId, taskListId, taskId, content) {
   return request('POST', `/projects/${projectId}/todolists/${taskListId}/tasks/${taskId}/comments`, {
     description: content

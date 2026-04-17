@@ -6090,6 +6090,7 @@
               ${isClientTask ? `<span class="client-task-badge" onclick="toggleTaskType(${item.id}, 'client')" title="Click to mark as B3X task">Client Task</span>` : (item.task_type === 'b3x' ? `<span class="b3x-task-badge" onclick="toggleTaskType(${item.id}, 'b3x')" title="Click to mark as Client task">B3X</span>` : '')}
               ${isPushed ? `<span class="pushed-badge">Pushed</span>` : ''}
               ${item.ph_task_id ? `<a class="ph-link" href="https://breakthrough3x.proofhub.com/bapplite/#app/todos/project-${item.ph_project_id}/list-${item.ph_task_list_id}/task-${item.ph_task_id}" target="_blank">View in PH</a>` : ''}
+              ${item.ph_task_id ? `<label class="attach-btn" style="font-size:11px;color:#8b949e;cursor:pointer;margin-left:4px" title="Attach file">📎<input type="file" style="display:none" onchange="attachFileToPH(${item.id},'${item.ph_project_id}','${item.ph_task_list_id}','${item.ph_task_id}',this)"></label>` : ''}
               ${showPromote ? `<button class="promote-btn" onclick="promoteToRecap(${item.id})">↑ Promote to Recap</button>` : ''}
             </div>
             <div class="item-desc ${item.description ? '' : 'empty'} inline-edit" onclick="startEdit(${item.id}, 'description', this)">
@@ -6316,6 +6317,22 @@
     }
 
     // Push single item to ProofHub
+    async function attachFileToPH(itemId, projectId, taskListId, taskId, input) {
+      const file = input.files[0];
+      if (!file) return;
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('project_id', projectId);
+      formData.append('task_list_id', taskListId);
+      try {
+        const res = await fetch(`${API}/proofhub/tasks/${taskId}/attach`, { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.success) { showToast('File attached to PH task'); }
+        else { showToast('Attachment failed: ' + (data.error || 'unknown'), true); }
+      } catch (e) { showToast('Upload failed: ' + e.message, true); }
+      input.value = '';
+    }
+
     async function pushToPH(itemId) {
       const btn = document.getElementById(`push-btn-${itemId}`);
       btn.disabled = true;
