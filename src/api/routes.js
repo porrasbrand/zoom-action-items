@@ -121,6 +121,16 @@ router.get('/meetings/:id', (req, res) => {
   }
 });
 
+// GET /api/meetings/:id/unpushed-items - Items edited but not pushed to PH
+router.get('/meetings/:id/unpushed-items', (req, res) => {
+  try {
+    const items = db.getUnpushedItems(parseInt(req.params.id));
+    res.json({ items, count: items.length });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/meetings/:id/transcript - Raw transcript
 router.get('/meetings/:id/transcript', (req, res) => {
   try {
@@ -525,8 +535,23 @@ router.post('/action-items/:id/push-ph', async (req, res) => {
       taskData.start_date = meeting.meeting.start_time.slice(0, 10);
     }
 
+    // Insert into push queue before attempting
+    console.log('[PH Push] Starting push for item', itemId);
+    db.insertPushQueue(itemId, ph_project_id, taskListId);
+
     // Create the task
-    const task = await proofhub.createTask(ph_project_id, taskListId, taskData);
+    let task;
+    try {
+      task = await proofhub.createTask(ph_project_id, taskListId, taskData);
+    } catch (pushErr) {
+      console.error('[PH Push] FAILED for item', itemId, pushErr.message);
+      db.updatePushQueueFailed(itemId, pushErr.message);
+      throw pushErr;
+    }
+
+    // Mark push queue as completed
+    console.log('[PH Push] Success for item', itemId, 'ph_task_id:', task.id);
+    db.updatePushQueueSuccess(itemId);
 
     // AK comment: auto-post acknowledgment request to assignee
     if (req.body.ak_comment && item.owner_name) {
@@ -646,8 +671,22 @@ router.post('/meetings/:id/push-all-ph', async (req, res) => {
           taskData.start_date = meeting.start_time.slice(0, 10);
         }
 
+        // Insert into push queue
+        console.log('[PH Push] Starting push for item', item.id);
+        db.insertPushQueue(item.id, ph_project_id, taskListId);
+
         // Create task
-        const task = await proofhub.createTask(ph_project_id, taskListId, taskData);
+        let task;
+        try {
+          task = await proofhub.createTask(ph_project_id, taskListId, taskData);
+        } catch (pushErr) {
+          console.error('[PH Push] FAILED for item', item.id, pushErr.message);
+          db.updatePushQueueFailed(item.id, pushErr.message);
+          throw pushErr;
+        }
+
+        console.log('[PH Push] Success for item', item.id, 'ph_task_id:', task.id);
+        db.updatePushQueueSuccess(item.id);
 
         // Update action item
         const phTaskUrl = `https://${process.env.PROOFHUB_COMPANY_URL}/#tasks/${task.id}/project-${ph_project_id}`;

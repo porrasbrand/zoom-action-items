@@ -5751,6 +5751,9 @@
         const data = await res.json();
         renderMeetingDetail(data);
 
+        // Check for unpushed items and show retry banner
+        checkUnpushedItems(id);
+
         // Scope chat concierge to this meeting
         if (typeof setChatScope === 'function') {
           const meeting = data.meeting;
@@ -5848,6 +5851,8 @@
           </div>
 
           ${renderReextractBanner(meeting, action_items.filter(i => i.source !== 'adversarial_added').length)}
+
+          <div id="retry-push-banner-${meeting.id}"></div>
 
           ${summary ? `
             <div class="section">
@@ -6467,6 +6472,36 @@
         btn.disabled = false;
         btn.textContent = 'Push All';
       }
+    }
+
+    // Check for unpushed items and show retry banner
+    async function checkUnpushedItems(meetingId) {
+      try {
+        const res = await fetch(`${API}/meetings/${meetingId}/unpushed-items`);
+        const data = await res.json();
+        const banner = document.getElementById(`retry-push-banner-${meetingId}`);
+        if (!banner) return;
+        if (data.count > 0) {
+          banner.innerHTML = `
+            <div style="background:#d2992222;border-left:3px solid #d29922;padding:8px;font-size:13px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
+              <span>${data.count} item${data.count > 1 ? 's were' : ' was'} edited but not pushed to ProofHub.</span>
+              <button onclick="retryPushUnpushed(${meetingId})" style="background:#d29922;color:#000;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:600;">Push Now</button>
+            </div>
+          `;
+        } else {
+          banner.innerHTML = '';
+        }
+      } catch (err) {
+        console.warn('Failed to check unpushed items:', err);
+      }
+    }
+
+    // Retry push for unpushed items (triggers batch push for items with owners but no ph_task_id)
+    async function retryPushUnpushed(meetingId) {
+      // Show the push-all panel so user can select project/task list
+      const meeting = window._currentMeeting;
+      const clientId = meeting?.client_id || '';
+      showPushAllPanel(meetingId, clientId);
     }
 
     // Start inline editing
