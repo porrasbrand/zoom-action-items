@@ -482,7 +482,7 @@ router.post('/action-items/:id/push-ph', async (req, res) => {
 
     const taskData = {
       title: title || item.title,
-      description: desc
+      description: desc.replace(/\n/g, '<br>')
     };
 
     if (assignedIds.length > 0) {
@@ -588,7 +588,7 @@ router.post('/meetings/:id/push-all-ph', async (req, res) => {
 
         const taskData = {
           title: item.title,
-          description: desc
+          description: desc.replace(/\n/g, '<br>')
         };
 
         if (assignedIds.length > 0) {
