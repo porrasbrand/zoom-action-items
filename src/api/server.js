@@ -127,7 +127,7 @@ app.use(cookieParser());
 
 // CORS headers for development
 app.use((req, res, next) => {
-  const origin = req.headers.origin; const allowedOrigins = ['https://www.breakthrough3x.com', 'https://breakthrough3x.com', 'https://www.manuelporras.com']; if (allowedOrigins.includes(origin)) { res.header('Access-Control-Allow-Origin', origin); res.header('Access-Control-Allow-Credentials', 'true'); } else { res.header('Access-Control-Allow-Origin', '*'); }
+  const origin = req.headers.origin; const allowedOrigins = ['https://www.breakthrough3x.com', 'https://breakthrough3x.com', 'https://www.manuelporras.com', 'https://ai.breakthrough3x.com']; if (allowedOrigins.includes(origin)) { res.header('Access-Control-Allow-Origin', origin); res.header('Access-Control-Allow-Credentials', 'true'); } else { res.header('Access-Control-Allow-Origin', '*'); }
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') {
@@ -236,7 +236,8 @@ app.get(BASE_PATH + '/auth/callback', async (req, res) => {
     // Redirect to return_to or dashboard
     const returnTo = req.cookies?.zoom_return_to;
     if (returnTo) res.clearCookie('zoom_return_to', { path: '/zoom' });
-    const redirectUrl = (returnTo && returnTo.startsWith('https://')) ? returnTo : BASE_PATH + '/';
+    const allowedReturnDomains = ['https://ai.breakthrough3x.com', 'https://www.manuelporras.com', 'https://www.breakthrough3x.com'];
+    const redirectUrl = (returnTo && allowedReturnDomains.some(d => returnTo.startsWith(d))) ? returnTo : BASE_PATH + '/';
     res.redirect(redirectUrl);
   } catch (err) {
     console.error('[Auth] Callback error:', err);
@@ -262,7 +263,7 @@ app.get('/health', (req, res) => {
 });
 
 app.get(BASE_PATH + '/api/health', (req, res) => {
-  res.json({ status: 'ok', service: 'zoom-dashboard' });
+  res.json({ status: 'ok', service: 'zoom-dashboard', timestamp: new Date().toISOString(), uptime: Math.floor(process.uptime()) });
 });
 
 // ============ PROTECTED ROUTES (require auth) ============

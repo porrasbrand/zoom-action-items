@@ -5041,6 +5041,7 @@
       <div class="header-top">
         <h1>Zoom Meeting Notes</h1>
         <div class="header-right">
+          <span id="healthIndicator" style="font-size:11px;color:#8b949e;margin-right:8px" title="Server connection">🟢</span>
           <div class="user-info" id="userInfo">
             <span class="user-name" id="userName">Loading...</span>
             <a href="/zoom/auth/logout" class="logout-link">Logout</a>
@@ -10649,6 +10650,25 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
     }
 
     init();
+
+    // Health check indicator (every 30s)
+    async function checkHealth() {
+      const indicator = document.getElementById('healthIndicator');
+      try {
+        const start = Date.now();
+        const res = await fetch(API + '/health');
+        const latency = Date.now() - start;
+        if (res.ok) {
+          indicator.textContent = latency < 500 ? '🟢' : latency < 2000 ? '🟡' : '🔴';
+          indicator.title = 'Connected (' + latency + 'ms)';
+        } else {
+          indicator.textContent = '🔴';
+          indicator.title = 'Server error';
+        }
+      } catch { indicator.textContent = '🔴'; indicator.title = 'Disconnected'; }
+    }
+    checkHealth();
+    setInterval(checkHealth, 30000);
   </script>
   <!-- Chat Panel -->
   <button id="chat-toggle" class="chat-toggle-btn" onclick="toggleChatPanel()">💬 AI Concierge</button>
@@ -10854,11 +10874,14 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         if (currentChatMeetingId) body.meeting_id = currentChatMeetingId;
         if (currentChatSession) body.session_id = currentChatSession;
 
-        const res = await fetch(API + '/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
+        let res;
+        try {
+          res = await fetch(API + '/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        } catch (fetchErr) {
+          // Retry once after 2s on network failure
+          await new Promise(r => setTimeout(r, 2000));
+          res = await fetch(API + '/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        }
 
         typing.style.display = 'none';
         document.getElementById('chat-send-btn').disabled = false;
