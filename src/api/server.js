@@ -180,7 +180,7 @@ app.get(BASE_PATH + '/auth/google', (req, res) => {
   const returnTo = req.query.return_to || '';
   const authUrl = getGoogleAuthURL();
   // Store return_to in a cookie so callback can read it
-  if (returnTo) res.cookie('zoom_return_to', returnTo, { maxAge: 300000, path: '/zoom', sameSite: req.secure ? 'none' : 'lax', // lax for HTTP, none for HTTPS secure: req.secure });
+  if (returnTo) res.cookie("zoom_return_to", returnTo, { maxAge: 300000, path: "/zoom", sameSite: req.secure ? "none" : "lax", secure: req.secure });
   res.redirect(authUrl);
 });
 
