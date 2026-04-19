@@ -180,7 +180,7 @@ app.get(BASE_PATH + '/auth/google', (req, res) => {
   const returnTo = req.query.return_to || '';
   const authUrl = getGoogleAuthURL();
   // Store return_to in a cookie so callback can read it
-  if (returnTo) res.cookie('zoom_return_to', returnTo, { maxAge: 300000, path: '/zoom', sameSite: 'none', secure: true });
+  if (returnTo) res.cookie('zoom_return_to', returnTo, { maxAge: 300000, path: '/zoom', sameSite: req.secure ? 'none' : 'lax', // lax for HTTP, none for HTTPS secure: req.secure });
   res.redirect(authUrl);
 });
 
@@ -225,8 +225,8 @@ app.get(BASE_PATH + '/auth/callback', async (req, res) => {
     // Set cookie
     res.cookie('zoom_session', sessionId, {
       httpOnly: true,
-      secure: true, // was: process.env.NODE_ENV === 'production' || req.secure,
-      sameSite: 'none',
+      secure: process.env.NODE_ENV === 'production' || req.secure, // auto-detect HTTPS
+      sameSite: req.secure ? 'none' : 'lax', // lax for HTTP, none for HTTPS
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       path: '/zoom'
     });
