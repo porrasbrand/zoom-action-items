@@ -6100,6 +6100,7 @@
               ${isPushed ? `<span class="pushed-badge">Pushed</span>` : ''}
               ${item.ph_task_id ? `<a class="ph-link" href="https://breakthrough3x.proofhub.com/bapplite/#app/todos/project-${item.ph_project_id}/list-${item.ph_task_list_id}/task-${item.ph_task_id}" target="_blank">View in PH</a>` : ''}
               ${item.ph_task_id ? `<label class="attach-btn" style="font-size:11px;color:#8b949e;cursor:pointer;margin-left:4px" title="Attach file">📎<input type="file" style="display:none" onchange="attachFileToPH(${item.id},'${item.ph_project_id}','${item.ph_task_list_id}','${item.ph_task_id}',this)"></label>` : ''}
+              ${item.ph_task_id ? `<button class="action-btn reject-btn" onclick="unpushItem(${item.id})" title="Remove from ProofHub" style="font-size:10px;margin-left:4px;padding:2px 6px">Unpush</button>` : ''}
               ${showPromote ? `<button class="promote-btn" onclick="promoteToRecap(${item.id})">↑ Promote to Recap</button>` : ''}
             </div>
             <div class="item-desc ${item.description ? '' : 'empty'} inline-edit" onclick="startEdit(${item.id}, 'description', this)">
@@ -6249,6 +6250,22 @@
         flatpickr(el, { dateFormat: 'Y-m-d', theme: 'dark', allowInput: true });
       }
     }
+    async function unpushItem(id) {
+      if (!confirm('Remove this task from ProofHub? The PH task will be deleted.')) return;
+      try {
+        const res = await fetch(API + '/action-items/' + id + '/unpush', { method: 'POST' });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          if (err.canForce && confirm('PH delete failed: ' + (err.error || 'Unknown') + '. Force unpush anyway?')) {
+            const forceRes = await fetch(API + '/action-items/' + id + '/unpush?force=true', { method: 'POST' });
+            if (!forceRes.ok) throw new Error('Force unpush failed');
+          } else throw new Error(err.error || 'Unpush failed');
+        }
+        showToast('Unpushed from ProofHub');
+        if (selectedMeetingId) loadMeetingDetail(selectedMeetingId);
+      } catch (e) { showToast('Unpush failed: ' + e.message, true); }
+    }
+
     async function showPushPanel(itemId, clientId, ownerName) {
       const panel = document.getElementById(`push-panel-${itemId}`);
       panel.classList.add('visible');

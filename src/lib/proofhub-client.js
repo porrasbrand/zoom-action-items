@@ -213,6 +213,25 @@ export async function addTaskComment(projectId, taskListId, taskId, content) {
   });
 }
 
+export async function deleteTask(projectId, taskListId, taskId) {
+  if (!isProofhubConfigured()) throw new Error('ProofHub not configured');
+  const now = Date.now();
+  const elapsed = now - lastRequestTime;
+  if (elapsed < MIN_INTERVAL) await new Promise(r => setTimeout(r, MIN_INTERVAL - elapsed));
+  lastRequestTime = Date.now();
+
+  const baseUrl = `https://${process.env.PROOFHUB_COMPANY_URL}/api/v3`;
+  const url = `${baseUrl}/projects/${projectId}/todolists/${taskListId}/tasks/${taskId}`;
+  const response = await fetch(url, {
+    method: 'DELETE',
+    headers: { 'X-API-KEY': process.env.PROOFHUB_API_KEY, 'User-Agent': 'ZoomPipeline/1.0 (porrasbrand@gmail.com)' }
+  });
+  if (!response.ok && response.status !== 404) {
+    throw new Error(`ProofHub DELETE failed: ${response.status}`);
+  }
+  return { deleted: true, status: response.status };
+}
+
 export default {
   isProofhubConfigured,
   clearCache,
@@ -224,5 +243,6 @@ export default {
   getTask,
   getPeople,
   getTaskComments,
-  addTaskComment
+  addTaskComment,
+  deleteTask
 };

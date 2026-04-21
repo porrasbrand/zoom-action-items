@@ -585,6 +585,33 @@ router.post('/action-items/:id/push-ph', async (req, res) => {
   }
 });
 
+// POST /api/action-items/:id/unpush - Remove task from ProofHub
+router.post('/action-items/:id/unpush', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const force = req.query.force === 'true';
+    const item = db.getActionItemById(id);
+    if (!item) return res.status(404).json({ error: 'Item not found' });
+    if (!item.ph_task_id) return res.status(400).json({ error: 'Item is not pushed to ProofHub' });
+
+    let phDeleted = false;
+    if (!force) {
+      try {
+        await proofhub.deleteTask(item.ph_project_id, item.ph_task_list_id, item.ph_task_id);
+        phDeleted = true;
+      } catch (e) {
+        return res.status(500).json({ error: 'PH delete failed: ' + e.message, canForce: true });
+      }
+    }
+
+    db.unpushActionItem(id);
+    res.json({ success: true, phDeleted: phDeleted || force, message: 'Task unpushed from ProofHub' });
+  } catch (err) {
+    console.error('[Unpush] Error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // POST /api/meetings/:id/push-all-ph - Push all open items from meeting to ProofHub
 router.post('/meetings/:id/push-all-ph', async (req, res) => {
   try {
