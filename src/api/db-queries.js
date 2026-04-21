@@ -795,8 +795,8 @@ export function getMeetingForReextract(meetingId) {
 export function insertReextractedItems(meetingId, clientId, actionItems) {
   const d = getDb();
   const stmt = d.prepare(`
-    INSERT INTO action_items (meeting_id, client_id, title, description, owner_name, due_date, priority, category, source, status, transcript_excerpt)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'llm_extracted', 'open', ?)
+    INSERT INTO action_items (meeting_id, client_id, title, description, owner_name, due_date, priority, category, source, status, transcript_excerpt, task_type)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'llm_extracted', 'open', ?, ?)
   `);
 
   const insertMany = d.transaction((items) => {
@@ -806,7 +806,8 @@ export function insertReextractedItems(meetingId, clientId, actionItems) {
         item.title, item.description || null,
         item.owner || null, item.due_date || null,
         item.priority || 'medium', item.category || 'other',
-        item.transcript_excerpt || null
+        item.transcript_excerpt || null,
+        item.task_type || null
       );
     }
   });

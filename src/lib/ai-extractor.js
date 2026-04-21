@@ -45,6 +45,7 @@ Extract the following in JSON format:
       "title": "Clear, actionable task title",
       "description": "Additional context if needed",
       "owner": "Person responsible (use their name from transcript)",
+      "task_type": "b3x|client (b3x = Breakthrough3x team responsibility, client = client/external person responsibility)",
       "due_date": "YYYY-MM-DD or null if not mentioned",
       "priority": "high|medium|low",
       "category": "seo|ads|content|design|dev|admin|other",
@@ -68,6 +69,7 @@ Rules:
 - Priority: "high" = urgent/blocking, "medium" = this week, "low" = nice to have
 - Be concise but specific in titles
 - transcript_excerpt MUST be the exact verbatim lines from the transcript where this task was discussed
+- task_type: Set to 'b3x' if the owner is a Breakthrough3x team member (Dan, Phil, Bill, Jacob, Juan, Manuel, Nicole, Ray, Richard, Sarah, Vince, or anyone clearly from the agency). Set to 'client' if the owner is the client or someone external to Breakthrough3x.
 - If transcript is too short or unclear, still return valid JSON with empty arrays`;
 
 /**
