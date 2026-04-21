@@ -390,11 +390,12 @@
     .priority-medium { color: #d29922 !important; }
     .priority-low { color: #8b949e !important; }
 
-    .client-task-badge { background: #d2992222; color: #d29922; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; cursor: pointer; }
+    .client-task-badge { background: #d2992230; color: #d29922; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; cursor: pointer; font-weight: 600; }
     .client-task-badge:hover { background: #d2992244; }
-    .b3x-task-badge { background: #58a6ff22; color: #58a6ff; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; cursor: pointer; opacity: 0.6; }
-    .b3x-task-badge:hover { background: #58a6ff44; }
-    .action-item.client-task { border-left: 3px solid #d29922; }
+    .b3x-task-badge { background: #3b82f620; color: #3b82f6; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; cursor: pointer; font-weight: 600; }
+    .b3x-task-badge:hover { background: #3b82f640; }
+    .action-item.client-task { border-left: 5px solid #d29922; background: rgba(210,153,34,0.06); }
+    .action-item.b3x-task { border-left: 5px solid #3b82f6; background: rgba(59,130,246,0.04); }
 
     .action-item .item-actions {
       display: flex;
@@ -5750,6 +5751,7 @@
       try {
         const res = await fetch(`${API}/meetings/${id}`);
         const data = await res.json();
+        window._currentMeetingData = data.meeting || data;
         renderMeetingDetail(data);
 
         // Check for unpushed items and show retry banner
@@ -6088,12 +6090,13 @@
       const meetingDate = meeting?.start_time || '';
       const clientId = meeting?.client_id || '';
 
+      const taskClass = isClientTask ? ' client-task' : ' b3x-task';
       return `
-        <div class="action-item ${statusClass}${isClientTask ? ' client-task' : ''}" id="action-${item.id}" data-meeting-id="${item.meeting_id || meeting?.id || ''}">
+        <div class="action-item ${statusClass}${taskClass}" id="action-${item.id}" data-meeting-id="${item.meeting_id || meeting?.id || ''}">
           <div class="item-content">
             <div class="item-row">
               <div class="item-title inline-edit" onclick="startEdit(${item.id}, 'title', this)">${escapeHtml(item.title)}</div>
-              ${isClientTask ? `<span class="client-task-badge" onclick="toggleTaskType(${item.id}, 'client')" title="Click to mark as B3X task">Client Task</span>` : (item.task_type === 'b3x' ? `<span class="b3x-task-badge" onclick="toggleTaskType(${item.id}, 'b3x')" title="Click to mark as Client task">B3X</span>` : '')}
+              ${isClientTask ? `<span class="client-task-badge" onclick="toggleTaskType(${item.id}, 'client')" title="Click to mark as B3X task">CLIENT</span>` : `<span class="b3x-task-badge" onclick="toggleTaskType(${item.id}, 'b3x')" title="Click to mark as Client task">B3X</span>`}
               ${isPushed ? `<span class="pushed-badge">Pushed</span>` : ''}
               ${item.ph_task_id ? `<a class="ph-link" href="https://breakthrough3x.proofhub.com/bapplite/#app/todos/project-${item.ph_project_id}/list-${item.ph_task_list_id}/task-${item.ph_task_id}" target="_blank">View in PH</a>` : ''}
               ${item.ph_task_id ? `<label class="attach-btn" style="font-size:11px;color:#8b949e;cursor:pointer;margin-left:4px" title="Attach file">📎<input type="file" style="display:none" onchange="attachFileToPH(${item.id},'${item.ph_project_id}','${item.ph_task_list_id}','${item.ph_task_id}',this)"></label>` : ''}
@@ -6158,7 +6161,7 @@
               <button class="action-btn complete-btn" onclick="completeItem(${item.id})">✓</button>
               <button class="action-btn agenda-btn" onclick="agendaItem(${item.id})" title="Add to agenda">📋</button>
               <button class="action-btn reject-btn" onclick="rejectItem(${item.id})">✕</button>
-              ${canPush ? `<button class="action-btn push-btn" onclick="showPushPanel(${item.id}, '${escapeHtml(clientId)}', '${escapeHtml(item.owner_name || '')}')">Push to PH</button>` : ''}
+              ${canPush ? `<button class="action-btn push-btn" onclick="showPushPanel(${item.id}, '${escapeHtml(clientId)}', '${escapeHtml(item.owner_name || '')}')">Push to PH</button>` : (isClientTask && item.status === 'open' && !isPushed ? `<span style="font-size:11px;color:#6e7681">Client responsibility</span>` : '')}
             ` : item.status === 'on-agenda' ? `
               <button class="action-btn complete-btn" onclick="completeItem(${item.id})">✓</button>
               <button class="action-btn reopen-btn" onclick="reopenItem(${item.id})">↩</button>
@@ -6531,16 +6534,77 @@
         input.className = 'inline-edit-input flatpickr-input';
         input.placeholder = 'Pick a date...';
         input.value = currentValue ? currentValue.slice(0, 10) : '';
-      } else if (field === 'owner_name' || field === 'collaborators') {
+      } else if (field === 'owner_name') {
+        input = document.createElement('select');
+        input.className = 'inline-edit-input';
+        input.style.minWidth = '180px';
+        // B3X Team optgroup
+        const b3xGroup = document.createElement('optgroup');
+        b3xGroup.label = 'B3X Team';
+        INTERNAL_TEAM.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t.name;
+          opt.textContent = '\u2605 B3X - ' + t.name;
+          if (t.name.toLowerCase() === currentValue.toLowerCase()) opt.selected = true;
+          b3xGroup.appendChild(opt);
+        });
+        input.appendChild(b3xGroup);
+        // Meeting Participants optgroup
+        const meeting = window._currentMeetingData || {};
+        const extraction = meeting.ai_extraction ? (typeof meeting.ai_extraction === 'string' ? JSON.parse(meeting.ai_extraction) : meeting.ai_extraction) : {};
+        const attendees = extraction.attendees || [];
+        const internalNames = INTERNAL_TEAM.map(t => t.name.toLowerCase());
+        const externalAttendees = attendees.filter(a => !internalNames.includes((a.name || a).toLowerCase()));
+        if (externalAttendees.length > 0) {
+          const partGroup = document.createElement('optgroup');
+          partGroup.label = 'Meeting Participants';
+          externalAttendees.forEach(a => {
+            const name = a.name || a;
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = '\uD83D\uDC64 ' + name;
+            if (name.toLowerCase() === currentValue.toLowerCase()) opt.selected = true;
+            partGroup.appendChild(opt);
+          });
+          input.appendChild(partGroup);
+        }
+        // Other option
+        const otherOpt = document.createElement('option');
+        otherOpt.value = '__other__';
+        otherOpt.textContent = 'Other...';
+        input.appendChild(otherOpt);
+        // If current value not found in any option, add it
+        if (currentValue && ![...input.options].some(o => o.value.toLowerCase() === currentValue.toLowerCase() && o.value !== '__other__')) {
+          const curOpt = document.createElement('option');
+          curOpt.value = currentValue;
+          curOpt.textContent = currentValue;
+          curOpt.selected = true;
+          input.insertBefore(curOpt, input.firstChild);
+        }
+        // Handle "Other" selection
+        input.addEventListener('change', () => {
+          if (input.value === '__other__') {
+            const textInput = document.createElement('input');
+            textInput.type = 'text';
+            textInput.className = 'inline-edit-input';
+            textInput.placeholder = 'Type owner name...';
+            textInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); saveEdit(textInput.value); } else if (e.key === 'Escape') { cancelEdit(); } });
+            textInput.addEventListener('blur', () => setTimeout(() => { if (currentEditField) saveEdit(textInput.value); }, 150));
+            element.innerHTML = '';
+            element.appendChild(textInput);
+            textInput.focus();
+            return;
+          }
+        });
+      } else if (field === 'collaborators') {
         input = document.createElement('input');
         input.type = 'text';
         input.className = 'inline-edit-input';
-        input.value = field === 'collaborators' && currentValue === '+ Add collaborators' ? '' : currentValue;
-        // Use scoped per-meeting datalist
+        input.value = currentValue === '+ Add collaborators' ? '' : currentValue;
         const actionItemEl = element.closest('.action-item');
         const meetingId = actionItemEl?.dataset?.meetingId || '';
         input.setAttribute('list', meetingId ? 'ownersList-' + meetingId : 'ownersList');
-        if (field === 'collaborators') input.placeholder = 'e.g., Manuel, Juan';
+        input.placeholder = 'e.g., Manuel, Juan';
       } else {
         input = document.createElement('input');
         input.type = 'text';
@@ -6609,11 +6673,18 @@
       // Show saving indicator
       element.innerHTML = '<span class=saving-indicator>Saving...</span>';
 
+      // Auto-toggle task_type when owner changes
+      const bodyFields = { [field]: newValue || null };
+      if (field === 'owner_name' && newValue) {
+        const isInternal = INTERNAL_TEAM.some(t => newValue.toLowerCase().includes(t.name.toLowerCase()));
+        bodyFields.task_type = isInternal ? 'b3x' : 'client';
+      }
+
       try {
         const res = await fetch(API + '/action-items/' + id, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ [field]: newValue || null })
+          body: JSON.stringify(bodyFields)
         });
 
         if (!res.ok) throw new Error('HTTP ' + res.status);
