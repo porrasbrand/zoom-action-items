@@ -109,7 +109,7 @@
     <div class="logo">📹</div>
     <h1>Zoom Meeting Notes</h1>
     <p>Sign in to access meeting transcripts, action items, and team coordination.</p>
-    <a href="/zoom/auth/google" class="google-btn">
+    <a id="googleLoginBtn" href="/zoom/auth/google" class="google-btn">
       <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" />
       Sign in with Google
     </a>
@@ -139,12 +139,22 @@
         <div class="logo">⚠️</div>
         <h1>Login Error</h1>
         <p>Something went wrong during sign in. Please try again.</p>
-        <a href="/zoom/auth/google" class="google-btn">
+        <a id="googleLoginBtn" href="/zoom/auth/google" class="google-btn">
           <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" />
           Try Again
         </a>
       `;
     }
   </script>
+
+    <script>
+      // Pass return_to from URL query to Google OAuth link
+      const params = new URLSearchParams(location.search);
+      const returnTo = params.get('return_to');
+      if (returnTo) {
+        const btn = document.getElementById('googleLoginBtn');
+        if (btn) btn.href = '/zoom/auth/google?return_to=' + encodeURIComponent(returnTo);
+      }
+    </script>
 </body>
 </html>

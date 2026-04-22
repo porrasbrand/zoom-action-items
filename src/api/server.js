@@ -178,7 +178,10 @@ app.get(BASE_PATH + '/login', (req, res) => {
 // Start Google OAuth flow
 app.get(BASE_PATH + '/auth/google', (req, res) => {
   const returnTo = req.query.return_to || '';
-  const authUrl = getGoogleAuthURL();
+  // Use callback URI matching the domain the user is on
+  const origin = req.get('origin') || req.get('referer') || '';
+  const useHassanCallback = origin.includes('ai.breakthrough3x.com') ? 'https://ai.breakthrough3x.com/zoom/auth/callback' : null;
+  const authUrl = getGoogleAuthURL(useHassanCallback);
   // Store return_to in a cookie so callback can read it
   if (returnTo) res.cookie("zoom_return_to", returnTo, { maxAge: 300000, path: "/zoom", sameSite: req.secure ? "none" : "lax", secure: req.secure });
   res.redirect(authUrl);
@@ -188,6 +191,8 @@ app.get(BASE_PATH + '/auth/google', (req, res) => {
 app.get(BASE_PATH + '/auth/callback', async (req, res) => {
   try {
     const { code, error } = req.query;
+    // Detect which redirect URI was used based on Host header
+    const hostRedirectUri = req.get('host')?.includes('ai.breakthrough3x.com') ? 'https://ai.breakthrough3x.com/zoom/auth/callback' : null;
 
     if (error) {
       console.error('[Auth] OAuth error:', error);
@@ -199,7 +204,7 @@ app.get(BASE_PATH + '/auth/callback', async (req, res) => {
     }
 
     // Exchange code for tokens
-    const tokens = await getGoogleTokens(code);
+    const tokens = await getGoogleTokens(code, hostRedirectUri);
 
     // Get user info
     const googleUser = await getGoogleUser(tokens.access_token);

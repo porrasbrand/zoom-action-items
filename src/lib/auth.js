@@ -87,11 +87,11 @@ function getOAuthConfig() {
 /**
  * Generate Google OAuth consent URL
  */
-export function getGoogleAuthURL() {
+export function getGoogleAuthURL(redirectUri = null) {
   const config = getOAuthConfig();
   const params = new URLSearchParams({
     client_id: config.clientId,
-    redirect_uri: config.redirectUri,
+    redirect_uri: redirectUri || config.redirectUri,
     response_type: 'code',
     scope: config.scopes.join(' '),
     access_type: 'offline',
@@ -104,7 +104,7 @@ export function getGoogleAuthURL() {
 /**
  * Exchange authorization code for tokens
  */
-export async function getGoogleTokens(code) {
+export async function getGoogleTokens(code, redirectUri = null) {
   const config = getOAuthConfig();
   const response = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
@@ -113,7 +113,7 @@ export async function getGoogleTokens(code) {
       code,
       client_id: config.clientId,
       client_secret: config.clientSecret,
-      redirect_uri: config.redirectUri,
+      redirect_uri: redirectUri || config.redirectUri,
       grant_type: 'authorization_code'
     })
   });

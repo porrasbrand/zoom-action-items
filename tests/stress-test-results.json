@@ -1,18 +1,18 @@
 {
-  "startTime": "2026-04-16T12:45:55.119Z",
+  "startTime": "2026-04-16T13:49:43.013Z",
   "sessions": [
     {
       "name": "Dan Morning Prep",
       "description": "Executive morning briefing flow: overview → client prep → sentiment → search → action items",
-      "sessionId": "c21c5be9-c770-4a13-8593-8a20664808e4",
+      "sessionId": "522b5a9a-7336-4913-b2c7-f631edd45b55",
       "questions": [
         {
           "questionNum": 1,
           "question": "Give me a meta analysis of all our recent meetings. What are the big themes?",
-          "answer": "Here’s the meta-analysis across recent meetings, with the most urgent issues first.\n\n## Executive summary: big themes across the portfolio\n\n### 1) Execution risk is the biggest portfolio-wide issue\nYou have **20 overdue action items** across multiple clients. The pattern is not isolated—it’s showing up in campaign execution, event operations, integrations, approvals, and internal setup.\n\nMost affected clients by overdue count:\n- **Pearce HVAC: 4 overdue**\n- **Jay Conner / Conner Marketing: 4 overdue**\n- **Incontrera Consulting: 3 overdue**\n- **Unmatched: 2 overdue**\n- **Mike McVety: 2 overdue**\n- **Legendary Service: 2 overdue**\n- **B3X Internal: 2 overdue**\n- **Jerry Levinson: 1 overdue**\n\n### 2) Sentiment is softening across the portfolio\nThere are **13 clients/accounts with declining sentiment**. Several drops are material, suggesting frustration, uncertainty, or stalled momentum.\n\nLargest sentiment declines:\n- **Bearcat:** 2.996 → 2.146 (**-0.850**)\n- **London Flooring:** 2.538 → 1.825 (**-0.713**)\n- **Jay Conner / Conner Marketing:** 3.221 → 2.817 (**-0.404**)\n- **Pearce HVAC:** 3.217 → 2.863 (**-0.354**)\n- **Jerry Levinson:** 2.821 → 2.496 (**-0.325**)\n- **B3X Team Leadership Huddle:** 2.725 → 2.404 (**-0.321**)\n\n### 3) Event and webinar delivery is a recurring operational bottleneck\nA large share of overdue items are tied to:\n- reminders\n- registration emails\n- lead list delivery\n- replay/transcript requests\n- scripts/content approvals\n- presentation prep\n- voice broadcasts\n\nThis suggests a repeated issue in **pre-event coordination and post-event follow-through**, not just one-off misses.\n\n### 4) Approval and handoff delays are slowing client momentum\nSeveral overdue tasks involve:\n- status updates\n- review/approval of emails\n- sending designs\n- delivering scripts/content\n- re-sending introductions\n- sharing documents/checklists\n\nThis points to a broader theme: **work may be in motion, but clients are not consistently seeing completed deliverables or clear next steps**.\n\n### 5) Internal ops issues are also affecting delivery confidence\nThere are overdue internal items tied to:\n- **credit card/wallet status in High Level**\n- **opening an LSA account**\n\nCombined with the decline in **B3X Team Leadership Huddle sentiment**, this suggests some client-facing issues may be rooted in internal coordination and systems readiness.\n\n---\n\n# By client: what stands out\n\n## Pearce HVAC\n### Urgent signals\n- **4 overdue items**:\n  - Status update on Google Ads\n  - Complete Service Titan integration\n  - Send postcard/leaflet design to Bill\n  - Deliver welcome and content emails for review\n- Sentiment dropped from **3.217 to 2.863** (**-0.354**)\n\n### Read on the account\nThis looks like a classic **execution + communication gap**. There are both technical and creative deliverables overdue, which usually creates client concern because nothing feels fully moving:\n- paid media status unclear\n- integration incomplete\n- direct mail/design pending\n- email assets not delivered for review\n\n### Priority action\n1. Assign one owner to run a **48-hour recovery plan**\n2. Send the client a **single consolidated status update**\n3. Finish the **Service Titan integration** first, then Google Ads update, then creative approvals\n\n---\n\n## Jay Conner / Conner Marketing\n### Urgent signals\n- **4 overdue items**:\n  - Record voice broadcast\n  - Send voice broadcast\n  - Finish/practice PowerPoint\n  - Send Saturday event reminder text\n- Sentiment dropped from **3.221 to 2.817** (**-0.404**)\n\n### Read on the account\nThis is heavily concentrated around **event readiness**. The risk here is immediate because these are time-sensitive tasks that directly affect attendance and event quality.\n\n### Priority action\n1. Treat this as an **event rescue**\n2. Complete in this order:\n   - reminder text\n   - voice broadcast recording\n   - voice broadcast send\n   - presentation finalization/practice\n3. Confirm there is one accountable lead for all event logistics today\n\n---\n\n## Incontrera Consulting\n### Urgent signals\n- **3 overdue items**:\n  - Send webinar lead lists (CSV)\n  - Request webinar replay and transcript\n  - Deliver VIP script and thank you emails\n- Sentiment dropped from **2.946 to 2.863** (**-0.083**)\n\n### Read on the account\nSentiment decline is modest, but the overdue items suggest **post-webinar monetization and follow-up are lagging**. That means leads may be cooling while ops catches up.\n\n### Priority action\n1. Send the **lead list immediately**\n2. Request replay/transcript same day\n3. Deliver follow-up assets next so the client can continue conversion efforts\n\n---\n\n## Legendary Service\n### Urgent signals\n- **2 overdue items**:\n  - Re-send introduction to Andy at Opportunity Knocks Mailings\n  - Throttle or cut sump pump campaigns\n\n### Read on the account\nThis account appears to have both **partnership coordination** and **campaign control** issues. The sump pump campaign item is especially important if spend is being wasted or performance is off-target.\n\n### Priority action\n1. Review campaign economics and **throttle/cut sump pump campaigns immediately**\n2. Re-send the introduction after campaign action is confirmed\n\n---\n\n## Unmatched\n### Urgent signals\n- **2 overdue items**:\n  - Install vertical video setup on OBS\n  - Share checklist document\n\n### Read on the account\nThis looks like a **production workflow readiness** issue. Not catastrophic yet, but it can quickly delay content output.\n\n### Priority action\n1. Complete OBS setup first\n2. Share checklist immediately after so the process becomes repeatable\n\n---\n\n## Mike McVety\n### Urgent signals\n- **2 overdue items**:\n  - Send Zoom registration email to current clients\n  - Review and approve invitation/countdown emails\n\n### Read on the account\nThis is another **event/email operations** bottleneck. The issue is likely reducing registration volume and compressing the timeline.\n\n### Priority action\n1. Get approval on invitation/countdown emails today\n2. Send Zoom registration email immediately after approval\n\n---\n\n## Jerry Levinson\n### Urgent signals\n- **1 overdue item**:\n  - Cut off ads for remarketing of the event\n- Sentiment dropped from **2.821 to 2.496** (**-0.325**)\n\n### Read on the account\nEven with only one overdue item, the sentiment drop is meaningful. This suggests the issue may be less about task count and more about **confidence in campaign management or responsiveness**.\n\n### Priority action\n1. Confirm ads are cut off immediately\n2. Send a short explanation of what",
+          "answer": "Here’s the meta-analysis across recent meetings, with the biggest themes and where to focus first.\n\n## Urgent portfolio-level signals\n\n### 1) Execution backlog is the biggest immediate risk\nThere are **20 overdue action items** across the portfolio. The most affected clients are:\n\n- **Pearce HVAC** — **4 overdue**\n- **Jay Conner / Conner Marketing** — **4 overdue**\n- **Incontrera Consulting** — **3 overdue**\n- **Unmatched** — **2 overdue**\n- **Mike McVety** — **2 overdue**\n- **Legendary Service** — **2 overdue**\n- **Jerry Levinson** — **1 overdue**\n- **B3X Internal** — **2 overdue**\n\n**Theme:** follow-through is lagging most around campaign launches, event execution, integrations, and client communications.\n\n### 2) Sentiment is softening across multiple accounts\nThere are **13 clients/accounts with declining sentiment**.\n\nLargest drops:\n- **Bearcat:** **-0.85** to **2.15**\n- **London Flooring:** **-0.71** to **1.83**\n- **Jay Conner / Conner Marketing:** **-0.40** to **2.82**\n- **Pearce HVAC:** **-0.35** to **2.86**\n- **Jerry Levinson:** **-0.325** to **2.50**\n- **B3X Team Leadership Huddle:** **-0.321** to **2.40**\n\n**Theme:** sentiment decline is concentrated where delivery complexity is high or deadlines are slipping.\n\n### 3) Events and webinar operations are a recurring friction point\nA large share of overdue items are tied to:\n- reminder emails/texts\n- registration follow-up\n- voice broadcasts\n- webinar lead delivery\n- replay/transcript handling\n- presentation readiness\n\n**Theme:** event-based clients are especially vulnerable to missed timing windows.\n\n---\n\n# Big themes by client\n\n## Pearce HVAC\n### What’s happening\n- **4 overdue items**\n  - Status update on Google Ads\n  - Complete Service Titan integration\n  - Send postcard/leaflet design\n  - Deliver welcome and content emails for review\n- Sentiment dropped **3.22 → 2.86** (**-0.35**)\n\n### Read\nThis account shows a classic **multi-channel delivery bottleneck**:\n- paid ads\n- CRM/integration\n- direct mail creative\n- email content\n\nThat usually means the client is waiting on several dependencies at once, which can quickly erode confidence.\n\n### Priority action\n1. Assign one owner to consolidate all open workstreams.\n2. Deliver a **single recovery plan** with dates for ads, integration, mailer, and email assets.\n3. Close the Google Ads update and Service Titan integration first; those are likely highest leverage.\n\n---\n\n## Jay Conner / Conner Marketing\n### What’s happening\n- **4 overdue items**\n  - Record voice broadcast\n  - Send voice broadcast\n  - Finish/practice PowerPoint\n  - Send Saturday event reminder text\n- Sentiment dropped **3.22 → 2.82** (**-0.40**)\n\n### Read\nThis is an **event execution risk** account. The overdue items are all time-sensitive and clustered around one event funnel. That suggests the issue is not strategy; it’s operational readiness.\n\n### Priority action\n1. Treat this as a same-day event rescue.\n2. Complete presenter readiness first: **PowerPoint + voice broadcast recording**.\n3. Immediately push reminder text and registrant follow-up once assets are approved.\n4. Add a pre-event checklist for future launches.\n\n---\n\n## Incontrera Consulting\n### What’s happening\n- **3 overdue items**\n  - Send webinar lead lists (CSV)\n  - Request webinar replay and transcript\n  - Deliver VIP script and thank you emails\n- Sentiment dropped **2.95 → 2.86** (**-0.08**)\n\n### Read\nSentiment decline is mild, but this account has a **post-webinar fulfillment gap**. The risk is less about immediate dissatisfaction and more about losing momentum after lead generation.\n\n### Priority action\n1. Send the lead list first.\n2. Deliver replay/transcript next.\n3. Finish follow-up assets so leads can be nurtured while interest is still warm.\n\n---\n\n## Unmatched\n### What’s happening\n- **2 overdue items**\n  - Install vertical video setup on OBS\n  - Share checklist document\n\n### Read\nThis looks like a **production systems/setup issue**, not necessarily a relationship issue yet. But if unresolved, it can slow content output and create repeated friction.\n\n### Priority action\n1. Complete OBS setup.\n2. Share the checklist immediately after, so the client has a repeatable process.\n\n---\n\n## Mike McVety\n### What’s happening\n- **2 overdue items**\n  - Send Zoom registration email to current clients\n  - Review/approve invitation and countdown emails\n\n### Read\nAnother **event/email operations** pattern. The issue is likely campaign timing and approvals rather than strategy.\n\n### Priority action\n1. Finalize approvals fast.\n2. Send registration email immediately after approval.\n3. Build a tighter approval SLA for future launches.\n\n---\n\n## Legendary Service\n### What’s happening\n- **2 overdue items**\n  - Re-send introduction to Andy at Opportunity Knocks Mailings\n  - Throttle or cut sump pump campaigns\n\n### Read\nThis account has both **partner coordination** and **campaign optimization** delays. The sump pump campaign item suggests active media inefficiency or seasonal mismatch.\n\n### Priority action\n1. Make the campaign decision first: throttle or cut.\n2. Re-send the intro same day; it’s easy to close and removes drag.\n\n---\n\n## Jerry Levinson\n### What’s happening\n- **1 overdue item**\n  - Cut off ads for remarketing of the event\n- Sentiment dropped **2.82 → 2.50** (**-0.325**)\n\n### Read\nThis is a warning sign. Only one overdue item is listed, but sentiment dropped materially. That usually means the issue is not just one task; it may reflect broader dissatisfaction with event performance or ad spend efficiency.\n\n### Priority action\n1. Shut off or adjust remarketing immediately.\n2. Schedule a proactive check-in to reset expectations and review results.\n3. Audit whether spend continued past the useful event window.\n\n---\n\n## B3X Internal\n### What’s happening\n- **2 overdue items**\n  - Confirm Jay Connor credit card and wallet status in High Level\n  - Open LSA account for Dr. Raymar\n- Sentiment decline in **B3X Team Leadership Huddle:** **2.73 → 2.40** (**-0.321**)\n\n### Read\nInternal ops issues are likely contributing to client-facing delays. The leadership sentiment drop suggests the team feels strain around execution, coordination, or accountability.\n\n### Priority action\n1. Clear internal blockers first, especially payment/account setup issues.\n2. Review ownership and escalation paths for launch-critical tasks.\n3. Run a short internal triage meeting focused only on overdue items.\n\n---\n\n# Clients with declining sentiment but no overdue items listed\nThese accounts still need attention because sentiment is dropping even without visible",
           "queryType": "meta_analysis",
-          "latencyMs": 27299,
-          "sessionId": "c21c5be9-c770-4a13-8593-8a20664808e4",
+          "latencyMs": 32938,
+          "sessionId": "522b5a9a-7336-4913-b2c7-f631edd45b55",
           "citationCount": 0,
           "modelUsed": "gpt-5.4",
           "tokensUsed": 2817,
@@ -32,59 +32,59 @@
         {
           "questionNum": 2,
           "question": "I have a meeting with Pearce today. Give me a meeting prep.",
-          "answer": "I couldn't identify which client you're asking about. Could you mention the client name? Recent clients: Northern Services, The Collective Genius, Regen Profits, Bearcat, Echelon",
+          "answer": "Here’s a focused prep for your Pearce meeting today.\n\nPearce is in a generally constructive place, with clear momentum around the **IAQ book launch**, **Google/LSA optimization**, and **busy-season readiness**. The biggest strategic decision from the last real huddle was to **avoid cold paid traffic for the IAQ book** and instead start with **internal list promotion first**, then layer in **remarketing** if engagement looks good [Meeting: Apr 14, 2026 | Dan Kuschell at unknown]. Dan framed it clearly: “**1A would be to your internal [list]… then 1B would be… remarketing**” and explicitly said, “**I would not recommend [cold paid media] up front with the small budget you got**” [Meeting: Apr 14, 2026 | Dan Kuschell at unknown]. Sarah was aligned with that direction, responding, “**Yeah, absolutely**” [Meeting: Apr 14, 2026 | Sarah- Pearce at unknown]. Session sentiment was strong in the most recent meeting: Sarah rated the huddle a **10/10** [Meeting: Apr 14, 2026 | Sarah- Pearce at unknown], which is a notable improvement over the lower March evaluation scores, where sentiment was only **3/100 on Mar 17** and **3–4/100 on Mar 31**.\n\n## What to walk in knowing\nOperationally, Pearce’s main open threads are still execution and follow-through. The most important **open action items** are:\n- **Draft IAQ Book Email Campaign** — **open**, due Apr 21\n- **Provide Customer List for Matchback** — **open**, due Apr 21\n- **Fix Website Typo and Broken Link** — **open**, due Apr 15\n- **Record Video Scripts for Facebook Ads** — **open**, due Apr 21  \nThere are also several older **open** items still hanging around, including **Integrate Service Titan SMS opt-in code** (due Apr 2), **Update Google Ads and Keywords for AC** (due Mar 17), **Finalize Truck Website Updates** (due Mar 17), and **Review and Approve Landing Pages** (due Mar 11). That backlog matters because Dan specifically called out agenda clutter and stale items, saying completed items were still sitting in the agenda “**here it is mid-April**” [Meeting: Apr 14, 2026 | Dan Kuschell at unknown]. So one likely hidden risk in today’s meeting is not strategy disagreement — it’s whether Pearce feels B3X is closing loops cleanly.\n\n## Likely priorities for today\nFirst, be ready to confirm status on the **website fixes**. Sarah specifically raised the “**Cheating instead of heating**” typo and an “**HTML… 404 not found**” issue, and Dan committed that Phil/Bill would verify and close it out by end of next business day [Meeting: Apr 14, 2026 | Sarah- Pearce at unknown] [Meeting: Apr 14, 2026 | Dan Kuschell at unknown]. If that is not fully resolved, it should be addressed first. Second, check whether Sarah delivered the **customer list for matchback**, because Dan positioned that as the “**next phase**” to improve Google targeting and said it becomes “**super valuable**” for refining performance [Meeting: Apr 14, 2026 | Dan Kuschell at unknown]. Sarah was cooperative and said, “**I’ll go work on pulling that list right now**” [Meeting: Apr 14, 2026 | Sarah- Pearce at unknown]. Third, confirm whether the **3-email IAQ campaign**, **text**, and **voice broadcast** drafts are ready, since Dan committed B3X would prepare them [Meeting: Apr 14, 2026 | Dan Kuschell at unknown]. That is the clearest near-term deliverable tied to the agreed launch plan.\n\n## Suggested meeting flow\nOpen by reinforcing what Pearce cares about most right now: **keeping the schedule full without overwhelming dispatch during peak season**. Sarah said they are keeping technicians busy and actively managing capacity with an “**urgency list**” and “**backup list**” to improve conversion when they’re booked out [Meeting: Apr 14, 2026 | Sarah- Pearce at unknown]. That’s a strong cue to position marketing as controlled, not just aggressive. Then move into a simple sequence:  \n1. confirm all website/book issues are fixed,  \n2. confirm IAQ internal-promo assets are ready,  \n3. confirm matchback list status,  \n4. revisit video content timing for Facebook/Meta, since Sarah said she was likely “**about a week out**” from creating content [Meeting: Apr 14, 2026 | Sarah- Pearce at unknown].  \n\nIf you want, I can also turn this into a **one-page live call brief** with:\n- top talking points,\n- risks to address,\n- questions to ask Sarah,\n- and a recommended close with next-step commitments.",
           "queryType": "meeting_prep",
-          "latencyMs": 2805,
-          "sessionId": "c21c5be9-c770-4a13-8593-8a20664808e4",
+          "latencyMs": 23415,
+          "sessionId": "522b5a9a-7336-4913-b2c7-f631edd45b55",
           "citationCount": 0,
-          "modelUsed": "system",
-          "tokensUsed": 0,
-          "chunksUsed": 0,
+          "modelUsed": "gpt-5.4",
+          "tokensUsed": 15172,
+          "chunksUsed": 22,
           "scoring": {
             "scores": {
               "factual": 2,
-              "contextRetention": 0,
+              "contextRetention": 1,
               "intentMatch": 1,
               "quality": 2,
               "noHallucination": 1
             },
-            "total": 6,
+            "total": 7,
             "maxScore": 8
           }
         },
         {
           "questionNum": 3,
           "question": "What was the sentiment in their last meeting?",
-          "answer": "I couldn't identify which client you're asking about. Could you mention the client name? Recent clients: Northern Services, The Collective Genius, Regen Profits, Bearcat, Echelon",
+          "answer": "Their **last meeting sentiment was very strong**. In the **Apr 14, 2026** Pearce HVAC huddle, Sarah gave the session a **10/10** rating, which is a major improvement from the much lower March scores. The most recent formal session scores before that were **3/100 sentiment on Mar 31** and **3/100 sentiment on Mar 17**, so the trend is clearly upward [Meeting: Apr 14, 2026 | Sarah- Pearce at unknown].\n\nThe meeting itself sounded constructive and aligned. The team agreed to prioritize **internal list promotion** for the IAQ book launch, with **remarketing** as the next layer, and they also worked through practical items like website fixes and matchback data for better Google targeting [Meeting: Apr 14, 2026 | Dan Kuschell at unknown]. Sarah’s response was positive and collaborative, including “**Yeah, absolutely**” on the launch approach and “**I’ll go work on pulling that list right now**” on the matchback list [Meeting: Apr 14, 2026 | Sarah- Pearce at unknown].\n\nIf you want, I can also give you a **quick Pearce meeting prep** for today with the top open action items and likely talking points.",
           "queryType": "sentiment_analysis",
-          "latencyMs": 1124,
-          "sessionId": "c21c5be9-c770-4a13-8593-8a20664808e4",
+          "latencyMs": 3400,
+          "sessionId": "522b5a9a-7336-4913-b2c7-f631edd45b55",
           "citationCount": 0,
-          "modelUsed": "system",
-          "tokensUsed": 0,
+          "modelUsed": "gpt-5.4-mini",
+          "tokensUsed": 6198,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
               "factual": 2,
-              "contextRetention": 0,
+              "contextRetention": 2,
               "intentMatch": 1,
               "quality": 2,
               "noHallucination": 1
             },
-            "total": 6,
+            "total": 8,
             "maxScore": 8
           }
         },
         {
           "questionNum": 4,
           "question": "Now prep me for Echelon.",
-          "answer": "Here’s a concise prep for your **Echelon** meeting today.\n\nEchelon appears to be in a **low-confidence / execution-drift phase**. The most recent usable meeting context is **Mar 30, 2026**, where Andrew Williams and Philip Mutrie focused on the April Fool’s AC maintenance campaign, a month-long lighting promotion, and clarifying the FAQ video process. They agreed Andrew would provide scripts to go with raw footage in Google Drive for editing [Meeting: Mar 30, 2026 | Andrew Williams at summary] and the session evaluation flagged weak structure, stale follow-through, and limited proactive leadership, with **sentiment at 3/100** and **accountability at 2/100**. The Apr 1 recording was effectively unusable—just “Testing!”—and scored **sentiment 1/100** / **accountability 1/100**, which reinforces that the account likely feels under-managed rather than strategically led [Meeting: Apr 1, 2026 | Philip Mutrie at 00:00:00].\n\nYour biggest risk going into today is the **backlog of 15 open action items**, several of them stale. The most important ones to address live are: **review/approve edited videos** (Andrew, due Apr 15), **send sample lead gen videos** (Dan Kuschell, due Apr 15), **record/send lead gen videos** (Andrew, due Apr 20), **export 2024–2026 customer data from Service Titan** (Andrew), **check Service Titan integration for tracking numbers** (Philip), **create content for Lighting Promo** (Andrew), and **update Google Search Ads to Residential** (Philip). There are also older unresolved items like **send photos of Golden Ticket and trifold** (due Mar 5) and **mail Golden Ticket pieces** (due Mar 6), which suggest follow-through has been inconsistent. I’d open the meeting by explicitly resetting ownership and due dates, because prior evaluations specifically criticized the lack of recap and accountability.\n\nRecommended agenda: **(1)** 5-minute reset on goals and top 3 outcomes for today, **(2)** action-item triage by urgency, **(3)** campaign status review for lighting promo / HVAC lead gen / Google Search Ads, **(4)** content pipeline review for videos and hiring content, **(5)** confirm next deadlines with named owners. A strong discussion point is that earlier momentum did exist—the **Golden Ticket campaign generated 12–15 calls and at least 8 maintenance bookings** in the Mar 20 meeting summary—so this is a good account to re-anchor around what has already worked and then push toward repeatable execution. If you want, I can also turn this into a **talking points script** or a **1-page pre-call brief**.",
+          "answer": "I only have Pearce HVAC context in the material you provided, and there’s **no meeting timeline, transcript, action items, or session evaluation for Echelon**. So I can’t responsibly prep you for Echelon without making things up.\n\nIf you send the Echelon context, I can turn it around quickly. Ideally include:\n- **Meeting timeline** with recent summaries\n- **Open action items** with status\n- **Session scores/evaluations**\n- Any **recent transcript excerpts**\n\nFor Pearce, if helpful as a stopgap, I can already prep:\n- a **1-page live call brief**\n- **top risks / talking points**\n- or a **client-by-client meeting prep template** you can reuse for Echelon once you paste their context.",
           "queryType": "meeting_prep",
-          "latencyMs": 14247,
-          "sessionId": "c21c5be9-c770-4a13-8593-8a20664808e4",
+          "latencyMs": 4828,
+          "sessionId": "522b5a9a-7336-4913-b2c7-f631edd45b55",
           "citationCount": 0,
           "modelUsed": "gpt-5.4",
-          "tokensUsed": 4370,
+          "tokensUsed": 5771,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
@@ -101,13 +101,13 @@
         {
           "questionNum": 5,
           "question": "Has Andrew mentioned anything about a Golden Ticket program?",
-          "answer": "Yes — Andrew mentioned the **“Golden Ticket”** program in the **Mar 20, 2026** Echelon meeting. He said the campaign had already generated **12–15 calls and at least 8 maintenance bookings**, which suggests it was performing well [Meeting: Mar 20, 2026 | Andrew Williams at summary].\n\nThe timeline summary doesn’t show Andrew discussing Golden Ticket in the later Apr 1 or Mar 30 meetings. Those later sessions were focused on the April Fool’s AC maintenance campaign, lighting promotion, and FAQ video workflow, so the Golden Ticket program appears to have been an earlier growth tactic rather than the main topic in the most recent meetings [Meeting: Mar 30, 2026 | Andrew Williams at summary].\n\nIf you want, I can also pull together a **full Echelon prep** based on the timeline and action items.",
+          "answer": "I don’t have any Echelon context in what you pasted — the context is only for **Pearce HVAC**. So I can’t prep you for Echelon yet, and I can’t confirm whether **Andrew** mentioned a **Golden Ticket** program from the provided material.\n\nIf you meant **Pearce**, I can prep you from the timeline you shared: the latest meeting on **Apr 14, 2026** centered on the **IAQ book launch**, **internal list promotion**, **remarketing**, and **matchback data** for Google Ads, with a bi-weekly huddle cadence starting Apr 28 [Meeting: Apr 14, 2026 | Dan Kuschell at unknown]. If you want, I can also scan the Pearce context for any mention of a **Golden Ticket** program — but based on the timeline summary alone, I don’t see it referenced.",
           "queryType": "transcript_search",
-          "latencyMs": 2772,
-          "sessionId": "c21c5be9-c770-4a13-8593-8a20664808e4",
+          "latencyMs": 3556,
+          "sessionId": "522b5a9a-7336-4913-b2c7-f631edd45b55",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 1532,
+          "tokensUsed": 2410,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
@@ -124,13 +124,13 @@
         {
           "questionNum": 6,
           "question": "What open action items do I still have?",
-          "answer": "Here are your **open action items** for **Echelon** from the latest context. I’m listing the ones marked **OPEN** and noting the due date where provided:\n\n- **Andrew** — Enter website form fills into trackback sheet  \n- **Andrew** — Send Mike’s planning and war mapping documents  \n- **Dan Kuschell** — Send sample lead gen videos to Andrew — **Due Apr 15, 2026**  \n- **Andrew** — Record and send lead gen videos — **Due Apr 20, 2026**  \n- **Philip Mutrie** — Draft HVAC hiring email and social post  \n- **Andrew** — Review and approve edited videos in Traffic and Media — **Due Apr 15, 2026**  \n- **Andrew** — Export 2024–2026 customer data from Service Titan  \n- **Philip Mutrie** — Check Service Titan integration for tracking numbers  \n- **Andrew** — Create content for Lighting Promo  \n- **Andrew** — Update YouTube Channel branding  \n- **Andrew** — Send photos of Golden Ticket and trifold — **Due Mar 5, 2026**  \n- **Dan Kuschell** — Draft outbound call scripts  \n- **Andrew** — Mail Golden Ticket pieces — **Due Mar 6, 2026**  \n- **Andrew** — Record and upload HVAC promo videos  \n- **Philip Mutrie** — Update Google Search Ads to Residential  \n- **Philip Mutrie** — Check status of Connection Campaign FAQ videos  \n- **Richard O** — Get how-to video  \n- **Richard O** — Create GoHighLevel walkthrough video — **Due Mar 25, 2024**  \n- **Andrew** — Send marketing videos to Philip  \n- **Andrew** — Monitor GoHighLevel Conversations daily  \n\nA few of these are clearly **stale/overdue** based on the dates shown, especially the Golden Ticket items and the GoHighLevel walkthrough video. The most time-sensitive current items appear to be **review/approve edited videos** and **send sample lead gen videos** by **Apr 15**, plus **record and send lead gen videos** by **Apr 20** [Meeting: Apr 15, 2026 | Andrew Williams at 00:00:00].\n\nIf you want, I can also turn this into a **prioritized “what to chase first” list** for today’s call.",
+          "answer": "Here are the **open action items** still listed for **Pearce HVAC**. I’m including the current status as requested; all items below are **open** unless noted otherwise.\n\n- **Bill Soady** — Update Meeting Agenda\n- **Sarah- Pearce** — Provide additional email addresses for lead notifications\n- **Philip Mutrie** — Add Ferguson Plumbing Supply as a negative keyword\n- **Sarah- Pearce** — Review and approve April content and raise hand emails\n- **Sarah- Pearce** — Complete CEO Checklist and Blueprint\n- **AL-Jim pearce** — Send Digital Book PDF\n- **Philip Mutrie** — Website Optimization Audit\n- **Philip Mutrie** — Switch ad focus from furnaces to AC\n- **Philip Mutrie** — Update branding on IAQ landing pages\n- **offic** — Pull Service Titan lead correlation report\n- **AL-Jim pearce** — Confirm availability for Orlando event\n- **Philip Mutrie** — Update $50 off repairs graphic\n- **Sarah** — Provide updated family/team photos\n- **Sarah** — Execute lead follow-up for book campaign\n\nThere are also several **older open items with past due dates** still unresolved, including **Status update on Google Ads** [Owner: Philip Mutrie], **Complete Service Titan integration** [Owner: Juan], **Send postcard/leaflet design to Bill** [Owner: Sarah], **Deliver welcome and content emails for review** [Owner: Bill Soady], **Capture and send localized truck photos** [Owner: offic], **Tweak content emails for AC and IAQ focus** [Owner: Bill Soady], **Post Approval Links in Slack** [Owner: Philip Mutrie], **Finalize Indoor Air Quality (IAQ) digital book** [Owner: AL-Jim pearce], **Review and Approve Landing Pages** [Owner: AL-Jim pearce], **Update Google Ads and Keywords for AC** [Owner: Philip Mutrie], and **Finalize Truck Website Updates** [Owner: Philip Mutrie].\n\nIf you want, I can also turn this into a **prioritized “what you should do next” list** based on urgency and likely impact.",
           "queryType": "action_items",
-          "latencyMs": 4536,
-          "sessionId": "c21c5be9-c770-4a13-8593-8a20664808e4",
+          "latencyMs": 3901,
+          "sessionId": "522b5a9a-7336-4913-b2c7-f631edd45b55",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 2368,
+          "tokensUsed": 2342,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
@@ -145,23 +145,23 @@
           }
         }
       ],
-      "totalScore": 43,
+      "totalScore": 46,
       "maxScore": 48,
-      "startTime": "2026-04-16T12:45:55.120Z",
-      "endTime": "2026-04-16T12:46:50.416Z"
+      "startTime": "2026-04-16T13:49:43.013Z",
+      "endTime": "2026-04-16T13:50:57.568Z"
     },
     {
       "name": "Phil Accountability",
       "description": "Accountability review: overdue counts → details → per-person → cross-client comparison",
-      "sessionId": "1570756a-deba-4dad-86be-9f0da041ebeb",
+      "sessionId": "2b933586-892d-4a60-a893-5dc6dea4735e",
       "questions": [
         {
           "questionNum": 1,
           "question": "How many overdue action items do we have right now?",
-          "answer": "There are **811** open action items.",
+          "answer": "There are **255** overdue action items.",
           "queryType": "count_query",
-          "latencyMs": 9,
-          "sessionId": "1570756a-deba-4dad-86be-9f0da041ebeb",
+          "latencyMs": 739,
+          "sessionId": "2b933586-892d-4a60-a893-5dc6dea4735e",
           "citationCount": 0,
           "modelUsed": "sql",
           "tokensUsed": 0,
@@ -181,82 +181,82 @@
         {
           "questionNum": 2,
           "question": "Show me those overdue items.",
-          "answer": "I couldn't identify which client you're asking about. Could you mention the client name? Recent clients: Northern Services, The Collective Genius, Regen Profits, Bearcat, Echelon",
+          "answer": "You currently have **25 overdue action items**.\n\nHere are the overdue items from the context, all marked **[OPEN]**:\n- Cut off ads for remarketing of the event — Phil — Due Mar 10, 2024\n- Status update on Google Ads — Philip Mutrie — Due Mar 18, 2024\n- Send webinar lead lists (CSV) — Marie Incontrera — Due Mar 19, 2024\n- Complete Service Titan integration — Juan — Due Mar 19, 2024\n- Send postcard/leaflet design to Bill — Sarah — Due Mar 19, 2024\n- Re-send introduction to Andy at Opportunity Knocks Mailings — Dan Kuschell — Due Mar 19, 2024\n- Request webinar replay and transcript — Bill Soady — Due Mar 20, 2024\n- Deliver VIP script and thank you emails — Bill Soady — Due Mar 20, 2024\n- Deliver welcome and content emails for review — Bill Soady — Due Mar 20, 2024\n- Record voice broadcast for the Saturday event — Jay Conner — Due Mar 20, 2024\n- Send voice broadcast to Saturday event registrants — Dan's Team — Due Mar 20, 2024\n- Throttle or cut sump pump campaigns — Dan's Team — Due Mar 20, 2024\n- Send Zoom registration email to current clients — Michael McVety — Due Mar 20, 2024\n- Review and approve invitation/countdown emails — Michael McVety — Due Mar 20, 2024\n- Install vertical video setup on OBS — Joaco Malig — Due Mar 20, 2024\n- Finish and practice PowerPoint presentation — Jay Conner — Due Mar 21, 2024\n- Send Saturday event reminder text — Dan's Team — Due Mar 21, 2024\n- Share checklist document — Joaco Malig — Due Mar 21, 2024\n- Prepare LSA verification documents — Dr Ramah Wagner — Due Mar 22, 2024\n- LSA and CallRail lead audit — Manuel — Due Mar 22, 2024\n- Update geo-targeting for Wisconsin — Bill Soady — Due Mar 22, 2024\n- Trim non-performing campaign 'fat' — Dan's Team — Due Mar 22, 2024\n- Add hiring P.S. to First Choice content emails — Philip Mutrie — Due Mar 22, 2024\n- Record Facebook video scripts — Brendan — Due Mar 22, 2024\n- Address ad budget overspending with Jacob — Dan Kuschell — Due Mar 22, 2024\n\nIf you want, I can also group these by owner or due date.",
           "queryType": "action_items",
-          "latencyMs": 967,
-          "sessionId": "1570756a-deba-4dad-86be-9f0da041ebeb",
+          "latencyMs": 3608,
+          "sessionId": "2b933586-892d-4a60-a893-5dc6dea4735e",
           "citationCount": 0,
-          "modelUsed": "system",
-          "tokensUsed": 0,
+          "modelUsed": "gpt-5.4-mini",
+          "tokensUsed": 1498,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
               "factual": 2,
-              "contextRetention": 0,
+              "contextRetention": 1,
               "intentMatch": 1,
               "quality": 2,
               "noHallucination": 1
             },
-            "total": 6,
+            "total": 7,
             "maxScore": 8
           }
         },
         {
           "questionNum": 3,
           "question": "What are Dan's action items?",
-          "answer": "I couldn't identify which client you're asking about. Could you mention the client name? Recent clients: Northern Services, The Collective Genius, Regen Profits, Bearcat, Echelon",
+          "answer": "Dan Kuschell has **25 open action items** in the current context, all marked **[OPEN]**:\n\n- Send Scottsdale event details\n- Send ESPN founder interview link\n- Introduce Lauren to Debbie Allen for speaking agent\n- Filter competitors from PPC\n- Adjust welcome emails\n- Review HubSpot and landing page tech issues\n- Grant GPT Access\n- Follow up on Stripe payment gateway\n- Review evergreen page copy\n- Connect Breakthrough 3X email to Claude\n- Submit support ticket to SuperScale regarding client visibility\n- Prorate fees and offset overspend\n- Review Collective Genius contract redlines\n- Send Survey Questions\n- Send Expression of Interest form sample\n- Send AI content generation tool\n- Post lead volume and budget update in Slack\n- Perform post-editing on the interview recording\n- Share Bill's new audiobook with clients\n- Email Lynn for a private mailing address\n- Respond to Jay Connor regarding booking issues\n- Assign Phil as Project Coordinator\n- Provide Brian Kurtz Mastermind details to Philip\n- Send summary and pricing breakdown\n- Send dinner invitation link\n\nIf you want, I can also group Dan’s items by priority, topic, or status.",
           "queryType": "action_items",
-          "latencyMs": 877,
-          "sessionId": "1570756a-deba-4dad-86be-9f0da041ebeb",
+          "latencyMs": 3061,
+          "sessionId": "2b933586-892d-4a60-a893-5dc6dea4735e",
           "citationCount": 0,
-          "modelUsed": "system",
-          "tokensUsed": 0,
+          "modelUsed": "gpt-5.4-mini",
+          "tokensUsed": 1521,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
               "factual": 2,
-              "contextRetention": 0,
+              "contextRetention": 1,
               "intentMatch": 1,
               "quality": 2,
               "noHallucination": 1
             },
-            "total": 6,
+            "total": 7,
             "maxScore": 8
           }
         },
         {
           "questionNum": 4,
           "question": "What about Manuel's?",
-          "answer": "I don’t see any action-item list for **Dan Kuschell** in the provided context, so I can’t identify specific Dan action items from these transcripts. The meeting content is mostly a discovery conversation about Thomas Spall’s business, lead gen, and marketing challenges, but no explicit Dan-owned tasks are stated. If you want, I can summarize the commitments mentioned in the meeting instead.\n\nFor **Manuel**, I also don’t see any transcript content or action items tied to a speaker named Manuel in the context you provided. The only named speakers here are **Dan Kuschell**, **Philip Mutrie**, and **Thomas Spall**. So I can’t reliably list Manuel’s action items from this material.",
-          "queryType": "transcript_search",
-          "latencyMs": 2875,
-          "sessionId": "1570756a-deba-4dad-86be-9f0da041ebeb",
+          "answer": "Dan Kuschell’s open action items are:\n\n- Send Scottsdale event details\n- Send ESPN founder interview link\n- Introduce Lauren to Debbie Allen for speaking agent\n\nAll three are currently marked **[OPEN]** in the context.\n\nFor **Manuel**, I don’t see any action items assigned to Manuel in the provided open-action-items list. If you want, I can also list action items by owner for everyone shown in the context.",
+          "queryType": "action_items",
+          "latencyMs": 1980,
+          "sessionId": "2b933586-892d-4a60-a893-5dc6dea4735e",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 4278,
-          "chunksUsed": 10,
+          "tokensUsed": 1651,
+          "chunksUsed": 0,
           "scoring": {
             "scores": {
               "factual": 2,
               "contextRetention": 1,
-              "intentMatch": 0,
+              "intentMatch": 1,
               "quality": 2,
               "noHallucination": 1
             },
-            "total": 6,
+            "total": 7,
             "maxScore": 8
           }
         },
         {
           "questionNum": 5,
           "question": "Compare Echelon vs Prosper — which client has more engagement?",
-          "answer": "I can compare **Echelon** now, but I don’t have any context for **Prosper** in what you shared, so I can’t make a valid engagement comparison yet.\n\nFor **Echelon**, engagement looks **low to modest and inconsistent** across the recent meetings. The strongest signal is the Mar 20 session, where the “Golden Ticket” campaign had real traction and Andrew was actively discussing next steps; the timeline says it generated **12–15 calls and at least 8 maintenance bookings**. But the session scores are still weak overall: Mar 20 had **sentiment 3/100** and **accountability 2/100**, Mar 30 had **sentiment 3/100** with accountability as low as **1–2/100**, and Apr 1 dropped to **composite 1.1/100** with **sentiment 1/100** because it was basically just an audio test. That pattern suggests some real business activity, but not consistently high meeting engagement.\n\nIf you want a true **Echelon vs Prosper** answer, send the Prosper context and I’ll compare them directly using meeting frequency, session scores, and the amount of substantive discussion.",
+          "answer": "I don’t see any action items assigned to **Manuel** in the context you provided. The only explicit Manuel-related item I can confirm is a session evaluation note for Echelon: **“LSA and CallRail lead audit”** is mentioned as a meeting improvement/action area, but it is **not shown as an assigned action item with a status** in the provided data.\n\nOn the engagement comparison: **Echelon appears to have more engagement than Prosper** based on the timeline and session scores you shared for Echelon. Echelon has multiple substantive meetings with concrete campaign planning and execution, including the Mar 20 meeting where the “Golden Ticket” campaign generated **12–15 calls and at least 8 maintenance bookings** [Meeting: Mar 20, 2026 | Philip Mutrie at 00:00:00]. Its session scores are also consistently low on sentiment/accountability, but the meetings themselves show ongoing interaction and active work. I don’t have any Prosper context in this prompt, so I can’t directly compare Prosper’s engagement level without that data.",
           "queryType": "sentiment_analysis",
-          "latencyMs": 3061,
-          "sessionId": "1570756a-deba-4dad-86be-9f0da041ebeb",
+          "latencyMs": 3841,
+          "sessionId": "2b933586-892d-4a60-a893-5dc6dea4735e",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 3618,
+          "tokensUsed": 4292,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
@@ -273,13 +273,13 @@
         {
           "questionNum": 6,
           "question": "Between those two, who's performing better overall?",
-          "answer": "**Echelon is performing better overall, and it also shows more engagement.** The strongest evidence is the Mar 20 meeting, where the team discussed a campaign that generated **12–15 calls and at least 8 maintenance bookings**, which is a real business outcome. Even though the session scores are still low, Echelon has multiple substantive working sessions in the timeline (Mar 11, Mar 20, Mar 30, Apr 1, Apr 15), showing ongoing activity and follow-through. By contrast, I don’t have any **Prosper** context in the provided data, so I can’t verify its engagement or performance directly.\n\nOn the engagement side, Echelon’s meetings include campaign planning, ad setup, training requests, and operational coordination, which indicates active collaboration. However, the session evaluations show weak execution quality: Mar 20 had **sentiment 3/100** and **accountability 2/100**, Mar 30 had **sentiment 3/100** and accountability as low as **1–2/100**, and Apr 1 dropped to **composite 1.1/100** with **sentiment 1/100** because it was just an audio test. So Echelon is engaged, but the engagement is inconsistent and not especially strong in meeting quality.\n\nIf you want a true **Echelon vs Prosper** comparison, send the Prosper timeline and scores. Based on what’s here, though, **Echelon is the only client with measurable activity and outcomes, so it’s the better-performing account in this dataset**.",
+          "answer": "Between **Echelon** and **Prosper**, I can only assess **Echelon** from the context you provided here. There’s no Prosper timeline, transcript, or session scores in this prompt, so I can’t make a valid head-to-head comparison or say which client is performing better overall without that missing data.\n\nFor **Echelon**, engagement looks **active but uneven**. The timeline shows multiple live working sessions with concrete campaign work: on **Mar 20, 2026**, Andrew and Philip discussed the “Golden Ticket” campaign, which had already generated **12–15 calls and at least 8 maintenance bookings** [Meeting: Mar 20, 2026 | Philip Mutrie at 00:00:00]. On **Mar 30, 2026**, they coordinated an April Fool’s AC maintenance campaign and a lighting promotion [Meeting: Mar 30, 2026 | Andrew Williams at 00:00:00]. That said, the Apr 1 recording was essentially just an audio test, with no business discussion [Meeting: Apr 1, 2026 | Philip Mutrie at 00:00:00].\n\nOverall performance for Echelon appears **weak on session scores** despite the engagement. The session evaluations are extremely low: **composite 1.1/100** on Apr 1, **2.32/100** and **2.36/100** on Mar 30, and **2.64/100** on Mar 20, with sentiment consistently around **1–3/100** and accountability around **1–2/100**. So Echelon is engaged in the sense that meetings are happening and work is moving, but the quality and efficiency of those meetings are poor. If you share Prosper’s context, I can compare them directly and tell you which is performing better overall.",
           "queryType": "sentiment_analysis",
-          "latencyMs": 3254,
-          "sessionId": "1570756a-deba-4dad-86be-9f0da041ebeb",
+          "latencyMs": 3809,
+          "sessionId": "2b933586-892d-4a60-a893-5dc6dea4735e",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 3909,
+          "tokensUsed": 4094,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
@@ -294,23 +294,23 @@
           }
         }
       ],
-      "totalScore": 39,
+      "totalScore": 42,
       "maxScore": 48,
-      "startTime": "2026-04-16T12:46:52.418Z",
-      "endTime": "2026-04-16T12:47:05.968Z"
+      "startTime": "2026-04-16T13:50:59.570Z",
+      "endTime": "2026-04-16T13:51:19.114Z"
     },
     {
       "name": "New Team Member Onboarding",
       "description": "New hire getting oriented: client count → top clients → deep dives → comparisons",
-      "sessionId": "b76f9760-ee2e-4b37-999e-4f222af64a16",
+      "sessionId": "a01ecd62-8f93-4ee5-b4f8-91218a852656",
       "questions": [
         {
           "questionNum": 1,
           "question": "How many clients do we manage?",
           "answer": "There are **132** meetings.",
           "queryType": "count_query",
-          "latencyMs": 6,
-          "sessionId": "b76f9760-ee2e-4b37-999e-4f222af64a16",
+          "latencyMs": 882,
+          "sessionId": "a01ecd62-8f93-4ee5-b4f8-91218a852656",
           "citationCount": 0,
           "modelUsed": "sql",
           "tokensUsed": 0,
@@ -330,13 +330,13 @@
         {
           "questionNum": 2,
           "question": "Which are our top 3 most active clients?",
-          "answer": "We manage **13 clients** in the provided context.\n\n### Top 3 most active clients\nBased on the context, using visible activity volume from overdue items plus notable sentiment movement:\n\n1. **Pearce HVAC** — **4 overdue action items**  \n2. **Jay Conner / Conner Marketing** — **3 overdue action items**  \n3. **Incontrera Consulting** — **3 overdue action items**  \n   - Tied with **Legendary Service** at **2 overdue items**, so Incontrera stays ahead due to also appearing in declining sentiment.\n\n### Quick client activity breakdown\n- **Pearce HVAC** — 4 overdue, declining sentiment\n- **Jay Conner / Conner Marketing** — 3 overdue, declining sentiment\n- **Incontrera Consulting** — 3 overdue, declining sentiment\n- **Legendary Service** — 2 overdue\n- **Unmatched** — 2 overdue\n- **Mike McVety** — 2 overdue\n- **Jerry Levinson** — 1 overdue, declining sentiment\n- **B3X Internal** — 2 overdue\n- Sentiment-only clients: **Tom Ruwitch, BEC CFO, Empower, GS Home Services, London Flooring, Prosper Group, B3X Team Leadership Huddle, Regen Profits, Bearcat**\n\n### Urgent flags\nMost urgent clients based on both workload and risk:\n- **Pearce HVAC**: 4 overdue + sentiment down **0.35**\n- **Jay Conner / Conner Marketing**: 3 overdue + sentiment down **0.40**\n- **Incontrera Consulting**: 3 overdue + sentiment down **0.08**\n- **Jerry Levinson**: sentiment now **2.50** + overdue item\n- **Bearcat**: biggest sentiment drop, down **0.85**\n- **London Flooring**: sentiment now **1.83**, down **0.71**\n\n### Prioritized actions\n1. **Clear Pearce HVAC backlog first**\n2. **Resolve Jay Conner event-related tasks immediately**\n3. **Close Incontrera Consulting deliverables this week**\n4. **Escalate low-sentiment accounts**: Bearcat, London Flooring, Jerry Levinson\n5. **Review clients with both declining sentiment and open tasks** before next check-in\n\nIf you want, I can also turn this into a **ranked client activity table**.",
+          "answer": "We manage **13 clients/accounts** in the context provided.\n\n### Top 3 most active clients\nBased on the activity shown here, the most active clients are:\n\n1. **Pearce HVAC** — **4 items**\n   - 3 overdue action items\n   - 1 declining sentiment flag\n\n2. **Jay Conner / Conner Marketing** — **4 items**\n   - 3 overdue action items\n   - 1 declining sentiment flag\n\n3. **Incontrera Consulting** — **3 items**\n   - 2 overdue action items\n   - 1 declining sentiment flag\n\n### Also highly active\n- **Legendary Service** — **2 items**\n- **Unmatched** — **2 items**\n- **Jerry Levinson** — **2 items**\n\n### Priority takeaways\n- **Most urgent:**  \n  - **Pearce HVAC** and **Jay Conner / Conner Marketing** — highest volume of activity and both have declining sentiment.\n- **Next priority:**  \n  - **Incontrera Consulting** — multiple overdue tasks plus sentiment decline.\n\nIf you want, I can also rank **all 13 clients by activity** in a clean table.",
           "queryType": "meta_analysis",
-          "latencyMs": 9865,
-          "sessionId": "b76f9760-ee2e-4b37-999e-4f222af64a16",
+          "latencyMs": 5864,
+          "sessionId": "a01ecd62-8f93-4ee5-b4f8-91218a852656",
           "citationCount": 0,
           "modelUsed": "gpt-5.4",
-          "tokensUsed": 1835,
+          "tokensUsed": 1578,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
@@ -353,13 +353,13 @@
         {
           "questionNum": 3,
           "question": "Tell me about Bearcat. Give me a meeting prep.",
-          "answer": "**Bearcat meeting prep:** Bearcat is coming into this next conversation with two dominant themes: **operational stabilization at Northern** after the office manager transition, and **growth execution** around hiring, marketing, and Cathy’s content/show strategy. In the Mar 23 session, Cathy framed the staffing change as painful but ultimately positive, saying she believed “it’s all happening for us” and that they were going to “skyrocket” after navigating the transition [Meeting: Mar 23, 2026 | Cathy Helin at 00:00]. Gregg reinforced that the priority was to “stop the bleeding” after two resignations and protect team culture during the transition [Meeting: Mar 23, 2026 | Gregg’s iPhonegre at 00:02]. By the Apr 6 timeline summary, the conversation had evolved into scaling Bearcat through **client video reviews**, a **‘show’ strategy** for networking with experts, and refining **hiring criteria for a new office manager**, while also addressing **back-office ownership** and **scheduling issues**.\n\nThe biggest risks to prepare for are **execution slippage** and **client confidence**. Bearcat currently has **15 open action items**, including several operationally important ones: **Change back office ownership** (open, Philip Mutrie), **Resolve scheduling issue with Richard** (open, Philip Mutrie, due Apr 8, 2026), **Research safe Google account ownership transfer** (open, Juan), **Implement accountability test for office manager candidates** (open, Gregg Helin), **Share hiring ad info for email campaigns** (open, Gregg), **Send hiring ads to Cathy for BirdDog** (open, Gregg), **Contact ‘Who Hire’ for recruitment pipeline** (open, Dan Kuschell), **Launch seasonal AC marketing campaigns** (open, Dan Kuschell), and **Track non-quality Meta leads in tracking sheet** (open, Gregg). On the growth side, **Record 3–5 short video content pieces** is also still **open** for Cathy with a due date of **May 1, 2026**. Session evaluations suggest relationship fragility: Mar 23 scored **sentiment 3/100 and accountability 1/100** in one evaluation, and **sentiment 4/100 and accountability 2/100** in another, indicating the client may feel supported personally but is not seeing strong structure or follow-through.\n\n**Recommended agenda for the next meeting:**  \n1. **Open with action-item review** — especially overdue/open operational items.  \n2. **Hiring update** — ask whether the office manager/dispatcher/controller role has been posted everywhere and whether the accountability test is in place.  \n3. **Operational blockers** — confirm status of back-office ownership, Google account transfer research, and Richard scheduling issue.  \n4. **Marketing execution** — get a concrete update on seasonal AC campaigns, Facebook ad split tests, and Meta lead quality tracking.  \n5. **Bearcat growth strategy** — review progress on client interview questions, sample show screening page, AI content tool, and Cathy’s short-form videos.  \n\n**Suggested questions to ask:**  \n- “What has changed since the office manager transition in terms of team energy and accountability?”  \n- “Which open item is creating the most drag right now: hiring, scheduling, Google ownership, or campaign launch?”  \n- “Have the hiring ads gone live across BirdDog, email, ZipRecruiter, and personal networks?”  \n- “What do you need from us this week to get the show/video strategy moving?”  \n- “Can we leave today with owners and dates for every open item?”  \n\nOne useful note for tone: Cathy and Gregg both viewed the staffing change as necessary and potentially energizing. Cathy said removing the wrong piece can shift a team so that “you start winning every freaking game” [Meeting: Mar 23, 2026 | Cathy Helin at 00:05], and Dan advised them to communicate directly with the team and invite people to “raise your game” during the transition [Meeting: Mar 23, 2026 | Dan Kuschell at 00:03]. So the prep posture should be: **supportive, structured, and highly accountability-driven**.",
+          "answer": "**Bearcat meeting prep:** Bearcat’s recent meetings show two main themes: **operational disruption from staffing turnover at Northern** and **growth initiatives for Bearcat through content/show strategy and recruiting systems**. In the Mar 23 session, Cathy Helin framed the office-manager departure as painful but ultimately positive, saying the change is “all happening for us” and that they’re going to “skyrocket,” while also worrying about getting pulled back into operations and losing focus on Bearcat [Meeting: Mar 23, 2026 | Cathy Helin at unknown timestamp]. Gregg Helin emphasized the need to protect culture after two resignations and “stop the bleeding” so the transition doesn’t affect the broader team [Meeting: Mar 23, 2026 | Gregg’s iPhonegre at unknown timestamp]. The Apr 6 timeline summary suggests the conversation then advanced into **scaling via client video reviews, a ‘show’ strategy, and hiring criteria for a new office manager**, while also touching **back-office ownership** and **scheduling issues**.\n\n**What to walk in knowing:** morale/rhythm appears fragile. Session evaluations were very weak: on **Mar 23**, one evaluation scored **sentiment 3/100 and accountability 1/100**, and another scored **sentiment 4/100 and accountability 2/100**; on **Mar 9**, sentiment was **3/100 and accountability 3/100**. The evaluations repeatedly note poor follow-through and lack of structured review of prior commitments. That means your prep should center on **clarity, prioritization, and visible accountability**, not just strategy. Also note that hiring remains active: Gregg had already broken up the former office manager role into clearer functions and said they were running ads and outreach, with Cathy asking him to send the ads so she could post them on BirdDog [Meeting: Mar 23, 2026 | Gregg’s iPhonegre at unknown timestamp] [Meeting: Mar 23, 2026 | Cathy Helin at unknown timestamp].\n\n**Open action items to review live:** highest-priority operational items appear to be **[OPEN] Resolve scheduling issue with Richard** (Philip Mutrie, due **Apr 8, 2026**), **[OPEN] Change back office ownership** (Philip Mutrie), and **[OPEN] Research safe Google account ownership transfer** (Juan). For growth, key items are **[OPEN] Record 3–5 short video content pieces** (Cathy Helin, due **May 1, 2026**), **[OPEN] Send sample show screening page** (Philip Mutrie), **[OPEN] Send client interview questions** (Philip Mutrie), and **[OPEN] Send AI content generation tool** (Dan Kuschell). For hiring, confirm progress on **[OPEN] Implement accountability test for office manager candidates** (Gregg Helin), **[OPEN] Share hiring ad info for email campaigns** (Gregg), **[OPEN] Send hiring ads to Cathy for BirdDog** (Gregg), and **[OPEN] Contact ‘Who Hire’ for recruitment pipeline** (Dan Kuschell). Marketing execution items also remain open: **[OPEN] Review and split test new Facebook ads**, **[OPEN] Launch seasonal AC marketing campaigns** (both Dan Kuschell), and **[OPEN] Track non-quality Meta leads in tracking sheet** (Gregg).\n\n**Suggested agenda for the next call:** 1) quick recap of staffing transition and whether team culture has stabilized, 2) status check on the office manager hiring pipeline and accountability test, 3) resolve the operational blockers—Richard scheduling, back-office ownership, and Google account transfer, 4) move Bearcat growth forward by locking dates for video reviews/show assets, and 5) close with a strict owner/deadline recap. A useful discussion prompt may be Gregg’s earlier concern about role clarity—he said he had redefined the org chart so office manager/dispatch/sales responsibilities were “all clear and defined” to avoid recreating the same issues [Meeting: Mar 23, 2026 | Gregg’s iPhonegre at unknown timestamp]. That makes a good checkpoint: **Did the new structure hold, and what still needs support?**",
           "queryType": "meeting_prep",
-          "latencyMs": 16725,
-          "sessionId": "b76f9760-ee2e-4b37-999e-4f222af64a16",
+          "latencyMs": 17973,
+          "sessionId": "a01ecd62-8f93-4ee5-b4f8-91218a852656",
           "citationCount": 0,
           "modelUsed": "gpt-5.4",
-          "tokensUsed": 8144,
+          "tokensUsed": 7888,
           "chunksUsed": 10,
           "scoring": {
             "scores": {
@@ -376,36 +376,36 @@
         {
           "questionNum": 4,
           "question": "Who are the key people we talk to there?",
-          "answer": "The key people we talk to at **Bearcat** are **Cathy Helin** and **Gregg Helin** — they’re the main decision-makers and the people driving the business strategy. In the Mar 23 session, Cathy spoke about the emotional and operational impact of the staffing transition and Bearcat’s growth plans [Meeting: Mar 23, 2026 | Cathy Helin at 00:00]. Gregg handled the operational side, especially the staffing changes, role clarity, and hiring pipeline [Meeting: Mar 23, 2026 | Gregg’s iPhonegre at 00:02].\n\nWe also regularly work with **Dan Kuschell** and **Philip Mutrie** on the coaching side. In the Apr 6 meeting summary, Dan and Philip were the ones providing strategic coaching to Cathy and Gregg on scaling Bearcat through client video reviews, a “show” strategy, and hiring criteria for the new office manager [Meeting: Apr 6, 2026 | Meeting Summary at 00:00]. In the Mar 23 transcript, Dan led the discussion on team culture, hiring, and communication during the transition [Meeting: Mar 23, 2026 | Dan Kuschell at 00:03].\n\nA few other names come up as supporting contacts or operational references: **Juan** is tied to research on Google account ownership separation from the Mar 9 meeting summary [Meeting: Mar 9, 2026 | Meeting Summary at 00:00], and **Todd** is mentioned by Gregg as helping with ads and meetings related to recruiting [Meeting: Mar 23, 2026 | Gregg’s iPhonegre at 00:00]. If you want, I can also give you a **who’s-who by role** list for Bearcat.",
-          "queryType": "transcript_search",
-          "latencyMs": 3757,
-          "sessionId": "b76f9760-ee2e-4b37-999e-4f222af64a16",
+          "answer": "The key people B3X speaks with at **Bearcat** are primarily **Cathy Helin** and **Gregg Helin**, with B3X team members **Dan Kuschell**, **Philip Mutrie**, and **Juan** participating on the coaching/implementation side.\n\n**Client-side contacts:**\n- **Cathy Helin** — a central voice in the meetings, especially around Bearcat growth, client work, and operational concerns. For example, she talked about protecting her focus on Bearcat during the Northern staffing disruption: “I’m gonna have to come back in there and lose my focus on Bearcat” [Meeting: Mar 23, 2026 | Cathy Helin at unknown timestamp].\n- **Gregg Helin** — heavily involved in operations, hiring, org structure, and team culture. He described breaking up the former office manager role into clearer functions and running ads for the replacement role [Meeting: Mar 23, 2026 | Gregg’s iPhonegre at unknown timestamp].\n\n**B3X-side contacts:**\n- **Dan Kuschell** — strategic coach on staffing, culture, hiring pipeline, and growth strategy. He advised them to “cast the net everywhere” for recruiting and suggested the “Who Hire” pipeline option [Meeting: Mar 23, 2026 | Dan Kuschell at unknown timestamp].\n- **Philip Mutrie** — appears to be the implementation/project follow-up lead in the timeline and action items, owning several open items including **[OPEN] Change back office ownership**, **[OPEN] Resolve scheduling issue with Richard**, **[OPEN] Send client interview questions**, and **[OPEN] Send sample show screening page**.\n- **Juan** — involved specifically in the Google account ownership issue from Mar 9; he owns **[OPEN] Research safe Google account ownership transfer**.\n\nOne additional name mentioned is **Richard**, tied to an operational issue rather than as a main meeting participant; there is an open item to **[OPEN] Resolve scheduling issue with Richard** (Owner: Philip Mutrie, due Apr 8, 2026). If you want, I can also turn this into a **Bearcat stakeholder map** with each person’s role, priorities, and current open items.",
+          "queryType": "meeting_prep",
+          "latencyMs": 10729,
+          "sessionId": "a01ecd62-8f93-4ee5-b4f8-91218a852656",
           "citationCount": 0,
-          "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 6767,
+          "modelUsed": "gpt-5.4",
+          "tokensUsed": 8364,
           "chunksUsed": 10,
           "scoring": {
             "scores": {
               "factual": 2,
               "contextRetention": 1,
-              "intentMatch": 1,
+              "intentMatch": 0,
               "quality": 2,
               "noHallucination": 1
             },
-            "total": 7,
+            "total": 6,
             "maxScore": 8
           }
         },
         {
           "questionNum": 5,
           "question": "Summarize their last meeting.",
-          "answer": "Bearcat’s last meeting was the **Apr 6, 2026 — Bearcat Coaching - Breakthrough Session**. The main focus was on **scaling the Bearcat business** while also helping Cathy and Gregg manage the **Northern office-manager transition**. Dan Kuschell pushed a “client story” strategy: interview clients for short video reviews, use those stories as marketing assets, and build a simple “show” format to feature experts and potential future clients [Meeting: Apr 6, 2026 | Dan Kuschell at 00:00]. Cathy said she felt “a little overwhelmed” by everything going on, especially Northern, but was excited about Bearcat growth and new course-building support [Meeting: Apr 6, 2026 | Cathy Helin at 00:00].\n\nThe meeting also covered several operational items. Philip Mutrie said the only outstanding Bearcat item was getting into the back office to change ownership, and Dan suggested using the scheduled session to address a scheduling issue with Richard and ask for a video of the problem beforehand [Meeting: Apr 6, 2026 | Philip Mutrie at 00:00]. On the Northern side, Gregg asked about hiring a new office manager, and Dan recommended testing candidates by asking for examples of accountability systems and reports they’ve used before [Meeting: Apr 6, 2026 | Gregg Helin at 00:00]. Dan also emphasized keeping the process simple: use YouTube as the initial home for the show, then syndicate it later [Meeting: Apr 6, 2026 | Dan Kuschell at 00:00].\n\nIn terms of sentiment, the session felt positive but stretched. Cathy rated the meeting **10/10**, and Gregg rated it **9.5/10**, which suggests strong confidence in the coaching even though the business is under pressure [Meeting: Apr 6, 2026 | Cathy Helin at 00:00] [Meeting: Apr 6, 2026 | Gregg Helin at 00:00]. The timeline also shows the meeting built on earlier work from Mar 23 and Mar 9, moving from staffing transition and Google-account organization into a more concrete growth plan around content, interviews, and hiring.",
+          "answer": "Bearcat’s last meeting was on **Apr 6, 2026** and it was a **Breakthrough Session** focused on two tracks: **Bearcat growth strategy** and **Northern operations**. On the Bearcat side, Dan Kuschell pushed a content-and-leverage plan: collect **client review videos**, create **3–5 short video pieces** from Cathy, and launch a **“show” strategy** to interview experts and potential future clients. Cathy said she liked the idea of starting a show and using it to build relationships and future business [Meeting: Apr 6, 2026 | Cathy Helin at unknown timestamp]. Dan framed the approach as simple and scalable, recommending YouTube as the initial home for the show and emphasizing that the goal is to capture conversations, not build a big website first [Meeting: Apr 6, 2026 | Dan Kuschell at unknown timestamp].\n\nThe meeting also covered **Northern’s staffing transition** and a few operational blockers. Gregg said he was not worried overall and that things were moving in the right direction, but asked about hiring a new office manager and how to test candidates [Meeting: Apr 6, 2026 | Gregg Helin at unknown timestamp]. Dan advised using a practical accountability test: ask candidates to show examples of how they track daily productivity, unity, and values, and to demonstrate how they’d handle friction and conflict [Meeting: Apr 6, 2026 | Dan Kuschell at unknown timestamp]. Philip and Dan also discussed a **back-office ownership change** and a **scheduling issue with Richard**, with Dan suggesting they use the upcoming session to address it and ask for a video of the issue beforehand [Meeting: Apr 6, 2026 | Philip Mutrie at unknown timestamp] [Meeting: Apr 6, 2026 | Dan Kuschell at unknown timestamp].\n\n**Action items from the meeting are still open** unless otherwise noted: **[OPEN] Send client review questions** (Philip Mutrie), **[OPEN] Send AI content tool** (Dan Kuschell), **[OPEN] Send sample show/guest page** (Dan Kuschell / Philip Mutrie to confirm URL), **[OPEN] Record 3–5 short Bearcat videos** (Cathy Helin, due by early May), **[OPEN] Change back office ownership**, and **[OPEN] Resolve scheduling issue with Richard** (Philip Mutrie). The session ended positively: Cathy rated it **10/10** and Gregg rated it **9.5/10**, which suggests strong confidence in the plan and the coaching value [Meeting: Apr 6, 2026 | Cathy Helin at unknown timestamp] [Meeting: Apr 6, 2026 | Gregg Helin at unknown timestamp].",
           "queryType": "meeting_summary",
-          "latencyMs": 5628,
-          "sessionId": "b76f9760-ee2e-4b37-999e-4f222af64a16",
+          "latencyMs": 5727,
+          "sessionId": "a01ecd62-8f93-4ee5-b4f8-91218a852656",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 14999,
+          "tokensUsed": 14944,
           "chunksUsed": 28,
           "scoring": {
             "scores": {
@@ -422,13 +422,13 @@
         {
           "questionNum": 6,
           "question": "Now give me a prep for London Flooring.",
-          "answer": "I don’t have any context for **London Flooring** in the materials provided. The only client context available here is for **Bearcat** — including Bearcat’s meeting timeline, transcripts, action items, and session evaluations. So I can’t create a reliable London Flooring prep without making assumptions, and I shouldn’t do that.\n\nIf you want, send the **London Flooring** meeting timeline, transcript excerpts, action items, or session scores, and I’ll turn that into a prep right away. If helpful, I can also give you a **prep template** you can reuse for London Flooring once you paste the context.",
+          "answer": "I don’t have any meeting transcript, action items, evaluations, or timeline context for **London Flooring** in the material you provided. The only client context here is for **Bearcat**, so I can’t create a factual meeting prep for London Flooring without making assumptions.\n\nIf you send the **London Flooring** context, I can turn it into a prep immediately. Ideally include:\n- **Meeting timeline** with recent meeting summaries\n- **Transcript excerpts** with dates, speakers, and timestamps\n- **Open action items** with owners/status\n- **Session scores/evaluations**\n\nOnce you share that, I can give you a concise prep covering:\n1. recent themes and risks,  \n2. key stakeholders,  \n3. open action items with status,  \n4. sentiment/accountability readout from session scores, and  \n5. a recommended agenda for the next call.",
           "queryType": "meeting_prep",
-          "latencyMs": 4334,
-          "sessionId": "b76f9760-ee2e-4b37-999e-4f222af64a16",
+          "latencyMs": 7023,
+          "sessionId": "a01ecd62-8f93-4ee5-b4f8-91218a852656",
           "citationCount": 0,
           "modelUsed": "gpt-5.4",
-          "tokensUsed": 8602,
+          "tokensUsed": 8856,
           "chunksUsed": 10,
           "scoring": {
             "scores": {
@@ -445,13 +445,13 @@
         {
           "questionNum": 7,
           "question": "How does London Flooring compare to Bearcat in terms of activity?",
-          "answer": "**Urgent:** both clients show meaningful sentiment decline, but **Bearcat is slightly worse than London Flooring** on the latest score, while **London Flooring has less context available** in this portfolio snapshot.\n\n## By client\n\n### London Flooring\n- **Latest sentiment:** **1.825**\n- **Previous sentiment:** **2.5375**\n- **Change:** **-0.7125**\n\nWhat that means:\n- London Flooring is in a **clear decline** and should be treated as an at-risk account.\n- However, in the context you shared, there are **no overdue action items listed for London Flooring**.\n- That suggests one of two things:\n  1. activity is happening but not captured in overdue tasks, or  \n  2. there is simply **less recorded activity / follow-through visibility** for this client right now.\n\n### Bearcat\n- **Latest sentiment:** **2.1458**\n- **Previous sentiment:** **2.9958**\n- **Change:** **-0.85**\n\nWhat that means:\n- Bearcat’s decline is **larger than London Flooring’s**.\n- Bearcat’s current score (**2.1458**) is still **higher than London Flooring’s 1.825**, but only slightly.\n- From the earlier meeting context, Bearcat has had **recent active conversations** around:\n  - scaling the business\n  - office manager transition\n  - content/video strategy\n  - back-office ownership changes\n- So Bearcat appears to have **more visible engagement activity** than London Flooring, even though sentiment has dropped more sharply.\n\n## Direct comparison: activity\nBased on the data provided:\n\n- **Bearcat appears more active**\n  - We have recent meeting detail and multiple concrete discussion threads.\n  - There is visible strategic and operational engagement.\n- **London Flooring appears less active / less visible**\n  - No overdue tasks shown\n  - No meeting or action-item detail in this snapshot\n  - Only a sharp sentiment decline is visible\n\n## Bottom line\n- **If you mean “which client seems more actively engaged?” → Bearcat**\n- **If you mean “which client is in worse shape emotionally/right now?” → London Flooring by latest score**\n- **If you mean “which had the steeper recent drop?” → Bearcat**\n  - Bearcat: **-0.85**\n  - London Flooring: **-0.7125**\n\n## Prioritized actions\n1. **Review London Flooring immediately**\n   - A **1.825 sentiment score** is very low.\n   - Pull latest meetings, emails, and open deliverables to find the source of dissatisfaction.\n\n2. **Stabilize Bearcat next**\n   - The **largest drop** among the two suggests something changed materially.\n   - Review whether transition stress, hiring friction, or execution delays are affecting confidence.\n\n3. **Audit activity tracking for London Flooring**\n   - Since there are **no overdue items** but sentiment is poor, confirm whether work is being tracked properly.\n\n4. **Schedule proactive check-ins for both**\n   - London Flooring: focus on dissatisfaction and unmet expectations\n   - Bearcat: focus on execution confidence and transition support\n\nIf you want, I can turn this into a **client-risk ranking** with London Flooring and Bearcat placed against the rest of the portfolio.",
+          "answer": "**Urgent takeaway:** both clients show **declining sentiment**, but **Bearcat is more active** in the available data because there are concrete recent meeting details and open work, while **London Flooring appears less active or less documented** here.\n\n## Comparison: London Flooring vs. Bearcat\n\n### 1) Sentiment trend\n- **Bearcat:** **2.9958 → 2.1458**  \n  - Drop of **0.8500**\n- **London Flooring:** **2.5375 → 1.8250**  \n  - Drop of **0.7125**\n\n**What this means:**  \n- **Bearcat declined more sharply** in absolute terms: **-0.85 vs. -0.7125**\n- **London Flooring is currently lower** in score: **1.825 vs. 2.1458**\n\nSo:\n- **More negative current sentiment:** London Flooring\n- **Steeper recent decline:** Bearcat\n\n### 2) Activity level in the provided context\n#### Bearcat\nBearcat has clear signs of active engagement:\n- Recent meeting context exists\n- Named stakeholders are identified:\n  - **Cathy Helin**\n  - **Gregg Helin**\n  - **Dan Kuschell**\n  - **Philip Mutrie**\n  - **Juan**\n- Specific active initiatives were discussed:\n  - client review videos\n  - 3–5 short videos\n  - show/interview strategy\n  - hiring and office manager process\n  - back-office ownership change\n  - scheduling issue with Richard\n- Multiple open action items were referenced in prior context\n\n#### London Flooring\nFor London Flooring, in the context you provided here:\n- **No overdue action items listed**\n- **No meeting summary provided**\n- **No named stakeholders provided**\n- **No active initiatives or transcript excerpts provided**\n\n**What this means:**  \nBased on this dataset, **London Flooring is less active than Bearcat**, or at minimum **less visible/documented** in the current dashboard context.\n\n## Direct answer\n**Bearcat appears more active than London Flooring** in terms of visible engagement and tracked work.\n\n### Why\n- Bearcat has:\n  - recent meeting activity\n  - multiple named participants\n  - active strategic discussions\n  - several open follow-ups\n- London Flooring only shows:\n  - a **low and declining sentiment score**\n  - no visible tasks or recent meeting detail in this context\n\n## Risk assessment by client\n\n### London Flooring\n**Higher immediate relationship risk**\n- Current score is only **1.825**\n- That is lower than Bearcat’s **2.1458**\n- But there is **not enough activity data** to tell whether the issue is disengagement, delivery problems, or missing documentation\n\n### Bearcat\n**Higher operational activity, but also meaningful decline**\n- Score dropped more: **-0.85**\n- There is enough activity to intervene because there are clear projects and stakeholders\n- This looks like a client where momentum exists, but satisfaction may be under pressure\n\n## Prioritized actions\n\n### For London Flooring\n1. **Audit recent touchpoints immediately**\n   - Confirm last meeting date\n   - Pull transcript/activity history\n   - Identify whether there are stalled deliverables\n2. **Schedule a proactive check-in**\n   - Current score of **1.825** is a red flag\n3. **Identify missing owners and next steps**\n   - No visible tasks usually means either low engagement or poor tracking\n\n### For Bearcat\n1. **Review why sentiment dropped by 0.85**\n   - Largest decline of the two\n2. **Close open operational items**\n   - especially scheduling and ownership issues\n3. **Convert strategy into quick wins**\n   - get the review questions sent\n   - launch the first 3–5 videos\n   - finalize the show page/sample flow\n\n## Bottom line\n- **More active:** Bearcat\n- **Lower current sentiment:** London Flooring\n- **Bigger recent drop:** Bearcat\n- **Most urgent unknown:** London Flooring, because the score is worse and there’s no supporting activity data to explain it",
           "queryType": "meta_analysis",
-          "latencyMs": 15695,
-          "sessionId": "b76f9760-ee2e-4b37-999e-4f222af64a16",
+          "latencyMs": 17350,
+          "sessionId": "a01ecd62-8f93-4ee5-b4f8-91218a852656",
           "citationCount": 0,
           "modelUsed": "gpt-5.4",
-          "tokensUsed": 2994,
+          "tokensUsed": 3417,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
@@ -466,23 +466,23 @@
           }
         }
       ],
-      "totalScore": 51,
+      "totalScore": 50,
       "maxScore": 56,
-      "startTime": "2026-04-16T12:47:07.969Z",
-      "endTime": "2026-04-16T12:48:06.986Z"
+      "startTime": "2026-04-16T13:51:21.116Z",
+      "endTime": "2026-04-16T13:52:29.675Z"
     },
     {
       "name": "Fire Drill Investigation",
       "description": "Urgent client issue: sentiment scan → specific client → complaint search → promises → overdue",
-      "sessionId": "7200c6d6-4bee-4b79-81b9-4f9ec990188e",
+      "sessionId": "c3a5d62f-4afa-4568-805a-938264479cc1",
       "questions": [
         {
           "questionNum": 1,
           "question": "Are any of our clients unhappy? Check sentiment across the board.",
-          "answer": "Yes — several clients show signs of unhappiness, and a few need immediate attention.\n\n## Most concerning clients first\n\n### 1) London Flooring\n- **Sentiment:** **1.825**\n- **Change:** down **0.713**\n- **Risk level:** **Critical**\n- **Why it matters:** Lowest sentiment on the board and a sharp drop.\n\n**Action:**\n1. Schedule an immediate check-in.\n2. Identify the top 1–2 delivery issues driving frustration.\n3. Assign an owner and send a recovery plan within 24 hours.\n\n---\n\n### 2) Bearcat\n- **Sentiment:** **2.146**\n- **Change:** down **0.850**\n- **Risk level:** **Critical**\n- **Why it matters:** Biggest sentiment drop of all clients listed.\n\n**Action:**\n1. Escalate to account leadership now.\n2. Review recent deliverables, missed expectations, and communication gaps.\n3. Put a client-save plan in place this week.\n\n---\n\n### 3) Jerry Levinson\n- **Sentiment:** **2.496**\n- **Change:** down **0.325**\n- **Overdue items:** **1**\n  - Cut off ads for remarketing of the event — overdue since **2024-03-10**\n- **Risk level:** **High**\n- **Why it matters:** Low sentiment plus an overdue action item tied to campaign execution.\n\n**Action:**\n1. Resolve the overdue ad task immediately.\n2. Send a proactive status update today.\n3. Confirm whether ad spend/performance issues caused dissatisfaction.\n\n---\n\n### 4) Jay Conner / Conner Marketing\n- **Sentiment:** **2.817**\n- **Change:** down **0.404**\n- **Overdue items:** **3**\n  - Record voice broadcast\n  - Send voice broadcast to registrants\n  - Finish/practice PowerPoint\n  - Send Saturday event reminder text\n- **Risk level:** **High**\n- **Why it matters:** Significant sentiment decline and multiple overdue event-critical tasks.\n\n**Action:**\n1. Triage event tasks immediately by deadline impact.\n2. Assign one owner to coordinate all open items.\n3. Communicate a same-day recovery timeline to the client.\n\n---\n\n### 5) Pearce HVAC\n- **Sentiment:** **2.863**\n- **Change:** down **0.354**\n- **Overdue items:** **4**\n  - Status update on Google Ads\n  - Complete Service Titan integration\n  - Send postcard/leaflet design\n  - Deliver welcome/content emails for review\n- **Risk level:** **High**\n- **Why it matters:** Multiple overdue deliverables plus a meaningful sentiment drop.\n\n**Action:**\n1. This is likely an execution/communication problem — fix both.\n2. Send the overdue Google Ads update today.\n3. Build a dated completion plan for all 4 items and review it with the client.\n\n---\n\n## Other unhappy or at-risk clients\n\n### Incontrera Consulting\n- **Sentiment:** **2.863**\n- **Change:** down **0.083**\n- **Overdue items:** **3**\n  - Send webinar lead lists\n  - Request webinar replay/transcript\n  - Deliver VIP script and thank you emails\n- **Risk level:** **Moderate to High**\n- **Takeaway:** Sentiment decline is small, but overdue follow-up work could worsen it.\n\n**Action:** Clear the webinar-related backlog and send a consolidated update.\n\n---\n\n### Empower\n- **Sentiment:** **2.371**\n- **Change:** down **0.033**\n- **Risk level:** **Moderate**\n- **Takeaway:** Sentiment is already low, even though the recent drop is small.\n\n**Action:** Check for chronic dissatisfaction; low score suggests underlying issues.\n\n---\n\n### Prosper Group\n- **Sentiment:** **2.642**\n- **Change:** down **0.050**\n- **Risk level:** **Moderate**\n\n**Action:** Monitor closely and do a light-touch check-in before this worsens.\n\n---\n\n### Regen Profits\n- **Sentiment:** **2.592**\n- **Change:** down **0.183**\n- **Risk level:** **Moderate**\n\n**Action:** Review recent client interactions and address any unresolved concerns.\n\n---\n\n### GS Home Services\n- **Sentiment:** **2.958**\n- **Change:** down **0.087**\n- **Risk level:** **Watch list**\n\n**Action:** Not urgent yet, but slipping toward concern territory.\n\n---\n\n## Clients declining, but less alarming right now\n\n### Tom Ruwitch\n- **Sentiment:** **3.0**\n- **Change:** down **0.133**\n- **Status:** Mild decline, not clearly unhappy yet.\n\n### BEC CFO\n- **Sentiment:** **3.0**\n- **Change:** down **0.229**\n- **Status:** Mild concern; worth monitoring.\n\n---\n\n## Clients with overdue tasks that may become unhappy soon\n\n### Legendary Service\n- **Overdue items:** **2**\n  - Re-send introduction to Andy\n  - Throttle or cut sump pump campaigns\n- **Sentiment:** Not listed as declining\n- **Risk:** Operational risk; could turn into dissatisfaction if unresolved.\n\n### Unmatched\n- **Overdue items:** **2**\n  - Install vertical video setup on OBS\n  - Share checklist document\n- **Sentiment:** Not listed as declining\n- **Risk:** Medium; delivery delays can create frustration.\n\n### Mike McVety\n- **Overdue items:** **2**\n  - Send Zoom registration email\n  - Review/approve invitation/countdown emails\n- **Sentiment:** Not listed as declining\n- **Risk:** Medium; event-related delays are sensitive.\n\n---\n\n## Bottom line\n\n### Clients that appear unhappy now\nBased on low and/or declining sentiment, the clearest unhappy clients are:\n\n1. **London Flooring** — **1.825**\n2. **Bearcat** — **2.146**\n3. **Empower** — **2.371**\n4. **Jerry Levinson** — **2.496**\n5. **Regen Profits** — **2.592**\n6. **Prosper Group** — **2.642**\n7. **Jay Conner / Conner Marketing** — **2.817**\n8. **Pearce HVAC** — **2.863**\n9. **Incontrera Consulting** — **2.863**\n\n## Priority order for action\n1. **London Flooring**\n2. **Bearcat**\n3. **Jerry Levinson**\n4. **Jay Conner / Conner Marketing**\n5. **Pearce HVAC**\n6. **Incontrera Consulting**\n7. **Empower**\n8. **Regen Profits / Prosper Group**\n\n## Portfolio-level takeaway\nYes, there is a real cross-portfolio sentiment issue:\n- **13 clients/accounts** show declining sentiment\n- At least **9 clients** are at or below roughly **2.86 sentiment**, which suggests dissatisfaction or elevated risk\n- Several of the most at-risk clients also have **overdue action items**, especially **Pearce HVAC, Jay Conner, Jerry Levinson, and Incontrera Consulting**\n\nIf you want, I can turn this into",
+          "answer": "Yes. A few clients show clear risk signals, and several others look mildly dissatisfied or slipping.\n\n## Most concerning clients first\n\n### 1) London Flooring\n- **Current sentiment:** 1.825\n- **Change:** down **0.713**\n- **Status:** **High risk / likely unhappy**\n- This is one of the lowest scores in the portfolio and one of the sharpest drops.\n\n**Action:**\n- Immediate client check-in this week\n- Review recent deliverables, missed expectations, and communication gaps\n- Put a recovery plan in writing with deadlines\n\n---\n\n### 2) Bearcat\n- **Current sentiment:** 2.146\n- **Change:** down **0.850**\n- **Status:** **High risk / likely unhappy**\n- This is the **largest sentiment drop** across the board.\n\n**Action:**\n- Escalate to account lead immediately\n- Audit last 30 days of meetings, deliverables, and unresolved asks\n- Schedule a “reset” conversation with concrete next steps\n\n---\n\n### 3) Jerry Levinson\n- **Current sentiment:** 2.496\n- **Change:** down **0.325**\n- **Overdue items:** **1**\n  - Cut off ads for remarketing of the event — overdue since **2024-03-10**\n- **Status:** **Unhappy risk is real**\n- Low score plus an overdue action tied to campaign execution is a strong warning sign.\n\n**Action:**\n- Resolve overdue ad task immediately\n- Send proactive update today explaining what changed and what happens next\n- Confirm whether spend/performance concerns are driving sentiment\n\n---\n\n### 4) Jay Conner / Conner Marketing\n- **Current sentiment:** 2.817\n- **Change:** down **0.404**\n- **Overdue items:** **4**\n  - Record voice broadcast\n  - Send voice broadcast\n  - Finish/practice PowerPoint\n  - Send Saturday event reminder text\n- **Status:** **At risk**\n- This is a meaningful sentiment drop, and the volume of overdue event-related tasks increases the chance of frustration.\n\n**Action:**\n- Triage all event-critical tasks today\n- Assign one owner to coordinate completion\n- Send Jay a concise status report with exact completion times\n\n---\n\n### 5) Pearce HVAC\n- **Current sentiment:** 2.863\n- **Change:** down **0.354**\n- **Overdue items:** **4**\n  - Status update on Google Ads\n  - Complete Service Titan integration\n  - Send postcard/leaflet design\n  - Deliver welcome/content emails for review\n- **Status:** **At risk**\n- Sentiment has moved from healthy to concerning, and there are multiple overdue deliverables across ads, integration, and creative.\n\n**Action:**\n- Immediate internal review of all open workstreams\n- Deliver the overdue Google Ads update first\n- Re-baseline timeline for integration and creative approvals\n\n---\n\n## Moderate concern\n\n### Incontrera Consulting\n- **Current sentiment:** 2.863\n- **Change:** down **0.083**\n- **Overdue items:** **3**\n  - Send webinar lead lists\n  - Request webinar replay/transcript\n  - Deliver VIP script and thank you emails\n- **Status:** **Mixed**\n- Sentiment decline is small, but there are several overdue post-webinar items. Risk may rise if not cleared quickly.\n\n**Action:**\n- Close out webinar follow-up items within 24–48 hours\n- Confirm client priorities: leads, replay, or follow-up assets first\n\n---\n\n### Empower\n- **Current sentiment:** 2.371\n- **Change:** down **0.033**\n- **Status:** **Low score, but only slight decline**\n- Even though the drop is small, the score is already low enough to warrant attention.\n\n**Action:**\n- Review recent call transcripts for friction themes\n- Have account manager do a soft temperature check\n\n---\n\n### Regen Profits\n- **Current sentiment:** 2.592\n- **Change:** down **0.183**\n- **Status:** **At risk**\n- Not a severe drop, but sentiment is below comfort level.\n\n**Action:**\n- Check for unresolved asks or performance concerns\n- Add to watchlist for next client touchpoint\n\n---\n\n### Prosper Group\n- **Current sentiment:** 2.642\n- **Change:** down **0.050**\n- **Status:** **Mild concern**\n- Slight decline, below ideal sentiment range.\n\n**Action:**\n- Monitor\n- Look for recurring objections or stalled deliverables\n\n---\n\n### GS Home Services\n- **Current sentiment:** 2.958\n- **Change:** down **0.087**\n- **Status:** **Watchlist**\n- Near neutral, not urgent yet.\n\n**Action:**\n- Monitor next meeting closely\n- Check if there are any unresolved campaign issues\n\n---\n\n## Lower concern but declining\n\n### Tom Ruwitch\n- **Current sentiment:** 3.000\n- **Change:** down **0.133**\n- **Status:** Slight decline, still relatively stable\n\n### BEC CFO\n- **Current sentiment:** 3.000\n- **Change:** down **0.229**\n- **Status:** Slightly more notable decline, but still not in danger zone\n\n**Action for both:**\n- Monitor only unless transcripts show specific complaints\n\n---\n\n## Internal / non-client declines\nThese are declining, but not client dissatisfaction issues:\n- **B3X Team Leadership Huddle:** 2.404, down 0.321\n\n---\n\n## Clients with overdue items but no sentiment data shown here\nThese may still be at risk operationally:\n- **Legendary Service** — 2 overdue items\n- **Unmatched** — 2 overdue items\n- **Mike McVety** — 2 overdue items\n\n**Action:**\n- Don’t wait for sentiment to drop; clear overdue work and communicate status proactively\n\n---\n\n## Portfolio summary\n### Clients most likely unhappy\n1. **Bearcat**\n2. **London Flooring**\n3. **Jerry Levinson**\n4. **Jay Conner / Conner Marketing**\n5. **Pearce HVAC**\n\n### Biggest sentiment drops\n1. **Bearcat:** -0.850\n2. **London Flooring:** -0.713\n3. **Jay Conner / Conner Marketing:** -0.404\n4. **Pearce HVAC:** -0.354\n5. **Jerry Levinson:** -0.325\n\n### Clients with both declining sentiment and overdue work\n- **Jerry Levinson** — 1 overdue\n- **Pearce HVAC** — 4 overdue\n- **Jay Conner / Conner Marketing** — 4 overdue\n- **Incontrera Consulting** — 3 overdue\n\n## Recommended priority actions\n1. **Immediate rescue outreach:** Bearcat, London Flooring, Jerry Levinson\n2. **Operational triage today:** Jay Conner, Pearce HVAC, Incontrera Consulting\n3. **Watchlist review this week:** Empower, Regen Profits, Prosper Group, GS Home Services\n4. **Preventive cleanup:** Legendary Service, Unmatched, Mike McVety\n\nIf you want, I can turn this into a **red/yellow/green",
           "queryType": "meta_analysis",
-          "latencyMs": 25225,
-          "sessionId": "7200c6d6-4bee-4b79-81b9-4f9ec990188e",
+          "latencyMs": 30368,
+          "sessionId": "c3a5d62f-4afa-4568-805a-938264479cc1",
           "citationCount": 0,
           "modelUsed": "gpt-5.4",
           "tokensUsed": 2813,
@@ -502,13 +502,13 @@
         {
           "questionNum": 2,
           "question": "Give me a full summary of Northern Services meetings.",
-          "answer": "Here’s a full summary of the available **Northern Services** meeting context.\n\nNorthern Services’ most recent meeting was on **Apr 13, 2026** with **Cathy & Gregg Helin**. The discussion centered on strong business performance: the team reported **significant growth**, including a **10% margin increase** and **record-breaking leads from a recent home show**. The overall tone appears positive, with the meeting focused on how to capitalize on that momentum rather than solve a major crisis.\n\nThe main strategic topics were marketing and operational improvements. The team discussed **expanding Meta ad audiences**, **implementing a shared lead-tracking system for bot traffic**, and **leadership coaching for Gregg** ahead of his quarterly team huddle. The summary indicates these were the key decisions and priorities, but the context provided here does not include detailed transcript quotes, timestamps, or action-item statuses beyond the summary.\n\nIf you want, I can also turn this into a **meeting-by-meeting timeline summary** or a **client health snapshot** for Northern Services.",
+          "answer": "I only have one Northern Services meeting in the provided context, so this is a summary of that meeting rather than a full multi-meeting history.\n\nOn **Apr 13, 2026**, **Cathy & Gregg Helin** met with **Breakthrough3x** for a 77-minute session. The discussion was strongly positive overall: Northern Services reported **significant business growth**, including a **10% margin increase** and **record-breaking leads from a recent home show**. The meeting also centered on marketing optimization and operational follow-through, especially around expanding Meta ad audiences and improving lead quality tracking. [Meeting: 2026-04-13 | Cathy & Gregg Helin at unknown timestamp]\n\nKey topics included **expanding Meta ad audiences**, **implementing a shared lead-tracking system for bot traffic**, and **leadership coaching for Gregg** ahead of his quarterly team huddle. The summary indicates the team was focused on scaling what’s working while tightening internal processes to better manage lead flow and team communication. [Meeting: 2026-04-13 | Cathy & Gregg Helin at unknown timestamp]\n\nI don’t have the underlying transcript, action-item list, or session evaluation scores for Northern Services in the context you provided, so I can’t cite speaker-by-speaker quotes, action-item status, or sentiment scores beyond the meeting summary. If you share the full transcript or evaluation data, I can produce a more detailed recap with exact citations and action-item status.",
           "queryType": "meeting_summary",
-          "latencyMs": 3477,
-          "sessionId": "7200c6d6-4bee-4b79-81b9-4f9ec990188e",
+          "latencyMs": 4424,
+          "sessionId": "c3a5d62f-4afa-4568-805a-938264479cc1",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 2062,
+          "tokensUsed": 2147,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
@@ -525,13 +525,13 @@
         {
           "questionNum": 3,
           "question": "Search their transcripts for any complaints or frustrations.",
-          "answer": "I don’t see any transcript text in the provided context for Northern Services—only the meeting timeline summary. Because of that, I can’t reliably search for specific complaints or frustrations in the transcripts, and I don’t want to invent details.\n\nWhat I can say from the available meeting summary is that the **Apr 13, 2026** meeting with **Cathy & Gregg Helin** appears generally positive: the client reported **significant business growth**, a **10% margin increase**, and **record-breaking leads** from a home show. The agenda was mostly forward-looking and operational, centered on **expanding Meta ad audiences**, **lead tracking for bot traffic**, and **leadership coaching for Gregg**. There’s nothing in the summary itself that indicates explicit frustration.\n\nIf you share the actual transcript text or additional meeting notes, I can search for complaint language, frustration signals, and any negative sentiment, and I’ll cite the exact speaker and timestamp as requested.",
+          "answer": "I don’t see any transcript text, action-item list, or session evaluation scores in the context you provided—only the meeting timeline summary for **Apr 13, 2026**. Because of that, I can’t reliably search for specific complaints or frustrations in the transcripts, and I shouldn’t invent them.\n\nWhat I *can* say from the available summary is that the meeting appears **positive overall**: Northern Services discussed **significant business growth**, a **10% margin increase**, and **record-breaking leads** from a home show. The main discussion points were operational and strategic—**expanding Meta ad audiences**, **shared lead tracking for bot traffic**, and **leadership coaching for Gregg**—which suggests a working session focused on optimization rather than conflict. [Meeting: 2026-04-13 | Cathy & Gregg Helin at unknown timestamp]\n\nIf you want, send the transcript or evaluation data and I can search it for:\n- explicit complaints or frustrations\n- negative sentiment language\n- unresolved action items\n- any signs of dissatisfaction from Cathy or Gregg",
           "queryType": "transcript_search",
-          "latencyMs": 2894,
-          "sessionId": "7200c6d6-4bee-4b79-81b9-4f9ec990188e",
+          "latencyMs": 5293,
+          "sessionId": "c3a5d62f-4afa-4568-805a-938264479cc1",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 2276,
+          "tokensUsed": 2383,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
@@ -548,36 +548,36 @@
         {
           "questionNum": 4,
           "question": "What promises have we made to them?",
-          "answer": "Based on the context provided, the clearest promises/commitments made to **Northern Services** are the **open action items** from the latest meeting. These are all still **open**, so they represent promises not yet completed:\n\n- **Send updated ad videos** — **Open** [Meeting: Apr 13, 2026 | Gregg Helin at N/A]\n- **Create shared lead tracking Google Sheet** — **Open** [Meeting: Apr 13, 2026 | Philip Mutrie at N/A]\n- **Upload historical customer data to Google** — **Open** [Meeting: Apr 13, 2026 | Philip Mutrie at N/A]\n- **Send batch of leads for Constant Contact** — **Open** [Meeting: Apr 13, 2026 | Cathy Helin at N/A]\n- **Research API automation for Service Titan and Constant Contact** — **Open** [Meeting: Apr 13, 2026 | Philip Mutrie at N/A]\n- **Send weekly call reports to clients** — **Open** [Meeting: Apr 13, 2026 | Philip Mutrie at N/A]\n- **Email new clients to book onboarding calls** — **Open** [Meeting: Apr 13, 2026 | Philip Mutrie at N/A]\n\nFrom the meeting timeline summary, the broader commitments appear to be: improving **Meta ad performance**, setting up **shared lead tracking for bot traffic**, and supporting **leadership coaching for Gregg** ahead of his quarterly team huddle. However, the provided context does **not** include transcript quotes or timestamps for those promises, so I can’t attribute them to specific speakers beyond the action-item owners listed above.\n\nIf you want, I can also turn this into a **“promises made vs. promises completed”** checklist.",
-          "queryType": "action_items",
-          "latencyMs": 3225,
-          "sessionId": "7200c6d6-4bee-4b79-81b9-4f9ec990188e",
+          "answer": "From the context provided, I can only identify one clear promise/commitment made to Northern Services in the Apr 13, 2026 meeting summary:\n\n- **Expand the Meta ad audience** to support continued growth and improve lead generation. [Meeting: 2026-04-13 | Cathy & Gregg Helin at unknown timestamp]\n\nThere are also a couple of implied commitments, but the context doesn’t state them as explicit promises, so I can’t confirm them as such:\n- **Implement a shared lead-tracking system for bot traffic** [Meeting: 2026-04-13 | Cathy & Gregg Helin at unknown timestamp]\n- **Provide leadership coaching for Gregg** ahead of his quarterly team huddle [Meeting: 2026-04-13 | Cathy & Gregg Helin at unknown timestamp]\n\nI don’t have the full transcript or action-item list here, so I can’t verify whether these were formal promises, who owned them, or their status. If you share the transcript, I can extract every explicit commitment and label each as open, complete, or on-agenda.",
+          "queryType": "transcript_search",
+          "latencyMs": 5447,
+          "sessionId": "c3a5d62f-4afa-4568-805a-938264479cc1",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 2823,
+          "tokensUsed": 2623,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
               "factual": 2,
               "contextRetention": 2,
-              "intentMatch": 0,
+              "intentMatch": 1,
               "quality": 2,
               "noHallucination": 1
             },
-            "total": 7,
+            "total": 8,
             "maxScore": 8
           }
         },
         {
           "questionNum": 5,
           "question": "Are there any overdue action items for Northern Services specifically?",
-          "answer": "Yes — there are **overdue action items** for Northern Services.\n\nThe items that are clearly overdue based on the due dates provided are:\n- **Send weekly call reports to clients** — **Open / Overdue** (Owner: Philip Mutrie, Due: Apr 13, 2026)\n- **Email new clients to book onboarding calls** — **Open / Overdue** (Owner: Philip Mutrie, Due: Apr 13, 2026)\n\nThere is also one item that is **due very soon / potentially overdue depending on current date**:\n- **Send updated ad videos** — **Open** (Owner: Gregg Helin, Due: Apr 14, 2026)\n\nThe remaining open items do **not** show due dates in the context, so I can’t determine whether they’re overdue:\n- **Create shared lead tracking Google Sheet** — Open\n- **Upload historical customer data to Google** — Open\n- **Send batch of leads for Constant Contact** — Open\n- **Research API automation for Service Titan and Constant Contact** — Open\n\nIf you want, I can also group these into **overdue, due soon, and no due date** in a simple table.",
+          "answer": "Yes — based on the context, there are **3 open action items** for **Northern Services**, and **none are explicitly marked overdue** yet because their due dates are **Apr 13, 2026** and **Apr 14, 2026**, with no current date provided to confirm lateness.\n\nOpen items:\n- **Send weekly call reports to clients** — **Open** — Owner: Philip Mutrie — Due: Apr 13, 2026\n- **Email new clients to book onboarding calls** — **Open** — Owner: Philip Mutrie — Due: Apr 13, 2026\n- **Send updated ad videos** — **Open** — Owner: Gregg Helin — Due: Apr 14, 2026\n\nIf you want, I can also separate these into **likely overdue vs. not overdue** if you tell me today’s date or the dashboard’s reference date.",
           "queryType": "action_items",
-          "latencyMs": 3349,
-          "sessionId": "7200c6d6-4bee-4b79-81b9-4f9ec990188e",
+          "latencyMs": 2967,
+          "sessionId": "c3a5d62f-4afa-4568-805a-938264479cc1",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 1571,
+          "tokensUsed": 1397,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
@@ -592,26 +592,26 @@
           }
         }
       ],
-      "totalScore": 36,
+      "totalScore": 37,
       "maxScore": 40,
-      "startTime": "2026-04-16T12:48:08.988Z",
-      "endTime": "2026-04-16T12:48:49.166Z"
+      "startTime": "2026-04-16T13:52:31.676Z",
+      "endTime": "2026-04-16T13:53:22.184Z"
     },
     {
       "name": "Cross-Meeting Topic Tracking",
       "description": "Tracking topics across time and clients: SEO → website → hiring → budget → pricing → timeline",
-      "sessionId": "62e810b4-16e7-4f80-87ff-b4dc02b33e82",
+      "sessionId": "796ea3b9-46fb-4aec-97b2-f67b0c24f35f",
       "questions": [
         {
           "questionNum": 1,
           "question": "When was SEO last discussed in London Flooring meetings?",
-          "answer": "SEO was last discussed in the **Mar 17, 2026** London Flooring Canada | Growth Huddle. In that meeting, Philip Mutrie tied the softer lead volume to **Google algorithm changes** and said the team was in the optimization process: “Google went through some algorithm changes, so we are… we’ve been in the optimization process of that” [Meeting: Mar 17, 2026 | Philip Mutrie at 00:00:00]. He also noted that lead volume was down partly due to the seasonal transition from February into March, which he described as a typical slowdown [Meeting: Mar 17, 2026 | Philip Mutrie at 00:00:00].\n\nThere’s no later mention of SEO in the provided context after that date. The next meetings in the timeline, **Mar 24, 2026**, **Mar 31, 2026**, **Apr 7, 2026**, and **Apr 14, 2026**, focus on other topics like technical access, email marketing setup, DNS/hosting issues, hiring, and luxury brand strategy, but not SEO specifically.\n\nIf you want, I can also pull out the **full chain of marketing-related discussions after Mar 17** to show how the SEO/optimization conversation evolved.",
+          "answer": "SEO was last discussed on **Mar 17, 2026** in the **London’s Flooring Canada | Growth Huddle**. In that meeting, Philip Mutrie and Jerry discussed a slowdown in leads and Philip attributed part of it to **Google algorithm changes**, saying they were “in the optimization process” and that the lead dip was due to both seasonality and the platform change. [Meeting: Mar 17, 2026 | Philip Mutrie at 00:00:00]  \n\nThe discussion was not framed as a formal SEO strategy review, but it was the most recent transcript evidence touching on search visibility/performance. Philip noted that “Google went through some algorithm changes” and that they were working to optimize around it. [Meeting: Mar 17, 2026 | Philip Mutrie at 00:00:00]  \n\nI don’t see any later meeting in the provided context that mentions SEO directly. The Apr 7 and Apr 14 meetings focused on access/admin issues, hosting, email marketing, and luxury brand strategy rather than SEO.",
           "queryType": "temporal_search",
-          "latencyMs": 4576,
-          "sessionId": "62e810b4-16e7-4f80-87ff-b4dc02b33e82",
+          "latencyMs": 3564,
+          "sessionId": "796ea3b9-46fb-4aec-97b2-f67b0c24f35f",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 10312,
+          "tokensUsed": 10265,
           "chunksUsed": 20,
           "scoring": {
             "scores": {
@@ -628,13 +628,13 @@
         {
           "questionNum": 2,
           "question": "What about their website — any recent discussions?",
-          "answer": "Yes — the most recent **website-related** discussion in the London Flooring meetings appears to be on **Apr 7, 2026** and **Apr 14, 2026**, but it was framed more as **technical infrastructure / access** than website content or design.\n\nOn **Apr 7, 2026**, the team discussed taking over the technical configuration of **FloorZap and Liquid Web hosting** to resolve ongoing **DNS issues** and get email marketing moving again [Meeting: Apr 7, 2026 | Meeting summary]. On **Apr 14, 2026**, the focus shifted to getting full **admin access** and clearing “tech jail” so the agency could proceed with marketing work, including email campaigns and broader brand initiatives [Meeting: Apr 14, 2026 | Meeting summary].\n\nFor **SEO specifically**, the last clear discussion in the provided context was on **Mar 17, 2026**, when Philip Mutrie linked lower lead volume to **Google algorithm changes** and said they were in the optimization process [Meeting: Mar 17, 2026 | Philip Mutrie at 00:00:00]. After that, the meetings in the timeline don’t mention SEO directly.",
+          "answer": "SEO was last discussed on **Mar 17, 2026** in **London’s Flooring Canada | Growth Huddle**. The meeting summary says lead volume dipped partly because of **Google algorithm changes**, which is the clearest recent SEO-related discussion in the timeline. [Meeting: Mar 17, 2026 | Philip Mutrie at 00:00:00]\n\nOn the website side, there have been several recent discussions, mostly around **technical access and infrastructure** rather than design or content changes. On **Apr 7, 2026**, the team discussed taking over the technical configuration of **FloorZap and Liquid Web hosting** to resolve ongoing **DNS issues** and support email marketing. [Meeting: Apr 7, 2026 | Philip Mutrie at 00:00:00] On **Mar 31, 2026**, they focused on a **critical Liquid Web DNS access blocker** that was preventing email campaigns from launching. [Meeting: Mar 31, 2026 | Philip Mutrie at 00:00:00]\n\nThe most recent meeting on **Apr 14, 2026** continued the technical theme, describing the team as being stuck in “**tech jail**” and working to secure full admin access for the agency. That meeting also emphasized a luxury brand strategy and social campaigns, but I don’t see any direct website redesign or SEO-specific update there. [Meeting: Apr 14, 2026 | Philip Mutrie at 00:00:00]",
           "queryType": "transcript_search",
-          "latencyMs": 3574,
-          "sessionId": "62e810b4-16e7-4f80-87ff-b4dc02b33e82",
+          "latencyMs": 3322,
+          "sessionId": "796ea3b9-46fb-4aec-97b2-f67b0c24f35f",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 1233,
+          "tokensUsed": 1246,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
@@ -651,36 +651,36 @@
         {
           "questionNum": 3,
           "question": "Has hiring come up in Echelon meetings recently?",
-          "answer": "Yes — hiring has come up recently in the **London Flooring** meetings.\n\nOn **Apr 7, 2026**, the meeting summary notes that **Jerry and Lisa are moving forward with summer hiring through Fanshawe College** and other channels [Meeting: Apr 7, 2026 | Meeting summary]. On **Mar 31, 2026**, the team also discussed **hiring temporary help to produce video content** for “connection campaigns” [Meeting: Mar 31, 2026 | Meeting summary].\n\nMore broadly, the recent meetings have been focused on technical blockers, email marketing, and brand strategy, but hiring is definitely active in the background. If you want, I can also pull out the **specific hiring-related action items and their status** from these meetings.",
-          "queryType": "transcript_search",
-          "latencyMs": 3745,
-          "sessionId": "62e810b4-16e7-4f80-87ff-b4dc02b33e82",
+          "answer": "Yes — hiring came up recently in the **London Flooring** meetings, specifically on **Apr 7, 2026** and **Mar 31, 2026**. On Apr 7, the summary notes that **Jerry and Lisa are moving forward with summer hiring through Fanshawe College and interviews**. [Meeting: Apr 7, 2026 | Jerry at 00:00:00]\n\nOn Mar 31, the team discussed **hiring temporary help to produce video content for “connection campaigns.”** That was framed as a support need tied to marketing execution, not a broader staffing plan. [Meeting: Mar 31, 2026 | Philip Mutrie at 00:00:00]\n\nI don’t see any hiring discussion in the Apr 14 meeting summary, which was focused more on technical access, email marketing delays, and luxury brand strategy. So the most recent hiring-related discussion in the provided context is **Apr 7, 2026**.",
+          "queryType": "temporal_search",
+          "latencyMs": 2454,
+          "sessionId": "796ea3b9-46fb-4aec-97b2-f67b0c24f35f",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 1413,
-          "chunksUsed": 0,
+          "tokensUsed": 10814,
+          "chunksUsed": 20,
           "scoring": {
             "scores": {
               "factual": 2,
               "contextRetention": 1,
-              "intentMatch": 0,
+              "intentMatch": 1,
               "quality": 2,
               "noHallucination": 1
             },
-            "total": 6,
+            "total": 7,
             "maxScore": 8
           }
         },
         {
           "questionNum": 4,
           "question": "What about budget discussions at Prosper?",
-          "answer": "I can only answer using the provided context, and the context here is for **London Flooring** only. There’s **no Echelon or Prosper meeting data included**, so I can’t verify whether hiring came up at Echelon or whether budget was discussed at Prosper.\n\nIf you want, send the **Echelon** or **Prosper** meeting timeline/transcripts, and I can check for:\n- **Hiring discussions** at Echelon\n- **Budget discussions** at Prosper\n- Any related **action items** and their status",
+          "answer": "I don’t have any **Echelon** meeting context in the provided data, so I can’t confirm whether hiring has come up there recently. If you share the Echelon timeline or transcripts, I can check it directly.\n\nFor **Prosper**, I also don’t see any Prosper meeting context in what you provided, so I can’t verify recent budget discussions there either. The only available timeline is for **London Flooring**, where the recent meetings focused on technical access, email marketing, and hiring support, not Prosper budget items.",
           "queryType": "transcript_search",
-          "latencyMs": 3077,
-          "sessionId": "62e810b4-16e7-4f80-87ff-b4dc02b33e82",
+          "latencyMs": 2926,
+          "sessionId": "796ea3b9-46fb-4aec-97b2-f67b0c24f35f",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 1546,
+          "tokensUsed": 1599,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
@@ -697,13 +697,13 @@
         {
           "questionNum": 5,
           "question": "Has pricing been discussed across any clients recently?",
-          "answer": "Yes — **pricing has been discussed recently across multiple clients**, but it’s **not broad-based across the whole portfolio** from the context provided.\n\n## Urgent portfolio flags first\n- **20 overdue action items** across the portfolio\n- Biggest sentiment declines:\n  - **Bearcat:** 2.996 → 2.146 (**-0.850**)\n  - **London Flooring:** 2.538 → 1.825 (**-0.713**)\n  - **Jay Conner / Conner Marketing:** 3.221 → 2.817 (**-0.404**)\n  - **Pearce HVAC:** 3.217 → 2.863 (**-0.354**)\n  - **Jerry Levinson:** 2.821 → 2.496 (**-0.325**)\n  - **B3X Team Leadership Huddle:** 2.725 → 2.404 (**-0.321**)\n\n## Pricing discussions by client\nFrom the context you shared, there are **no explicit pricing discussion notes or transcript excerpts** attached to the overdue items/sentiment list itself. That means I **can’t confirm specific recent pricing conversations** for most clients from this dataset alone.\n\n### Clients where pricing may warrant review based on risk signals\nThese are the accounts I’d prioritize checking for pricing-related conversations because sentiment is falling or delivery is strained:\n\n#### London Flooring\n- **Sentiment drop:** 2.538 → 1.825 (**-0.713**)\n- This is the sharpest active client concern in the list after Bearcat.\n- **Action:** review recent meetings for pricing/value tension, scope concerns, or ROI objections.\n\n#### Pearce HVAC\n- **Sentiment drop:** 3.217 → 2.863 (**-0.354**)\n- Also has **4 overdue items**, suggesting execution friction:\n  - Status update on Google Ads\n  - Complete Service Titan integration\n  - Send postcard/leaflet design\n  - Deliver welcome/content emails\n- **Action:** check whether pricing came up in relation to ad spend, integration cost, or campaign performance.\n\n#### Jay Conner / Conner Marketing\n- **Sentiment drop:** 3.221 → 2.817 (**-0.404**)\n- **4 overdue items** tied to event execution:\n  - Record voice broadcast\n  - Send voice broadcast\n  - Finish/practice PowerPoint\n  - Send reminder text\n- **Action:** review whether pricing/value concerns surfaced due to missed deliverables.\n\n#### Jerry Levinson\n- **Sentiment drop:** 2.821 → 2.496 (**-0.325**)\n- Has an overdue ad-related item:\n  - Cut off ads for remarketing of the event\n- **Action:** check for pricing discussion around ad efficiency or event ROI.\n\n#### Prosper Group\n- **Sentiment drop:** 2.692 → 2.642 (**-0.050**)\n- Mild decline only.\n- From this context, **no direct evidence of pricing discussion**.\n- **Action:** low urgency unless separate transcripts show budget/pricing concerns.\n\n## Clients with no evidence of pricing discussion in this context\nBased strictly on the data provided, I **cannot verify recent pricing discussions** for:\n- Prosper Group\n- Bearcat\n- GS Home Services\n- Empower\n- Regen Profits\n- Incontrera Consulting\n- Tom Ruwitch\n- BEC CFO\n\n## Prioritized actions\n1. **Audit recent transcripts for London Flooring, Pearce HVAC, and Jay Conner first**\n   - Highest combination of sentiment decline + delivery risk\n2. **Cross-check pricing against performance complaints**\n   - Especially ad spend, ROI, scope, and implementation delays\n3. **Resolve overdue items before pricing renewals or review calls**\n   - Missed execution often triggers pricing objections\n4. **Prepare client-by-client value defense**\n   - What was delivered\n   - What is blocked\n   - What results are attributable\n   - What next-step investment is justified\n\n## Bottom line\n**Pricing has likely become relevant in a few at-risk accounts, but this specific dataset does not contain direct proof of recent pricing discussions across clients.** The best candidates to investigate first are **London Flooring, Pearce HVAC, Jay Conner / Conner Marketing, and Jerry Levinson** based on declining sentiment and execution issues.",
-          "queryType": "meta_analysis",
-          "latencyMs": 15700,
-          "sessionId": "62e810b4-16e7-4f80-87ff-b4dc02b33e82",
+          "answer": "I don’t see any **Prosper** context in the data you provided, so I can’t confirm whether budget was discussed there.\n\nFor **pricing across clients**, I also don’t see any explicit pricing discussion in the available meeting timeline. The London Flooring meetings focus on technical blockers, email marketing, hiring, and brand strategy, but not pricing. For example, Apr 14 is about resolving “tech jail” and securing admin access, while Apr 7 centers on DNS/hosting access and summer hiring. [Meeting: Apr 14, 2026 | Philip Mutrie at 00:00:00] [Meeting: Apr 7, 2026 | Philip Mutrie at 00:00:00]\n\nIf you want, I can also scan the London Flooring timeline for any mentions of **budget, pricing, retainers, or fees** and summarize those specifically.",
+          "queryType": "transcript_search",
+          "latencyMs": 2983,
+          "sessionId": "796ea3b9-46fb-4aec-97b2-f67b0c24f35f",
           "citationCount": 0,
-          "modelUsed": "gpt-5.4",
-          "tokensUsed": 2788,
+          "modelUsed": "gpt-5.4-mini",
+          "tokensUsed": 1554,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
@@ -720,13 +720,13 @@
         {
           "questionNum": 6,
           "question": "Give me a timeline of Echelon's budget conversations.",
-          "answer": "I can give you a **budget timeline for London Flooring**, but I **can’t provide an Echelon budget timeline** from the context you shared because there are **no Echelon meeting transcripts or timeline entries included**. If you meant **London Flooring**, here’s the budget-related timeline from the available meeting data.\n\n- **Mar 17, 2026 — London Flooring Canada | Growth Huddle**: Philip Mutrie said, “**we did increase the budget**” and explained that this triggers an optimization/learning period for the ad platform [Meeting: Mar 17, 2026 | Philip Mutrie at transcript timestamp not provided in context]. He also reviewed spend and performance: **31 leads**, **$2,383.49 total ad spend**, and **$76.89 blended cost per lead** [Meeting: Mar 17, 2026 | Philip Mutrie at transcript timestamp not provided in context].\n- **Mar 17, 2026 — same meeting**: Jerry said it had been “**tight this month**,” and Philip attributed higher lead costs partly to **Google algorithm changes** and seasonal slowdown [Meeting: Mar 17, 2026 | Jerry at transcript timestamp not provided in context; Meeting: Mar 17, 2026 | Philip Mutrie at transcript timestamp not provided in context].\n\nIf you want the **Echelon** budget timeline specifically, send the Echelon meeting context and I’ll build it in the same format.",
+          "answer": "I don’t see any **Echelon** meetings or transcripts in the context you provided, so I can’t build a timeline of Echelon’s budget conversations.\n\nWhat I *can* confirm is that **budget did come up in London Flooring’s Mar 17, 2026 Growth Huddle**. Philip Mutrie said, “we did increase the budget,” and explained that this triggers an optimization/learning period in the ad platform. [Meeting: Mar 17, 2026 | Philip Mutrie at 00:00:00] He also reviewed spend and performance: Bing ad spend was **$709.49**, Google search spend was **$1,674**, total ad spend was **$2,383.49**, and blended cost per lead was **$76.89**. [Meeting: Mar 17, 2026 | Philip Mutrie at 00:00:00]\n\nThere’s also a related pricing discussion in the same meeting: Jerry said he was researching what other companies charge and was trying to get rough price ranges like “more than $10,000,” “more than $15,000,” or “more than $20,000” for a video-related service. [Meeting: Mar 17, 2026 | Home at 00:00:00] If you want, I can turn the London Flooring budget mentions into a clean timeline, but I’d need Echelon context to do the same for Echelon.",
           "queryType": "temporal_search",
-          "latencyMs": 4462,
-          "sessionId": "62e810b4-16e7-4f80-87ff-b4dc02b33e82",
+          "latencyMs": 2668,
+          "sessionId": "796ea3b9-46fb-4aec-97b2-f67b0c24f35f",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 11581,
+          "tokensUsed": 10896,
           "chunksUsed": 20,
           "scoring": {
             "scores": {
@@ -741,23 +741,23 @@
           }
         }
       ],
-      "totalScore": 42,
+      "totalScore": 43,
       "maxScore": 48,
-      "startTime": "2026-04-16T12:48:51.167Z",
-      "endTime": "2026-04-16T12:49:28.811Z"
+      "startTime": "2026-04-16T13:53:24.185Z",
+      "endTime": "2026-04-16T13:53:44.607Z"
     },
     {
       "name": "Rapid Fire Factual",
       "description": "Quick factual questions testing speed and accuracy",
-      "sessionId": "6c84192c-cffa-437c-8e04-43a4cc53395a",
+      "sessionId": "93ce43c4-0975-4277-bf48-2d1930bf4528",
       "questions": [
         {
           "questionNum": 1,
           "question": "How many meetings have we had with London Flooring?",
           "answer": "There are **7** meetings for london-flooring in the system.",
           "queryType": "count_query",
-          "latencyMs": 8,
-          "sessionId": "6c84192c-cffa-437c-8e04-43a4cc53395a",
+          "latencyMs": 9,
+          "sessionId": "93ce43c4-0975-4277-bf48-2d1930bf4528",
           "citationCount": 0,
           "modelUsed": "sql",
           "tokensUsed": 0,
@@ -777,13 +777,13 @@
         {
           "questionNum": 2,
           "question": "Summarize the last one.",
-          "answer": "The last meeting was on **Apr 14, 2026** and it focused on getting London Flooring out of “tech jail” so marketing can move forward. Dan Kuschell pushed for **full admin access** to the website/email stack (FloorZap, Liquid Web, cPanel, CallRail) so Breakthrough 3X can finally launch email and improve lead flow. Jerry agreed to email the relevant tech contacts, and the team also discussed the possibility of rebuilding the setup if access remains blocked. [Meeting: Apr 14, 2026 | Dan Kuschell at multiple timestamps]\n\nOn the marketing side, the team outlined several next steps: launch **Mother’s Day/Father’s Day**-style social and Facebook campaigns, create organic post samples, and build a **premium/luxury lead-gen strategy**. They identified target premium brands including **Custom Showers, Fabrica, Tuftex Carpets, Coretec Vinyl, and Caradine Luxury Vinyl**, and agreed to create sample landing pages for one brand first before expanding. [Meeting: Apr 14, 2026 | Dan Kuschell at multiple timestamps]\n\nThere were also operational follow-ups: Lisa is interviewing for a **marketing assistant/summer student** to help with video capture and social posting, and the team wants a customer list export for **2025 and 2026** to support matchback/enhanced conversions. The session ended positively: Jerry rated it a **10/10** and Lisa gave it **8.5/10**, indicating strong sentiment despite the ongoing technical bottlenecks. [Meeting: Apr 14, 2026 | Lisa at multiple timestamps]",
+          "answer": "We’ve had **7 meetings** with London Flooring.\n\nHere’s a brief summary of the **most recent meeting on Apr 14, 2026**: the team focused on removing major technical blockers that have been slowing down email marketing for months. Dan Kuschell emphasized that the business is still in “tech jail” because of access issues with FloorZap, Liquid Web/cPanel, WebTech, and CallRail, and Jerry agreed to email the relevant parties to request full admin access so Breakthrough 3X can move forward [Meeting: Apr 14, 2026 | Dan Kuschell at multiple timestamps; Home at multiple timestamps].\n\nOn the marketing side, Lisa shared that they’re interviewing for a summer marketing assistant to help with video capture and social posting, and the team agreed to move ahead with Mother’s Day/Father’s Day social and Facebook campaign concepts while also developing organic post ideas [Meeting: Apr 14, 2026 | Lisa at multiple timestamps; Dan Kuschell at multiple timestamps]. They also discussed a luxury lead-gen strategy: build sample landing pages for premium offerings like Custom Showers, Fabrica, Tuftex Carpets, CoreTec vinyl, and Caradine luxury vinyl, then scale from one approved page to the rest [Meeting: Apr 14, 2026 | Dan Kuschell at multiple timestamps; Home at multiple timestamps].\n\nA key follow-up item is the **customer data “matchback”** process: Lisa and Jerry are expected to provide customer lists so the team can improve targeting and lead quality over time [Meeting: Apr 14, 2026 | Dan Kuschell at multiple timestamps; Lisa at multiple timestamps]. Session sentiment was very positive: Jerry rated the meeting **10/10** and Lisa rated it **8.5/10**, indicating strong alignment despite the technical frustrations [Meeting: Apr 14, 2026 | Dan Kuschell at the end of meeting; Home at the end of meeting; Lisa at the end of meeting].",
           "queryType": "meeting_summary",
-          "latencyMs": 4422,
-          "sessionId": "6c84192c-cffa-437c-8e04-43a4cc53395a",
+          "latencyMs": 4544,
+          "sessionId": "93ce43c4-0975-4277-bf48-2d1930bf4528",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 12048,
+          "tokensUsed": 12116,
           "chunksUsed": 27,
           "scoring": {
             "scores": {
@@ -802,8 +802,8 @@
           "question": "How long was that meeting?",
           "answer": "There are **7** meetings for london-flooring in the system.",
           "queryType": "count_query",
-          "latencyMs": 790,
-          "sessionId": "6c84192c-cffa-437c-8e04-43a4cc53395a",
+          "latencyMs": 737,
+          "sessionId": "93ce43c4-0975-4277-bf48-2d1930bf4528",
           "citationCount": 0,
           "modelUsed": "sql",
           "tokensUsed": 0,
@@ -825,8 +825,8 @@
           "question": "How many open action items does Echelon have?",
           "answer": "There are **40** open action items for london-flooring.",
           "queryType": "count_query",
-          "latencyMs": 4,
-          "sessionId": "6c84192c-cffa-437c-8e04-43a4cc53395a",
+          "latencyMs": 6,
+          "sessionId": "93ce43c4-0975-4277-bf48-2d1930bf4528",
           "citationCount": 0,
           "modelUsed": "sql",
           "tokensUsed": 0,
@@ -846,13 +846,13 @@
         {
           "questionNum": 5,
           "question": "Who owns the most action items across all clients?",
-          "answer": "**Dan’s Team** owns the most action items in the provided portfolio snapshot, with **3 overdue items**.\n\nTop owners from the overdue list:\n- **Dan’s Team** — **3**\n- **Bill Soady** — **3**\n- **Philip Mutrie** — **2**\n- **Joaco Malig** — **2**\n- **Michael McVety** — **2**\n- **Jay Conner** — **2**\n\nIf you want, I can also break this down **by client** or identify who owns the most **total open items** instead of just the overdue ones shown here.",
+          "answer": "Top owner across the items shown is **Dan's Team** with **3 overdue action items**.\n\nBreakdown of the highest counts from the provided context:\n- **Dan's Team** — 3\n- **Bill Soady** — 3\n- **Philip Mutrie** — 2\n- **Joaco Malig** — 2\n- **Michael McVety** — 2\n- **Jay Conner** — 2\n\nUrgent note:\n- The most concentrated overdue risk is with **Dan's Team** and **Bill Soady**, since they each hold the highest number of overdue items.\n- Clients with both overdue items and declining sentiment that should be prioritized:\n  - **Pearce HVAC** — 4 overdue items, sentiment down **0.354**\n  - **Jay Conner / Conner Marketing** — 3 overdue items, sentiment down **0.404**\n  - **Incontrera Consulting** — 3 overdue items, sentiment down **0.083**\n\nRecommended next actions:\n1. Clear **Dan's Team** and **Bill Soady** overdue items first.\n2. Triage by client impact: **Pearce HVAC**, **Jay Conner / Conner Marketing**, then **Incontrera Consulting**.\n3. Review **London Flooring** and **Bearcat** separately for sentiment recovery, since they show the sharpest score declines even though no overdue items are listed here.",
           "queryType": "meta_analysis",
-          "latencyMs": 6142,
-          "sessionId": "6c84192c-cffa-437c-8e04-43a4cc53395a",
+          "latencyMs": 5998,
+          "sessionId": "93ce43c4-0975-4277-bf48-2d1930bf4528",
           "citationCount": 0,
           "modelUsed": "gpt-5.4",
-          "tokensUsed": 1855,
+          "tokensUsed": 2091,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
@@ -872,7 +872,7 @@
           "answer": "There are **7** meetings for london-flooring in the system.",
           "queryType": "count_query",
           "latencyMs": 5,
-          "sessionId": "6c84192c-cffa-437c-8e04-43a4cc53395a",
+          "sessionId": "93ce43c4-0975-4277-bf48-2d1930bf4528",
           "citationCount": 0,
           "modelUsed": "sql",
           "tokensUsed": 0,
@@ -892,21 +892,21 @@
       ],
       "totalScore": 41,
       "maxScore": 48,
-      "startTime": "2026-04-16T12:49:30.813Z",
-      "endTime": "2026-04-16T12:49:44.691Z"
+      "startTime": "2026-04-16T13:53:46.609Z",
+      "endTime": "2026-04-16T13:54:00.412Z"
     },
     {
       "name": "Adversarial Edge Cases",
       "description": "Testing robustness with vague, malformed, and edge-case queries",
-      "sessionId": "82ab40df-ff07-464f-8382-19f69cc507e5",
+      "sessionId": "08b4eac5-3273-453e-a6bb-7fab8ea32d08",
       "questions": [
         {
           "questionNum": 1,
           "question": "What's going on?",
           "answer": "I couldn't identify which client you're asking about. Could you mention the client name? Recent clients: Northern Services, The Collective Genius, Regen Profits, Bearcat, Echelon",
           "queryType": "meeting_summary",
-          "latencyMs": 913,
-          "sessionId": "82ab40df-ff07-464f-8382-19f69cc507e5",
+          "latencyMs": 846,
+          "sessionId": "08b4eac5-3273-453e-a6bb-7fab8ea32d08",
           "citationCount": 0,
           "modelUsed": "system",
           "tokensUsed": 0,
@@ -928,8 +928,8 @@
           "question": "meetings",
           "answer": "There are **132** meetings in the system.",
           "queryType": "count_query",
-          "latencyMs": 761,
-          "sessionId": "82ab40df-ff07-464f-8382-19f69cc507e5",
+          "latencyMs": 1685,
+          "sessionId": "08b4eac5-3273-453e-a6bb-7fab8ea32d08",
           "citationCount": 0,
           "modelUsed": "sql",
           "tokensUsed": 0,
@@ -949,10 +949,10 @@
         {
           "questionNum": 3,
           "question": "Tell me everything about every client we have ever worked with in complete detail.",
-          "answer": "Here’s the portfolio-level readout based on the context provided.\n\n## Urgent issues first\n\n### 1) Clients with overdue action items\nThere are **20 overdue action items** across **8 clients/internal accounts**.\n\nMost urgent by volume:\n\n- **Pearce HVAC** — **4 overdue**\n- **Jay Conner / Conner Marketing** — **4 overdue**\n- **Incontrera Consulting** — **3 overdue**\n- **Unmatched** — **2 overdue**\n- **Mike McVety** — **2 overdue**\n- **Legendary Service** — **2 overdue**\n- **Jerry Levinson** — **1 overdue**\n- **B3X Internal** — **2 overdue**\n\n### 2) Clients with the biggest sentiment declines\nLargest drops:\n\n- **Bearcat**: **2.996 → 2.146** (**-0.850**)  \n- **London Flooring**: **2.538 → 1.825** (**-0.713**)  \n- **Jay Conner / Conner Marketing**: **3.221 → 2.817** (**-0.404**)  \n- **Pearce HVAC**: **3.217 → 2.863** (**-0.354**)  \n- **Jerry Levinson**: **2.821 → 2.496** (**-0.325**)  \n- **B3X Team Leadership Huddle**: **2.725 → 2.404** (**-0.321**)  \n\nMost concerning current sentiment scores:\n\n- **London Flooring**: **1.825**\n- **Bearcat**: **2.146**\n- **Empower**: **2.371**\n- **B3X Team Leadership Huddle**: **2.404**\n- **Jerry Levinson**: **2.496**\n- **Regen Profits**: **2.592**\n- **Prosper Group**: **2.642**\n\n---\n\n# Client-by-client summary\n\n## Bearcat\n- **Sentiment:** **2.996 → 2.146** (**-0.850**)\n- **Status:** Biggest decline in the portfolio\n- **Risk level:** **Critical**\n- **Action:** Immediate account review. Identify what changed in delivery, communication, or results. Schedule recovery call this week.\n\n## London Flooring\n- **Sentiment:** **2.538 → 1.825** (**-0.713**)\n- **Status:** Lowest current sentiment score in the portfolio\n- **Risk level:** **Critical**\n- **Action:** Escalate immediately. This is likely a churn-risk account. Senior team should intervene and produce a corrective plan.\n\n## Jay Conner / Conner Marketing\n- **Sentiment:** **3.221 → 2.817** (**-0.404**)\n- **Overdue items:** **4**\n  - Record voice broadcast for the Saturday event\n  - Send voice broadcast to Saturday event registrants\n  - Finish and practice PowerPoint presentation\n  - Send Saturday event reminder text\n- **Status:** High operational risk tied to event execution\n- **Risk level:** **Critical**\n- **Action:** Treat as same-day rescue. Complete event-related deliverables immediately and assign one owner to coordinate all remaining launch tasks.\n\n## Pearce HVAC\n- **Sentiment:** **3.217 → 2.863** (**-0.354**)\n- **Overdue items:** **4**\n  - Status update on Google Ads\n  - Complete Service Titan integration\n  - Send postcard/leaflet design to Bill\n  - Deliver welcome and content emails for review\n- **Status:** Heavy execution backlog plus meaningful sentiment decline\n- **Risk level:** **High**\n- **Action:** Prioritize operational cleanup. Send client-facing status update today, then close integration and creative/email deliverables in sequence.\n\n## Jerry Levinson\n- **Sentiment:** **2.821 → 2.496** (**-0.325**)\n- **Overdue items:** **1**\n  - Cut off ads for remarketing of the event\n- **Status:** Declining sentiment and unresolved ad task\n- **Risk level:** **High**\n- **Action:** Stop or adjust campaign immediately if still active. Then communicate what happened and what the next step is.\n\n## Incontrera Consulting\n- **Sentiment:** **2.946 → 2.863** (**-0.083**)\n- **Overdue items:** **3**\n  - Send webinar lead lists (CSV)\n  - Request webinar replay and transcript\n  - Deliver VIP script and thank you emails\n- **Status:** Sentiment only slightly down, but execution backlog is real\n- **Risk level:** **Medium-High**\n- **Action:** Clear all webinar follow-up assets fast. This looks recoverable if fulfillment happens quickly.\n\n## Unmatched\n- **Overdue items:** **2**\n  - Install vertical video setup on OBS\n  - Share checklist document\n- **Status:** Operational slippage\n- **Risk level:** **Medium**\n- **Action:** Close both production tasks this week. Low complexity, should be easy to recover.\n\n## Mike McVety\n- **Overdue items:** **2**\n  - Send Zoom registration email to current clients\n  - Review and approve invitation/countdown emails\n- **Status:** Event/email workflow delayed\n- **Risk level:** **Medium**\n- **Action:** Push approvals and registration email immediately to avoid attendance loss.\n\n## Legendary Service\n- **Overdue items:** **2**\n  - Re-send introduction to Andy at Opportunity Knocks Mailings\n  - Throttle or cut sump pump campaigns\n- **Status:** Mix of partnership follow-up and campaign control issue\n- **Risk level:** **Medium-High**\n- **Action:** Campaign throttling is more urgent than the intro. Fix spend/performance exposure first, then handle the introduction.\n\n## Regen Profits\n- **Sentiment:** **2.775 → 2.592** (**-0.183**)\n- **Status:** Moderate decline, no overdue items listed here\n- **Risk level:** **Medium**\n- **Action:** Review recent meetings for dissatisfaction drivers. Likely needs proactive check-in before it worsens.\n\n## Empower\n- **Sentiment:** **2.404 → 2.371** (**-0.033**)\n- **Status:** Low score, but decline is small\n- **Risk level:** **Medium**\n- **Action:** Monitor closely. Low sentiment matters even without a sharp drop.\n\n## GS Home Services\n- **Sentiment:** **3.046 → 2.958** (**-0.087**)\n- **Status:** Slight decline, still near 3\n- **Risk level:** **Low-Medium**\n- **Action:** Watch trend, no immediate escalation from this data alone.\n\n## Prosper Group\n- **Sentiment:** **2.692 → 2.642** (**-0.050**)\n- **Status:** Slight decline, below ideal sentiment\n- **Risk level:** **Medium**\n- **Action:** Light-touch client success outreach recommended.\n\n## Tom Ruwitch\n- **Sentiment:** **3.133 → 3.000** (**-0.133**)\n- **Status:**",
+          "answer": "Here’s the portfolio-wide picture based on the data provided.\n\n## Urgent issues first\n\n### 1) Clients with overdue action items\nThese need immediate follow-up because they are already late.\n\n- **Pearce HVAC** — **4 overdue items**\n- **Jay Conner / Conner Marketing** — **3 overdue items**\n- **Incontrera Consulting** — **3 overdue items**\n- **Unmatched** — **2 overdue items**\n- **Mike McVety** — **2 overdue items**\n- **Legendary Service** — **2 overdue items**\n- **Jerry Levinson** — **1 overdue item**\n- **B3X Internal** — **2 overdue items**\n\n### 2) Biggest sentiment declines\nThese are the clearest relationship-risk accounts.\n\n1. **Bearcat**: **2.996 → 2.146** (**-0.850**)  \n2. **London Flooring**: **2.538 → 1.825** (**-0.713**)  \n3. **Jay Conner / Conner Marketing**: **3.221 → 2.817** (**-0.404**)  \n4. **Pearce HVAC**: **3.217 → 2.863** (**-0.354**)  \n5. **Jerry Levinson**: **2.821 → 2.496** (**-0.325**)  \n6. **B3X Team Leadership Huddle**: **2.725 → 2.404** (**-0.321**)  \n7. **BEC CFO**: **3.229 → 3.000** (**-0.229**)  \n8. **Regen Profits**: **2.775 → 2.592** (**-0.183**)\n\n### 3) Lowest current sentiment scores\nThese are the accounts most likely to need intervention now.\n\n- **London Flooring** — **1.825**\n- **Bearcat** — **2.146**\n- **Empower** — **2.371**\n- **B3X Team Leadership Huddle** — **2.404**\n- **Jerry Levinson** — **2.496**\n- **Regen Profits** — **2.592**\n- **Prosper Group** — **2.642**\n- **Pearce HVAC** — **2.863**\n- **Incontrera Consulting** — **2.863**\n- **Jay Conner / Conner Marketing** — **2.817**\n\n---\n\n# Client-by-client summary\n\n## Bearcat\n- **Current sentiment:** **2.146**\n- **Previous sentiment:** **2.996**\n- **Change:** **-0.850**\n- **Overdue items:** **0 listed**\n- **Status:** Highest-risk sentiment drop in the portfolio.\n- **Recommended action:** Immediate account review. Schedule a client recovery call, identify delivery gaps, and assign an owner to stabilize the relationship this week.\n\n## London Flooring\n- **Current sentiment:** **1.825**\n- **Previous sentiment:** **2.538**\n- **Change:** **-0.713**\n- **Overdue items:** **0 listed**\n- **Status:** Lowest current sentiment in the portfolio.\n- **Recommended action:** Escalate immediately. Executive outreach recommended within 24–48 hours.\n\n## Jay Conner / Conner Marketing\n- **Current sentiment:** **2.817**\n- **Previous sentiment:** **3.221**\n- **Change:** **-0.404**\n- **Overdue items:** **3**\n  - Record voice broadcast for the Saturday event — **Owner: Jay Conner** — Due **2024-03-20**\n  - Send voice broadcast to Saturday event registrants — **Owner: Dan's Team** — Due **2024-03-20**\n  - Finish and practice PowerPoint presentation — **Owner: Jay Conner** — Due **2024-03-21**\n  - Send Saturday event reminder text — **Owner: Dan's Team** — Due **2024-03-21**\n- **Note:** There are actually **4 overdue items listed** for this client in the data, not 3.\n- **Status:** High operational risk tied to a live event.\n- **Recommended action:** Treat as same-day priority. Confirm event-critical deliverables, assign one coordinator, and close all event tasks before anything else.\n\n## Pearce HVAC\n- **Current sentiment:** **2.863**\n- **Previous sentiment:** **3.217**\n- **Change:** **-0.354**\n- **Overdue items:** **4**\n  - Status update on Google Ads — **Philip Mutrie** — Due **2024-03-18**\n  - Complete Service Titan integration — **Juan** — Due **2024-03-19**\n  - Send postcard/leaflet design to Bill — **Sarah** — Due **2024-03-19**\n  - Deliver welcome and content emails for review — **Bill Soady** — Due **2024-03-20**\n- **Status:** One of the most operationally blocked accounts.\n- **Recommended action:** Run a 15-minute internal unblock meeting today. Integration, ads, creative, and email are all lagging; this likely explains the sentiment decline.\n\n## Jerry Levinson\n- **Current sentiment:** **2.496**\n- **Previous sentiment:** **2.821**\n- **Change:** **-0.325**\n- **Overdue items:** **1**\n  - Cut off ads for remarketing of the event — **Phil** — Due **2024-03-10**\n- **Status:** Sentiment is weak and declining; overdue task is old.\n- **Recommended action:** Resolve the ad-status issue immediately and send a proactive update to the client today.\n\n## B3X Team Leadership Huddle\n- **Current sentiment:** **2.404**\n- **Previous sentiment:** **2.725**\n- **Change:** **-0.321**\n- **Overdue items:** **0 listed**\n- **Status:** Internal leadership sentiment is deteriorating.\n- **Recommended action:** Review internal blockers and ownership clarity. This may be contributing to client delivery issues elsewhere.\n\n## BEC CFO\n- **Current sentiment:** **3.000**\n- **Previous sentiment:** **3.229**\n- **Change:** **-0.229**\n- **Overdue items:** **0 listed**\n- **Status:** Mild decline, but still relatively stable compared with lower-scoring accounts.\n- **Recommended action:** Monitor. No emergency unless additional issues surface.\n\n## Regen Profits\n- **Current sentiment:** **2.592**\n- **Previous sentiment:** **2.775**\n- **Change:** **-0.183**\n- **Overdue items:** **0 listed**\n- **Status:** Low sentiment, moderate decline.\n- **Recommended action:** Review recent meetings and identify dissatisfaction themes before this worsens.\n\n## Tom Ruwitch\n- **Current sentiment:** **3.000**\n- **Previous sentiment:** **3.133**\n- **Change:** **-0.133**\n- **Overdue items:** **0 listed**\n- **Status:** Slight decline, not urgent.\n- **Recommended action:** Monitor.\n\n## GS Home Services\n- **Current sentiment:** **2",
           "queryType": "meta_analysis",
-          "latencyMs": 28487,
-          "sessionId": "82ab40df-ff07-464f-8382-19f69cc507e5",
+          "latencyMs": 23057,
+          "sessionId": "08b4eac5-3273-453e-a6bb-7fab8ea32d08",
           "citationCount": 0,
           "modelUsed": "gpt-5.4",
           "tokensUsed": 2887,
@@ -972,13 +972,13 @@
         {
           "questionNum": 4,
           "question": "What happened in meetings on February 30th, 2025?",
-          "answer": "I can’t answer **“What happened in meetings on February 30th, 2025”** because that date does not exist, and the provided context only includes a meeting on **Apr 15, 2026**. I don’t have any transcript or meeting timeline entries for **Feb 30, 2025**, so I’d be making it up if I tried to summarize it.\n\nIf you meant a different date, send the correct one and I can summarize it from the transcript. For example, the available meeting on **Apr 15, 2026** with **Dr. Ramah Wagner** focused heavily on marketing/email campaign performance, avatar definition, and messaging alignment. Dr. Ramah Wagner said the recent email campaign produced a **34% open rate** but poor conversion and low-quality leads, and she wanted more educational, branded emails rather than coupon-style offers [Meeting: Apr 15, 2026 | Dr. Ramah Wagner at no timestamp provided in context].\n\nThe discussion also covered the need to finalize the **“Beyond the Avatar”** work before refining messaging. Philip Mutrie said the team had built an avatar from Dean Graziosi materials and would share it for review, while Dr. Ramah Wagner emphasized that her practice is centered on caring, holistic care, and specialties including chiropractic, scoliosis, DISC disorders, neuropathy, wellness, kinesiology, nutritional counseling, and functional medicine [Meeting: Apr 15, 2026 | Philip Mutrie at no timestamp provided in context] [Meeting: Apr 15, 2026 | Dr. Ramah Wagner at no timestamp provided in context].\n\nIf you want, I can also give you a **brief overview of the Apr 15, 2026 meeting** or help find the correct February 2025 meeting date.",
+          "answer": "I can’t answer that as asked because **February 30th, 2025 does not exist**, and the context you provided only contains a meeting dated **Apr 15, 2026**. I don’t have any meeting records for **Feb 30, 2025** in the supplied context, so I can’t describe what happened on that date without making something up.\n\nIf you meant a different date, send it and I’ll summarize the meetings using the transcript. For example, the **Apr 15, 2026** meeting with **Dr. Ramah Wagner** focused heavily on email campaign performance, avatar/offer clarity, and messaging alignment. Dr. Ramah Wagner said the campaign “did not net any big client” and that the messaging felt off-brand, while Philip Mutrie and Bill Soady discussed refining the avatar and using a softer CTA. [Meeting: Apr 15, 2026 | Dr. Ramah Wagner at multiple timestamps in provided transcript]\n\nIf you want, I can also give you a **full summary of the Apr 15, 2026 meeting** or help you find the correct date.",
           "queryType": "temporal_search",
-          "latencyMs": 4829,
-          "sessionId": "82ab40df-ff07-464f-8382-19f69cc507e5",
+          "latencyMs": 6360,
+          "sessionId": "08b4eac5-3273-453e-a6bb-7fab8ea32d08",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 10731,
+          "tokensUsed": 10590,
           "chunksUsed": 20,
           "scoring": {
             "scores": {
@@ -995,13 +995,13 @@
         {
           "questionNum": 5,
           "question": "Compare all clients against each other on every metric.",
-          "answer": "Here’s the direct cross-client comparison on **every metric provided**: **overdue action items**, **current sentiment**, **sentiment decline**, and **combined risk**.\n\n## Executive summary\n\n### Highest-risk clients right now\n1. **Jay Conner / Conner Marketing**\n   - **4 overdue items**\n   - **Sentiment:** **2.817**\n   - **Decline:** **-0.404**\n   - Biggest combination of backlog + meaningful sentiment drop\n\n2. **Pearce HVAC**\n   - **4 overdue items**\n   - **Sentiment:** **2.863**\n   - **Decline:** **-0.354**\n   - Heavy delivery backlog and declining client health\n\n3. **London Flooring**\n   - **0 overdue listed**\n   - **Sentiment:** **1.825** lowest\n   - **Decline:** **-0.713**\n   - Severe relationship risk even without overdue tasks listed\n\n4. **Bearcat**\n   - **0 overdue listed**\n   - **Sentiment:** **2.146**\n   - **Decline:** **-0.850** worst decline\n   - Fastest deterioration in the portfolio\n\n5. **Jerry Levinson**\n   - **1 overdue**\n   - **Sentiment:** **2.496**\n   - **Decline:** **-0.325**\n   - Low score plus unresolved campaign issue\n\n---\n\n# 1) Compare all clients by overdue action items\n\n## Ranking by overdue count\n| Client | Overdue Items |\n|---|---:|\n| Pearce HVAC | 4 |\n| Jay Conner / Conner Marketing | 4 |\n| Incontrera Consulting | 3 |\n| Legendary Service | 2 |\n| Mike McVety | 2 |\n| Unmatched | 2 |\n| B3X Internal | 2 |\n| Jerry Levinson | 1 |\n| Bearcat | 0 |\n| London Flooring | 0 |\n| Tom Ruwitch | 0 |\n| BEC CFO | 0 |\n| Empower | 0 |\n| GS Home Services | 0 |\n| Prosper Group | 0 |\n| Regen Profits | 0 |\n| B3X Team Leadership Huddle | 0 |\n\n## What this means\n- **Most operationally behind:** **Pearce HVAC** and **Jay Conner / Conner Marketing**\n- **Moderate backlog:** **Incontrera Consulting**\n- **Some slippage:** **Legendary Service**, **Mike McVety**, **Unmatched**, **B3X Internal**\n- **No overdue items listed in this dataset:** everyone else\n\n## Overdue detail by client\n\n### Pearce HVAC — 4 overdue\n- Status update on Google Ads\n- Complete Service Titan integration\n- Send postcard/leaflet design to Bill\n- Deliver welcome and content emails for review\n\n### Jay Conner / Conner Marketing — 4 overdue\n- Record voice broadcast for the Saturday event\n- Send voice broadcast to Saturday event registrants\n- Finish and practice PowerPoint presentation\n- Send Saturday event reminder text\n\n### Incontrera Consulting — 3 overdue\n- Send webinar lead lists (CSV)\n- Request webinar replay and transcript\n- Deliver VIP script and thank you emails\n\n### Legendary Service — 2 overdue\n- Re-send introduction to Andy at Opportunity Knocks Mailings\n- Throttle or cut sump pump campaigns\n\n### Mike McVety — 2 overdue\n- Send Zoom registration email to current clients\n- Review and approve invitation/countdown emails\n\n### Unmatched — 2 overdue\n- Install vertical video setup on OBS\n- Share checklist document\n\n### B3X Internal — 2 overdue\n- Confirm Jay Connor credit card and wallet status in High Level\n- Open LSA account for Dr. Raymar\n\n### Jerry Levinson — 1 overdue\n- Cut off ads for remarketing of the event\n\n---\n\n# 2) Compare all clients by current sentiment score\n\n## Ranking from worst to best current sentiment\n| Rank | Client | Current Sentiment |\n|---|---|---:|\n| 1 | London Flooring | **1.825** |\n| 2 | Bearcat | **2.146** |\n| 3 | Empower | **2.371** |\n| 4 | B3X Team Leadership Huddle | **2.404** |\n| 5 | Jerry Levinson | **2.496** |\n| 6 | Regen Profits | **2.592** |\n| 7 | Prosper Group | **2.642** |\n| 8 | Jay Conner / Conner Marketing | **2.817** |\n| 9 | Pearce HVAC | **2.863** |\n| 10 | Incontrera Consulting | **2.863** |\n| 11 | GS Home Services | **2.958** |\n| 12 | Tom Ruwitch | **3.000** |\n| 13 | BEC CFO | **3.000** |\n\n## What this means\n- **Critical low sentiment:** **London Flooring**, **Bearcat**\n- **Low sentiment watchlist:** **Empower**, **B3X Team Leadership Huddle**, **Jerry Levinson**\n- **Mid-tier but vulnerable:** **Regen Profits**, **Prosper Group**, **Jay Conner**, **Pearce HVAC**, **Incontrera**\n- **Healthiest among declining accounts:** **GS Home Services**, **Tom Ruwitch**, **BEC CFO**\n\n---\n\n# 3) Compare all clients by sentiment decline\n\n## Ranking by largest drop\n| Rank | Client | Previous | Current | Drop |\n|---|---|---:|---:|---:|\n| 1 | Bearcat | 2.996 | 2.146 | **-0.850** |\n| 2 | London Flooring | 2.538 | 1.825 | **-0.713** |\n| 3 | Jay Conner / Conner Marketing | 3.221 | 2.817 | **-0.404** |\n| 4 | Pearce HVAC | 3.217 | 2.863 | **-0.354** |\n| 5 | Jerry Levinson | 2.821 | 2.496 | **-0.325** |\n| 6 | B3X Team Leadership Huddle | 2.725 | 2.404 | **-0.321** |\n| 7 | BEC CFO | 3.229 | 3.000 | **-0.229** |\n| 8 | Regen Profits | 2.775 | 2.592 | **-0.183** |\n| 9 | Tom Ruwitch | 3.133 | 3.000 | **-0.133** |\n| 10 | GS Home Services | 3.046 | 2.958 | **-0.087** |\n| 11 | Incontrera Consulting | 2.946 | 2.863 | **-0.083** |\n| 12 | Prosper Group | 2.692 | 2.642 | **-0.050** |\n| 13 | Empower | 2.404 | 2.371 | **-0.",
+          "answer": "Here’s the **cross-client comparison on every metric available in the context**.\n\n## Executive summary\n\n### Most urgent accounts\nPrioritizing both **overdue execution risk** and **sentiment deterioration**, the top risk clients are:\n\n1. **Jay Conner / Conner Marketing**\n   - **4 overdue items**\n   - Sentiment: **3.221 → 2.817** (**-0.404**)\n   - Event-related tasks are overdue, which raises immediate delivery risk.\n\n2. **Pearce HVAC**\n   - **4 overdue items**\n   - Sentiment: **3.217 → 2.863** (**-0.354**)\n   - Multiple operational dependencies are late.\n\n3. **Incontrera Consulting**\n   - **3 overdue items**\n   - Sentiment: **2.946 → 2.863** (**-0.083**)\n   - Lower decline than others, but execution backlog is meaningful.\n\n4. **Jerry Levinson**\n   - **1 overdue item**\n   - Sentiment: **2.821 → 2.496** (**-0.325**)\n   - Weak current sentiment plus an overdue task.\n\n5. **London Flooring**\n   - **0 overdue items listed**\n   - Sentiment: **2.538 → 1.825** (**-0.713**)\n   - Lowest current sentiment in the portfolio.\n\n6. **Bearcat**\n   - **0 overdue items listed**\n   - Sentiment: **2.996 → 2.146** (**-0.850**)\n   - Largest sentiment drop in the portfolio.\n\n---\n\n# Portfolio comparison by metric\n\n## 1) Overdue action items by client\n\n### Highest overdue counts\n| Client | Overdue Items |\n|---|---:|\n| Jay Conner / Conner Marketing | 4 |\n| Pearce HVAC | 4 |\n| Incontrera Consulting | 3 |\n| Mike McVety | 2 |\n| Unmatched | 2 |\n| Legendary Service | 2 |\n| B3X Internal | 2 |\n| Jerry Levinson | 1 |\n\n### Detailed overdue comparison by client\n\n#### Jay Conner / Conner Marketing — 4 overdue\n- Record voice broadcast for the Saturday event\n- Send voice broadcast to Saturday event registrants\n- Finish and practice PowerPoint presentation\n- Send Saturday event reminder text\n\n**Comparison:** Tied for highest overdue count in the portfolio. Also one of the steepest sentiment declines.\n\n#### Pearce HVAC — 4 overdue\n- Status update on Google Ads\n- Complete Service Titan integration\n- Send postcard/leaflet design to Bill\n- Deliver welcome and content emails for review\n\n**Comparison:** Tied for highest overdue count. High operational complexity across ads, integration, creative, and email.\n\n#### Incontrera Consulting — 3 overdue\n- Send webinar lead lists (CSV)\n- Request webinar replay and transcript\n- Deliver VIP script and thank you emails\n\n**Comparison:** Third-highest overdue count, but sentiment decline is relatively mild.\n\n#### Mike McVety — 2 overdue\n- Send Zoom registration email to current clients\n- Review and approve invitation/countdown emails\n\n**Comparison:** Moderate execution risk; no sentiment data provided in the decline list.\n\n#### Unmatched — 2 overdue\n- Install vertical video setup on OBS\n- Share checklist document\n\n**Comparison:** Moderate execution risk; no sentiment data provided in the decline list.\n\n#### Legendary Service — 2 overdue\n- Re-send introduction to Andy at Opportunity Knocks Mailings\n- Throttle or cut sump pump campaigns\n\n**Comparison:** Moderate execution risk; no sentiment data provided in the decline list.\n\n#### B3X Internal — 2 overdue\n- Confirm Jay Connor credit card and wallet status in High Level\n- Open LSA account for Dr. Raymar\n\n**Comparison:** Internal operational risk that may affect downstream client delivery.\n\n#### Jerry Levinson — 1 overdue\n- Cut off ads for remarketing of the event\n\n**Comparison:** Lower overdue count, but sentiment is already weak and declining, so this one overdue item matters more than the count suggests.\n\n---\n\n## 2) Sentiment decline comparison\n\n### Largest declines\n| Rank | Client | Previous | Current | Change |\n|---|---|---:|---:|---:|\n| 1 | Bearcat | 2.996 | 2.146 | **-0.850** |\n| 2 | London Flooring | 2.538 | 1.825 | **-0.713** |\n| 3 | Jay Conner / Conner Marketing | 3.221 | 2.817 | **-0.404** |\n| 4 | Pearce HVAC | 3.217 | 2.863 | **-0.354** |\n| 5 | Jerry Levinson | 2.821 | 2.496 | **-0.325** |\n| 6 | B3X Team Leadership Huddle | 2.725 | 2.404 | **-0.321** |\n| 7 | BEC CFO | 3.229 | 3.000 | **-0.229** |\n| 8 | Regen Profits | 2.775 | 2.592 | **-0.183** |\n| 9 | Tom Ruwitch | 3.133 | 3.000 | **-0.133** |\n| 10 | GS Home Services | 3.046 | 2.958 | **-0.087** |\n| 11 | Incontrera Consulting | 2.946 | 2.863 | **-0.083** |\n| 12 | Prosper Group | 2.692 | 2.642 | **-0.050** |\n| 13 | Empower | 2.404 | 2.371 | **-0.033** |\n\n### Interpretation\n- **Bearcat** and **London Flooring** are the biggest relationship-risk accounts based on sentiment alone.\n- **Jay Conner** and **Pearce HVAC** are the most concerning combination of **high decline + high overdue count**.\n- **Incontrera Consulting** has a meaningful execution backlog, but sentiment has not deteriorated nearly as much as the highest-risk accounts.\n\n---\n\n## 3) Current sentiment comparison\n\n### Lowest current sentiment\n| Rank | Client | Current Sentiment |\n|---|---|---:|\n| 1 | London Flooring | **1.825** |\n| 2 | Bearcat | **2.146** |\n| 3 | Empower | **2.371** |\n| 4 | B3X Team Leadership Huddle | **2.404** |\n| 5 | Jerry Levinson | **2.496** |\n| 6 | Regen Profits | **2.592** |\n| 7 | Prosper Group | **2.642** |\n| 8 | Pearce HVAC | **2.863** |\n| 9 | Incontrera Consulting | **2.863** |\n| 10 | Jay Conner / Conner Marketing | **2.817** |\n| 11 | GS Home Services | **2.958** |\n| 12 | Tom Ruwitch | **3.000",
           "queryType": "meta_analysis",
-          "latencyMs": 21789,
-          "sessionId": "82ab40df-ff07-464f-8382-19f69cc507e5",
+          "latencyMs": 21939,
+          "sessionId": "08b4eac5-3273-453e-a6bb-7fab8ea32d08",
           "citationCount": 0,
           "modelUsed": "gpt-5.4",
-          "tokensUsed": 4746,
+          "tokensUsed": 4611,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
@@ -1020,8 +1020,8 @@
           "question": "How good are you at answering questions? Rate yourself.",
           "answer": "I couldn't identify which client you're asking about. Could you mention the client name? Recent clients: Northern Services, The Collective Genius, Regen Profits, Bearcat, Echelon",
           "queryType": "sentiment_analysis",
-          "latencyMs": 969,
-          "sessionId": "82ab40df-ff07-464f-8382-19f69cc507e5",
+          "latencyMs": 1287,
+          "sessionId": "08b4eac5-3273-453e-a6bb-7fab8ea32d08",
           "citationCount": 0,
           "modelUsed": "system",
           "tokensUsed": 0,
@@ -1041,25 +1041,25 @@
       ],
       "totalScore": 47,
       "maxScore": 48,
-      "startTime": "2026-04-16T12:49:46.693Z",
-      "endTime": "2026-04-16T12:50:46.949Z"
+      "startTime": "2026-04-16T13:54:02.413Z",
+      "endTime": "2026-04-16T13:55:00.093Z"
     },
     {
       "name": "Real Dan Patterns",
       "description": "Simulating how Dan actually uses the concierge — terse, contextual, rapid",
-      "sessionId": "9193f6eb-1cd0-420b-b262-f79138c11e89",
+      "sessionId": "5dd7ada5-122d-4d3e-ae23-b0a36ef05555",
       "questions": [
         {
           "questionNum": 1,
           "question": "Pearce",
-          "answer": "Pearce, I can help, but I don’t see a meeting transcript or timeline entry for a client named **Pearce** in the context you provided. The available material is for **Thomas E. Spall** (with Philip Mutrie and Dan Kuschell) on **Mar 23, 2026**, so I can’t reliably answer about Pearce without more context.\n\nIf you meant **Thomas E. Spall**, the meeting focused on lead generation, marketing consistency, and growth constraints. Philip summarized the business as generating about **$35K currently** and around **8 leads per month**, with a goal of getting to **16 leads per month**; the biggest obstacles were **lead gen and business development** [Meeting: Mar 23, 2026 | Philip Mutrie at 00:00]. Thomas said he’s been in HVAC for **41 years**, runs a business around **$13M**, and is looking for help on the marketing side because he’s “doing all the heavy lifting” and wants to figure out what’s missing [Meeting: Mar 23, 2026 | Thomas Spall at 00:00].\n\nOn sentiment, Thomas was skeptical but engaged, and Dan framed the opportunity as performance-based and data-driven. Thomas described a major drop after they “disappeared off of Google altogether” in February and said he’s been trying to rebuild consistency with direct mail and a targeted demographic [Meeting: Mar 23, 2026 | Thomas Spall at 00:00]. There weren’t any explicit action items listed in the context, so I can’t mark any as open/complete/on-agenda beyond noting that getting access “under the hood” to review Google/lead-gen performance was discussed [Meeting: Mar 23, 2026 | Dan Kuschell at 00:00].",
-          "queryType": "transcript_search",
-          "latencyMs": 4480,
-          "sessionId": "9193f6eb-1cd0-420b-b262-f79138c11e89",
+          "answer": "Here’s a brief overview of Pearce HVAC’s recent meeting activity based on the timeline provided:\n\nThe most recent meeting on **Apr 14, 2026** focused on launching the **IAQ book** strategy, with the team deciding to prioritize **internal list promotion and remarketing** instead of cold paid media. They also addressed technical cleanup items like website typos and discussed implementing a **matchback customer data process** to improve Google Ads targeting. The team agreed to move to a **bi-weekly huddle schedule starting Apr 28**. [Meeting: Apr 14, 2026 | Meeting summary at timeline]\n\nOn **Mar 31, 2026**, the team was in final prep for the **digital IAQ book lead campaign**, which was scheduled to launch by **Thu, Apr 2**. They also reviewed March performance, including **$45,000 in revenue from non-branded campaigns**, while noting a slight increase in cost-per-lead tied to platform algorithm shifts. [Meeting: Mar 31, 2026 | Meeting summary at timeline]\n\nEarlier meetings show a consistent marketing focus: on **Mar 17** the team worked through the **Free Book campaign**, website integration, Service Titan form connectivity, and lead follow-up; on **Mar 10** they discussed shifting marketing toward **AC services** for warmer weather and final approvals for a digital book lead campaign. The **Apr 7** meeting was just an audio test and had no business content. [Meeting: Mar 17, 2026 | Meeting summary at timeline] [Meeting: Mar 10, 2026 | Meeting summary at timeline] [Meeting: Apr 7, 2026 | Meeting summary at timeline]\n\nIf you want, I can also turn this into a **client status update**, **action-item list**, or **meeting-by-meeting recap**.",
+          "queryType": "meeting_summary",
+          "latencyMs": 4399,
+          "sessionId": "5dd7ada5-122d-4d3e-ae23-b0a36ef05555",
           "citationCount": 0,
           "modelUsed": "gpt-5.4-mini",
-          "tokensUsed": 4371,
-          "chunksUsed": 10,
+          "tokensUsed": 1057,
+          "chunksUsed": 0,
           "scoring": {
             "scores": {
               "factual": 2,
@@ -1075,10 +1075,10 @@
         {
           "questionNum": 2,
           "question": "How many sessions have they had?",
-          "answer": "There are **132** meetings in the system.",
+          "answer": "There are **6** meetings for pearce-hvac in the system.",
           "queryType": "count_query",
-          "latencyMs": 5,
-          "sessionId": "9193f6eb-1cd0-420b-b262-f79138c11e89",
+          "latencyMs": 6,
+          "sessionId": "5dd7ada5-122d-4d3e-ae23-b0a36ef05555",
           "citationCount": 0,
           "modelUsed": "sql",
           "tokensUsed": 0,
@@ -1086,71 +1086,71 @@
           "scoring": {
             "scores": {
               "factual": 2,
-              "contextRetention": 0,
+              "contextRetention": 1,
               "intentMatch": 1,
               "quality": 1,
               "noHallucination": 1
             },
-            "total": 5,
+            "total": 6,
             "maxScore": 8
           }
         },
         {
           "questionNum": 3,
           "question": "Prep me for their next meeting.",
-          "answer": "I couldn't identify which client you're asking about. Could you mention the client name? Recent clients: Northern Services, The Collective Genius, Regen Profits, Bearcat, Echelon",
+          "answer": "Here’s a concise prep for **Pearce HVAC’s next meeting**.\n\n**What changed most recently:** On **Apr 14, 2026**, the team decided to launch the **IAQ book** by prioritizing **internal list promotion and remarketing**, not cold paid traffic, and agreed to begin a **bi-weekly huddle cadence starting Apr 28** [Meeting: Apr 14, 2026 | Meeting summary at timeline]. The biggest follow-up items heading into the next call are operational: **Dan Kuschell’s IAQ Book Email Campaign is still open and due Apr 21**, **Sarah- Pearce’s customer list for matchback is open and due Apr 21**, **Sarah- Pearce’s video scripts for Facebook ads are open and due Apr 21**, and **Bill Soady’s website typo/broken link fix is still open and was due Apr 15**. There are also several older items still unresolved, including **Service Titan SMS opt-in code integration** (open, due Apr 2), **AC Google Ads/keyword updates** (open, due Mar 17), **landing page approval from AL-Jim pearce** (open, due Mar 11), and **truck website updates** (open, due Mar 17). That suggests the next meeting should start with a strict **open-items triage** by due date and business impact.\n\n**Recommended agenda:** First, confirm whether the **IAQ launch assets are actually ready**: email campaign draft, customer list for matchback, video scripts, and any landing page or PDF dependencies. Second, review whether the **website typo/broken link** and any remaining site issues were fixed, since technical friction could hurt conversion [Meeting: Apr 14, 2026 | Meeting summary at timeline]. Third, ask for a status update on the **matchback process** and whether customer data has been delivered so Google Ads targeting improvements can begin [Meeting: Apr 14, 2026 | Meeting summary at timeline]. Fourth, revisit the older unresolved implementation items—especially Service Titan SMS opt-in and lead notification emails—because those directly affect lead handling. On **Mar 31, 2026**, Sarah- Pearce asked about IAQ emails being built in Service Titan, saying, “for the emails that we were talking about, they're going to be built inside of Service Titan for the IAQ Emails, correct?” [Meeting: Mar 31, 2026 | Sarah- Pearce at 00:06:24.020]. That makes it worth confirming the exact lead follow-up workflow before traffic scales.\n\n**Risks / talking points to be ready for:** Performance context from **Mar 31** was positive on revenue but mixed on efficiency: the team reviewed **$45,000 in revenue from non-branded campaigns**, while noting a slight CPL increase due to platform algorithm shifts [Meeting: Mar 31, 2026 | Meeting summary at timeline]. Also, session evaluations have been consistently weak: **Mar 31 scored 2.8625/100 composite with 3/100 sentiment and 3/100 accountability**, and another Mar 31 evaluation scored **3.2167/100 composite with 4/100 sentiment and 3/100 accountability**. The feedback specifically called out **missing due dates, repetition, and client confusion**, including Philip Mutrie saying, “Sorry, run that by me again, I was just jotting down something” [Meeting: Mar 31, 2026 | Philip Mutrie at 00:06:34.720]. So for the next meeting, the best prep is to show up with a **tight agenda, every open item listed with owner/status/due date, and direct yes/no decisions needed**. If you want, I can turn this into a **1-page meeting brief with priorities, questions to ask, and a suggested opening script**.",
           "queryType": "meeting_prep",
-          "latencyMs": 5,
-          "sessionId": "9193f6eb-1cd0-420b-b262-f79138c11e89",
+          "latencyMs": 15380,
+          "sessionId": "5dd7ada5-122d-4d3e-ae23-b0a36ef05555",
           "citationCount": 0,
-          "modelUsed": "system",
-          "tokensUsed": 0,
+          "modelUsed": "gpt-5.4",
+          "tokensUsed": 3941,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
               "factual": 2,
-              "contextRetention": 0,
+              "contextRetention": 1,
               "intentMatch": 1,
               "quality": 2,
               "noHallucination": 1
             },
-            "total": 6,
+            "total": 7,
             "maxScore": 8
           }
         },
         {
           "questionNum": 4,
           "question": "How has their sentiment trended?",
-          "answer": "I couldn't identify which client you're asking about. Could you mention the client name? Recent clients: Northern Services, The Collective Genius, Regen Profits, Bearcat, Echelon",
+          "answer": "Pearce HVAC’s sentiment has been **consistently low, but slightly improved at times**. The recorded session sentiment scores are **3/100 on Mar 10**, **4/100 on Mar 17**, **3/100 on Mar 31**, and there’s **no sentiment score provided for Apr 7** because that session was just an audio test with no business discussion [Meeting: Mar 10, 2026 | Session evaluation at timeline] [Meeting: Mar 17, 2026 | Session evaluation at timeline] [Meeting: Mar 31, 2026 | Session evaluation at timeline] [Meeting: Apr 7, 2026 | Meeting summary at timeline].\n\nThe trend is basically **flat-to-marginally better, but still very weak overall**. The best score in the period was **4/100 on Mar 17 and Mar 31**, while the lowest was **3/100 on Mar 10 and Mar 31**. The composite scores also stayed very low: **2.95/100 on Mar 10**, **3.4042/100 on Mar 17**, and **2.8625/100 on Mar 31** [Meeting: Mar 10, 2026 | Session evaluation at timeline] [Meeting: Mar 17, 2026 | Session evaluation at timeline] [Meeting: Mar 31, 2026 | Session evaluation at timeline].\n\nThe evaluation notes suggest the low sentiment is tied to **confusion, repetition, and weak action discipline**. For example, on **Mar 31**, Philip had to ask, “Sorry, run that by me again, I was just jotting down something,” which was flagged as a client-confusion issue [Meeting: Mar 31, 2026 | Philip Mutrie at 00:06:34.720]. So the overall sentiment trend is **not declining sharply, but it’s not meaningfully improving either**—it’s hovering in a very low range.",
           "queryType": "sentiment_analysis",
-          "latencyMs": 977,
-          "sessionId": "9193f6eb-1cd0-420b-b262-f79138c11e89",
+          "latencyMs": 5079,
+          "sessionId": "5dd7ada5-122d-4d3e-ae23-b0a36ef05555",
           "citationCount": 0,
-          "modelUsed": "system",
-          "tokensUsed": 0,
+          "modelUsed": "gpt-5.4-mini",
+          "tokensUsed": 4971,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
               "factual": 2,
-              "contextRetention": 0,
+              "contextRetention": 2,
               "intentMatch": 1,
               "quality": 2,
               "noHallucination": 1
             },
-            "total": 6,
+            "total": 8,
             "maxScore": 8
           }
         },
         {
           "questionNum": 5,
           "question": "Big picture — how are we doing across the board?",
-          "answer": "Here’s the big-picture portfolio readout.\n\n## Executive summary\nWe have **2 clear portfolio-wide risks** right now:\n\n1. **Execution risk:** **20 overdue action items** across clients/internal\n2. **Sentiment risk:** **13 accounts with declining sentiment**\n\nThis is not isolated. The pattern suggests:\n- follow-through is slipping,\n- several client experiences are deteriorating at the same time,\n- and a few accounts need immediate intervention before they become churn/escalation risks.\n\n## Most urgent items first\n\n### 1) Highest-risk sentiment declines\nThese need attention first because the drops are steep and/or the current scores are low.\n\n- **Bearcat:** **2.996 → 2.146** (**-0.850**)  \n  - Largest decline in the portfolio\n  - Current score is firmly in risk territory\n\n- **London Flooring:** **2.538 → 1.825** (**-0.713**)  \n  - Lowest current sentiment score listed\n  - Likely urgent recovery situation\n\n- **Jay Conner / Conner Marketing:** **3.221 → 2.817** (**-0.404**)  \n  - Meaningful drop with multiple overdue deliverables tied to the account\n\n- **Pearce HVAC:** **3.217 → 2.863** (**-0.354**)  \n  - Notable decline plus **4 overdue items**\n  - This is both a sentiment and execution problem\n\n- **Jerry Levinson:** **2.821 → 2.496** (**-0.325**)  \n  - Low current score and overdue work\n\n- **B3X Team Leadership Huddle:** **2.725 → 2.404** (**-0.321**)  \n  - Internal signal that delivery/coordination issues may be systemic\n\n### 2) Clients with the most overdue work\nThese are the accounts where operational slippage is most visible.\n\n- **Pearce HVAC:** **4 overdue items**\n- **Jay Conner / Conner Marketing:** **3 overdue items**\n- **Incontrera Consulting:** **3 overdue items**\n- **Mike McVety:** **2 overdue items**\n- **Unmatched:** **2 overdue items**\n- **Legendary Service:** **2 overdue items**\n- **B3X Internal:** **2 overdue items**\n- **Jerry Levinson:** **1 overdue item**\n\n## By client\n\n### Pearce HVAC\n**Status:** High risk  \n**Sentiment:** **3.217 → 2.863** (**-0.354**)  \n**Overdue items: 4**\n- Status update on Google Ads\n- Complete Service Titan integration\n- Send postcard/leaflet design to Bill\n- Deliver welcome and content emails for review\n\n**Read:** This is one of the clearest problem accounts in the portfolio. Sentiment is down materially and there are multiple overdue deliverables across strategy, integration, creative, and email. That usually means the client is feeling stalled.\n\n**Priority actions:**\n1. Assign one owner to consolidate all Pearce deliverables\n2. Clear the 4 overdue items within **48 hours**\n3. Schedule a proactive client update with dates, owners, and next milestones\n4. Confirm whether Google Ads and Service Titan delays are blocking results\n\n---\n\n### Jay Conner / Conner Marketing\n**Status:** High risk  \n**Sentiment:** **3.221 → 2.817** (**-0.404**)  \n**Overdue items: 3**\n- Record voice broadcast for the Saturday event\n- Send voice broadcast to Saturday event registrants\n- Send Saturday event reminder text\n\n**Read:** This looks like a time-sensitive event execution issue. The sentiment drop is significant, and the overdue items are directly tied to event attendance/performance.\n\n**Priority actions:**\n1. Triage event-related deliverables immediately today\n2. Confirm whether the event window has already been missed\n3. If missed, prepare a recovery plan: replay, follow-up campaign, apology/reframe\n4. Put one person in charge of all event communications\n\n---\n\n### Incontrera Consulting\n**Status:** Moderate risk  \n**Sentiment:** **2.946 → 2.863** (**-0.083**)  \n**Overdue items: 3**\n- Send webinar lead lists (CSV)\n- Request webinar replay and transcript\n- Deliver VIP script and thank you emails\n\n**Read:** Sentiment decline is modest, but the overdue items are clustered around webinar follow-up. That can quickly become a bigger issue if lead handoff and post-event nurture are delayed.\n\n**Priority actions:**\n1. Deliver lead list first\n2. Send replay/transcript request same day\n3. Complete VIP script and thank-you emails next\n4. Confirm client has a post-webinar conversion plan\n\n---\n\n### Legendary Service\n**Status:** Moderate risk  \n**Overdue items: 2**\n- Re-send introduction to Andy at Opportunity Knocks Mailings\n- Throttle or cut sump pump campaigns\n\n**Read:** No sentiment decline listed here, but campaign control and partner intro delays can still create frustration. The sump pump campaign item sounds performance-sensitive.\n\n**Priority actions:**\n1. Review campaign spend/performance immediately\n2. Decide today whether to throttle or cut\n3. Send the intro same day\n\n---\n\n### Unmatched\n**Status:** Moderate risk  \n**Overdue items: 2**\n- Install vertical video setup on OBS\n- Share checklist document\n\n**Read:** Operational slippage, but likely recoverable quickly if handled now.\n\n**Priority actions:**\n1. Complete setup\n2. Send checklist\n3. Confirm readiness for next production milestone\n\n---\n\n### Mike McVety\n**Status:** Moderate risk  \n**Overdue items: 2**\n- Send Zoom registration email to current clients\n- Review and approve invitation/countdown emails\n\n**Read:** This appears to be a webinar/event workflow bottleneck. Could affect attendance and client confidence if not resolved quickly.\n\n**Priority actions:**\n1. Push registration email immediately\n2. Approve invitation/countdown sequence same day\n3. Verify send schedule is still viable\n\n---\n\n### Jerry Levinson\n**Status:** High risk  \n**Sentiment:** **2.821 → 2.496** (**-0.325**)  \n**Overdue items: 1**\n- Cut off ads for remarketing of the event\n\n**Read:** Only one overdue item, but sentiment is already low and falling. This suggests the issue may be bigger than the single task, or the task itself is highly visible/important.\n\n**Priority actions:**\n1. Resolve the ad issue immediately\n2. Review account health with client-facing owner\n3. Schedule a check-in to surface root concerns beyond the task list\n\n---\n\n### Bearcat\n**Status:** Critical risk  \n**Sentiment:** **2.996 → 2.146** (**-0.850**)  \n**Overdue items listed:** none in this report\n\n**Read:** Biggest sentiment drop in the portfolio, even without overdue tasks showing here. That usually means dissatisfaction is coming from strategy, results, communication quality, or unresolved issues not captured as action items.\n\n**Priority actions:**\n1. Immediate account review with client success + delivery lead\n2. Pull last 2–3 meetings and identify friction themes\n3.",
+          "answer": "Here’s the **big-picture portfolio view**.\n\n## Urgent issues first\n\n### 1) Overdue work is the biggest operational risk\nThere are **20 overdue action items** across the portfolio. The most exposed clients by count:\n\n- **Pearce HVAC — 4 overdue**\n  - Status update on Google Ads\n  - Complete Service Titan integration\n  - Send postcard/leaflet design to Bill\n  - Deliver welcome and content emails for review\n\n- **Jay Conner / Conner Marketing — 4 overdue**\n  - Record voice broadcast\n  - Send voice broadcast\n  - Finish/practice PowerPoint\n  - Send Saturday event reminder text\n\n- **Incontrera Consulting — 3 overdue**\n  - Send webinar lead lists\n  - Request webinar replay/transcript\n  - Deliver VIP script and thank you emails\n\n- **B3X Internal — 2 overdue**\n  - Confirm Jay Conner credit card/wallet status in High Level\n  - Open LSA account for Dr. Raymar\n\n- **Legendary Service — 2 overdue**\n  - Re-send intro to Andy\n  - Throttle/cut sump pump campaigns\n\n- **Mike McVety — 2 overdue**\n  - Send Zoom registration email\n  - Review/approve invitation/countdown emails\n\n- **Unmatched — 2 overdue**\n  - Install vertical video setup on OBS\n  - Share checklist document\n\n- **Single-item overdue clients**\n  - **Jerry Levinson — 1**\n  - **BEC CFO — 0 overdue listed**\n  - **Tom Ruwitch — 0 overdue listed**\n  - **Empower — 0 overdue listed**\n  - **GS Home Services — 0 overdue listed**\n  - **London Flooring — 0 overdue listed**\n  - **Prosper Group — 0 overdue listed**\n  - **Regen Profits — 0 overdue listed**\n  - **Bearcat — 0 overdue listed**\n\n### 2) Sentiment is slipping across many accounts\nThere are **13 clients/teams with declining sentiment**. Biggest drops:\n\n- **Bearcat:** **2.9958 → 2.1458** (**-0.85**)  \n- **London Flooring:** **2.5375 → 1.825** (**-0.7125**)  \n- **Jay Conner / Conner Marketing:** **3.2208 → 2.8167** (**-0.4042**)  \n- **Pearce HVAC:** **3.2167 → 2.8625** (**-0.3542**)  \n- **Jerry Levinson:** **2.8208 → 2.4958** (**-0.3250**)  \n- **B3X Team Leadership Huddle:** **2.7250 → 2.4042** (**-0.3208**)\n\nThis is not isolated. It’s a **broad portfolio pattern**, which usually points to execution drag, unclear ownership, or meetings that are not producing confidence.\n\n---\n\n## By client\n\n### Pearce HVAC\n- **4 overdue items** — tied for highest in the portfolio\n- **Sentiment declined:** **3.2167 → 2.8625** (**-0.3542**)\n\n**Read:** High risk. This account has both **execution backlog** and **declining client confidence**.\n\n**Priority actions:**\n1. Clear all 4 overdue items immediately\n2. Assign one owner to drive Pearce weekly\n3. Next meeting should open with a due-date-by-due-date status review\n\n---\n\n### Jay Conner / Conner Marketing\n- **4 overdue items** — tied for highest\n- **Sentiment declined:** **3.2208 → 2.8167** (**-0.4042**)\n\n**Read:** Event execution risk is high. Multiple overdue items are directly tied to event promotion and delivery.\n\n**Priority actions:**\n1. Complete all event-critical items same day\n2. Create a 48-hour event readiness checklist\n3. Escalate any blocked dependencies immediately\n\n---\n\n### Incontrera Consulting\n- **3 overdue items**\n- **Sentiment declined:** **2.9458 → 2.8625** (**-0.0833**)\n\n**Read:** Mild sentiment decline, but operational follow-through is weak.\n\n**Priority actions:**\n1. Deliver lead lists, replay/transcript, and VIP assets in one batch\n2. Confirm next-step timeline with client\n3. Tighten post-webinar fulfillment process\n\n---\n\n### Legendary Service\n- **2 overdue items**\n- No sentiment decline listed\n\n**Read:** Operational issue more than relationship issue right now.\n\n**Priority actions:**\n1. Resolve sump pump campaign decision immediately\n2. Re-send the Andy introduction today\n\n---\n\n### Mike McVety\n- **2 overdue items**\n- No sentiment decline listed\n\n**Read:** Email/event workflow is stalled.\n\n**Priority actions:**\n1. Send registration email\n2. Approve countdown/invite emails\n3. Put one owner in charge of launch communications\n\n---\n\n### Unmatched\n- **2 overdue items**\n- No sentiment decline listed\n\n**Read:** Production/setup delays, but not yet showing as sentiment deterioration.\n\n**Priority actions:**\n1. Finish OBS setup\n2. Share checklist\n3. Confirm production readiness in one review call\n\n---\n\n### B3X Internal\n- **2 overdue items**\n- **Leadership huddle sentiment declined:** **2.7250 → 2.4042** (**-0.3208**)\n\n**Read:** Internal execution issues are likely contributing to client-facing slippage.\n\n**Priority actions:**\n1. Clear both internal overdue items this week\n2. Review internal accountability cadence\n3. Tighten owner tracking and escalation rules\n\n---\n\n### Jerry Levinson\n- **1 overdue item**\n- **Sentiment declined:** **2.8208 → 2.4958** (**-0.3250**)\n\n**Read:** Even with only one overdue item, sentiment dropped materially. This suggests confidence may be fragile.\n\n**Priority actions:**\n1. Resolve the overdue ads/remarketing item now\n2. Reconfirm strategy and expected outcomes with client\n3. Watch next meeting closely for tone\n\n---\n\n### Bearcat\n- **0 overdue items listed**\n- **Sentiment declined sharply:** **2.9958 → 2.1458** (**-0.85**)\n\n**Read:** Biggest sentiment drop in the portfolio. Since no overdue items are listed, the issue may be **strategy dissatisfaction, meeting quality, or untracked blockers**.\n\n**Priority actions:**\n1. Audit last 2–3 meetings\n2. Identify unresolved concerns not captured as tasks\n3. Prepare a reset conversation with clear wins and next steps\n\n---\n\n### London Flooring\n- **0 overdue items listed**\n- **Sentiment declined sharply:** **2.5375 → 1.825** (**-0.7125**)\n\n**Read:** Very high relationship risk. This is the second-worst sentiment drop and now one of the lowest scores overall.\n\n**Priority actions:**\n1. Immediate account review\n2. Identify what changed in delivery or expectations\n3. Go into next meeting with a corrective plan, not just updates\n\n---\n\n###",
           "queryType": "meta_analysis",
-          "latencyMs": 26156,
-          "sessionId": "9193f6eb-1cd0-420b-b262-f79138c11e89",
+          "latencyMs": 28256,
+          "sessionId": "5dd7ada5-122d-4d3e-ae23-b0a36ef05555",
           "citationCount": 0,
           "modelUsed": "gpt-5.4",
-          "tokensUsed": 3302,
+          "tokensUsed": 4441,
           "chunksUsed": 0,
           "scoring": {
             "scores": {
@@ -1165,21 +1165,21 @@
           }
         }
       ],
-      "totalScore": 33,
+      "totalScore": 37,
       "maxScore": 40,
-      "startTime": "2026-04-16T12:50:48.950Z",
-      "endTime": "2026-04-16T12:51:22.579Z"
+      "startTime": "2026-04-16T13:55:02.094Z",
+      "endTime": "2026-04-16T13:55:57.223Z"
     }
   ],
   "summary": {
     "totalQuestions": 47,
-    "totalScore": 332,
+    "totalScore": 343,
     "maxScore": 376,
-    "overallPercent": 88,
-    "avgLatencyMs": 6253,
-    "p50LatencyMs": 3349,
-    "p95LatencyMs": 26156,
-    "maxLatencyMs": 28487
+    "overallPercent": 91,
+    "avgLatencyMs": 7248,
+    "p50LatencyMs": 3841,
+    "p95LatencyMs": 28256,
+    "maxLatencyMs": 32938
   },
-  "endTime": "2026-04-16T12:51:22.580Z"
+  "endTime": "2026-04-16T13:55:57.224Z"
 }
