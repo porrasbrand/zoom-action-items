@@ -30,6 +30,10 @@
     .b3x-nav-link:hover { color: var(--b3x-text); background: var(--b3x-bg); }
     .b3x-nav-link.active { color: var(--b3x-accent); background: rgba(88,166,255,0.1); }
     .b3x-nav-spacer { flex: 1; }
+    .b3x-nav-user { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--b3x-text-dim); }
+    .b3x-nav-user-email { color: var(--b3x-text); }
+    .b3x-nav-user-logout { color: var(--b3x-text-dim); text-decoration: none; padding: 4px 8px; border-radius: 4px; }
+    .b3x-nav-user-logout:hover { color: var(--b3x-text); background: var(--b3x-bg); }
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -5068,6 +5072,10 @@
     <a class="b3x-nav-link" href="/zoom/" data-target="zoom">Meetings</a>
     <a class="b3x-nav-link" href="/triage/" data-target="triage">Triage</a>
     <span class="b3x-nav-spacer"></span>
+    <div class="b3x-nav-user" id="b3xNavUser">
+      <span class="b3x-nav-user-email" id="b3xNavUserEmail"></span>
+      <a class="b3x-nav-user-logout" href="/auth/logout" title="Sign out">Sign out</a>
+    </div>
   </nav>
   <div class="app">
     <div class="header">
@@ -11042,6 +11050,13 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       else if (p.startsWith('/triage')) target = 'triage';
       if (target) document.querySelector('.b3x-nav-link[data-target="' + target + '"]')?.classList.add('active');
     })();
+    // Populate user pill from /auth/me. Degrade gracefully on failure.
+    fetch('/auth/me').then(r => r.json()).then(d => {
+      if (d.authenticated && d.user) {
+        const el = document.getElementById('b3xNavUserEmail');
+        if (el) el.textContent = d.user.email;
+      }
+    }).catch(() => {});
   </script>
 </body>
 </html>
