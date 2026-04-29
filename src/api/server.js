@@ -262,6 +262,123 @@ app.get(BASE_PATH + '/auth/logout', (req, res) => {
   res.redirect(BASE_PATH + '/login');
 });
 
+// ============ ROOT-SCOPED CENTRALIZED AUTH ============
+// New /auth/* routes that issue a root-scoped JWT cookie 'b3x_session' covering
+// /command-center/, /triage/, and /zoom/. The legacy /zoom/auth/* flow above is
+// preserved for backward-compat.
+import jwt from 'jsonwebtoken';
+
+const B3X_ALLOWED_EMAILS = (process.env.B3X_ALLOWED_EMAILS || 'porrasbrand@gmail.com').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+const B3X_ALLOWED_DOMAINS = ['breakthrough3x.com'];
+
+function b3xCheckEmailAllowed(email) {
+  const e = (email || '').toLowerCase();
+  if (B3X_ALLOWED_EMAILS.includes(e)) return true;
+  for (const d of B3X_ALLOWED_DOMAINS) if (e.endsWith('@' + d)) return true;
+  // Also accept anyone in zoom's existing allowlist
+  if (isEmailWhitelisted(e)) return true;
+  return false;
+}
+
+function b3xJwtSign(payload) {
+  const secret = process.env.SESSION_SECRET;
+  if (!secret) throw new Error('SESSION_SECRET not configured');
+  return jwt.sign(payload, secret, { expiresIn: '7d' });
+}
+
+function b3xJwtVerify(token) {
+  const secret = process.env.SESSION_SECRET;
+  if (!secret) return null;
+  try { return jwt.verify(token, secret); } catch { return null; }
+}
+
+function setB3xCookie(res, token) {
+  res.cookie('b3x_session', token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+}
+
+// Build the Google auth URL with redirect_uri = /auth/google/callback (root-scoped)
+function getRootGoogleAuthURL(redirectParam) {
+  const params = new URLSearchParams({
+    client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
+    redirect_uri: 'https://ai.breakthrough3x.com/auth/google/callback',
+    response_type: 'code',
+    scope: 'email profile',
+    access_type: 'offline',
+    prompt: 'select_account',
+    state: redirectParam ? encodeURIComponent(redirectParam) : '',
+  });
+  return 'https://accounts.google.com/o/oauth2/v2/auth?' + params.toString();
+}
+
+// GET /auth/google?redirect=<url>
+app.get('/auth/google', (req, res) => {
+  const redirect = req.query.redirect || '/';
+  res.redirect(getRootGoogleAuthURL(redirect));
+});
+
+// GET /auth/google/callback
+app.get('/auth/google/callback', async (req, res) => {
+  try {
+    const { code, error, state } = req.query;
+    if (error) return res.status(400).send('OAuth error: ' + String(error).slice(0, 100));
+    if (!code) return res.status(400).send('Missing code');
+
+    const tokens = await getGoogleTokens(code, 'https://ai.breakthrough3x.com/auth/google/callback');
+    const googleUser = await getGoogleUser(tokens.access_token);
+    const email = (googleUser.email || '').toLowerCase();
+
+    if (!b3xCheckEmailAllowed(email)) {
+      console.log('[B3xAuth] Access denied for:', email);
+      return res.status(403).send(`<!doctype html>
+<title>Access not authorized</title>
+<style>body{font:16px/1.5 -apple-system,sans-serif;background:#0d1117;color:#c9d1d9;padding:60px;text-align:center}h1{color:#f85149}a{color:#58a6ff}</style>
+<h1>Access not authorized</h1>
+<p>The email <code>${email.replace(/[<>"'&]/g,'')}</code> is not on the B3X Ops allowlist.</p>
+<p>Contact <a href="mailto:admin@breakthrough3x.com">admin@breakthrough3x.com</a> if you believe this is an error.</p>`);
+    }
+
+    const payload = {
+      email,
+      name: googleUser.name || email,
+      picture: googleUser.picture || null,
+    };
+    const jwtToken = b3xJwtSign(payload);
+    setB3xCookie(res, jwtToken);
+
+    let redirect = '/';
+    try {
+      const decoded = state ? decodeURIComponent(String(state)) : '/';
+      // Allowlist redirect targets
+      if (decoded.startsWith('/') || decoded.startsWith('https://ai.breakthrough3x.com')) redirect = decoded;
+    } catch {}
+    console.log('[B3xAuth] Login success:', email, '→', redirect);
+    res.redirect(redirect);
+  } catch (e) {
+    console.error('[B3xAuth] Callback error:', e.message);
+    res.status(500).send('Auth failed: ' + e.message);
+  }
+});
+
+// GET /auth/logout
+app.get('/auth/logout', (req, res) => {
+  res.clearCookie('b3x_session', { path: '/' });
+  res.redirect('/');
+});
+
+// GET /auth/me — JSON endpoint for frontend nav
+app.get('/auth/me', (req, res) => {
+  const token = req.cookies?.b3x_session;
+  const claims = b3xJwtVerify(token);
+  if (!claims) return res.status(401).json({ authenticated: false });
+  res.json({ authenticated: true, user: { email: claims.email, name: claims.name, picture: claims.picture } });
+});
+
 // Health check (unauthenticated)
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'zoom-dashboard' });
