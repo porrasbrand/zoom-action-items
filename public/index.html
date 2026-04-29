@@ -5,6 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zoom Meeting Notes</title>
   <style>
+    :root {
+      --b3x-bg: #0d1117;
+      --b3x-surface: #161b22;
+      --b3x-border: #30363d;
+      --b3x-text: #c9d1d9;
+      --b3x-text-dim: #8b949e;
+      --b3x-accent: #58a6ff;
+      --b3x-accent-hover: #79c0ff;
+      --b3x-success: #3fb950;
+      --b3x-warning: #d29922;
+      --b3x-danger: #f85149;
+      --b3x-nav-height: 48px;
+    }
+    body { padding-top: var(--b3x-nav-height) !important; }
+    .b3x-nav {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--b3x-nav-height);
+      background: var(--b3x-surface); border-bottom: 1px solid var(--b3x-border);
+      display: flex; align-items: center; padding: 0 16px; gap: 16px;
+      z-index: 100; font-size: 14px;
+    }
+    .b3x-nav-brand { font-weight: 600; color: var(--b3x-text); }
+    .b3x-nav-link { color: var(--b3x-text-dim); text-decoration: none; padding: 6px 10px; border-radius: 6px; }
+    .b3x-nav-link:hover { color: var(--b3x-text); background: var(--b3x-bg); }
+    .b3x-nav-link.active { color: var(--b3x-accent); background: rgba(88,166,255,0.1); }
+    .b3x-nav-spacer { flex: 1; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -5037,6 +5062,13 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
+  <nav class="b3x-nav" role="navigation">
+    <div class="b3x-nav-brand">B3X Ops</div>
+    <a class="b3x-nav-link" href="/command-center/" data-target="command-center">Command Center</a>
+    <a class="b3x-nav-link" href="/zoom/" data-target="zoom">Meetings</a>
+    <a class="b3x-nav-link" href="/triage/" data-target="triage">Triage</a>
+    <span class="b3x-nav-spacer"></span>
+  </nav>
   <div class="app">
     <div class="header">
       <div class="header-top">
@@ -11000,6 +11032,16 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
         renderMessage('error', 'Connection error. Try again.');
       }
     }
+
+    // Highlight current dashboard in shared nav.
+    (function () {
+      const p = location.pathname;
+      let target = null;
+      if (p.startsWith('/command-center')) target = 'command-center';
+      else if (p.startsWith('/zoom')) target = 'zoom';
+      else if (p.startsWith('/triage')) target = 'triage';
+      if (target) document.querySelector('.b3x-nav-link[data-target="' + target + '"]')?.classList.add('active');
+    })();
   </script>
 </body>
 </html>
