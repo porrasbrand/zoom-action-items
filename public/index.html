@@ -5066,11 +5066,13 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
+  <!-- B3X global nav — keep in sync across all 4 dashboards. See b3x-client-registry/CLAUDE.md -->
   <nav class="b3x-nav" role="navigation">
     <div class="b3x-nav-brand">B3X Ops</div>
     <a class="b3x-nav-link" href="/command-center/" data-target="command-center">Command Center</a>
     <a class="b3x-nav-link" href="/zoom/" data-target="zoom">Meetings</a>
     <a class="b3x-nav-link" href="/triage/" data-target="triage">Triage</a>
+    <a class="b3x-nav-link" href="/registry/" data-target="registry">Clients</a>
     <span class="b3x-nav-spacer"></span>
     <div class="b3x-nav-user" id="b3xNavUser">
       <span class="b3x-nav-user-email" id="b3xNavUserEmail"></span>
@@ -11048,6 +11050,7 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
       if (p.startsWith('/command-center')) target = 'command-center';
       else if (p.startsWith('/zoom')) target = 'zoom';
       else if (p.startsWith('/triage')) target = 'triage';
+      else if (p.startsWith('/registry')) target = 'registry';
       if (target) document.querySelector('.b3x-nav-link[data-target="' + target + '"]')?.classList.add('active');
     })();
     // Populate user pill from /auth/me. Degrade gracefully on failure.
