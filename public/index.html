@@ -1214,6 +1214,24 @@
       font-size: 13px;
     }
 
+    .style-indicator {
+      font-size: 11px;
+      color: #8b949e;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 8px;
+      user-select: none;
+    }
+    .style-indicator:hover { background: #21262d; color: #c9d1d9; }
+    .style-indicator.styled { color: #58a6ff; }
+    .style-indicator.loading { color: #d29922; cursor: default; }
+    .style-indicator.unstyled { color: #6e7681; cursor: default; }
+    .style-indicator .toggle-link { text-decoration: underline; opacity: 0.8; margin-left: 4px; }
+
     .push-all-btn {
       background: #238636;
       color: white;
@@ -6591,11 +6609,11 @@
                 <div class="resolved-info" id="resolved-info-${item.id}"></div>
               </div>
               <div class="form-row">
-                <label>Title</label>
+                <label>Title <span class="style-indicator" id="style-chip-title-${item.id}" style="display:none"></span></label>
                 <input type="text" id="ph-title-${item.id}" value="${escapeHtml(item.title)}">
               </div>
               <div class="form-row">
-                <label>Description</label>
+                <label>Description <span class="style-indicator" id="style-chip-desc-${item.id}" style="display:none"></span></label>
                 <textarea id="ph-desc-${item.id}">${escapeHtml(item.description || '')}${item.collaborators ? '\n\nAlso involved: ' + escapeHtml(item.collaborators) : ''}${hasExcerpt ? '\n\n---\nFrom meeting: ' + escapeHtml(meetingTopic) + '\n' + escapeHtml(item.transcript_excerpt || '') : ''}</textarea>
               </div>
               <div class="form-row">
@@ -6773,6 +6791,94 @@
         if (clientNames.length) collabInfo += `<div style="font-size:12px;color:#d29922;margin-top:2px">📝 In description: ${clientNames.join(', ')}</div>`;
         resolvedInfo.innerHTML += collabInfo;
       }
+
+      // Fire-and-forget: pull push-time AI styling for this item.
+      loadStyledSuggestions(itemId);
+    }
+
+    // ─── Push-time AI styling: load & toggle ───
+    async function loadStyledSuggestions(itemId) {
+      const titleInput = document.getElementById('ph-title-' + itemId);
+      const descInput  = document.getElementById('ph-desc-' + itemId);
+      if (!titleInput || !descInput) return;
+      const rawTitleSnapshot = titleInput.value;
+      const rawDescSnapshot  = descInput.value;
+
+      setStyleChip(itemId, 'title', 'loading');
+      setStyleChip(itemId, 'desc',  'loading');
+
+      try {
+        const res = await fetch(API + '/action-items/' + itemId + '/styled-suggestions');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+
+        if (data.enabled && data.styled_title) {
+          titleInput.value = data.styled_title;
+          attachStyleToggle(itemId, 'title', titleInput, rawTitleSnapshot, data.styled_title);
+          setStyleChip(itemId, 'title', 'styled');
+        } else {
+          setStyleChip(itemId, 'title', 'hidden');
+        }
+
+        if (data.enabled && data.styled_description) {
+          descInput.value = data.styled_description;
+          attachStyleToggle(itemId, 'desc', descInput, rawDescSnapshot, data.styled_description);
+          setStyleChip(itemId, 'desc', 'styled');
+        } else {
+          setStyleChip(itemId, 'desc', 'hidden');
+        }
+      } catch (err) {
+        console.warn('[styled-suggestions] failed, leaving raw:', err);
+        setStyleChip(itemId, 'title', 'hidden');
+        setStyleChip(itemId, 'desc',  'hidden');
+      }
+    }
+
+    function setStyleChip(itemId, kind, state) {
+      const chip = document.getElementById('style-chip-' + kind + '-' + itemId);
+      if (!chip) return;
+      chip.classList.remove('styled', 'loading', 'unstyled');
+      switch (state) {
+        case 'loading':
+          chip.style.display = '';
+          chip.classList.add('loading');
+          chip.innerHTML = '⏳ styling…';
+          break;
+        case 'styled':
+          chip.style.display = '';
+          chip.classList.add('styled');
+          chip.innerHTML = '💡 AI-styled · <span class="toggle-link">view original</span>';
+          break;
+        case 'raw':
+          chip.style.display = '';
+          chip.classList.add('styled');
+          chip.innerHTML = '📝 raw · <span class="toggle-link">view AI-styled</span>';
+          break;
+        case 'hidden':
+        default:
+          chip.style.display = 'none';
+          chip.innerHTML = '';
+      }
+    }
+
+    function attachStyleToggle(itemId, kind, fieldEl, rawValue, styledValue) {
+      const chip = document.getElementById('style-chip-' + kind + '-' + itemId);
+      if (!chip) return;
+      // Track state on the chip element itself so setStyleChip's innerHTML
+      // rewrite doesn't lose it.
+      chip.dataset.showingStyled = 'true';
+      chip.onclick = () => {
+        const showingStyled = chip.dataset.showingStyled === 'true';
+        if (showingStyled) {
+          fieldEl.value = rawValue;
+          chip.dataset.showingStyled = 'false';
+          setStyleChip(itemId, kind, 'raw');
+        } else {
+          fieldEl.value = styledValue;
+          chip.dataset.showingStyled = 'true';
+          setStyleChip(itemId, kind, 'styled');
+        }
+      };
     }
 
     // Hide push panel

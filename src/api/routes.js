@@ -17,7 +17,9 @@ import { calculateConfidence } from '../lib/confidence-calculator.js';
 import { verifyExtraction } from '../lib/adversarial-verifier.js';
 import { analyzeCoverage, classifyLines } from '../lib/coverage-analyzer.js';
 import { extractMeetingData } from '../lib/ai-extractor.js';
-import { styleTitle } from '../lib/title-styler.js';
+import { styleTitle, styleTitleForce } from '../lib/title-styler.js';
+import { styleDescription } from '../lib/description-styler.js';
+import { weekdayName } from '../lib/util.js';
 import { parseVTT, extractSpeakers } from '../lib/vtt-parser.js';
 import { detectSummary } from '../lib/summary-detector.js';
 import { extractSummaryItems } from '../lib/summary-extractor.js';
@@ -394,6 +396,111 @@ router.get('/action-items/:id', (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// GET /api/action-items/:id/styled-suggestions
+// Push-time AI styling: returns Phil-voice styled title + description scaffold.
+// Greeting + closer assembled deterministically; LLM only writes the middle paragraph.
+router.get('/action-items/:id/styled-suggestions', async (req, res) => {
+  const enabled = String(process.env.PUSH_TIME_STYLER_ENABLED || 'true').toLowerCase() !== 'false';
+  try {
+    const item = db.getActionItemById(parseInt(req.params.id));
+    if (!item) return res.status(404).json({ error: 'not found' });
+
+    if (!enabled) {
+      return res.json({
+        action_item_id: Number(item.id),
+        styled_title: null,
+        styled_description: null,
+        raw_title: item.title || '',
+        raw_description: item.description || '',
+        enabled: false,
+      });
+    }
+
+    const meeting = db.getMeetingById(item.meeting_id);
+    const fullTranscript = meeting?.transcript_raw || '';
+    const transcriptExcerpt = pickExcerptWindow(fullTranscript, item.transcript_excerpt || '', 8000);
+
+    const ownerFirst = (item.owner_name || '').trim().split(/\s+/)[0] || '';
+    const clientName = lookupClientName(item.client_id);
+
+    const [styledTitle, middleParagraph] = await Promise.all([
+      styleTitleForce({
+        rawTitle: item.title,
+        ownerName: item.owner_name,
+        clientName,
+        transcriptExcerpt,
+        taskType: item.task_type,
+      }).catch(err => {
+        console.warn('[styled-suggestions] title failed:', err.message);
+        return null;
+      }),
+      styleDescription({
+        rawDescription: item.description,
+        ownerFirst,
+        clientName,
+        transcriptExcerpt,
+      }).catch(err => {
+        console.warn('[styled-suggestions] description failed:', err.message);
+        return null;
+      }),
+    ]);
+
+    let styledDescription = null;
+    if (middleParagraph) {
+      const greeting = ownerFirst ? `${ownerFirst} - Happy ${weekdayName()}!` : '';
+      styledDescription = [greeting, middleParagraph, 'Thanks...'].filter(Boolean).join('\n\n');
+    }
+
+    res.json({
+      action_item_id: Number(item.id),
+      styled_title: (styledTitle && styledTitle !== item.title) ? styledTitle : null,
+      styled_description: styledDescription,
+      raw_title: item.title || '',
+      raw_description: item.description || '',
+      enabled: true,
+    });
+  } catch (err) {
+    console.warn('[styled-suggestions] handler failed:', err.message);
+    res.json({
+      action_item_id: Number(req.params.id),
+      styled_title: null,
+      styled_description: null,
+      raw_title: '',
+      raw_description: '',
+      enabled,
+      error: err.message,
+    });
+  }
+});
+
+// Slice an 8k window of the full meeting transcript, anchored on the existing
+// transcript_excerpt if it can be located; otherwise return the head of the transcript.
+function pickExcerptWindow(fullTranscript, anchor, maxChars = 8000) {
+  if (!fullTranscript) return anchor || '';
+  if (fullTranscript.length <= maxChars) return fullTranscript;
+  const probe = anchor ? String(anchor).slice(0, 80).trim() : '';
+  if (probe) {
+    const idx = fullTranscript.indexOf(probe);
+    if (idx >= 0) {
+      const half = Math.floor(maxChars / 2);
+      const start = Math.max(0, idx - half);
+      return fullTranscript.slice(start, start + maxChars);
+    }
+  }
+  return fullTranscript.slice(0, maxChars);
+}
+
+function lookupClientName(clientId) {
+  if (!clientId) return '';
+  try {
+    const cfg = JSON.parse(readFileSync(join(__dirname, '..', 'config', 'clients.json'), 'utf8'));
+    const c = (cfg.clients || []).find(x => x.id === clientId);
+    return c?.name || clientId;
+  } catch {
+    return clientId;
+  }
+}
 
 // PUT /api/action-items/:id - Update action item
 router.put('/action-items/:id', (req, res) => {
