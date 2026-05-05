@@ -17,6 +17,7 @@ import { calculateConfidence } from '../lib/confidence-calculator.js';
 import { verifyExtraction } from '../lib/adversarial-verifier.js';
 import { analyzeCoverage, classifyLines } from '../lib/coverage-analyzer.js';
 import { extractMeetingData } from '../lib/ai-extractor.js';
+import { styleTitle } from '../lib/title-styler.js';
 import { parseVTT, extractSpeakers } from '../lib/vtt-parser.js';
 import { detectSummary } from '../lib/summary-detector.js';
 import { extractSummaryItems } from '../lib/summary-extractor.js';
@@ -1483,6 +1484,20 @@ router.post('/meetings/:id/reextract', async (req, res) => {
 
     // Insert new action items
     if (result.action_items?.length) {
+      // Phil-voice title styling (feature-flagged via TITLE_STYLER_ENABLED). Graceful no-op when disabled.
+      for (const item of result.action_items) {
+        try {
+          item.title = await styleTitle({
+            rawTitle: item.title,
+            ownerName: item.owner_name,
+            clientName: meeting.client_name,
+            transcriptExcerpt: item.transcript_excerpt,
+            taskType: item.task_type,
+          });
+        } catch (err) {
+          console.warn(`[Reextract] title-styler skipped item: ${err.message}`);
+        }
+      }
       db.insertReextractedItems(meetingId, meeting.client_id, result.action_items);
     }
 

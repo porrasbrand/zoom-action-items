@@ -21,6 +21,7 @@ import { listRecordings, filterMeetingsWithTranscripts, downloadTranscript } fro
 import { parseVTT, extractSpeakers } from './lib/vtt-parser.js';
 import { matchClient, isInternalMeeting } from './lib/client-matcher.js';
 import { extractMeetingData } from './lib/ai-extractor.js';
+import { styleTitle } from './lib/title-styler.js';
 import { postToSlack, formatSlackMessage, postAlert, resolveChannel } from './lib/slack-publisher.js';
 import * as db from './lib/database.js';
 import { isProofhubConfigured } from './lib/proofhub-client.js';
@@ -186,6 +187,20 @@ async function processMeeting(meeting) {
     });
 
     if (extraction.action_items?.length) {
+      // Phil-voice title styling (feature-flagged via TITLE_STYLER_ENABLED). Graceful no-op when disabled.
+      for (const item of extraction.action_items) {
+        try {
+          item.title = await styleTitle({
+            rawTitle: item.title,
+            ownerName: item.owner_name,
+            clientName,
+            transcriptExcerpt: item.transcript_excerpt,
+            taskType: item.task_type,
+          });
+        } catch (err) {
+          log(`  [title-styler] skipped item: ${err.message}`);
+        }
+      }
       db.insertActionItems(meetingId, clientId, extraction.action_items);
     }
     if (extraction.decisions?.length) {
