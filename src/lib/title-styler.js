@@ -42,6 +42,12 @@ Rules:
 7. If the input title already follows the formula or is already specific to client+context, return it UNCHANGED.
 8. Output ONLY the styled title. No preamble, no quotes, no explanation.
 
+Rule A (owner cross-check): Cross-check Owner_First against the transcript. If the transcript clearly indicates a DIFFERENT person commits to or is assigned to do this work (e.g. "Bill is going to handle that", "Richard will take this one"), use that person's first name as Owner_First instead of the input owner_name. Default to the input owner_name only if the transcript is silent or ambiguous.
+
+Rule B (clean client names): Output the client name EXACTLY as provided. NEVER splice with slashes (e.g. NOT "Jay Conner / Conner Marketing"). NEVER embed redundant company names. If client_name has parenthetical or comma-separated suffixes, drop them.
+
+Rule C (append vs restructure): If the raw title is already verb-led, ≥4 words, and contains specific objects (counts, dates, named entities), APPEND specifics with a hyphen rather than restructure to formula. Example: raw="Edit and upload Q1 analysis video" + transcript="once received by client" → output="Edit and upload Q1 analysis video - Once Received By Client" (NOT "<Owner> - <Client> - Edit and upload Q1..."). Apply formula prefix ONLY when the raw title is generic/vague.
+
 Few-shot examples (real Phil rewrites, verbatim):
 
 Example 1 (owner+client):
@@ -122,7 +128,7 @@ export async function styleTitle({ rawTitle, ownerName, clientName, transcriptEx
 owner: ${JSON.stringify(ownerName || '')}
 client: ${JSON.stringify(clientName || '')}
 task_type: ${JSON.stringify(taskType || '')}
-transcript_excerpt: ${JSON.stringify((transcriptExcerpt || '').slice(0, 2000))}
+transcript_excerpt: ${JSON.stringify((transcriptExcerpt || '').slice(0, 8000))}
 
 styled:`;
     const client = getClient();

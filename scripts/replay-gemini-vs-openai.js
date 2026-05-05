@@ -95,6 +95,21 @@ function loadClients() {
   } catch { return []; }
 }
 
+function buildWideExcerpt(rawTranscript, narrowExcerpt, windowChars = 8000) {
+  if (!rawTranscript) return narrowExcerpt || '';
+  const half = Math.floor(windowChars / 2);
+  if (narrowExcerpt) {
+    const probe = String(narrowExcerpt).slice(0, 80).trim();
+    const idx = probe ? rawTranscript.indexOf(probe) : -1;
+    if (idx >= 0) {
+      const start = Math.max(0, idx - half);
+      const end = Math.min(rawTranscript.length, idx + half);
+      return rawTranscript.slice(start, end);
+    }
+  }
+  return rawTranscript.slice(0, windowChars);
+}
+
 // ─── Gemini client (standalone, mirrors production styler config) ───
 const geminiKey = process.env.GOOGLE_API_KEY;
 if (!geminiKey) { console.error('Missing GOOGLE_API_KEY'); process.exit(1); }
@@ -117,7 +132,7 @@ async function styleWithGemini({ rawTitle, ownerName, clientName, transcriptExce
 owner: ${JSON.stringify(ownerName || '')}
 client: ${JSON.stringify(clientName || '')}
 task_type: ${JSON.stringify(taskType || '')}
-transcript_excerpt: ${JSON.stringify((transcriptExcerpt || '').slice(0, 2000))}
+transcript_excerpt: ${JSON.stringify((transcriptExcerpt || '').slice(0, 8000))}
 
 styled:`;
   const result = await gemini.generateContent({
@@ -175,9 +190,12 @@ const rows = db.prepare(`
     ai.owner_name     AS owner_name,
     ai.client_id      AS client_id,
     ai.task_type      AS task_type,
-    ai.transcript_excerpt AS transcript_excerpt
+    ai.transcript_excerpt AS transcript_excerpt,
+    ai.meeting_id     AS meeting_id,
+    m.transcript_raw  AS meeting_transcript_raw
   FROM action_item_edits e
   JOIN action_items ai ON ai.id = e.action_item_id
+  LEFT JOIN meetings m ON m.id = ai.meeting_id
   WHERE e.field = 'title'
     AND e.edit_classification IN ('structural','tonal','unknown')
     AND ai.snapshot_title IS NOT NULL
@@ -199,6 +217,7 @@ for (let i = 0; i < rows.length; i++) {
   const clientName = clientNameById.get(r.client_id) || r.client_id || '';
   const rawTitle = r.snapshot_title || '';
   const passthroughExpected = looksLikePhilFormula(rawTitle);
+  const wideExcerpt = buildWideExcerpt(r.meeting_transcript_raw, r.transcript_excerpt, 8000);
   let styled = '';
   let usage = null;
   let error = null;
@@ -207,7 +226,7 @@ for (let i = 0; i < rows.length; i++) {
       rawTitle,
       ownerName: r.owner_name || '',
       clientName,
-      transcriptExcerpt: r.transcript_excerpt || '',
+      transcriptExcerpt: wideExcerpt,
       taskType: r.task_type || '',
     });
     styled = out.styled;

@@ -102,6 +102,26 @@ function loadClients() {
   }
 }
 
+// Build an 8k-char window of the meeting transcript anchored on the existing
+// transcript_excerpt. If the excerpt is found in the raw transcript, slice ±4k
+// chars around it; otherwise return the first 8k chars. Falls back to the
+// excerpt itself when the meeting transcript isn't available.
+function buildWideExcerpt(rawTranscript, narrowExcerpt, windowChars = 8000) {
+  if (!rawTranscript) return narrowExcerpt || '';
+  const half = Math.floor(windowChars / 2);
+  if (narrowExcerpt) {
+    // Try to anchor on a meaningful chunk of the narrow excerpt.
+    const probe = String(narrowExcerpt).slice(0, 80).trim();
+    const idx = probe ? rawTranscript.indexOf(probe) : -1;
+    if (idx >= 0) {
+      const start = Math.max(0, idx - half);
+      const end = Math.min(rawTranscript.length, idx + half);
+      return rawTranscript.slice(start, end);
+    }
+  }
+  return rawTranscript.slice(0, windowChars);
+}
+
 async function main() {
   mkdirSync(OUT_DIR, { recursive: true });
 
@@ -122,9 +142,12 @@ async function main() {
       ai.client_id       AS client_id,
       ai.task_type       AS task_type,
       ai.transcript_excerpt AS transcript_excerpt,
-      ai.ph_task_id      AS ph_task_id
+      ai.meeting_id      AS meeting_id,
+      ai.ph_task_id      AS ph_task_id,
+      m.transcript_raw   AS meeting_transcript_raw
     FROM action_item_edits e
     JOIN action_items ai ON ai.id = e.action_item_id
+    LEFT JOIN meetings m ON m.id = ai.meeting_id
     WHERE e.field = 'title'
       AND e.edit_classification IN ('structural','tonal','unknown')
       AND ai.snapshot_title IS NOT NULL
@@ -152,6 +175,7 @@ async function main() {
     const rawTitle = r.snapshot_title || '';
 
     const passthroughExpected = looksLikePhilFormula(rawTitle);
+    const wideExcerpt = buildWideExcerpt(r.meeting_transcript_raw, r.transcript_excerpt, 8000);
     let styled = '';
     let error = null;
     let attempts = 0;
@@ -163,7 +187,7 @@ async function main() {
           rawTitle,
           ownerName: r.owner_name || '',
           clientName,
-          transcriptExcerpt: r.transcript_excerpt || '',
+          transcriptExcerpt: wideExcerpt,
           taskType: r.task_type || '',
         });
         // styleTitle returns rawTitle on internal LLM failure; detect 429 by re-checking equality + a known signal would be tricky.
