@@ -5866,7 +5866,8 @@
       // Scope chat concierge cleared
       if (typeof setChatScope === 'function') setChatScope(null, null);
       syncUrlFromFilters();
-      loadMeetings(); // server fetch — will re-render filter UI on completion
+      renderFilterUi(); // sync chrome immediately (week label, recents, signal toggles)
+      loadMeetings();   // server fetch — re-renders filter UI again on completion via renderClient/SignalPills aliases
     }
 
     // Old function names kept for any external callers (the markup no longer wires these directly).
