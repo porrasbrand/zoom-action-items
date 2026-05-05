@@ -141,6 +141,126 @@ router.get('/meetings', (req, res) => {
   }
 });
 
+// ============ EDIT LOGGER (Phase 4D) ============
+
+// Decode HTML entities + strip PH rich-text tags before diffing description.
+function _decodeEntities(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ')
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&#39;/g, "'").replace(/&quot;/g, '"');
+}
+function _stripHtml(s) {
+  if (!s) return '';
+  let t = _decodeEntities(String(s));
+  if (t.includes('&lt;') || t.includes('&amp;')) t = _decodeEntities(t);
+  return t
+    .replace(/<phmention[^>]*>([^<]*)<\/phmention>/gi, '$1')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+function _classifyTitleEdit(oldT, newT) {
+  if (!oldT || !newT) return 'structural';
+  const lo = oldT.length, ln = newT.length;
+  const ratio = lo > 0 ? Math.abs(lo - ln) / Math.max(lo, ln) : 1;
+  if (ratio < 0.3) return 'tonal';
+  return 'structural';
+}
+function _classifyDescriptionEdit(oldD, newD) {
+  const oldClean = _stripHtml(oldD);
+  const newClean = _stripHtml(newD);
+  if (!oldClean && newClean) return 'structural'; // missing-desc-filled
+  if (oldClean && !newClean) return 'structural'; // description-deleted
+  // Direct-address opening "<First> [Last] - …" → tonal
+  if (/^\s*[A-Z][a-z]{2,}(\s+[A-Z][a-z]+)?\s*[-–—]/.test(newClean)) return 'tonal';
+  // URL added → structural (resource-added)
+  const urlRe = /https?:\/\/[^\s<>"]+/gi;
+  const oldUrls = new Set([...(oldClean.matchAll(urlRe))].map(m => m[0]));
+  const newUrls = [...(newClean.matchAll(urlRe))].map(m => m[0]);
+  if (newUrls.some(u => !oldUrls.has(u))) return 'structural';
+  return 'unknown';
+}
+
+// POST /api/admin/capture-edits — fetches current PH state for recently pushed items
+// and writes diffs to action_item_edits. Auth-gated (inherits apiAuthMiddleware).
+router.post('/admin/capture-edits', async (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 50;
+  const items = db.getRecentlyPushedActionItems(limit);
+  const results = { checked: 0, edits_captured: 0, deleted_in_ph: 0, errors: [] };
+
+  for (const item of items) {
+    results.checked++;
+    try {
+      const phTask = await proofhub.getTask(item.ph_project_id, item.ph_task_list_id, item.ph_task_id);
+      if (!phTask) continue;
+      // Title diff
+      if (phTask.title !== item.snapshot_title) {
+        const cls = _classifyTitleEdit(item.snapshot_title, phTask.title);
+        db.insertEdit({
+          action_item_id: item.id,
+          field: 'title',
+          old_value: item.snapshot_title,
+          new_value: phTask.title,
+          edit_classification: cls,
+          diff_summary: `${(item.snapshot_title || '').slice(0, 40)} → ${(phTask.title || '').slice(0, 40)}`,
+        });
+        results.edits_captured++;
+      }
+      // Description diff (compare normalized)
+      const dbDesc = _stripHtml(item.snapshot_description);
+      const phDesc = _stripHtml(phTask.description);
+      if (dbDesc !== phDesc) {
+        const cls = _classifyDescriptionEdit(item.snapshot_description, phTask.description);
+        db.insertEdit({
+          action_item_id: item.id,
+          field: 'description',
+          old_value: item.snapshot_description,
+          new_value: phTask.description,
+          edit_classification: cls,
+          diff_summary: `${dbDesc.slice(0, 40)} → ${phDesc.slice(0, 40)}`,
+        });
+        results.edits_captured++;
+      }
+      // Assignee diff (PH stores in `assigned` array)
+      const phAssigned = Array.isArray(phTask.assigned) ? phTask.assigned.map(String) : [];
+      const dbAssignee = item.snapshot_assignee_id ? String(item.snapshot_assignee_id) : null;
+      const stillThere = dbAssignee ? phAssigned.includes(dbAssignee) : false;
+      if (dbAssignee && phAssigned.length > 0 && (!stillThere || phAssigned.length > 1)) {
+        db.insertEdit({
+          action_item_id: item.id,
+          field: 'assignee_id',
+          old_value: dbAssignee,
+          new_value: phAssigned.join(','),
+          edit_classification: 'structural',
+          diff_summary: stillThere ? 'assignee-added' : 'assignee-correction',
+        });
+        results.edits_captured++;
+      }
+    } catch (err) {
+      const msg = String(err.message || err);
+      if (msg.includes('404')) {
+        results.deleted_in_ph++;
+      } else {
+        results.errors.push({ id: item.id, error: msg });
+      }
+    }
+  }
+  res.json(results);
+});
+
+// GET /api/admin/edit-stats — aggregate field × classification counts.
+router.get('/admin/edit-stats', (req, res) => {
+  res.json({ stats: db.getEditStats() });
+});
+
+// POST /api/admin/backfill-snapshots — populate snapshot_* on existing pushed items.
+router.post('/admin/backfill-snapshots', (req, res) => {
+  const result = db.backfillMissingSnapshots();
+  res.json(result);
+});
+
 // GET /api/registry-clients - Read-only view of the registry for the frontend.
 // Returns: { clients: [{ slug, name, status, proofhub_project_id }], count }.
 router.get('/registry-clients', (req, res) => {
@@ -642,14 +762,17 @@ router.post('/action-items/:id/push-ph', async (req, res) => {
       }
     }
 
-    // Update action item with PH info
+    // Update action item with PH info — INCLUDING push-time snapshot for edit-logger.
     const phTaskUrl = `https://${process.env.PROOFHUB_COMPANY_URL}/#tasks/${task.id}/project-${ph_project_id}`;
     db.updateActionItem(itemId, {
       ph_task_id: task.id.toString(),
       ph_project_id: ph_project_id.toString(),
       ph_task_list_id: taskListId.toString(),
       ph_assignee_id: assigneeId?.toString() || null,
-      status: 'pushed'
+      status: 'pushed',
+      snapshot_title: taskData.title,
+      snapshot_description: taskData.description,
+      snapshot_assignee_id: assigneeId?.toString() || null,
     });
     db.setPushedAt(itemId);
 
@@ -794,14 +917,17 @@ router.post('/meetings/:id/push-all-ph', async (req, res) => {
         console.log('[PH Push] Success for item', item.id, 'ph_task_id:', task.id);
         db.updatePushQueueSuccess(item.id);
 
-        // Update action item
+        // Update action item — including push-time snapshot for edit-logger.
         const phTaskUrl = `https://${process.env.PROOFHUB_COMPANY_URL}/#tasks/${task.id}/project-${ph_project_id}`;
         db.updateActionItem(item.id, {
           ph_task_id: task.id.toString(),
           ph_project_id: ph_project_id.toString(),
           ph_task_list_id: taskListId.toString(),
           ph_assignee_id: assigneeId?.toString() || null,
-          status: 'pushed'
+          status: 'pushed',
+          snapshot_title: taskData.title,
+          snapshot_description: taskData.description,
+          snapshot_assignee_id: assigneeId?.toString() || null,
         });
         db.setPushedAt(item.id);
 

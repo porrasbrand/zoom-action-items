@@ -43,6 +43,10 @@ export function runMigrations() {
     { name: 'confidence_tier', type: "TEXT DEFAULT 'conversation'" },
     { name: 'collaborators', type: "TEXT DEFAULT ''" },
     { name: 'task_type', type: "TEXT DEFAULT NULL" },
+    // Phase 4D edit-logger
+    { name: 'snapshot_title', type: 'TEXT' },
+    { name: 'snapshot_description', type: 'TEXT' },
+    { name: 'snapshot_assignee_id', type: 'TEXT' },
   ];
 
   for (const col of actionItemsNewCols) {
@@ -182,6 +186,23 @@ export function runMigrations() {
       PRIMARY KEY (contact_name, client_id)
     )
   `);
+
+  // Phase 4D edit-logger — diff history table
+  d.exec(`
+    CREATE TABLE IF NOT EXISTS action_item_edits (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      action_item_id INTEGER NOT NULL REFERENCES action_items(id),
+      captured_at TEXT NOT NULL DEFAULT (datetime('now')),
+      field TEXT NOT NULL,
+      old_value TEXT,
+      new_value TEXT,
+      edit_classification TEXT,
+      diff_summary TEXT
+    )
+  `);
+  d.exec('CREATE INDEX IF NOT EXISTS idx_action_item_edits_item ON action_item_edits(action_item_id)');
+  d.exec('CREATE INDEX IF NOT EXISTS idx_action_item_edits_captured ON action_item_edits(captured_at)');
+  d.exec('CREATE INDEX IF NOT EXISTS idx_action_item_edits_classification ON action_item_edits(edit_classification)');
 
   // Push queue table (persistent push tracking)
   d.exec(`
@@ -376,7 +397,8 @@ export function updateActionItem(id, updates) {
   const allowedFields = [
     'title', 'description', 'owner_name', 'due_date', 'priority', 'status', 'category',
     'transcript_excerpt', 'ph_project_id', 'ph_task_list_id', 'ph_assignee_id', 'ph_task_id',
-    'confidence_tier', 'collaborators', 'task_type'
+    'confidence_tier', 'collaborators', 'task_type',
+    'snapshot_title', 'snapshot_description', 'snapshot_assignee_id'
   ];
   const sets = [];
   const params = [];
@@ -982,4 +1004,53 @@ export function resetPushQueueForRetry(id) {
   return d.prepare(`
     UPDATE push_queue SET status = 'pending' WHERE id = ? AND status = 'failed' AND attempts < 3
   `).run(id);
+}
+
+// ─── Edit-logger (Phase 4D — capture Phil's post-push diffs) ───
+export function getRecentlyPushedActionItems(limit = 50) {
+  const d = getDb();
+  return d.prepare(`
+    SELECT id, title, description, owner_name, ph_task_id, ph_project_id, ph_task_list_id,
+           ph_assignee_id, pushed_at,
+           snapshot_title, snapshot_description, snapshot_assignee_id
+    FROM action_items
+    WHERE ph_task_id IS NOT NULL
+    ORDER BY pushed_at DESC
+    LIMIT ?
+  `).all(limit);
+}
+
+export function backfillMissingSnapshots() {
+  // For existing pushed items, populate snapshot_* from (title, description, ph_assignee_id)
+  // — assumes those equal the push-time state for items that haven't been edited yet.
+  // No-op for items that already have snapshot_title set.
+  const d = getDb();
+  const result = d.prepare(`
+    UPDATE action_items
+    SET snapshot_title = COALESCE(snapshot_title, title),
+        snapshot_description = COALESCE(snapshot_description, description),
+        snapshot_assignee_id = COALESCE(snapshot_assignee_id, ph_assignee_id)
+    WHERE ph_task_id IS NOT NULL
+      AND (snapshot_title IS NULL OR snapshot_description IS NULL OR snapshot_assignee_id IS NULL)
+  `).run();
+  return { changed: result.changes };
+}
+
+export function insertEdit({ action_item_id, field, old_value, new_value, edit_classification, diff_summary }) {
+  const d = getDb();
+  return d.prepare(`
+    INSERT INTO action_item_edits
+      (action_item_id, field, old_value, new_value, edit_classification, diff_summary)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).run(action_item_id, field, old_value, new_value, edit_classification, diff_summary);
+}
+
+export function getEditStats() {
+  const d = getDb();
+  return d.prepare(`
+    SELECT field, edit_classification, COUNT(*) AS n
+    FROM action_item_edits
+    GROUP BY field, edit_classification
+    ORDER BY field, edit_classification
+  `).all();
 }

@@ -406,10 +406,16 @@ export async function autoPushMeeting(db, meetingId, options = {}) {
               taskData
             );
 
-            // Store ph_task_id back on action_items
+            // Store ph_task_id + push-time snapshot for edit-logger.
             db.prepare(
-              "UPDATE action_items SET ph_task_id = ?, pushed_at = datetime('now') WHERE id = ?"
-            ).run(createdTask.id, item.id);
+              "UPDATE action_items SET ph_task_id = ?, pushed_at = datetime('now'), snapshot_title = ?, snapshot_description = ?, snapshot_assignee_id = ? WHERE id = ?"
+            ).run(
+              createdTask.id,
+              taskData.title,
+              taskData.description,
+              assigneeId ? String(assigneeId) : null,
+              item.id
+            );
 
             itemResult.ph_task_id = createdTask.id;
             itemResult.task_list_id = taskListId;
