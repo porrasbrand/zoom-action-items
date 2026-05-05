@@ -107,9 +107,14 @@ function classifyDescriptionEdit(oldD, newD, assigneeName) {
   const oldUrls = new Set(extractUrls(oldClean));
   const newUrls = extractUrls(newClean);
   const addedUrls = newUrls.filter(u => !oldUrls.has(u));
-  // Direct-address opening: "<First> [Last] - " — Phil's signature pattern.
-  // Try assignee first (tightest match); fall back to generic capitalized-name detector.
+  // Direct-address opening: Phil's signature voice patterns.
+  // Expanded heuristic (Phase 4D rerun): catches 'Hey <Name>', 'Happy <Weekday>',
+  // 'Just posting this', 'For this proof of task' phrasings.
   let opened = false;
+  let openerReason = 'style-rewrite-direct-address';
+  const head = newClean.slice(0, 200);
+  const headLower = head.toLowerCase();
+  // (a/b) "<First> - " — assignee-tight match first
   if (assigneeName) {
     const first = assigneeName.split(/\s+/)[0] || '';
     if (first) {
@@ -117,13 +122,26 @@ function classifyDescriptionEdit(oldD, newD, assigneeName) {
       if (opener.test(newClean)) opened = true;
     }
   }
-  if (!opened) {
-    // Generic: any single first-name (capitalized 3+ letter word) optionally followed by a Surname, then a dash.
-    if (/^\s*[A-Z][a-z]{2,}(\s+[A-Z][a-z]+)?\s*[-–—]/.test(newClean)) opened = true;
+  // (a/b) generic '<First> [Last] - ' opener
+  if (!opened && /^\s*[A-Z][a-z]{2,}(\s+[A-Z][a-z]+)?\s*[-–—]/.test(newClean)) opened = true;
+  // (c) 'Hey <FirstName>' / 'Hey <FirstName>,' / 'Hey <FirstName> -' (case-insensitive)
+  if (!opened && /^\s*hey\s+[A-Za-z][A-Za-z'-]{1,}\b/i.test(head)) {
+    opened = true;
+    openerReason = 'style-rewrite-hey-greeting';
+  }
+  // (d) 'Happy <Weekday>' anywhere in first 100 chars
+  if (!opened && /\bhappy\s+(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/i.test(head.slice(0, 100))) {
+    opened = true;
+    openerReason = 'style-rewrite-happy-weekday';
+  }
+  // (e) Phil-template phrasings: 'Just posting this' / 'For this proof of task'
+  if (!opened && /\b(just\s+posting\s+this|for\s+this\s+proof\s+of\s+task)\b/i.test(headLower)) {
+    opened = true;
+    openerReason = 'style-rewrite-phil-phrasing';
   }
   if (opened) {
-    const out = { class: 'tonal', reason: 'style-rewrite-direct-address' };
-    if (addedUrls.length > 0) { out.addedUrls = addedUrls; out.reason = 'style-rewrite-direct-address+resource-added'; }
+    const out = { class: 'tonal', reason: openerReason };
+    if (addedUrls.length > 0) { out.addedUrls = addedUrls; out.reason = openerReason + '+resource-added'; }
     return out;
   }
   if (addedUrls.length > 0) return { class: 'structural', reason: 'resource-added', addedUrls };
