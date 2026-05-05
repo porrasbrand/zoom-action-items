@@ -405,7 +405,7 @@ export function unpushActionItem(id) {
   const d = getDb();
   return d.prepare(`
     UPDATE action_items
-    SET ph_task_id = NULL, ph_project_id = NULL, ph_task_list_id = NULL, ph_assignee_id = NULL, pushed_at = NULL, updated_at = datetime('now')
+    SET ph_task_id = NULL, ph_project_id = NULL, ph_task_list_id = NULL, ph_assignee_id = NULL, pushed_at = NULL
     WHERE id = ?
   `).run(id);
 }
