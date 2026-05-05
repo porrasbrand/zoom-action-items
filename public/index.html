@@ -1983,6 +1983,53 @@
     .popover .popover-item.selected .check { opacity: 1; }
     .popover .popover-item .count { font-size: 11px; color: #6e7681; }
 
+    /* Registry-status: churned + sections */
+    .popover .popover-item.churned { color: #6e7681; font-style: italic; }
+    .popover .popover-item.churned .former-tag {
+      display: inline-block;
+      font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px;
+      color: #d29922; background: #2d2418; border: 1px solid #4a3a18;
+      border-radius: 3px; padding: 1px 5px; margin-left: 6px;
+      font-style: normal;
+    }
+    .popover-section-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 14px 6px;
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.7px;
+      color: #6e7681; cursor: pointer; user-select: none;
+    }
+    .popover-section-header:hover { color: #c9d1d9; }
+    .popover-section-header .caret { font-size: 10px; transition: transform 0.15s; }
+    .popover-section-header.collapsed .caret { transform: rotate(-90deg); }
+    .popover-section-header .count { font-size: 10px; color: #6e7681; font-weight: normal; }
+    .popover-section.collapsed { display: none; }
+
+    /* Recent chip — churned variant */
+    .recent-chip.churned { color: #6e7681; border-color: #2a2f37; font-style: italic; }
+    .recent-chip.churned.active { color: #fff; }
+
+    /* Client selector — churned-active state */
+    .client-selector.churned-active {
+      border-color: #d29922;
+      background: #1f1a0e;
+    }
+    .client-selector.churned-active .meta::before {
+      content: 'FORMER · ';
+      color: #d29922;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    /* Meeting card — FORMER tag for churned-client meetings */
+    .meeting-card.client-churned .client { color: #6e7681; font-style: italic; }
+    .meeting-card .meeting-former-tag {
+      display: inline-block;
+      font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px;
+      color: #d29922; background: #2d2418; border: 1px solid #4a3a18;
+      border-radius: 3px; padding: 1px 5px; margin-left: 6px;
+      vertical-align: middle;
+    }
+
 /* ============ TAB NAVIGATION ============ */
 .tab-nav {
   display: flex;
@@ -5609,9 +5656,9 @@
       localStorage.setItem(RECENTS_KEY, JSON.stringify(r));
     }
     function seedRecentsFromCounts() {
-      // Top N by count, excluding unmatched
+      // Top N by count, excluding unmatched AND churned (registry status).
       return allClientsForFilter
-        .filter(c => !c.isUnmatched && c.id)
+        .filter(c => !c.isUnmatched && c.id && c.status !== 'churned')
         .slice().sort((a, b) => b.count - a.count)
         .slice(0, RECENTS_MAX).map(c => c.id);
     }
@@ -5655,12 +5702,14 @@
       const meta = document.getElementById('clientSelectorMeta');
       const sel = document.getElementById('clientSelector');
       const total = allMeetings.length;
+      sel.classList.remove('churned-active');
       if (filters.client) {
         const c = allClientsForFilter.find(x => x.id === filters.client);
         lbl.textContent = c ? c.name : filters.client;
         meta.textContent = c ? ` (${c.count} meeting${c.count === 1 ? '' : 's'})` : '';
         sel.classList.add('has-value');
         sel.classList.toggle('unmatched', !!(c && c.isUnmatched));
+        if (c && c.status === 'churned') sel.classList.add('churned-active');
       } else {
         lbl.textContent = 'All clients';
         meta.textContent = total ? ` (${total} meeting${total === 1 ? '' : 's'})` : '';
@@ -5680,7 +5729,10 @@
         if (!c) return;
         const chip = document.createElement('button');
         chip.type = 'button';
-        chip.className = 'recent-chip' + (filters.client === cid ? ' active' : '') + (c.isUnmatched ? ' unmatched' : '');
+        chip.className = 'recent-chip'
+          + (filters.client === cid ? ' active' : '')
+          + (c.isUnmatched ? ' unmatched' : '')
+          + (c.status === 'churned' ? ' churned' : '');
         chip.innerHTML = `${escapeHtml(c.name)}<span class="count">${c.count}</span>`;
         chip.onclick = () => selectClientById(filters.client === cid ? null : cid);
         row.appendChild(chip);
@@ -5745,8 +5797,10 @@
       allMeetings.forEach(m => {
         const cid = m.client_id || 'unmatched';
         const cname = m.client_name || 'Unmatched';
-        if (!map[cid]) map[cid] = { id: cid, name: cname, count: 0, isUnmatched: cid === 'unmatched' };
+        if (!map[cid]) map[cid] = { id: cid, name: cname, count: 0, isUnmatched: cid === 'unmatched', status: null };
         map[cid].count++;
+        // First-write-wins for status: meetings of one client should all share status.
+        if (m.client_status && !map[cid].status) map[cid].status = m.client_status;
       });
       allClientsForFilter = Object.values(map);
     }
@@ -5859,10 +5913,54 @@
       }
     }
 
+    // localStorage keys for section collapse state
+    const SECT_KEY_ACTIVE  = 'zoom-section-active';
+    const SECT_KEY_CHURNED = 'zoom-section-churned';
+    function getSectionState(key, defaultExpanded) {
+      const v = localStorage.getItem(key);
+      if (v === 'expanded') return true;
+      if (v === 'collapsed') return false;
+      return defaultExpanded;
+    }
+    function setSectionState(key, expanded) {
+      try { localStorage.setItem(key, expanded ? 'expanded' : 'collapsed'); } catch {}
+    }
+
+    function buildPopoverItem(c, ft) {
+      const item = document.createElement('div');
+      const isChurned = c.status === 'churned';
+      item.className = 'popover-item'
+        + (filters.client === c.id ? ' selected' : '')
+        + (c.isUnmatched ? ' unmatched' : '')
+        + (isChurned ? ' churned' : '');
+      item.setAttribute('role', 'option');
+      item.setAttribute('aria-selected', filters.client === c.id ? 'true' : 'false');
+      item.dataset.cid = c.id;
+      const tag = isChurned ? '<span class="former-tag">FORMER</span>' : '';
+      const warn = c.isUnmatched ? ' ⚠' : '';
+      item.innerHTML = `<span><span class="check">✓</span> ${escapeHtml(c.name)}${warn}${tag}</span><span class="count">${c.count}</span>`;
+      item.onclick = () => { selectClientById(c.id); closePopovers(); };
+      return item;
+    }
+
+    function buildSectionHeader(label, count, sectionKey, expanded, onToggle) {
+      const h = document.createElement('div');
+      h.className = 'popover-section-header' + (expanded ? '' : ' collapsed');
+      h.innerHTML = `<span><span class="caret">▼</span> ${escapeHtml(label)}</span><span class="count">(${count})</span>`;
+      h.onclick = (e) => {
+        e.stopPropagation();
+        const nowCollapsed = h.classList.toggle('collapsed'); // returns AFTER state
+        setSectionState(sectionKey, !nowCollapsed);
+        onToggle(!nowCollapsed);
+      };
+      return h;
+    }
+
     function renderClientPopover(filterText = '') {
       const list = document.getElementById('clientPopoverList');
       list.innerHTML = '';
-      // "All clients"
+
+      // "All clients" pinned at top
       const all = document.createElement('div');
       all.className = 'popover-item' + (filters.client === null ? ' selected' : '');
       all.setAttribute('role', 'option');
@@ -5871,26 +5969,53 @@
       all.onclick = () => { selectClientById(null); closePopovers(); };
       list.appendChild(all);
 
-      const ft = filterText.toLowerCase();
-      const sorted = allClientsForFilter
-        .filter(c => !ft || c.name.toLowerCase().includes(ft))
-        .slice()
-        .sort((a, b) => {
-          // Unmatched last; otherwise by count desc
-          if (a.isUnmatched && !b.isUnmatched) return 1;
-          if (!a.isUnmatched && b.isUnmatched) return -1;
-          return b.count - a.count;
+      const ft = filterText.toLowerCase().trim();
+      const filtering = ft.length > 0;
+
+      const all_filtered = allClientsForFilter
+        .filter(c => !filtering || c.name.toLowerCase().includes(ft));
+
+      const activeClients = all_filtered
+        .filter(c => !c.isUnmatched && c.status !== 'churned')
+        .slice().sort((a, b) => b.count - a.count);
+      const churnedClients = all_filtered
+        .filter(c => !c.isUnmatched && c.status === 'churned')
+        .slice().sort((a, b) => b.count - a.count);
+      const unmatchedClient = all_filtered.find(c => c.isUnmatched);
+
+      // Section state — when typing, both auto-expand temporarily.
+      const activeExpanded  = filtering ? true : getSectionState(SECT_KEY_ACTIVE, true);
+      const churnedExpanded = filtering ? true : getSectionState(SECT_KEY_CHURNED, false);
+
+      // ACTIVE section
+      if (activeClients.length > 0) {
+        const activeBody = document.createElement('div');
+        activeBody.className = 'popover-section' + (activeExpanded ? '' : ' collapsed');
+        const activeHeader = buildSectionHeader('Active', activeClients.length, SECT_KEY_ACTIVE, activeExpanded, (expanded) => {
+          activeBody.classList.toggle('collapsed', !expanded);
         });
-      sorted.forEach(c => {
-        const item = document.createElement('div');
-        item.className = 'popover-item' + (filters.client === c.id ? ' selected' : '') + (c.isUnmatched ? ' unmatched' : '');
-        item.setAttribute('role', 'option');
-        item.setAttribute('aria-selected', filters.client === c.id ? 'true' : 'false');
-        item.dataset.cid = c.id;
-        item.innerHTML = `<span><span class="check">✓</span> ${escapeHtml(c.name)}${c.isUnmatched ? ' ⚠' : ''}</span><span class="count">${c.count}</span>`;
-        item.onclick = () => { selectClientById(c.id); closePopovers(); };
-        list.appendChild(item);
-      });
+        list.appendChild(activeHeader);
+        list.appendChild(activeBody);
+        activeClients.forEach(c => activeBody.appendChild(buildPopoverItem(c, ft)));
+      }
+
+      // CHURNED section
+      if (churnedClients.length > 0) {
+        const churnedBody = document.createElement('div');
+        churnedBody.className = 'popover-section' + (churnedExpanded ? '' : ' collapsed');
+        const churnedHeader = buildSectionHeader('Churned', churnedClients.length, SECT_KEY_CHURNED, churnedExpanded, (expanded) => {
+          churnedBody.classList.toggle('collapsed', !expanded);
+        });
+        list.appendChild(churnedHeader);
+        list.appendChild(churnedBody);
+        churnedClients.forEach(c => churnedBody.appendChild(buildPopoverItem(c, ft)));
+      }
+
+      // Unmatched (always last, no section, gets ⚠ accent via .unmatched class)
+      if (unmatchedClient) {
+        list.appendChild(buildPopoverItem(unmatchedClient, ft));
+      }
+
       popoverHighlight = -1;
     }
 
@@ -6024,17 +6149,18 @@
       container.innerHTML = meetings.map(m => {
         const isUnmatched = !m.client_id || m.client_id === 'unmatched';
         const isActive = m.id === selectedMeetingId;
+        const isChurned = m.client_status === 'churned';
         const signal = m.confidence_signal || 'pending';
         const suggestedCount = m.suggested_count || 0;
         return `
-          <div class="meeting-card ${isUnmatched ? 'unmatched' : ''} ${isActive ? 'active' : ''} ${m.pushed_count > 0 ? 'meeting-processed' : ''}"
+          <div class="meeting-card ${isUnmatched ? 'unmatched' : ''} ${isActive ? 'active' : ''} ${m.pushed_count > 0 ? 'meeting-processed' : ''} ${isChurned ? 'client-churned' : ''}"
                onclick="loadMeetingDetail(${m.id})">
             <div class="date"><span class="confidence-dot ${signal}"></span>${escapeHtml(formatDate(m.start_time))}</div>
             <div class="topic">${escapeHtml(m.topic || 'Untitled')}${suggestedCount > 0 ? `<span class="suggested-count-badge">+${suggestedCount}</span>` : ''}</div>
             <div class="meta">
               <span class="client ${isUnmatched ? 'unmatched' : ''}">
                 ${isUnmatched ? '⚠️ Unmatched' : escapeHtml(m.client_name)}
-              </span>
+              </span>${isChurned ? '<span class="meeting-former-tag">FORMER</span>' : ''}
               <span class="counts">
                 ${m.action_item_count || 0} actions · ${m.duration_minutes || 0}m
               </span>

@@ -7,7 +7,7 @@ import crypto from 'crypto';
 import multer from 'multer';
 import * as db from './db-queries.js';
 import { getDatabase } from './db-queries.js';
-import { readFileSync } from 'fs';
+import { readFileSync, statSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import * as proofhub from '../lib/proofhub-client.js';
@@ -43,6 +43,49 @@ import { getAllBaselines, getBaselines, recalculateAll as recalculateBaselines, 
 import { getScorecard, getClientTrend, getTeamStats, getAllTeamStats, getFlags, getBenchmarks, getWeeklyDigest, getCalibrationStatus, saveCalibrationScores, getCalibrationComparison, getCalibrationMeetingData } from '../lib/session-queries.js';
 import { getPPCReport, trackPPCTasks, updateDisposition, initPPCTrackingTable, refreshPPCStatuses, refreshSingleTask } from '../lib/ppc-task-tracker.js';
 import { readdirSync, readFileSync as fsReadFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { getStatusForZoomClient, getAllRegistryClients } from '../lib/registry-client.js';
+
+// ─── Registry-status helpers (Phase 4D zoom integration) ───
+// Cache zoom clients-config by id; refresh on file mtime change.
+let _zoomConfigCache = { mtime: 0, byId: new Map() };
+function getZoomConfigById() {
+  try {
+    const cfgPath = join(__dirname, '..', 'config', 'clients.json');
+    const stat = statSync(cfgPath);
+    if (stat.mtimeMs !== _zoomConfigCache.mtime) {
+      const raw = readFileSync(cfgPath, 'utf-8');
+      const doc = JSON.parse(raw);
+      const arr = Array.isArray(doc) ? doc : (doc.clients || []);
+      const byId = new Map();
+      for (const c of arr) byId.set(c.id, c);
+      _zoomConfigCache = { mtime: stat.mtimeMs, byId };
+    }
+    return _zoomConfigCache.byId;
+  } catch {
+    return _zoomConfigCache.byId;
+  }
+}
+function enrichMeetingsWithRegistryStatus(meetings) {
+  if (!Array.isArray(meetings) || meetings.length === 0) return meetings;
+  const byId = getZoomConfigById();
+  for (const m of meetings) {
+    if (m.client_id) {
+      const zc = byId.get(m.client_id);
+      if (zc) {
+        const reg = getStatusForZoomClient(zc);
+        m.client_status = reg ? reg.status : null;
+        m.client_registry_slug = reg ? reg.slug : null;
+      } else {
+        m.client_status = null;
+        m.client_registry_slug = null;
+      }
+    } else {
+      m.client_status = null;
+      m.client_registry_slug = null;
+    }
+  }
+  return meetings;
+}
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
@@ -91,7 +134,28 @@ router.get('/meetings', (req, res) => {
       offset: offset ? parseInt(offset) : 0,
       sort,
     });
+    enrichMeetingsWithRegistryStatus(result?.meetings);
     res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/registry-clients - Read-only view of the registry for the frontend.
+// Returns: { clients: [{ slug, name, status, proofhub_project_id }], count }.
+router.get('/registry-clients', (req, res) => {
+  try {
+    const all = getAllRegistryClients();
+    res.set('Cache-Control', 'no-cache');
+    res.json({
+      clients: all.map(c => ({
+        slug: c.slug,
+        name: c.name,
+        status: c.status,
+        proofhub_project_id: c.proofhub_project_id || null,
+      })),
+      count: all.length,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

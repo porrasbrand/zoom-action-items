@@ -438,6 +438,21 @@ app.get('/', (req, res) => {
 import { refreshPeopleCache } from '../lib/people-resolver.js';
 refreshPeopleCache().catch(e => console.warn('[Startup] People cache preload:', e.message));
 
+// Bootstrap b3x-client-registry — file-watched, mtime-based auto-refresh.
+import { loadRegistry as bootstrapRegistry } from '../lib/registry-client.js';
+{
+  const s = bootstrapRegistry();
+  if (s.loaded) {
+    const counts = { active: 0, churned: 0, paused: 0, other: 0 };
+    for (const c of s.clients) {
+      if (counts[c.status] !== undefined) counts[c.status]++; else counts.other++;
+    }
+    console.log(`[registry-client] loaded ${s.clients.length} clients (${counts.active} active, ${counts.churned} churned, ${counts.paused} paused)`);
+  } else {
+    console.warn('[registry-client] not loaded — meetings will return client_status=null');
+  }
+}
+
 app.listen(PORT, () => {
   console.log(`[${new Date().toISOString()}] Zoom Dashboard API running on port ${PORT}`);
   console.log(`  Local:    http://localhost:${PORT}${BASE_PATH}/`);
