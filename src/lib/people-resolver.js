@@ -74,7 +74,7 @@ async function fetchPeopleFromPH() {
       name: ((p.first_name || '') + ' ' + (p.last_name || '')).trim() || p.email.split('@')[0],
       suspended: p.suspended || false,
       groups: p.groups || [],
-      is_b3x: (p.groups || []).includes(PH_GROUP_B3X_INTERNAL),
+      is_b3x: (p.groups || []).includes(PH_GROUP_B3X_INTERNAL) || /@breakthrough3x\.com$/i.test(p.email || ''),
       is_traffic: (p.groups || []).includes(PH_GROUP_TRAFFIC),
       last_active: p.last_active,
     }));
