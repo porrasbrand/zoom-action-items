@@ -1038,6 +1038,15 @@ export function backfillMissingSnapshots() {
 
 export function insertEdit({ action_item_id, field, old_value, new_value, edit_classification, diff_summary }) {
   const d = getDb();
+  // Dedup: skip if the most recent capture for the same (item, field) already has the same new_value.
+  const prior = d.prepare(`
+    SELECT new_value FROM action_item_edits
+    WHERE action_item_id = ? AND field = ?
+    ORDER BY captured_at DESC LIMIT 1
+  `).get(action_item_id, field);
+  if (prior && (prior.new_value || null) === (new_value || null)) {
+    return { changes: 0, deduped: true };
+  }
   return d.prepare(`
     INSERT INTO action_item_edits
       (action_item_id, field, old_value, new_value, edit_classification, diff_summary)

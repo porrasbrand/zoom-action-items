@@ -169,27 +169,39 @@ function _classifyTitleEdit(oldT, newT) {
   return 'structural';
 }
 function _classifyDescriptionEdit(oldD, newD) {
+  // Returns { class, reason } — kept in sync with scripts/analyze-phil-edits.js.
   const oldClean = _stripHtml(oldD);
   const newClean = _stripHtml(newD);
-  if (!oldClean && newClean) return 'structural'; // missing-desc-filled
-  if (oldClean && !newClean) return 'structural'; // description-deleted
-  // Direct-address opening "<First> [Last] - …" → tonal
-  if (/^\s*[A-Z][a-z]{2,}(\s+[A-Z][a-z]+)?\s*[-–—]/.test(newClean)) return 'tonal';
+  if (!oldClean && newClean) return { class: 'structural', reason: 'missing-desc-filled' };
+  if (oldClean && !newClean) return { class: 'structural', reason: 'description-deleted' };
+
+  const head = newClean.slice(0, 200);
+  const head100 = head.slice(0, 100);
+  // (a) generic '<First> [Last] - ' direct-address opener
+  if (/^\s*[A-Z][a-z]{2,}(\s+[A-Z][a-z]+)?\s*[-–—]/.test(newClean))
+    return { class: 'tonal', reason: 'style-rewrite-direct-address' };
+  // (b) 'Hey <FirstName>' / 'Hey <FirstName>,' / 'Hey <FirstName> -' (case-insensitive)
+  if (/^\s*hey\s+[A-Za-z][A-Za-z'-]{1,}\b/i.test(head))
+    return { class: 'tonal', reason: 'style-rewrite-hey-greeting' };
+  // (c) 'Happy <Weekday>' anywhere in first 100 chars
+  if (/\bhappy\s+(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/i.test(head100))
+    return { class: 'tonal', reason: 'style-rewrite-happy-weekday' };
+  // (d) 'Just posting this' / 'For this proof of task' phrasings within first 200 chars
+  if (/\b(just\s+posting\s+this|for\s+this\s+proof\s+of\s+task)\b/i.test(head))
+    return { class: 'tonal', reason: 'style-rewrite-phil-phrasing' };
+
   // URL added → structural (resource-added)
   const urlRe = /https?:\/\/[^\s<>"]+/gi;
   const oldUrls = new Set([...(oldClean.matchAll(urlRe))].map(m => m[0]));
   const newUrls = [...(newClean.matchAll(urlRe))].map(m => m[0]);
-  if (newUrls.some(u => !oldUrls.has(u))) return 'structural';
-  return 'unknown';
+  if (newUrls.some(u => !oldUrls.has(u))) return { class: 'structural', reason: 'resource-added' };
+  return { class: 'unknown', reason: 'no-rule-matched' };
 }
 
-// POST /api/admin/capture-edits — fetches current PH state for recently pushed items
-// and writes diffs to action_item_edits. Auth-gated (inherits apiAuthMiddleware).
-router.post('/admin/capture-edits', async (req, res) => {
-  const limit = parseInt(req.query.limit, 10) || 50;
+// Reusable capture-edits routine — called from the route handler AND the daily cron.
+export async function captureEditsRun(limit = 50) {
   const items = db.getRecentlyPushedActionItems(limit);
-  const results = { checked: 0, edits_captured: 0, deleted_in_ph: 0, errors: [] };
-
+  const results = { checked: 0, edits_captured: 0, dedup_skipped: 0, deleted_in_ph: 0, errors: [] };
   for (const item of items) {
     results.checked++;
     try {
@@ -198,7 +210,7 @@ router.post('/admin/capture-edits', async (req, res) => {
       // Title diff
       if (phTask.title !== item.snapshot_title) {
         const cls = _classifyTitleEdit(item.snapshot_title, phTask.title);
-        db.insertEdit({
+        const inserted = db.insertEdit({
           action_item_id: item.id,
           field: 'title',
           old_value: item.snapshot_title,
@@ -206,29 +218,29 @@ router.post('/admin/capture-edits', async (req, res) => {
           edit_classification: cls,
           diff_summary: `${(item.snapshot_title || '').slice(0, 40)} → ${(phTask.title || '').slice(0, 40)}`,
         });
-        results.edits_captured++;
+        if (inserted && inserted.changes > 0) results.edits_captured++; else results.dedup_skipped++;
       }
       // Description diff (compare normalized)
       const dbDesc = _stripHtml(item.snapshot_description);
       const phDesc = _stripHtml(phTask.description);
       if (dbDesc !== phDesc) {
         const cls = _classifyDescriptionEdit(item.snapshot_description, phTask.description);
-        db.insertEdit({
+        const inserted = db.insertEdit({
           action_item_id: item.id,
           field: 'description',
           old_value: item.snapshot_description,
           new_value: phTask.description,
-          edit_classification: cls,
-          diff_summary: `${dbDesc.slice(0, 40)} → ${phDesc.slice(0, 40)}`,
+          edit_classification: cls.class,
+          diff_summary: `${cls.reason ? cls.reason + ' | ' : ''}${dbDesc.slice(0, 40)} → ${phDesc.slice(0, 40)}`,
         });
-        results.edits_captured++;
+        if (inserted && inserted.changes > 0) results.edits_captured++; else results.dedup_skipped++;
       }
       // Assignee diff (PH stores in `assigned` array)
       const phAssigned = Array.isArray(phTask.assigned) ? phTask.assigned.map(String) : [];
       const dbAssignee = item.snapshot_assignee_id ? String(item.snapshot_assignee_id) : null;
       const stillThere = dbAssignee ? phAssigned.includes(dbAssignee) : false;
       if (dbAssignee && phAssigned.length > 0 && (!stillThere || phAssigned.length > 1)) {
-        db.insertEdit({
+        const inserted = db.insertEdit({
           action_item_id: item.id,
           field: 'assignee_id',
           old_value: dbAssignee,
@@ -236,7 +248,7 @@ router.post('/admin/capture-edits', async (req, res) => {
           edit_classification: 'structural',
           diff_summary: stillThere ? 'assignee-added' : 'assignee-correction',
         });
-        results.edits_captured++;
+        if (inserted && inserted.changes > 0) results.edits_captured++; else results.dedup_skipped++;
       }
     } catch (err) {
       const msg = String(err.message || err);
@@ -247,6 +259,14 @@ router.post('/admin/capture-edits', async (req, res) => {
       }
     }
   }
+  return results;
+}
+
+// POST /api/admin/capture-edits — fetches current PH state for recently pushed items
+// and writes diffs to action_item_edits. Auth-gated (inherits apiAuthMiddleware).
+router.post('/admin/capture-edits', async (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 50;
+  const results = await captureEditsRun(limit);
   res.json(results);
 });
 

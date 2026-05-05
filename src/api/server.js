@@ -438,6 +438,32 @@ app.get('/', (req, res) => {
 import { refreshPeopleCache } from '../lib/people-resolver.js';
 refreshPeopleCache().catch(e => console.warn('[Startup] People cache preload:', e.message));
 
+// Daily capture-edits cron at 02:00 UTC (low-traffic window). setInterval-based
+// (no node-cron dep). Computes ms-until-next-02:00, fires once, then schedules
+// itself again for 24h hence.
+import { captureEditsRun } from './routes.js';
+function scheduleCaptureEditsCron() {
+  const now = new Date();
+  const next = new Date(Date.UTC(
+    now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 2, 0, 0, 0
+  ));
+  if (next <= now) next.setUTCDate(next.getUTCDate() + 1);
+  const delayMs = next - now;
+  console.log(`[capture-edits cron] next run at ${next.toISOString()} (in ${Math.round(delayMs/60000)} min)`);
+  setTimeout(async () => {
+    try {
+      console.log('[capture-edits cron] capture-edits cron triggered');
+      const result = await captureEditsRun(50);
+      console.log('[capture-edits cron] result:', JSON.stringify(result));
+    } catch (e) {
+      console.error('[capture-edits cron] failure:', e.message);
+    }
+    // Schedule the next run 24h after this one.
+    scheduleCaptureEditsCron();
+  }, delayMs);
+}
+scheduleCaptureEditsCron();
+
 // Bootstrap b3x-client-registry — file-watched, mtime-based auto-refresh.
 import { loadRegistry as bootstrapRegistry } from '../lib/registry-client.js';
 {
