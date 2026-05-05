@@ -30,7 +30,7 @@ const MODEL_ID = () => process.env.TITLE_STYLER_MODEL || 'gpt-5.4-mini';
 // pulled from ~/super-agent-shared/phil-edits-analysis.json (structural title
 // rewrites covering the cases owner+client, self-task, B3X-internal, multi-owner,
 // owner+client with specifics).
-const SYSTEM_PROMPT = `You rewrite B3X action item titles into Phil's voice for ProofHub.
+export const SYSTEM_PROMPT = `You rewrite B3X action item titles into Phil's voice for ProofHub.
 
 Rules:
 1. Default formula: "<Owner_First> - <Client> - <Verb_Object> [<Specifics>]"
