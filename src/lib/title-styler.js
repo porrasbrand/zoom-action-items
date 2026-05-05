@@ -6,37 +6,25 @@
  *
  * Feature-flagged via TITLE_STYLER_ENABLED env var. Default: disabled.
  *
- * Architecture: re-uses the same Gemini model as ai-extractor.js.
+ * Architecture: OpenAI gpt-5.4-mini (override via TITLE_STYLER_MODEL).
+ * Switched from Gemini after free-tier daily quotas (20 RPD on gemini-2.5-flash)
+ * blocked the replay validation gate. OpenAI Tier-1 = 500 RPM, Tier-2 = 5000 RPM.
  * Cost: ~1 extra call per action item (~$0.001 / meeting).
  */
 
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import OpenAI from 'openai';
 
-let _model = null;
-function getModel() {
-  if (!_model) {
-    const apiKey = process.env.GOOGLE_API_KEY;
-    if (!apiKey) throw new Error('Missing GOOGLE_API_KEY');
-    const genAI = new GoogleGenerativeAI(apiKey);
-    // Stable production model. The main extractor uses gemini-3-flash-preview which
-    // is rate-limited and 503-prone on free tier; gemini-2.5-flash is the reliable
-    // sibling and well-suited for short structured rewrites like this.
-    //
-    // thinkingBudget=0 disables Gemini-2.5's default chain-of-thought, which would
-    // otherwise eat the maxOutputTokens budget and produce truncated outputs like
-    // "Phil - Mike McV" instead of full styled titles.
-    const modelId = process.env.TITLE_STYLER_MODEL || 'gemini-2.5-flash';
-    _model = genAI.getGenerativeModel({
-      model: modelId,
-      generationConfig: {
-        temperature: 0.2,
-        maxOutputTokens: 1024,
-        thinkingConfig: { thinkingBudget: 0 },
-      },
-    });
+let _client = null;
+function getClient() {
+  if (!_client) {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) throw new Error('Missing OPENAI_API_KEY');
+    _client = new OpenAI({ apiKey });
   }
-  return _model;
+  return _client;
 }
+
+const MODEL_ID = () => process.env.TITLE_STYLER_MODEL || 'gpt-5.4-mini';
 
 // Phil's formula encoded as the system prompt + 6 verbatim few-shot examples
 // pulled from ~/super-agent-shared/phil-edits-analysis.json (structural title
@@ -137,11 +125,17 @@ task_type: ${JSON.stringify(taskType || '')}
 transcript_excerpt: ${JSON.stringify((transcriptExcerpt || '').slice(0, 2000))}
 
 styled:`;
-    const model = getModel();
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: SYSTEM_PROMPT + '\n\n' + userMsg }] }],
+    const client = getClient();
+    const response = await client.chat.completions.create({
+      model: MODEL_ID(),
+      temperature: 0.2,
+      max_completion_tokens: 1024,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: userMsg },
+      ],
     });
-    const text = result?.response?.text?.() || '';
+    const text = response?.choices?.[0]?.message?.content || '';
     const cleaned = sanitize(text);
     if (!cleaned || cleaned.length < 5 || cleaned.length > 200) {
       console.warn('[title-styler] output out of bounds, falling back:', JSON.stringify(cleaned).slice(0, 100));
