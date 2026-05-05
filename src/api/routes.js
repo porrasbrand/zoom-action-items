@@ -617,11 +617,26 @@ router.post('/action-items/:id/push-ph', async (req, res) => {
     console.log('[PH Push] Success for item', itemId, 'ph_task_id:', task.id);
     db.updatePushQueueSuccess(itemId);
 
-    // AK comment: auto-post acknowledgment request to assignee
-    if (req.body.ak_comment && item.owner_name) {
+    // AK comment: auto-post acknowledgment request to assignee.
+    // Use a real PH @-mention (phmention/mprofile HTML) so the assignee gets
+    // notified and the comment renders as a profile chip, not plain text.
+    if (req.body.ak_comment && (assigneeId || item.owner_name)) {
       try {
-        await proofhub.addTaskComment(ph_project_id, taskListId, task.id,
-          `${item.owner_name} - Please confirm receipt of this task... Thanks...`);
+        let body;
+        if (assigneeId) {
+          const people = await proofhub.getPeople();
+          const assignee = (people || []).find(p => String(p.id) === String(assigneeId));
+          if (assignee) {
+            const mention = proofhub.formatMention(assignee);
+            body = `${mention}- Please confirm receipt of this task... Thanks...`;
+          } else {
+            body = `${item.owner_name} - Please confirm receipt of this task... Thanks...`;
+            console.warn('[PH] AK comment fell back to plain text — no PH user found for assigneeId', assigneeId);
+          }
+        } else {
+          body = `${item.owner_name} - Please confirm receipt of this task... Thanks...`;
+        }
+        await proofhub.addTaskComment(ph_project_id, taskListId, task.id, body);
       } catch (e) {
         console.warn('[PH] AK comment failed:', e.message);
       }

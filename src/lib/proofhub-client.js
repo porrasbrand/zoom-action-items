@@ -213,6 +213,31 @@ export async function addTaskComment(projectId, taskListId, taskId, content) {
   });
 }
 
+/**
+ * Format a real ProofHub @-mention. PH only renders a mention pill (and fires
+ * the notification) when the comment HTML contains a <phmention> tag with
+ * class="mprofile" and a numeric data-id. Production-verified format used by
+ * the triage dashboard's AI follow-up flow:
+ *
+ *   <phmention contenteditable="false" class="mprofile" data-id="12345">First Last </phmention>
+ *
+ * Note the trailing space inside the tag — PH's web UI emits it and we mirror
+ * that to be byte-identical with what the editor produces.
+ *
+ * @param {{id: string|number, first_name?: string, last_name?: string, name?: string}} user
+ * @returns {string} HTML mention; falls back to plain @firstName if user shape is bad.
+ */
+export function formatMention(user) {
+  if (!user || user.id == null) return '';
+  const first = (user.first_name || '').trim();
+  const last  = (user.last_name  || '').trim();
+  const display = (first || last)
+    ? `${first}${first && last ? ' ' : ''}${last}`
+    : (user.name || '').trim();
+  if (!display) return `@user-${user.id}`;
+  return `<phmention contenteditable="false" class="mprofile" data-id="${String(user.id)}">${display} </phmention>`;
+}
+
 export async function deleteTask(projectId, taskListId, taskId) {
   if (!isProofhubConfigured()) throw new Error('ProofHub not configured');
   const now = Date.now();
@@ -244,5 +269,6 @@ export default {
   getPeople,
   getTaskComments,
   addTaskComment,
+  formatMention,
   deleteTask
 };
