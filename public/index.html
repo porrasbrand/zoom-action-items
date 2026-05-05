@@ -52,7 +52,7 @@
 
     .header {
       background: #161b22;
-      padding: 16px 24px;
+      padding: 8px 24px;          /* compacted (was 16px 24px) */
       border-bottom: 1px solid #30363d;
     }
 
@@ -60,15 +60,17 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 6px;          /* compacted (was 16px) */
     }
 
     .header h1 {
-      font-size: 20px;
+      font-size: 16px;             /* compacted (was 20px) */
       color: #f0f6fc;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      margin: 0;                   /* defensive — h1 default has top/bottom margin */
+      font-weight: 600;
     }
 
     .header h1::before {
@@ -115,24 +117,40 @@
       gap: 20px;
     }
 
+    /* Stats bar — flat inline strip, no chunky boxes */
     .stats-bar {
       display: flex;
-      gap: 16px;
+      align-items: center;
+      gap: 14px;                   /* was 16px */
       flex-wrap: wrap;
+      font-size: 12px;
     }
 
     .stat {
-      background: #21262d;
-      padding: 12px 20px;
-      border-radius: 8px;
-      text-align: center;
-      min-width: 120px;
+      background: transparent;     /* was #21262d */
+      padding: 0;                  /* was 12px 20px */
+      border-radius: 0;            /* was 8px */
+      text-align: left;            /* was center */
+      min-width: 0;                /* was 120px */
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+      position: relative;
+    }
+
+    /* Middot separator after each .stat except the last */
+    .stat:not(:last-of-type)::after {
+      content: '·';
+      color: #30363d;
+      margin-left: 8px;
+      font-weight: normal;
     }
 
     .stat-value {
-      font-size: 24px;
-      font-weight: 600;
+      font-size: 14px;             /* was 24px */
+      font-weight: 700;
       color: #58a6ff;
+      display: inline;             /* was block (default for div) */
     }
 
     .stat-value.green { color: #3fb950; }
@@ -142,7 +160,9 @@
       font-size: 11px;
       color: #8b949e;
       text-transform: uppercase;
-      margin-top: 4px;
+      letter-spacing: 0.4px;
+      margin-top: 0;               /* was 4px */
+      display: inline;             /* was block */
     }
 
     .main {
@@ -1600,11 +1620,11 @@
     .validation-stats-toggle {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 14px;
+      gap: 6px;
+      font-size: 11px;             /* compacted from 14px */
       color: #8b949e;
       cursor: pointer;
-      padding: 8px 12px;
+      padding: 4px 10px;           /* compacted from 8px 12px */
       background: #21262d;
       border-radius: 6px;
       margin-left: auto;
