@@ -1843,144 +1843,145 @@
       background: #21262d;
     }
 
-    /* Quick filter pills */
-    .filter-pills-container {
-      padding: 12px 16px;
+    /* ============ ALT-E LEFT PANEL FILTERS ============ */
+    .filter-area {
       border-bottom: 1px solid #30363d;
+      background: #161b22;
+      flex-shrink: 0;
     }
-
-    .filter-row.pills-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 10px;
+    .e-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #1c232b;
     }
-
-    .filter-row.pills-row:last-child {
-      margin-bottom: 0;
-    }
-
-    .filter-row.pills-row .row-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      color: #6e7681;
-      width: 100%;
-      margin-bottom: 4px;
-    }
-
-    .filter-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      border-radius: 16px;
-      font-size: 12px;
-      font-weight: 500;
+    .e-row:last-child { border-bottom: none; }
+    .e-row-recents { padding: 0; }
+    /* Row 1: client selector — primary */
+    .client-selector {
+      flex: 1;
+      background: #21262d; border: 1px solid #30363d; border-radius: 8px;
+      padding: 10px 14px;
+      display: flex; align-items: center; justify-content: space-between;
       cursor: pointer;
-      background: #1a1f2e;
-      border: 1px solid #333;
-      color: #8b949e;
-      transition: all 0.15s;
-      white-space: nowrap;
+      font-size: 14px; color: #f0f6fc;
+      font-weight: 500;
+      font-family: inherit;
     }
+    .client-selector:hover { border-color: #58a6ff; }
+    .client-selector.has-value { border-color: #58a6ff; background: #1f3043; }
+    .client-selector.has-value.unmatched { border-color: #ffa500; background: rgba(255,165,0,0.08); }
+    .client-selector .meta {
+      font-size: 11px; color: #8b949e; font-weight: 400; margin-left: 8px;
+    }
+    .client-selector .caret { color: #8b949e; font-size: 12px; }
 
-    .filter-pill:hover {
-      border-color: #4c9aff;
-      color: #c9d1d9;
+    .reset-btn {
+      background: transparent; border: none; color: #8b949e;
+      font-size: 16px; cursor: pointer; padding: 6px 9px; border-radius: 4px;
+      flex-shrink: 0;
     }
+    .reset-btn:hover { color: #ff7b7b; background: #21262d; }
 
-    .filter-pill.active {
-      background: #4c9aff;
-      border-color: #4c9aff;
-      color: white;
-    }
-
-    .filter-pill .pill-count {
-      font-size: 11px;
-      opacity: 0.7;
-    }
-
-    .filter-pill.active .pill-count {
-      opacity: 0.9;
-    }
-
-    /* Client pills - smaller */
-    .client-pills .filter-pill {
-      padding: 4px 10px;
-      font-size: 11px;
-    }
-
-    .client-pills .filter-pill.unmatched {
-      border-color: #ffa500;
-    }
-
-    .client-pills .filter-pill.unmatched.active {
-      background: #ffa500;
-      border-color: #ffa500;
-      color: #1a1500;
-    }
-
-    /* Signal pills - with colored borders */
-    .signal-pills .filter-pill {
-      padding: 4px 10px;
-      font-size: 11px;
-    }
-
-    .signal-pills .filter-pill.red {
-      border-color: #ff6b6b;
-    }
-    .signal-pills .filter-pill.red.active {
-      background: #ff6b6b;
-      border-color: #ff6b6b;
-      color: white;
-    }
-
-    .signal-pills .filter-pill.yellow {
-      border-color: #ffd43b;
-    }
-    .signal-pills .filter-pill.yellow.active {
-      background: #ffd43b;
-      border-color: #ffd43b;
-      color: #1a1500;
-    }
-
-    .signal-pills .filter-pill.green {
-      border-color: #51cf66;
-    }
-    .signal-pills .filter-pill.green.active {
-      background: #51cf66;
-      border-color: #51cf66;
-      color: #0a2e0a;
-    }
-
-    .signal-pills .filter-pill.suggestions {
-      border-color: #ffa500;
-    }
-    .signal-pills .filter-pill.suggestions.active {
-      background: #ffa500;
-      border-color: #ffa500;
-      color: #1a1500;
-    }
-
-    /* Search input in pills area */
-    .filter-search-row {
-      margin-top: 10px;
-    }
-
-    .filter-search-row input {
+    /* Row 2: recents chips */
+    .recents-row {
+      display: flex; gap: 6px; flex-wrap: nowrap;
+      overflow-x: auto; scrollbar-width: thin;
+      padding: 8px 14px;
+      align-items: center;
       width: 100%;
-      padding: 8px 12px;
-      border: 1px solid #30363d;
-      border-radius: 6px;
-      background: #21262d;
-      color: #c9d1d9;
-      font-size: 13px;
+    }
+    .recents-row::-webkit-scrollbar { height: 4px; }
+    .recents-row::-webkit-scrollbar-thumb { background: #30363d; border-radius: 2px; }
+    .recent-chip {
+      flex-shrink: 0;
+      padding: 5px 10px; border-radius: 14px;
+      background: #21262d; border: 1px solid #30363d;
+      font-size: 11px; color: #c9d1d9; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 5px;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    .recent-chip:hover { border-color: #58a6ff; color: #58a6ff; }
+    .recent-chip.active { background: #1f6feb; color: white; border-color: #1f6feb; }
+    .recent-chip.unmatched { border-color: #ffa500; }
+    .recent-chip.unmatched.active { background: #ffa500; color: #1a1500; border-color: #ffa500; }
+    .recent-chip .count { opacity: 0.7; font-size: 10px; }
+    .recents-label {
+      font-size: 10px; color: #6e7681;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 0 4px; align-self: center;
+      flex-shrink: 0;
     }
 
-    .filter-search-row input:focus {
-      outline: none;
-      border-color: #4c9aff;
+    /* Row 3: bottom row (week dropdown, signal toggles, search) */
+    .bottom-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 14px;
     }
+    .bottom-row .search-input { flex: 1; min-width: 100px; }
+
+    .filter-trigger {
+      background: #21262d; border: 1px solid #30363d;
+      border-radius: 6px; padding: 7px 12px;
+      font-size: 12px; color: #c9d1d9;
+      display: inline-flex; align-items: center; gap: 6px;
+      cursor: pointer; white-space: nowrap;
+      font-family: inherit;
+    }
+    .filter-trigger:hover { border-color: #58a6ff; }
+    .filter-trigger .caret { font-size: 10px; opacity: 0.7; }
+    .filter-trigger.has-value { color: #58a6ff; border-color: #58a6ff; background: #1f3043; }
+
+    .signal-toggles { display: inline-flex; gap: 4px; }
+    .signal-toggle {
+      width: 28px; height: 28px;
+      border-radius: 6px; border: 1px solid #30363d; background: #21262d;
+      display: inline-flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 14px;
+      transition: all 0.15s;
+      font-family: inherit;
+      padding: 0;
+      color: inherit;
+    }
+    .signal-toggle:hover { border-color: #58a6ff; }
+    .signal-toggle.active { border-color: #58a6ff; background: #1f3043; box-shadow: 0 0 0 1px #58a6ff; }
+
+    .search-input {
+      padding: 7px 10px;
+      border: 1px solid #30363d; border-radius: 6px;
+      background: #0d1117; color: #c9d1d9;
+      font-size: 12px;
+      font-family: inherit;
+    }
+    .search-input:focus { outline: none; border-color: #58a6ff; }
+
+    /* Popovers (anchored absolute) */
+    .popover {
+      position: absolute;
+      background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      min-width: 280px; max-width: 360px; max-height: 400px;
+      display: flex; flex-direction: column;
+      z-index: 1000;
+    }
+    .popover .popover-search { padding: 10px; border-bottom: 1px solid #30363d; }
+    .popover .popover-search .search-input { width: 100%; }
+    .popover .popover-list {
+      flex: 1; overflow-y: auto; padding: 4px 0;
+    }
+    .popover .popover-item {
+      padding: 8px 14px; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 13px;
+      color: #c9d1d9;
+    }
+    .popover .popover-item:hover,
+    .popover .popover-item.highlighted { background: #21262d; }
+    .popover .popover-item.selected { color: #58a6ff; font-weight: 500; background: #1a2332; }
+    .popover .popover-item.unmatched { color: #ffa500; }
+    .popover .popover-item .check { display: inline-block; width: 12px; opacity: 0; color: #58a6ff; }
+    .popover .popover-item.selected .check { opacity: 1; }
+    .popover .popover-item .count { font-size: 11px; color: #6e7681; }
 
 /* ============ TAB NAVIGATION ============ */
 .tab-nav {
@@ -5166,23 +5167,58 @@
 
     <div class="main tab-content active" id="meetingsView" role="tabpanel" aria-labelledby="tab-meetings">
       <div class="left-panel">
-        <div class="filter-pills-container">
-          <div class="filter-row pills-row week-pills" id="weekPills">
-            <!-- Generated dynamically -->
+        <div class="filter-area" id="filterArea">
+
+          <!-- Row 1: client selector (primary) -->
+          <div class="e-row e-row-client">
+            <button type="button"
+                    class="client-selector"
+                    id="clientSelector"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    onclick="openClientPopover(event)">
+              <span><span id="clientSelectorLabel">All clients</span><span class="meta" id="clientSelectorMeta"></span></span>
+              <span class="caret">▾</span>
+            </button>
+            <button type="button" class="reset-btn" id="resetFiltersBtn" title="Reset all filters" aria-label="Reset all filters" onclick="resetAllFilters()">↺</button>
           </div>
-          <div class="filter-row pills-row client-pills" id="clientPills">
-            <!-- Generated dynamically -->
+
+          <!-- Row 2: recents chips -->
+          <div class="e-row e-row-recents">
+            <div class="recents-row" id="recentsRow">
+              <span class="recents-label">Recents:</span>
+            </div>
           </div>
-          <div class="filter-row pills-row signal-pills" id="signalPills">
-            <!-- Generated dynamically -->
+
+          <!-- Row 3: secondary filters -->
+          <div class="bottom-row">
+            <button type="button"
+                    class="filter-trigger"
+                    id="weekTrigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    onclick="openWeekPopover(event)">
+              <span>📅</span><span id="weekLabel">This Week</span><span class="caret">▾</span>
+            </button>
+            <div class="signal-toggles" id="signalToggles" role="group" aria-label="Signal filter"></div>
+            <input class="search-input" id="filterSearch" placeholder="🔍 Search topic…" aria-label="Search by topic">
           </div>
-          <div class="filter-search-row">
-            <input type="text" id="filterSearch" placeholder="Search by topic...">
-          </div>
+
         </div>
         <div class="meeting-list" id="meetingList">
           <div class="loading">Loading meetings...</div>
         </div>
+      </div>
+
+      <!-- Popovers (rendered to body via portal-like fixed positioning; closed by default) -->
+      <div id="clientPopover" class="popover" style="display:none;" role="listbox" aria-label="Select client">
+        <div class="popover-search">
+          <input class="search-input" id="clientPopoverSearch" placeholder="🔍 Filter clients…" aria-label="Filter clients">
+        </div>
+        <div class="popover-list" id="clientPopoverList"></div>
+      </div>
+      <div id="weekPopover" class="popover" style="display:none; min-width: 220px;" role="listbox" aria-label="Select week">
+        <div class="popover-list" id="weekPopoverList"></div>
       </div>
 
       <div class="right-panel" id="rightPanel">
@@ -5400,11 +5436,25 @@
     let autoRefreshInterval = null;
     let currentEditField = null;
 
-    // Filter state
-    let selectedWeek = null; // { from, to, label }
-    let selectedClient = null; // client_id or null for "All"
-    let selectedSignal = null; // 'red', 'yellow', 'green', 'suggestions', or null
+    // ─── Filter state (Alt-E: client-as-primary-nav) ───
+    // Single source of truth for the left-panel filters.
+    const filters = {
+      week:   null,   // { key, from, to, label } — same shape as before
+      client: null,   // client id string or null
+      signal: null,   // 'red' | 'yellow' | 'green' | 'suggestions' | null
+      search: '',
+    };
+    // Compatibility shim — older code paths (loadMeetings, etc.) reference
+    // these names. Kept as a getter pattern via Object.defineProperty so the
+    // shim always reflects current `filters`.
+    let selectedWeek   = null;
+    let selectedClient = null;
+    let selectedSignal = null;
     let weekCounts = {}; // { 'from-to': count }
+    let popoverHighlight = -1; // active popover's highlighted index (for keyboard nav)
+    const RECENTS_KEY = 'zoom-recents-clients';
+    const RECENTS_MAX = 6;
+    let allClientsForFilter = []; // [{ id, name, count, isUnmatched }] from current allMeetings
 
     // ProofHub cache
     let phProjects = null;
@@ -5539,187 +5589,400 @@
       return `${startMonth} ${startDay} - ${endMonth} ${endDay}`;
     }
 
-    // Render week pills
-    async function renderWeekPills() {
-      const container = document.getElementById('weekPills');
-      const weeks = generateWeeks();
+    // ─── Alt-E left-panel: render functions (single source of truth = `filters`) ───
 
-      // Load week counts
-      try {
-        const res = await fetch(`${API}/meetings/week-counts`);
-        const data = await res.json();
-        data.forEach(w => {
-          weekCounts[`${w.week_start}-${w.week_end}`] = w.count;
-        });
-      } catch (err) {
-        console.error('Failed to load week counts:', err);
-      }
+    // Sync compat-shim globals from `filters` (so loadMeetings + any other ref keeps working).
+    function syncShimGlobals() {
+      selectedWeek   = filters.week;
+      selectedClient = filters.client;
+      selectedSignal = filters.signal;
+    }
 
-      // Set default selection from sessionStorage or "This Week"
-      const savedWeek = sessionStorage.getItem('selectedWeek');
-      if (savedWeek && savedWeek !== 'null') {
-        try {
-          selectedWeek = JSON.parse(savedWeek);
-        } catch {
-          selectedWeek = weeks[0];
+    function getRecents() {
+      try { return JSON.parse(localStorage.getItem(RECENTS_KEY)) || []; } catch { return []; }
+    }
+    function pushRecent(cid) {
+      if (!cid) return;
+      let r = getRecents().filter(x => x !== cid);
+      r.unshift(cid);
+      r = r.slice(0, RECENTS_MAX);
+      localStorage.setItem(RECENTS_KEY, JSON.stringify(r));
+    }
+    function seedRecentsFromCounts() {
+      // Top N by count, excluding unmatched
+      return allClientsForFilter
+        .filter(c => !c.isUnmatched && c.id)
+        .slice().sort((a, b) => b.count - a.count)
+        .slice(0, RECENTS_MAX).map(c => c.id);
+    }
+
+    // URL state — write current filters to ?week=..&client=..&signal=..&q=..
+    function syncUrlFromFilters() {
+      const url = new URL(window.location.href);
+      const p = url.searchParams;
+      if (filters.week?.key && filters.week.key !== 'this-week') p.set('week', filters.week.key); else p.delete('week');
+      if (filters.client) p.set('client', filters.client); else p.delete('client');
+      if (filters.signal) p.set('signal', filters.signal); else p.delete('signal');
+      if (filters.search) p.set('q', filters.search); else p.delete('q');
+      history.replaceState(null, '', url);
+    }
+    // URL state — seed `filters` from URL on first load (URL > sessionStorage > defaults).
+    function seedFiltersFromUrl(weeks) {
+      const p = new URLSearchParams(window.location.search);
+      const wkKey = p.get('week');
+      if (wkKey) {
+        const match = weeks.find(w => w.key === wkKey);
+        if (match) {
+          filters.week = match;
+          sessionStorage.setItem('selectedWeek', JSON.stringify(match));
         }
-      } else {
-        selectedWeek = weeks[0];
       }
-
-      container.innerHTML = weeks.map(w => {
-        const count = w.key === 'all' ? '' : (weekCounts[w.key] || 0);
-        const isActive = selectedWeek?.key === w.key;
-        return `
-          <div class="filter-pill ${isActive ? 'active' : ''}" data-week='${JSON.stringify(w)}' onclick="selectWeek(this)">
-            ${escapeHtml(w.label)}${count !== '' ? ` <span class="pill-count">(${count})</span>` : ''}
-          </div>
-        `;
-      }).join('');
+      const cid = p.get('client');
+      if (cid) filters.client = cid;
+      const sig = p.get('signal');
+      if (sig && ['red','yellow','green','suggestions'].includes(sig)) filters.signal = sig;
+      const q = p.get('q');
+      if (q) {
+        filters.search = q;
+        const inp = document.getElementById('filterSearch');
+        if (inp) inp.value = q;
+      }
     }
 
-    // Select a week
-    function selectWeek(el) {
-      const week = JSON.parse(el.dataset.week);
-      selectedWeek = week;
-      sessionStorage.setItem('selectedWeek', JSON.stringify(week));
-
-      // Update active state
-      document.querySelectorAll('#weekPills .filter-pill').forEach(p => p.classList.remove('active'));
-      el.classList.add('active');
-
-      // Reset other filters when changing week
-      selectedClient = null;
-      selectedSignal = null;
-
-      loadMeetings();
+    // Render the full left-panel filter UI from `filters` state.
+    function renderClientSelector() {
+      const lbl = document.getElementById('clientSelectorLabel');
+      const meta = document.getElementById('clientSelectorMeta');
+      const sel = document.getElementById('clientSelector');
+      const total = allMeetings.length;
+      if (filters.client) {
+        const c = allClientsForFilter.find(x => x.id === filters.client);
+        lbl.textContent = c ? c.name : filters.client;
+        meta.textContent = c ? ` (${c.count} meeting${c.count === 1 ? '' : 's'})` : '';
+        sel.classList.add('has-value');
+        sel.classList.toggle('unmatched', !!(c && c.isUnmatched));
+      } else {
+        lbl.textContent = 'All clients';
+        meta.textContent = total ? ` (${total} meeting${total === 1 ? '' : 's'})` : '';
+        sel.classList.remove('has-value');
+        sel.classList.remove('unmatched');
+      }
+      sel.setAttribute('aria-expanded', document.getElementById('clientPopover').style.display !== 'none' ? 'true' : 'false');
     }
 
-    // Render client pills based on loaded meetings
-    function renderClientPills() {
-      const container = document.getElementById('clientPills');
+    function renderRecents() {
+      const row = document.getElementById('recentsRow');
+      row.innerHTML = '<span class="recents-label">Recents:</span>';
+      let recents = getRecents();
+      if (recents.length === 0) recents = seedRecentsFromCounts();
+      recents.forEach(cid => {
+        const c = allClientsForFilter.find(x => x.id === cid);
+        if (!c) return;
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'recent-chip' + (filters.client === cid ? ' active' : '') + (c.isUnmatched ? ' unmatched' : '');
+        chip.innerHTML = `${escapeHtml(c.name)}<span class="count">${c.count}</span>`;
+        chip.onclick = () => selectClientById(filters.client === cid ? null : cid);
+        row.appendChild(chip);
+      });
+    }
 
-      // Count meetings per client
-      const clientCounts = {};
+    function renderSignalToggles() {
+      const c = document.getElementById('signalToggles');
+      c.innerHTML = '';
+      const counts = { red: 0, yellow: 0, green: 0, suggestions: 0 };
+      allMeetings.forEach(m => {
+        if (m.confidence_signal === 'red') counts.red++;
+        else if (m.confidence_signal === 'yellow') counts.yellow++;
+        else if (m.confidence_signal === 'green') counts.green++;
+        if ((m.suggested_count || 0) > 0) counts.suggestions++;
+      });
+      const SIGS = [
+        { key: 'red',         icon: '🔴', label: 'Red' },
+        { key: 'yellow',      icon: '🟡', label: 'Yellow' },
+        { key: 'green',       icon: '🟢', label: 'Green' },
+        { key: 'suggestions', icon: '⚠️', label: 'Suggestions' },
+      ];
+      SIGS.forEach(s => {
+        const t = document.createElement('button');
+        t.type = 'button';
+        t.className = 'signal-toggle' + (filters.signal === s.key ? ' active' : '');
+        t.title = `${s.label} (${counts[s.key]})`;
+        t.setAttribute('aria-label', `${s.label} signal — ${counts[s.key]} meeting${counts[s.key] === 1 ? '' : 's'}`);
+        t.setAttribute('aria-pressed', filters.signal === s.key ? 'true' : 'false');
+        t.textContent = s.icon;
+        t.onclick = () => {
+          filters.signal = (filters.signal === s.key) ? null : s.key;
+          syncShimGlobals();
+          applyFilters();
+          renderSignalToggles();
+          syncUrlFromFilters();
+        };
+        c.appendChild(t);
+      });
+    }
+
+    function renderWeekLabel() {
+      const w = filters.week;
+      const lbl = document.getElementById('weekLabel');
+      const trig = document.getElementById('weekTrigger');
+      lbl.textContent = w?.label || 'Week';
+      if (w?.key && w.key !== 'this-week') trig.classList.add('has-value'); else trig.classList.remove('has-value');
+      trig.setAttribute('aria-expanded', document.getElementById('weekPopover').style.display !== 'none' ? 'true' : 'false');
+    }
+
+    // Re-render the full filter UI (chrome only, not the meeting list)
+    function renderFilterUi() {
+      renderClientSelector();
+      renderRecents();
+      renderSignalToggles();
+      renderWeekLabel();
+    }
+
+    // ─── Compute client list from allMeetings ───
+    function recomputeClientList() {
+      const map = {};
       allMeetings.forEach(m => {
         const cid = m.client_id || 'unmatched';
         const cname = m.client_name || 'Unmatched';
-        if (!clientCounts[cid]) {
-          clientCounts[cid] = { name: cname, count: 0 };
-        }
-        clientCounts[cid].count++;
+        if (!map[cid]) map[cid] = { id: cid, name: cname, count: 0, isUnmatched: cid === 'unmatched' };
+        map[cid].count++;
       });
-
-      // Sort: alphabetical, but Unmatched last
-      const sortedClients = Object.entries(clientCounts)
-        .sort((a, b) => {
-          if (a[0] === 'unmatched') return 1;
-          if (b[0] === 'unmatched') return -1;
-          return a[1].name.localeCompare(b[1].name);
-        });
-
-      let html = `<div class="filter-pill ${!selectedClient ? 'active' : ''}" data-client="" onclick="selectClient(this)">All</div>`;
-      sortedClients.forEach(([cid, info]) => {
-        const isUnmatched = cid === 'unmatched';
-        const isActive = selectedClient === cid;
-        html += `
-          <div class="filter-pill ${isActive ? 'active' : ''} ${isUnmatched ? 'unmatched' : ''}" data-client="${escapeHtml(cid)}" onclick="selectClient(this)">
-            ${escapeHtml(info.name)} <span class="pill-count">(${info.count})</span>
-          </div>
-        `;
-      });
-
-      container.innerHTML = html;
+      allClientsForFilter = Object.values(map);
     }
 
-    // Select a client
-    function selectClient(el) {
-      const cid = el.dataset.client;
-      selectedClient = cid || null;
-
-      // Update active state
-      document.querySelectorAll('#clientPills .filter-pill').forEach(p => p.classList.remove('active'));
-      el.classList.add('active');
-
-      // Scope chat concierge to selected client
-      if (typeof setChatScope === 'function') {
-        const clientName = cid ? el.textContent.trim() : null;
-        setChatScope(cid || null, clientName);
+    // Old-name aliases — used elsewhere in the file (loadMeetings calls these).
+    async function renderWeekPills() {
+      // Bootstrap weeks + counts; sets default `filters.week`.
+      const weeks = generateWeeks();
+      try {
+        const res = await fetch(`${API}/meetings/week-counts`);
+        const data = await res.json();
+        data.forEach(w => { weekCounts[`${w.week_start}-${w.week_end}`] = w.count; });
+      } catch (err) {
+        console.error('Failed to load week counts:', err);
       }
-
-      applyFilters();
-    }
-
-    // Render signal pills based on loaded meetings
-    function renderSignalPills() {
-      const container = document.getElementById('signalPills');
-
-      // Count by signal
-      let red = 0, yellow = 0, green = 0, suggestions = 0;
-      allMeetings.forEach(m => {
-        const sig = m.confidence_signal;
-        if (sig === 'red') red++;
-        else if (sig === 'yellow') yellow++;
-        else if (sig === 'green') green++;
-        if ((m.suggested_count || 0) > 0) suggestions++;
-      });
-
-      container.innerHTML = `
-        <div class="filter-pill red ${selectedSignal === 'red' ? 'active' : ''}" data-signal="red" onclick="selectSignal(this)">
-          🔴 Red <span class="pill-count">(${red})</span>
-        </div>
-        <div class="filter-pill yellow ${selectedSignal === 'yellow' ? 'active' : ''}" data-signal="yellow" onclick="selectSignal(this)">
-          🟡 Yellow <span class="pill-count">(${yellow})</span>
-        </div>
-        <div class="filter-pill green ${selectedSignal === 'green' ? 'active' : ''}" data-signal="green" onclick="selectSignal(this)">
-          🟢 Green <span class="pill-count">(${green})</span>
-        </div>
-        <div class="filter-pill suggestions ${selectedSignal === 'suggestions' ? 'active' : ''}" data-signal="suggestions" onclick="selectSignal(this)">
-          ⚠️ Suggestions <span class="pill-count">(${suggestions})</span>
-        </div>
-      `;
-    }
-
-    // Select/toggle a signal filter
-    function selectSignal(el) {
-      const sig = el.dataset.signal;
-      if (selectedSignal === sig) {
-        // Toggle off
-        selectedSignal = null;
-        el.classList.remove('active');
+      const savedWeek = sessionStorage.getItem('selectedWeek');
+      if (savedWeek && savedWeek !== 'null') {
+        try { filters.week = JSON.parse(savedWeek); } catch { filters.week = weeks[0]; }
       } else {
-        // Select this signal
-        selectedSignal = sig;
-        document.querySelectorAll('#signalPills .filter-pill').forEach(p => p.classList.remove('active'));
-        el.classList.add('active');
+        filters.week = weeks[0];
       }
-
-      applyFilters();
+      // URL > sessionStorage > defaults — apply URL overrides on first render.
+      seedFiltersFromUrl(weeks);
+      syncShimGlobals();
+      renderWeekLabel();
+      // The week popover content is rendered lazily on open.
     }
 
-    // Apply client and signal filters to allMeetings
+    function renderClientPills() {
+      // Compatibility alias — re-render the new client-selector UI based on allMeetings.
+      recomputeClientList();
+      renderClientSelector();
+      renderRecents();
+    }
+    function renderSignalPills() {
+      // Compatibility alias.
+      renderSignalToggles();
+    }
+
+    // ─── Select / change handlers ───
+    function selectClientById(cid) {
+      filters.client = cid || null;
+      syncShimGlobals();
+      if (cid) pushRecent(cid);
+      // Scope chat concierge
+      if (typeof setChatScope === 'function') {
+        const c = allClientsForFilter.find(x => x.id === cid);
+        setChatScope(cid || null, c ? c.name : null);
+      }
+      renderClientSelector();
+      renderRecents();
+      applyFilters();
+      syncUrlFromFilters();
+    }
+
+    function changeWeek(week) {
+      filters.week = week;
+      // Behavioral preservation: changing week resets client + signal.
+      filters.client = null;
+      filters.signal = null;
+      sessionStorage.setItem('selectedWeek', JSON.stringify(week));
+      syncShimGlobals();
+      // Scope chat concierge cleared
+      if (typeof setChatScope === 'function') setChatScope(null, null);
+      syncUrlFromFilters();
+      loadMeetings(); // server fetch — will re-render filter UI on completion
+    }
+
+    // Old function names kept for any external callers (the markup no longer wires these directly).
+    function selectWeek(_el) { /* unused — replaced by week popover */ }
+    function selectClient(_el) { /* unused — replaced by client popover/recents */ }
+    function selectSignal(_el) { /* unused — replaced by signal toggles */ }
+
+    function resetAllFilters() {
+      filters.client = null;
+      filters.signal = null;
+      filters.search = '';
+      const inp = document.getElementById('filterSearch');
+      if (inp) inp.value = '';
+      syncShimGlobals();
+      if (typeof setChatScope === 'function') setChatScope(null, null);
+      renderFilterUi();
+      applyFilters();
+      syncUrlFromFilters();
+    }
+    window.resetAllFilters = resetAllFilters;
+
+    // ─── Popovers ───
+    function closePopovers() {
+      const cp = document.getElementById('clientPopover');
+      const wp = document.getElementById('weekPopover');
+      if (cp) cp.style.display = 'none';
+      if (wp) wp.style.display = 'none';
+      popoverHighlight = -1;
+      const cs = document.getElementById('clientSelector');
+      const wt = document.getElementById('weekTrigger');
+      if (cs) cs.setAttribute('aria-expanded', 'false');
+      if (wt) wt.setAttribute('aria-expanded', 'false');
+    }
+
+    function positionPopover(pop, trigger, opts = {}) {
+      const r = trigger.getBoundingClientRect();
+      pop.style.display = 'flex';
+      pop.style.left = r.left + window.scrollX + 'px';
+      pop.style.top  = (r.bottom + window.scrollY + 4) + 'px';
+      if (opts.matchTriggerWidth) {
+        pop.style.width = Math.max(280, r.width) + 'px';
+      } else {
+        pop.style.width = '';
+      }
+    }
+
+    function renderClientPopover(filterText = '') {
+      const list = document.getElementById('clientPopoverList');
+      list.innerHTML = '';
+      // "All clients"
+      const all = document.createElement('div');
+      all.className = 'popover-item' + (filters.client === null ? ' selected' : '');
+      all.setAttribute('role', 'option');
+      all.setAttribute('aria-selected', filters.client === null ? 'true' : 'false');
+      all.innerHTML = `<span><span class="check">✓</span> All clients</span><span class="count">${allMeetings.length}</span>`;
+      all.onclick = () => { selectClientById(null); closePopovers(); };
+      list.appendChild(all);
+
+      const ft = filterText.toLowerCase();
+      const sorted = allClientsForFilter
+        .filter(c => !ft || c.name.toLowerCase().includes(ft))
+        .slice()
+        .sort((a, b) => {
+          // Unmatched last; otherwise by count desc
+          if (a.isUnmatched && !b.isUnmatched) return 1;
+          if (!a.isUnmatched && b.isUnmatched) return -1;
+          return b.count - a.count;
+        });
+      sorted.forEach(c => {
+        const item = document.createElement('div');
+        item.className = 'popover-item' + (filters.client === c.id ? ' selected' : '') + (c.isUnmatched ? ' unmatched' : '');
+        item.setAttribute('role', 'option');
+        item.setAttribute('aria-selected', filters.client === c.id ? 'true' : 'false');
+        item.dataset.cid = c.id;
+        item.innerHTML = `<span><span class="check">✓</span> ${escapeHtml(c.name)}${c.isUnmatched ? ' ⚠' : ''}</span><span class="count">${c.count}</span>`;
+        item.onclick = () => { selectClientById(c.id); closePopovers(); };
+        list.appendChild(item);
+      });
+      popoverHighlight = -1;
+    }
+
+    function renderWeekPopover() {
+      const list = document.getElementById('weekPopoverList');
+      list.innerHTML = '';
+      const weeks = generateWeeks();
+      weeks.forEach(w => {
+        const count = w.key === 'all' ? '' : (weekCounts[w.key] || 0);
+        const item = document.createElement('div');
+        item.className = 'popover-item' + (filters.week?.key === w.key ? ' selected' : '');
+        item.setAttribute('role', 'option');
+        item.setAttribute('aria-selected', filters.week?.key === w.key ? 'true' : 'false');
+        item.innerHTML = `<span><span class="check">✓</span> ${escapeHtml(w.label)}</span>${count !== '' ? `<span class="count">${count}</span>` : ''}`;
+        item.onclick = () => { changeWeek(w); closePopovers(); };
+        list.appendChild(item);
+      });
+      popoverHighlight = -1;
+    }
+
+    function openClientPopover(e) {
+      e.stopPropagation();
+      const pop = document.getElementById('clientPopover');
+      const trigger = e.currentTarget;
+      positionPopover(pop, trigger, { matchTriggerWidth: true });
+      const inp = document.getElementById('clientPopoverSearch');
+      inp.value = '';
+      renderClientPopover('');
+      trigger.setAttribute('aria-expanded', 'true');
+      requestAnimationFrame(() => inp.focus());
+    }
+    window.openClientPopover = openClientPopover;
+
+    function openWeekPopover(e) {
+      e.stopPropagation();
+      const pop = document.getElementById('weekPopover');
+      const trigger = e.currentTarget;
+      positionPopover(pop, trigger, { matchTriggerWidth: false });
+      renderWeekPopover();
+      trigger.setAttribute('aria-expanded', 'true');
+      requestAnimationFrame(() => {
+        const first = pop.querySelector('.popover-item');
+        if (first) first.focus?.();
+      });
+    }
+    window.openWeekPopover = openWeekPopover;
+
+    // Keyboard navigation within an open popover
+    function handlePopoverKey(e) {
+      const cp = document.getElementById('clientPopover');
+      const wp = document.getElementById('weekPopover');
+      const open = cp.style.display !== 'none' ? cp : (wp.style.display !== 'none' ? wp : null);
+      if (!open) return;
+      const items = [...open.querySelectorAll('.popover-item')];
+      if (!items.length) return;
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        popoverHighlight = Math.min(items.length - 1, popoverHighlight + 1);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        popoverHighlight = Math.max(0, popoverHighlight - 1);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (popoverHighlight >= 0 && items[popoverHighlight]) items[popoverHighlight].click();
+        return;
+      } else {
+        return;
+      }
+      items.forEach(i => i.classList.remove('highlighted'));
+      const it = items[popoverHighlight];
+      if (it) {
+        it.classList.add('highlighted');
+        it.scrollIntoView({ block: 'nearest' });
+      }
+    }
+
+    // ─── applyFilters: same semantics as before, but reads from `filters` ───
     function applyFilters() {
-      const search = document.getElementById('filterSearch').value.toLowerCase();
-
+      filters.search = (document.getElementById('filterSearch')?.value || '').toLowerCase();
+      syncShimGlobals();
       meetings = allMeetings.filter(m => {
-        // Client filter
-        if (selectedClient && (m.client_id || 'unmatched') !== selectedClient) return false;
-
-        // Signal filter
-        if (selectedSignal) {
-          if (selectedSignal === 'suggestions') {
+        if (filters.client && (m.client_id || 'unmatched') !== filters.client) return false;
+        if (filters.signal) {
+          if (filters.signal === 'suggestions') {
             if ((m.suggested_count || 0) === 0) return false;
-          } else if (m.confidence_signal !== selectedSignal) {
+          } else if (m.confidence_signal !== filters.signal) {
             return false;
           }
         }
-
-        // Search filter
-        if (search && !(m.topic || '').toLowerCase().includes(search)) return false;
-
+        if (filters.search && !(m.topic || '').toLowerCase().includes(filters.search)) return false;
         return true;
       });
-
       renderMeetingList();
     }
 
@@ -7506,10 +7769,41 @@
       }
     });
 
-    // Filter listeners
+    // Filter listeners (Alt-E)
     document.getElementById('filterSearch').addEventListener('input',
-      debounce(applyFilters, 300)
+      debounce(() => { applyFilters(); syncUrlFromFilters(); }, 300)
     );
+    // Client-popover search filter
+    document.getElementById('clientPopoverSearch').addEventListener('input',
+      debounce(e => renderClientPopover(e.target.value), 80)
+    );
+    // Outside-click closes popovers
+    document.addEventListener('click', (e) => {
+      const cp = document.getElementById('clientPopover');
+      const wp = document.getElementById('weekPopover');
+      if (!cp.contains(e.target) && !wp.contains(e.target)) closePopovers();
+    });
+    // Stop bubbling inside popovers (otherwise outside-click closes them on every interior click)
+    document.getElementById('clientPopover').addEventListener('click', e => e.stopPropagation());
+    document.getElementById('weekPopover').addEventListener('click', e => e.stopPropagation());
+    // Keyboard: ESC closes popovers + returns focus; arrow-keys handled in handlePopoverKey
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const cpOpen = document.getElementById('clientPopover').style.display !== 'none';
+        const wpOpen = document.getElementById('weekPopover').style.display !== 'none';
+        if (cpOpen) {
+          closePopovers();
+          document.getElementById('clientSelector').focus();
+          e.preventDefault();
+        } else if (wpOpen) {
+          closePopovers();
+          document.getElementById('weekTrigger').focus();
+          e.preventDefault();
+        }
+      } else if (['ArrowUp','ArrowDown','Enter'].includes(e.key)) {
+        handlePopoverKey(e);
+      }
+    });
 
     // Debounce helper
     function debounce(fn, delay) {
