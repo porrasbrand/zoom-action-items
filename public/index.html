@@ -7084,7 +7084,7 @@
     }
 
     // Start inline editing
-    function startEdit(id, field, element) {
+    async function startEdit(id, field, element) {
       if (currentEditField) return; // Already editing
       currentEditField = { id, field, element };
 
@@ -7142,6 +7142,39 @@
             partGroup.appendChild(opt);
           });
           input.appendChild(partGroup);
+        }
+        // Other PH Members optgroup — every PH roster member not already
+        // listed under B3X Team or Meeting Participants. action_items.owner_name
+        // is TEXT (free-form name), so option.value is the person's name —
+        // not the ph_id.
+        //
+        // Dedup uses startsWith() against INTERNAL_TEAM (whose names are first-only,
+        // e.g. "Bill") to match full PH names ("Bill Soady"). Same pattern the
+        // showPushPanel logic at line ~6747 uses for internal-vs-other grouping.
+        try {
+          const phRoster = await fetchPHPeople();
+          const isInternal = (name) =>
+            INTERNAL_TEAM.some(t => name.toLowerCase().startsWith(t.name.toLowerCase()));
+          const externalLowerNames = new Set(
+            externalAttendees.map(a => ((a.name || a) || '').toLowerCase()).filter(Boolean)
+          );
+          const otherPH = (phRoster || []).filter(p =>
+            p && p.name && !isInternal(p.name) && !externalLowerNames.has(p.name.toLowerCase())
+          );
+          if (otherPH.length > 0) {
+            const otherPHGroup = document.createElement('optgroup');
+            otherPHGroup.label = 'Other PH Members';
+            otherPH.forEach(p => {
+              const opt = document.createElement('option');
+              opt.value = p.name;
+              opt.textContent = '🏢 ' + p.name + (p.email ? ' (' + p.email + ')' : '');
+              if (p.name.toLowerCase() === currentValue.toLowerCase()) opt.selected = true;
+              otherPHGroup.appendChild(opt);
+            });
+            input.appendChild(otherPHGroup);
+          }
+        } catch (err) {
+          console.warn('[startEdit/owner_name] fetchPHPeople failed, skipping Other PH Members:', err);
         }
         // Other option
         const otherOpt = document.createElement('option');
