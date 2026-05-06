@@ -159,8 +159,11 @@ export async function classifyDedup(candidate, existing) {
         // Update best to match the judge's picked item if different
         const judgedScore = scored.find(s => s.ex.id === matched.id);
         if (judgedScore) best = judgedScore;
-        // HIGH judge confidence collapses to duplicate_high; MEDIUM/LOW stays at duplicate_medium.
-        classification = (judgment.confidence === 'HIGH') ? 'duplicate_high' : 'duplicate_medium';
+        // Per GPT-5.2: 'never silently hide unless confidence is extremely high
+        // AND ≥2 independent anchors'. The judge confirming a dupe is ONE
+        // signal — keep these items VISIBLE in the medium tier (pre-selected
+        // Already captured + 'Show anyway' override) rather than auto-hiding.
+        classification = 'duplicate_medium';
         judgeAnchors.push('llm-judge');
       } else {
         // Judge says NOT a duplicate → demote to not_duplicate (override threshold).
