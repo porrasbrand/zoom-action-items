@@ -37,6 +37,20 @@ export function calculateConfidence(scanResult, actionItemCount, transcriptRaw, 
     // legacy rows without that flag are treated as valid.
     const validMissed = allMissed.filter(m => m.evidence_valid !== false);
     const highConf = validMissed.filter(m => m.confidence === 'HIGH').length;
+    // Severity override (Path-C-3): 1+ catastrophic missed item → red regardless
+    // of completeness_assessment. Hard rule. Per spec: 'these are the misses
+    // that would lose us a client'.
+    const catastrophic = validMissed.filter(m => m.severity === 'catastrophic').length;
+    if (catastrophic > 0) {
+      return {
+        signal: 'red', ratio: 0,
+        reason: `${catastrophic} CATASTROPHIC missed item${catastrophic > 1 ? 's' : ''} — review urgently`,
+        source: 'verifier_severity_override',
+        suggestedCount: validMissed.length,
+        catastrophicCount: catastrophic,
+        ...baseFields,
+      };
+    }
 
     if (a === 'complete') {
       return { signal: 'green', ratio: 0, reason: 'Verified complete by AI auditor', source: 'verifier', suggestedCount: 0, ...baseFields };

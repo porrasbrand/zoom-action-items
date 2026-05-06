@@ -72,8 +72,29 @@ Your task:
        "summary": "1-sentence summary of what was said in your own words"
      },
      "confidence": "HIGH/MEDIUM/LOW",
+     "severity": "catastrophic" | "important" | "nice-to-have",
      "reasoning": "why this is a commitment/task that should be tracked"
    }
+
+SEVERITY ASSIGNMENT — REQUIRED on every missed_item AND every client_commitment:
+
+  catastrophic — Missing this item would directly damage the client relationship
+                 OR cost B3X significant revenue. Examples: missed contract
+                 review, unpaid invoice follow-up, broken promise to client
+                 about a deliverable, commitment with money / contract / legal
+                 stakes, or anything tied to a stop-the-account threat.
+
+  important    — Missing this would cause friction, delay, or rework. Most
+                 operational commitments fall here. Examples: send a doc,
+                 schedule a meeting, update a tracker, follow up on a
+                 question, run a campaign, edit a page.
+
+  nice-to-have — Discussed but low-stakes. Casual mentions, ideas-to-explore,
+                 informal "we should look into X" without ownership.
+
+Be CONSERVATIVE with 'catastrophic' — reserve it for genuinely high-stakes
+items. When in doubt, choose 'important'. Most meetings have zero
+catastrophic items.
 
 CRITICAL OFFSET RULES:
 - start_char/end_char are character offsets into the transcript text we provided above (after "ORIGINAL TRANSCRIPT:")

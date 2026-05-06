@@ -1496,6 +1496,19 @@
     .ai-history-close { float: right; cursor: pointer; color: #8b949e; padding: 4px 8px; }
     .ai-history-close:hover { color: #c9d1d9; }
 
+    /* Path-C-3: HIGH-confidence filter toggle + severity badges */
+    .v2-confidence-filter { display: flex; align-items: center; gap: 8px; margin: 8px 0; font-size: 12px; color: #8b949e; }
+    .conf-filter-btn { background: #21262d; color: #8b949e; border: 1px solid #30363d; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+    .conf-filter-btn:hover { background: #30363d; color: #c9d1d9; }
+    .conf-filter-btn.active { background: #1f6feb22; color: #58a6ff; border-color: #1f6feb55; }
+    .v2-filter-note { font-size: 11px; color: #6e7681; margin-top: 6px; padding-left: 4px; }
+
+    .severity-badge { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 3px; margin-right: 6px; vertical-align: middle; font-weight: 600; }
+    .severity-badge.catastrophic { background: #f8514922; color: #f85149; border: 1px solid #f8514955; }
+    .severity-badge.nice { background: transparent; color: #6e7681; }
+    .v2-missed-row.severity-catastrophic { border-left: 4px solid #f85149; }
+    .v2-missed-row.severity-nice { opacity: 0.85; }
+
     .accept-btn {
       background: #238636;
       color: white;
@@ -7975,11 +7988,38 @@
     // Path-C-2: each missed_item now carries dedup_classification +
     // matched_action_item_id + match_similarity + match_anchors. Split into
     // 3 buckets: not_duplicate / duplicate_medium (soft) / duplicate_high (auto-hidden).
+    // Path-C-3: confidence filter persisted in localStorage (default 'high').
+    function getConfidenceFilter() {
+      try { return localStorage.getItem('zoom-missed-confidence-filter') || 'high'; }
+      catch { return 'high'; }
+    }
+    function setConfidenceFilter(value) {
+      try { localStorage.setItem('zoom-missed-confidence-filter', value); } catch {}
+    }
+    window.toggleConfidenceFilter = function(level) {
+      setConfidenceFilter(level);
+      if (window._currentMeetingId) loadMeetingDetail(window._currentMeetingId);
+    };
+
+    // Severity rank for sorting (lower = higher priority).
+    function severityRank(sev) {
+      if (sev === 'catastrophic') return 0;
+      if (sev === 'nice-to-have') return 2;
+      return 1; // 'important' or missing
+    }
+    function confidenceRank(conf) {
+      if (conf === 'HIGH') return 0;
+      if (conf === 'MEDIUM') return 1;
+      return 2;
+    }
+
     function renderV2MissedPanel(meeting) {
       const adv = meeting?.adversarial_result_parsed || (meeting?.adversarial_result ? safeJSON(meeting.adversarial_result) : null);
       const items = adv?.missed_items || [];
       const assessment = adv?.completeness_assessment || meeting?.completeness_assessment || null;
       if (!adv && !assessment) return '';
+
+      const filter = getConfidenceFilter();
 
       const notDup = [];
       const medDup = [];
@@ -7992,6 +8032,15 @@
         else notDup.push(it);
       }
 
+      // Sort: catastrophic first (always), then by severity rank, then confidence
+      const severitySort = (a, b) => {
+        const sa = severityRank(a.severity), sb = severityRank(b.severity);
+        if (sa !== sb) return sa - sb;
+        return confidenceRank(a.confidence) - confidenceRank(b.confidence);
+      };
+      notDup.sort(severitySort);
+      medDup.sort(severitySort);
+
       const headline = (() => {
         if (assessment === 'complete') return '<span style="color:#3fb950">✓ Verified complete</span>';
         if (assessment === 'mostly_complete') return '<span style="color:#d29922">⚠ Mostly complete — review below</span>';
@@ -7999,7 +8048,29 @@
         return '<span style="color:#8b949e">⏳ Awaiting AI verifier</span>';
       })();
 
-      const visible = [...notDup, ...medDup];
+      const allVisible = [...notDup, ...medDup];
+
+      // Counts for the filter toggle labels.
+      const totalAll = allVisible.length;
+      const totalHigh = allVisible.filter(it => it.confidence === 'HIGH' || it.severity === 'catastrophic').length;
+
+      // Apply filter — catastrophic always shows regardless of HIGH filter.
+      const visible = filter === 'high'
+        ? allVisible.filter(it => it.confidence === 'HIGH' || it.severity === 'catastrophic')
+        : allVisible;
+      const hidden = totalAll - visible.length;
+
+      const filterUi = `
+        <div class="v2-confidence-filter">
+          Show:
+          <button class="conf-filter-btn ${filter === 'high' ? 'active' : ''}" onclick="toggleConfidenceFilter('high')">HIGH only (${totalHigh})</button>
+          <button class="conf-filter-btn ${filter === 'all' ? 'active' : ''}" onclick="toggleConfidenceFilter('all')">All confidence levels (${totalAll})</button>
+        </div>
+      `;
+      const filterNote = filter === 'high'
+        ? (hidden > 0 ? `<div class="v2-filter-note">(${hidden} medium/low items hidden — click 'All' to see)</div>` : '')
+        : `<div class="v2-filter-note">(showing all confidence levels)</div>`;
+
       const autoHiddenSection = highDup.length === 0 ? '' : `
         <div class="v2-autodedup-section">
           <details>
@@ -8011,13 +8082,19 @@
         </div>
       `;
 
+      const emptyMsg = filter === 'high' && totalAll > 0 && visible.length === 0
+        ? `<div class="v2-empty">No HIGH-confidence missed items. (${hidden} medium/low hidden — click 'All' to review.)</div>`
+        : '<div class="v2-empty">No B3X-side commitments flagged. Click ✗ on any false positive to teach the system.</div>';
+
       return `
         <div class="v2-missed-panel">
-          <h4>🤖 AI Verifier — Suggested Missed Items (${visible.length}) ${headline}</h4>
+          <h4>🤖 AI Verifier — Suggested Missed Items (${visible.length}/${totalAll}) ${headline}</h4>
+          ${filterUi}
           ${visible.length === 0 && highDup.length === 0
-            ? '<div class="v2-empty">No B3X-side commitments flagged. Click ✗ on any false positive to teach the system.</div>'
+            ? emptyMsg
             : visible.map(it => renderV2MissedRow(meeting, it)).join('')
           }
+          ${filterNote}
           ${autoHiddenSection}
         </div>
       `;
@@ -8063,6 +8140,7 @@
 
     function renderV2MissedRow(meeting, item) {
       const conf = item.confidence || 'MEDIUM';
+      const sev = item.severity || 'important';
       const valid = item.evidence_valid !== false && item.evidence_text;
       const evidence = valid
         ? `<div class="v2-evidence">${escapeHtml(item.evidence_text)}</div>`
@@ -8072,15 +8150,22 @@
       const candidateHash = item.candidate_hash || '';
       const tier = item.dedup_classification || 'not_duplicate';
       const tierClass = tier === 'duplicate_medium' ? 'tier-medium' : '';
+      const sevClass = sev === 'catastrophic' ? 'severity-catastrophic'
+                       : sev === 'nice-to-have' ? 'severity-nice'
+                       : '';
+      const sevBadge = sev === 'catastrophic'
+        ? '<span class="severity-badge catastrophic">❗ CATASTROPHIC</span>'
+        : sev === 'nice-to-have'
+        ? '<span class="severity-badge nice">· nice-to-have</span>'
+        : '';
       const dedupLine = tier === 'duplicate_medium'
         ? `<div class="v2-dedup-line">💡 Likely matches action item <strong>#${item.matched_action_item_id}</strong> (sim=${item.match_similarity}, anchors: ${(item.match_anchors||[]).join('+') || 'none'}). Pre-selected as 'Already captured' — click any other button to override.</div>`
         : '';
-      // For medium tier, indicate the suggested default visually (the ✓ Already captured)
-      const dupeBtnClass = tier === 'duplicate_medium' ? 'v2-lbl-dupe' : 'v2-lbl-dupe';
       const dupeBtnExtra = tier === 'duplicate_medium' ? ' style="box-shadow: 0 0 0 2px rgba(88,166,255,0.4)"' : '';
       return `
-        <div class="v2-missed-row ${valid ? '' : 'invalid'} ${tierClass}" data-meeting-id="${meeting.id}" data-candidate-hash="${escapeAttr(candidateHash)}">
+        <div class="v2-missed-row ${valid ? '' : 'invalid'} ${tierClass} ${sevClass}" data-meeting-id="${meeting.id}" data-candidate-hash="${escapeAttr(candidateHash)}">
           <div class="v2-meta">
+            ${sevBadge}
             <span class="confidence-badge ${conf}">${conf}</span>
             ${speakerHint}
           </div>
@@ -8092,7 +8177,7 @@
           <div class="v2-label-buttons">
             <button class="v2-lbl-real" onclick="labelCandidate(this, 'real_miss')">✓ Real miss → add as item</button>
             <button class="v2-lbl-not"  onclick="labelCandidate(this, 'not_real')">✗ Not real</button>
-            <button class="${dupeBtnClass}"${dupeBtnExtra} onclick="labelCandidate(this, 'already_captured')">🟢 Already captured</button>
+            <button class="v2-lbl-dupe"${dupeBtnExtra} onclick="labelCandidate(this, 'already_captured')">🟢 Already captured</button>
           </div>
           <div class="v2-label-applied" style="display:none"></div>
         </div>

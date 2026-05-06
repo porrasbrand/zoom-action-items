@@ -11,6 +11,7 @@
 
 import { generateEmbedding, cosineSimilarity } from './embedding-cache.js';
 import { fingerprint, jaccard } from './commitment-fingerprint.js';
+import { judgeDedup } from './dedup-judge.js';
 
 export const ALGORITHM_VERSION = 'v1-features-embeddings';
 
@@ -19,6 +20,11 @@ export const ALGORITHM_VERSION = 'v1-features-embeddings';
 const HIGH_COSINE = 0.93;
 const HIGH_MIN_ANCHORS = 2;
 const MEDIUM_COSINE = 0.85;
+// Gray-zone band where the LLM-as-judge runs to break ties. Below 0.86 is
+// clearly not_duplicate; ≥0.93 with anchors is auto-hide; the band in between
+// is where embedding/feature scores can't decide cleanly.
+const JUDGE_LOW = 0.86;
+const JUDGE_HIGH = 0.93;
 
 const TEMPLATE = (item) => `Owner: ${item?.owner_name || item?.owner || 'unknown'}
 Due: ${item?.due_date || 'none'}
@@ -97,7 +103,8 @@ export async function classifyDedup(candidate, existing) {
   try { candEmb = await generateEmbedding(TEMPLATE({ ...candidate, owner_name: candidate.owner })); }
   catch (e) { /* fall back to features */ }
 
-  let best = null;
+  // Compute scores for every existing item; we'll need top-k for the LLM-as-judge.
+  const scored = [];
   for (const ex of existing) {
     let sim = 0;
     if (candEmb && ex.embedding) {
@@ -113,9 +120,10 @@ export async function classifyDedup(candidate, existing) {
     if (amountsMatch(candFp.amounts, ex.fingerprint.amounts)) anchors.push('amount');
     if (candFp.client_id && candFp.client_id === ex.fingerprint.client_id) anchors.push('client');
     if (candFp.verb !== 'unknown' && candFp.verb === ex.fingerprint.verb) anchors.push('verb');
-
-    if (!best || sim > best.sim) best = { ex, sim, anchors };
+    scored.push({ ex, sim, anchors });
   }
+  scored.sort((a, b) => b.sim - a.sim);
+  let best = scored[0];
 
   if (!best || best.sim <= 0) {
     return {
@@ -136,11 +144,40 @@ export async function classifyDedup(candidate, existing) {
     classification = 'duplicate_medium';
   }
 
+  // LLM-as-judge for the cosine 0.86–0.93 gray zone (Path C polish).
+  // Bounded scope; bounded cost. Failure is graceful — we keep the
+  // threshold-only verdict if the judge is unavailable or errors out.
+  let judgeAnchors = [];
+  let judgeUsed = false;
+  if (best.sim >= JUDGE_LOW && best.sim < JUDGE_HIGH) {
+    const top3 = scored.slice(0, 3).map(s => s.ex);
+    const judgment = await judgeDedup(candidate, top3);
+    if (judgment) {
+      judgeUsed = true;
+      if (judgment.same_as_existing_item_id) {
+        const matched = top3.find(e => e.id === judgment.same_as_existing_item_id) || best.ex;
+        // Update best to match the judge's picked item if different
+        const judgedScore = scored.find(s => s.ex.id === matched.id);
+        if (judgedScore) best = judgedScore;
+        // HIGH judge confidence collapses to duplicate_high; MEDIUM/LOW stays at duplicate_medium.
+        classification = (judgment.confidence === 'HIGH') ? 'duplicate_high' : 'duplicate_medium';
+        judgeAnchors.push('llm-judge');
+      } else {
+        // Judge says NOT a duplicate → demote to not_duplicate (override threshold).
+        classification = 'not_duplicate';
+        judgeAnchors.push('llm-judge-rejected');
+      }
+    }
+  }
+
+  const finalAnchors = [...best.anchors, ...judgeAnchors];
+
   return {
-    matched_action_item_id: best.ex.id,
+    matched_action_item_id: classification === 'not_duplicate' ? null : best.ex.id,
     match_similarity: parseFloat(best.sim.toFixed(3)),
-    match_anchors: best.anchors,
+    match_anchors: finalAnchors,
     dedup_classification: classification,
     algorithm_version: ALGORITHM_VERSION,
+    judge_used: judgeUsed,
   };
 }
