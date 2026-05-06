@@ -1466,6 +1466,36 @@
     .v2-client-row { background: #21262d; border-radius: 4px; padding: 10px; margin-bottom: 6px; border-left: 3px solid #1f6feb; }
     .v2-client-row .v2-evidence { font-size: 12px; color: #8b949e; padding: 6px 8px; background: #0d1117; border-radius: 3px; margin: 4px 0; font-family: 'SF Mono', Monaco, monospace; white-space: pre-wrap; }
 
+    /* Path-C-2: dedup tier styling */
+    .v2-missed-row.tier-medium { opacity: 0.85; border-left-color: #f8a14a; }
+    .v2-missed-row.tier-medium .v2-suggested { color: #d29922; }
+    .v2-dedup-line { font-size: 11px; color: #f8a14a; margin: 4px 0; padding: 4px 8px; background: rgba(248,161,74,0.08); border-radius: 3px; border-left: 2px solid #f8a14a; }
+    .v2-autodedup-section { margin-top: 12px; }
+    .v2-autodedup-summary { cursor: pointer; padding: 8px 12px; background: #0d1117; border: 1px solid #30363d; border-radius: 4px; color: #8b949e; font-size: 12px; user-select: none; }
+    .v2-autodedup-summary:hover { background: #161b22; color: #c9d1d9; }
+    .v2-autodedup-list { margin-top: 8px; padding-left: 8px; border-left: 2px dashed #30363d; }
+    .v2-autodedup-row { background: #0d1117; border-radius: 4px; padding: 10px; margin-bottom: 6px; opacity: 0.7; }
+    .v2-autodedup-row .v2-suggested { color: #8b949e; font-weight: 400; font-size: 12px; }
+    .v2-autodedup-row .v2-show-anyway { font-size: 11px; padding: 3px 8px; border-radius: 3px; background: #21262d; color: #58a6ff; border: 1px solid #30363d; cursor: pointer; }
+    .v2-autodedup-row .v2-show-anyway:hover { background: #1f6feb22; }
+
+    /* Path-C-2: 🕒 audit history modal */
+    .ai-history-btn { display: inline-block; cursor: pointer; padding: 2px 6px; font-size: 12px; color: #8b949e; user-select: none; border-radius: 3px; }
+    .ai-history-btn:hover { background: #21262d; color: #c9d1d9; }
+    .ai-history-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 200; }
+    .ai-history-modal.visible { display: flex; }
+    .ai-history-modal-inner { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; max-width: 720px; width: 90%; max-height: 80vh; overflow-y: auto; color: #c9d1d9; }
+    .ai-history-modal-inner h3 { margin: 0 0 12px 0; font-size: 16px; color: #f0f6fc; }
+    .ai-history-row { display: grid; grid-template-columns: 140px 110px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid #21262d; font-size: 12px; }
+    .ai-history-row .h-when { color: #8b949e; font-family: 'SF Mono', Monaco, monospace; }
+    .ai-history-row .h-field { color: #58a6ff; }
+    .ai-history-row .h-detail { color: #c9d1d9; }
+    .ai-history-row .h-detail .h-old { color: #f85149; text-decoration: line-through; margin-right: 6px; }
+    .ai-history-row .h-detail .h-new { color: #51cf66; }
+    .ai-history-row .h-detail .h-by { color: #8b949e; font-size: 11px; margin-left: 8px; }
+    .ai-history-close { float: right; cursor: pointer; color: #8b949e; padding: 4px 8px; }
+    .ai-history-close:hover { color: #c9d1d9; }
+
     .accept-btn {
       background: #238636;
       color: white;
@@ -6660,6 +6690,7 @@
             </div>
           </div>
           <div class="item-actions">
+            <span class="ai-history-btn" title="Change history" onclick="showItemHistory(${item.id}, ${JSON.stringify(item.title || '').replace(/"/g, '&quot;')})">🕒</span>
             ${item.status === 'open' ? `
               <button class="action-btn complete-btn" onclick="completeItem(${item.id})">✓</button>
               <button class="action-btn agenda-btn" onclick="agendaItem(${item.id})" title="Add to agenda">📋</button>
@@ -7941,27 +7972,93 @@
     }
 
     // ─── Path-C verifier (v2-offsets) — missed-items + client-commitments ─────────
+    // Path-C-2: each missed_item now carries dedup_classification +
+    // matched_action_item_id + match_similarity + match_anchors. Split into
+    // 3 buckets: not_duplicate / duplicate_medium (soft) / duplicate_high (auto-hidden).
     function renderV2MissedPanel(meeting) {
       const adv = meeting?.adversarial_result_parsed || (meeting?.adversarial_result ? safeJSON(meeting.adversarial_result) : null);
       const items = adv?.missed_items || [];
       const assessment = adv?.completeness_assessment || meeting?.completeness_assessment || null;
       if (!adv && !assessment) return '';
-      const visible = items.filter(it => !it._labelHidden);
+
+      const notDup = [];
+      const medDup = [];
+      const highDup = [];
+      for (const it of items) {
+        if (it._labelHidden) continue;
+        const cls = it.dedup_classification || 'not_duplicate';
+        if (cls === 'duplicate_high') highDup.push(it);
+        else if (cls === 'duplicate_medium') medDup.push(it);
+        else notDup.push(it);
+      }
+
       const headline = (() => {
         if (assessment === 'complete') return '<span style="color:#3fb950">✓ Verified complete</span>';
         if (assessment === 'mostly_complete') return '<span style="color:#d29922">⚠ Mostly complete — review below</span>';
         if (assessment === 'incomplete') return '<span style="color:#f85149">✗ Incomplete — review below</span>';
         return '<span style="color:#8b949e">⏳ Awaiting AI verifier</span>';
       })();
+
+      const visible = [...notDup, ...medDup];
+      const autoHiddenSection = highDup.length === 0 ? '' : `
+        <div class="v2-autodedup-section">
+          <details>
+            <summary class="v2-autodedup-summary">▸ Auto-deduped (${highDup.length}) — likely already captured · click to expand</summary>
+            <div class="v2-autodedup-list">
+              ${highDup.map(it => renderV2AutoDedupedRow(meeting, it)).join('')}
+            </div>
+          </details>
+        </div>
+      `;
+
       return `
         <div class="v2-missed-panel">
           <h4>🤖 AI Verifier — Suggested Missed Items (${visible.length}) ${headline}</h4>
-          ${visible.length === 0
+          ${visible.length === 0 && highDup.length === 0
             ? '<div class="v2-empty">No B3X-side commitments flagged. Click ✗ on any false positive to teach the system.</div>'
             : visible.map(it => renderV2MissedRow(meeting, it)).join('')
           }
+          ${autoHiddenSection}
         </div>
       `;
+    }
+
+    function renderV2AutoDedupedRow(meeting, item) {
+      const matchId = item.matched_action_item_id;
+      const sim = item.match_similarity;
+      const anchors = (item.match_anchors || []).join('+');
+      const candidateHash = item.candidate_hash || '';
+      return `
+        <div class="v2-autodedup-row" data-meeting-id="${meeting.id}" data-candidate-hash="${escapeAttr(candidateHash)}">
+          <div class="v2-suggested">${escapeHtml(item.title || '(no title)')} — ${escapeHtml(item.owner || 'TBD')}</div>
+          <div class="v2-dedup-line">
+            🟢 Auto-marked already_captured because matched action item <strong>#${matchId}</strong> (sim=${sim}, anchors: ${anchors || 'none'})
+          </div>
+          <button class="v2-show-anyway" onclick="showAnyway(this)">Show anyway / undo dedup</button>
+        </div>
+      `;
+    }
+
+    function showAnyway(btn) {
+      const row = btn.closest('.v2-autodedup-row');
+      if (!row) return;
+      const meetingId = row.dataset.meetingId;
+      const candidateHash = row.dataset.candidateHash;
+      // Persist override as a 'real_miss' label with a note
+      fetch(API + '/truth-labels', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          meeting_id: parseInt(meetingId, 10),
+          candidate_hash: candidateHash,
+          candidate_title: row.querySelector('.v2-suggested')?.textContent || '',
+          label: 'real_miss',
+          notes: 'auto-deduped override — user clicked Show anyway',
+        }),
+      }).then(() => {
+        showToast('Override saved — refreshing');
+        loadMeetingDetail(window._currentMeetingId);
+      }).catch(err => showToast('Override failed: ' + err.message, true));
     }
 
     function renderV2MissedRow(meeting, item) {
@@ -7973,8 +8070,16 @@
       const speakerHint = item.evidence?.speaker ? ` — said by <em>${escapeHtml(item.evidence.speaker)}</em>` : '';
       const summary = item.evidence?.summary ? `<div class="v2-meta">📝 ${escapeHtml(item.evidence.summary)}</div>` : '';
       const candidateHash = item.candidate_hash || '';
+      const tier = item.dedup_classification || 'not_duplicate';
+      const tierClass = tier === 'duplicate_medium' ? 'tier-medium' : '';
+      const dedupLine = tier === 'duplicate_medium'
+        ? `<div class="v2-dedup-line">💡 Likely matches action item <strong>#${item.matched_action_item_id}</strong> (sim=${item.match_similarity}, anchors: ${(item.match_anchors||[]).join('+') || 'none'}). Pre-selected as 'Already captured' — click any other button to override.</div>`
+        : '';
+      // For medium tier, indicate the suggested default visually (the ✓ Already captured)
+      const dupeBtnClass = tier === 'duplicate_medium' ? 'v2-lbl-dupe' : 'v2-lbl-dupe';
+      const dupeBtnExtra = tier === 'duplicate_medium' ? ' style="box-shadow: 0 0 0 2px rgba(88,166,255,0.4)"' : '';
       return `
-        <div class="v2-missed-row ${valid ? '' : 'invalid'}" data-meeting-id="${meeting.id}" data-candidate-hash="${escapeAttr(candidateHash)}">
+        <div class="v2-missed-row ${valid ? '' : 'invalid'} ${tierClass}" data-meeting-id="${meeting.id}" data-candidate-hash="${escapeAttr(candidateHash)}">
           <div class="v2-meta">
             <span class="confidence-badge ${conf}">${conf}</span>
             ${speakerHint}
@@ -7982,15 +8087,57 @@
           <div class="v2-suggested"><strong>${escapeHtml(item.title || '(no title)')}</strong> — ${escapeHtml(item.owner || 'TBD')}</div>
           ${summary}
           ${evidence}
+          ${dedupLine}
           ${item.reasoning ? `<div class="v2-reasoning">💡 ${escapeHtml(item.reasoning)}</div>` : ''}
           <div class="v2-label-buttons">
             <button class="v2-lbl-real" onclick="labelCandidate(this, 'real_miss')">✓ Real miss → add as item</button>
             <button class="v2-lbl-not"  onclick="labelCandidate(this, 'not_real')">✗ Not real</button>
-            <button class="v2-lbl-dupe" onclick="labelCandidate(this, 'already_captured')">🟢 Already captured</button>
+            <button class="${dupeBtnClass}"${dupeBtnExtra} onclick="labelCandidate(this, 'already_captured')">🟢 Already captured</button>
           </div>
           <div class="v2-label-applied" style="display:none"></div>
         </div>
       `;
+    }
+
+    // ─── Path-C-2: 🕒 audit history modal ────────────────────────────────
+    async function showItemHistory(itemId, itemTitle) {
+      let modal = document.getElementById('aiHistoryModal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'aiHistoryModal';
+        modal.className = 'ai-history-modal';
+        modal.innerHTML = '<div class="ai-history-modal-inner"></div>';
+        modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('visible'); });
+        document.body.appendChild(modal);
+      }
+      const inner = modal.querySelector('.ai-history-modal-inner');
+      inner.innerHTML = '<div style="color:#8b949e">Loading…</div>';
+      modal.classList.add('visible');
+      try {
+        const res = await fetch(API + '/action-items/' + itemId + '/history');
+        const data = await res.json();
+        const rows = data.history || [];
+        inner.innerHTML = `
+          <span class="ai-history-close" onclick="document.getElementById('aiHistoryModal').classList.remove('visible')">✕</span>
+          <h3>🕒 Change history — ${escapeHtml(itemTitle || 'Item #' + itemId)}</h3>
+          ${rows.length === 0
+            ? '<div style="color:#8b949e;font-size:12px">No changes recorded yet.</div>'
+            : rows.map(r => `
+              <div class="ai-history-row">
+                <span class="h-when">${escapeHtml(r.changed_at)}</span>
+                <span class="h-field">${escapeHtml(r.field)}</span>
+                <span class="h-detail">
+                  ${r.old_value != null ? `<span class="h-old">${escapeHtml(String(r.old_value).slice(0,80))}</span>` : ''}
+                  <span class="h-new">${escapeHtml(String(r.new_value || '').slice(0,160))}</span>
+                  <span class="h-by">${escapeHtml(r.changed_by_email || '(no user)')} · ${escapeHtml(r.source || '')}</span>
+                </span>
+              </div>
+            `).join('')
+          }
+        `;
+      } catch (err) {
+        inner.innerHTML = `<div style="color:#f85149">Failed: ${escapeHtml(err.message)}</div>`;
+      }
     }
 
     function renderV2ClientPanel(meeting) {

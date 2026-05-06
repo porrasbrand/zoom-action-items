@@ -24,6 +24,7 @@ import { extractMeetingData } from './lib/ai-extractor.js';
 import { styleTitle } from './lib/title-styler.js';
 import { verifyExtraction } from './lib/adversarial-verifier.js';
 import { sliceEvidence, canonicalCandidateHash } from './lib/transcript-utils.js';
+import { embedActionItems, classifyDedup } from './lib/dedup-matcher.js';
 import { calculateConfidence } from './lib/confidence-calculator.js';
 import { scanTranscript } from './lib/keyword-scanner.js';
 import { postToSlack, formatSlackMessage, postAlert, resolveChannel } from './lib/slack-publisher.js';
@@ -221,7 +222,7 @@ async function processMeeting(meeting) {
       try {
         const insertedItems = db.getActionItemsByMeeting?.(meetingId) || extraction.action_items || [];
         const result = await verifyExtraction(parsedTranscript, insertedItems);
-        const missed = (result.missed_items || []).map(mi => {
+        const baseMissed = (result.missed_items || []).map(mi => {
           const ev = mi.evidence || {};
           const slice = sliceEvidence(parsedTranscript, ev.start_char, ev.end_char);
           return {
@@ -231,7 +232,7 @@ async function processMeeting(meeting) {
             candidate_hash: canonicalCandidateHash(mi),
           };
         });
-        const clientComm = (result.client_commitments || []).map(mi => {
+        const baseClient = (result.client_commitments || []).map(mi => {
           const ev = mi.evidence || {};
           const slice = sliceEvidence(parsedTranscript, ev.start_char, ev.end_char);
           return {
@@ -241,6 +242,26 @@ async function processMeeting(meeting) {
             candidate_hash: canonicalCandidateHash(mi),
           };
         });
+        // Path-C-2: dedup classification (intra-meeting only). Best-effort —
+        // any per-candidate failure leaves dedup_classification='not_duplicate'
+        // so the user still sees the candidate (bias toward show, not silent hide).
+        let existingWithEmb = [];
+        try { existingWithEmb = await embedActionItems(insertedItems); }
+        catch (e) { log(`  [dedup] embed failed: ${e.message}`); }
+        const missed = [];
+        for (const mi of baseMissed) {
+          let dedup = { matched_action_item_id: null, match_similarity: 0, match_anchors: [], dedup_classification: 'not_duplicate', algorithm_version: 'v1-features-embeddings' };
+          try { dedup = await classifyDedup(mi, existingWithEmb); }
+          catch (e) { /* keep default not_duplicate */ }
+          missed.push({ ...mi, ...dedup });
+        }
+        const clientComm = [];
+        for (const mi of baseClient) {
+          let dedup = { matched_action_item_id: null, match_similarity: 0, match_anchors: [], dedup_classification: 'not_duplicate', algorithm_version: 'v1-features-embeddings' };
+          try { dedup = await classifyDedup(mi, existingWithEmb); }
+          catch (e) { /* keep default not_duplicate */ }
+          clientComm.push({ ...mi, ...dedup });
+        }
         const scan = scanTranscript(parsedTranscript);
         const confidence = calculateConfidence(scan, insertedItems.length, parsedTranscript, 'completed', {
           completeness_assessment: result.completeness_assessment,

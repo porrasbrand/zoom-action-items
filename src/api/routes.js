@@ -21,6 +21,7 @@ import { styleTitle, styleTitleForce } from '../lib/title-styler.js';
 import { styleDescription } from '../lib/description-styler.js';
 import { weekdayName } from '../lib/util.js';
 import { sliceEvidence, canonicalCandidateHash } from '../lib/transcript-utils.js';
+import { embedActionItems, classifyDedup } from '../lib/dedup-matcher.js';
 import { parseVTT, extractSpeakers } from '../lib/vtt-parser.js';
 import { detectSummary } from '../lib/summary-detector.js';
 import { extractSummaryItems } from '../lib/summary-extractor.js';
@@ -503,12 +504,28 @@ function lookupClientName(clientId) {
   }
 }
 
-// PUT /api/action-items/:id - Update action item
+// PUT /api/action-items/:id - Update action item (inline-edit). Logs each
+// changed field to the audit trail individually so the 🕒 history modal
+// shows separate rows per field.
 router.put('/action-items/:id', (req, res) => {
   try {
-    const updated = db.updateActionItem(parseInt(req.params.id), req.body);
+    const id = parseInt(req.params.id);
+    const before = db.getActionItemById(id);
+    const updated = db.updateActionItem(id, req.body);
     if (!updated) {
       return res.status(404).json({ error: 'Action item not found or no changes' });
+    }
+    if (before) {
+      const TRACKED = ['title','description','owner_name','due_date','priority','task_type','collaborators'];
+      for (const field of TRACKED) {
+        if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+          const oldV = before[field];
+          const newV = req.body[field];
+          if (String(oldV ?? '') !== String(newV ?? '')) {
+            logActionItemChange(req, before, field, oldV, newV, 'inline_edit');
+          }
+        }
+      }
     }
     res.json(updated);
   } catch (err) {
@@ -516,13 +533,37 @@ router.put('/action-items/:id', (req, res) => {
   }
 });
 
+// Path-C-2: helper that captures who-changed-what-when into the audit trail.
+// Called from every action_items mutation handler. Soft-fails (logs) so a
+// changelog hiccup never breaks the user-facing mutation.
+function logActionItemChange(req, beforeRow, field, oldValue, newValue, source) {
+  if (!beforeRow) return;
+  try {
+    const u = req?.user || {};
+    db.insertChangelog({
+      actionItemId: beforeRow.id,
+      meetingId: beforeRow.meeting_id,
+      field,
+      oldValue,
+      newValue,
+      changedByEmail: u.email || null,
+      changedByName: u.name || null,
+      source: source || 'api',
+      ipAddress: req?.ip || null,
+    });
+  } catch (err) {
+    console.warn('[changelog] insert failed:', err.message);
+  }
+}
+
 // POST /api/action-items/:id/complete - Mark as complete
 router.post('/action-items/:id/complete', (req, res) => {
   try {
-    const updated = db.setActionItemStatus(parseInt(req.params.id), 'complete');
-    if (!updated) {
-      return res.status(404).json({ error: 'Action item not found' });
-    }
+    const id = parseInt(req.params.id);
+    const before = db.getActionItemById(id);
+    const updated = db.setActionItemStatus(id, 'complete');
+    if (!updated) return res.status(404).json({ error: 'Action item not found' });
+    if (before) logActionItemChange(req, before, 'status', before.status, 'complete', 'dashboard_button');
     res.json({ success: true, status: 'complete' });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -532,10 +573,11 @@ router.post('/action-items/:id/complete', (req, res) => {
 // POST /api/action-items/:id/reject - Mark as rejected
 router.post('/action-items/:id/reject', (req, res) => {
   try {
-    const updated = db.setActionItemStatus(parseInt(req.params.id), 'rejected');
-    if (!updated) {
-      return res.status(404).json({ error: 'Action item not found' });
-    }
+    const id = parseInt(req.params.id);
+    const before = db.getActionItemById(id);
+    const updated = db.setActionItemStatus(id, 'rejected');
+    if (!updated) return res.status(404).json({ error: 'Action item not found' });
+    if (before) logActionItemChange(req, before, 'status', before.status, 'rejected', 'dashboard_button');
     res.json({ success: true, status: 'rejected' });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -545,10 +587,11 @@ router.post('/action-items/:id/reject', (req, res) => {
 // POST /api/action-items/:id/agenda - Add to agenda
 router.post('/action-items/:id/agenda', (req, res) => {
   try {
-    const updated = db.setActionItemStatus(parseInt(req.params.id), 'on-agenda');
-    if (!updated) {
-      return res.status(404).json({ error: 'Action item not found' });
-    }
+    const id = parseInt(req.params.id);
+    const before = db.getActionItemById(id);
+    const updated = db.setActionItemStatus(id, 'on-agenda');
+    if (!updated) return res.status(404).json({ error: 'Action item not found' });
+    if (before) logActionItemChange(req, before, 'status', before.status, 'on-agenda', 'dashboard_button');
     res.json({ success: true, status: 'on-agenda' });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -558,11 +601,33 @@ router.post('/action-items/:id/agenda', (req, res) => {
 // POST /api/action-items/:id/reopen - Reopen item
 router.post('/action-items/:id/reopen', (req, res) => {
   try {
-    const updated = db.setActionItemStatus(parseInt(req.params.id), 'open');
-    if (!updated) {
-      return res.status(404).json({ error: 'Action item not found' });
-    }
+    const id = parseInt(req.params.id);
+    const before = db.getActionItemById(id);
+    const updated = db.setActionItemStatus(id, 'open');
+    if (!updated) return res.status(404).json({ error: 'Action item not found' });
+    if (before) logActionItemChange(req, before, 'status', before.status, 'open', 'dashboard_button');
     res.json({ success: true, status: 'open' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/action-items/:id/history — full changelog for an item
+router.get('/action-items/:id/history', (req, res) => {
+  try {
+    const rows = db.getActionItemHistory(parseInt(req.params.id));
+    res.json({ history: rows });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/changelog/recent — recent changes across all items (default 7d)
+router.get('/changelog/recent', (req, res) => {
+  try {
+    const days = Math.max(1, Math.min(60, parseInt(req.query.days) || 7));
+    const rows = db.getRecentChangelog(days);
+    res.json({ days, count: rows.length, changes: rows });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -1216,16 +1281,37 @@ router.post('/meetings/:id/verify', async (req, res) => {
 
     // Path-C: slice each missed_item's offset evidence deterministically + canonical hash
     const transcriptForSlicing = meeting.transcript_raw.slice(0, 80_000);
-    const enrichedMissed = (result.missed_items || []).map(mi => {
+    const baseMissed = (result.missed_items || []).map(mi => {
       const ev = mi.evidence || {};
       const slice = sliceEvidence(transcriptForSlicing, ev.start_char, ev.end_char);
       return { ...mi, evidence_text: slice, evidence_valid: slice !== null, candidate_hash: canonicalCandidateHash(mi) };
     });
-    const enrichedClient = (result.client_commitments || []).map(mi => {
+    const baseClient = (result.client_commitments || []).map(mi => {
       const ev = mi.evidence || {};
       const slice = sliceEvidence(transcriptForSlicing, ev.start_char, ev.end_char);
       return { ...mi, evidence_text: slice, evidence_valid: slice !== null, candidate_hash: canonicalCandidateHash(mi) };
     });
+
+    // Path-C-2: dedup matching layer. For each verifier candidate, classify
+    // whether it duplicates an existing action_item in the same meeting.
+    // Two-tier (auto-hide vs soft-suggest) per OpenAI consult.
+    let existingWithEmb = [];
+    try { existingWithEmb = await embedActionItems(items); }
+    catch (err) { console.warn('[verify] embedActionItems failed:', err.message); }
+    const enrichedMissed = [];
+    for (const mi of baseMissed) {
+      let dedup = { matched_action_item_id: null, match_similarity: 0, match_anchors: [], dedup_classification: 'not_duplicate', algorithm_version: 'v1-features-embeddings' };
+      try { dedup = await classifyDedup(mi, existingWithEmb); }
+      catch (err) { console.warn('[verify] classifyDedup failed for missed_item:', err.message); }
+      enrichedMissed.push({ ...mi, ...dedup });
+    }
+    const enrichedClient = [];
+    for (const mi of baseClient) {
+      let dedup = { matched_action_item_id: null, match_similarity: 0, match_anchors: [], dedup_classification: 'not_duplicate', algorithm_version: 'v1-features-embeddings' };
+      try { dedup = await classifyDedup(mi, existingWithEmb); }
+      catch (err) { console.warn('[verify] classifyDedup failed for client_commitment:', err.message); }
+      enrichedClient.push({ ...mi, ...dedup });
+    }
 
     // Path-C: confidence signal driven by completeness_assessment (with regex fallback inside the helper).
     const scan = scanTranscript(meeting.transcript_raw);
@@ -1497,6 +1583,13 @@ router.post('/meetings/:id/action-items', (req, res) => {
       collaborators
     });
 
+    // Path-C-2: log creation event in the audit trail.
+    if (item?.id || item?.lastInsertRowid) {
+      logActionItemChange(req,
+        { id: item.id || item.lastInsertRowid, meeting_id: meetingId },
+        'created', null, title, 'manual_add');
+    }
+
     res.json(item);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1544,6 +1637,12 @@ router.post('/truth-labels', async (req, res) => {
         description: candidate_evidence || null,
       });
       resulting_action_item_id = created?.id || created?.lastInsertRowid || null;
+      // Audit trail: created via verifier-label path
+      if (resulting_action_item_id) {
+        logActionItemChange(req,
+          { id: resulting_action_item_id, meeting_id: parseInt(meeting_id) },
+          'created', null, candidate_title, 'verifier_label');
+      }
     }
 
     db.insertTruthLabel({

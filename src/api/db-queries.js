@@ -704,6 +704,58 @@ export function updateMeetingAdversarialV2(id, {
   );
 }
 
+// Action item changelog — full audit trail of mutations (Path-C-2).
+export function insertChangelog({
+  actionItemId, meetingId, field, oldValue, newValue,
+  changedByEmail, changedByName, source, ipAddress, notes,
+}) {
+  const d = getDb();
+  return d.prepare(`
+    INSERT INTO action_item_changelog
+      (action_item_id, meeting_id, field, old_value, new_value,
+       changed_by_email, changed_by_name, source, ip_address, notes)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    actionItemId, meetingId || null, field,
+    oldValue == null ? null : String(oldValue),
+    newValue == null ? '' : String(newValue),
+    changedByEmail || null, changedByName || null,
+    source || null, ipAddress || null, notes || null,
+  );
+}
+
+export function getActionItemHistory(itemId) {
+  const d = getDb();
+  return d.prepare(`
+    SELECT id, action_item_id, meeting_id, field, old_value, new_value,
+           changed_by_email, changed_by_name, changed_at, source, notes
+    FROM action_item_changelog
+    WHERE action_item_id = ?
+    ORDER BY changed_at ASC, id ASC
+  `).all(itemId);
+}
+
+export function getRecentChangelog(days = 7) {
+  const d = getDb();
+  return d.prepare(`
+    SELECT * FROM action_item_changelog
+    WHERE changed_at >= datetime('now', ?)
+    ORDER BY changed_at DESC
+    LIMIT 500
+  `).all(`-${days} days`);
+}
+
+// Convenience: load action items in one meeting (used by dedup matcher)
+export function getActionItemsByMeeting(meetingId) {
+  const d = getDb();
+  return d.prepare(`
+    SELECT * FROM action_items
+    WHERE meeting_id = ?
+      AND (status IS NULL OR status NOT IN ('superseded','rejected'))
+    ORDER BY id ASC
+  `).all(meetingId);
+}
+
 // Truth-label helpers (workflow-integrated 3-button labeling)
 export function insertTruthLabel({ meetingId, candidateHash, candidateTitle, candidateEvidence, candidateConfidence, label, severity, notes, labeledBy, resultingActionItemId }) {
   const d = getDb();

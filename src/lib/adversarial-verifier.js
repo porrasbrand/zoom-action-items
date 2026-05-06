@@ -102,6 +102,24 @@ CRITICAL RULES:
 - If you find items, explain WHY they were likely missed (casual language, implied commitment, etc.)
 - LOW confidence items should only be included if there's reasonable doubt they're real tasks
 
+DEDUPLICATION GUIDANCE:
+The EXTRACTED ITEMS list above may describe the same commitment from a
+different speaker's POV. For example, an existing item "Discuss budget
+with Amy" assigned to Ryan IS THE SAME commitment as "Phil confirms
+budget will be discussed in next session" — different speaker, same
+commitment.
+
+When you find a candidate that matches an existing item by:
+  - Same outcome verb (discuss/decide/send/review/update)
+  - Same primary object/topic (e.g., budget, proposal, email)
+  - Same time window OR both undated
+  - Same meeting scope
+
+…do NOT include it in missed_items, even if the speaker or phrasing differs.
+Owner attribution is NOT part of identity — speaker vs executor mismatches
+must dedup. A deterministic backstop runs after your output, but please
+reduce the load by self-deduping when the match is obvious.
+
 BEFORE OUTPUT: validate that every start_char/end_char points to a span
 that actually contains a commitment when sliced. If you cannot verify
 that the slice contains the commitment, mark confidence LOW or skip
