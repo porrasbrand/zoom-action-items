@@ -11,21 +11,24 @@ function getModel() {
   if (!model) {
     const apiKey = process.env.GOOGLE_API_KEY;
     if (!apiKey) throw new Error('Missing GOOGLE_API_KEY');
-
+    const apiName = process.env.VERIFIER_MODEL || 'gemini-2.0-flash';
+    const generationConfig = {
+      temperature: 0.3,
+      maxOutputTokens: 8192,
+      responseMimeType: 'application/json',
+    };
+    // Disable Gemini-2.5/3 chain-of-thought so it doesn't eat the output budget
+    // and produce truncated JSON.
+    if (/2\.5-flash|3-flash-preview|3\.1-flash/.test(apiName)) {
+      generationConfig.thinkingConfig = { thinkingBudget: 0 };
+    }
     const genAI = new GoogleGenerativeAI(apiKey);
-    model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
-      generationConfig: {
-        temperature: 0.3,
-        maxOutputTokens: 4000,
-        responseMimeType: 'application/json',
-      },
-    });
+    model = genAI.getGenerativeModel({ model: apiName, generationConfig });
   }
   return model;
 }
 
-const ADVERSARIAL_PROMPT = `You are a skeptical auditor reviewing action item extraction from a business meeting.
+export const ADVERSARIAL_PROMPT = `You are a skeptical auditor reviewing action item extraction from a B3X agency meeting.
 Your job is to find what was MISSED, not to validate what was found.
 
 EXTRACTED ITEMS (treat these as potentially incomplete):
@@ -33,6 +36,19 @@ EXTRACTED ITEMS (treat these as potentially incomplete):
 
 ORIGINAL TRANSCRIPT:
 {transcript}
+
+PRIMARY FOCUS: Identify B3X-side commitments — things B3X team members
+(Phil, Bill, Dan, Manuel, Vince, Jacob, Nicole, Sarah, Allysa, Juan, Richard,
+Ray, Raz) committed to do for clients or for each other internally.
+These are tasks B3X must execute and track in ProofHub.
+
+SECONDARY: Note client-side commitments separately. Things the CLIENT
+promised to do (e.g., "I'll send you the list", "we'll review by Friday").
+Return them in a separate \`client_commitments\` array — same evidence schema
+as missed_items, but for tracking-not-execution.
+
+(B3X team list above is authoritative — anyone with @breakthrough3x.com
+email is also B3X internal even if not listed.)
 
 Your task:
 1. Read the ENTIRE transcript carefully, not just the parts around extracted items
@@ -45,14 +61,26 @@ Your task:
    - Agreements or promises made during discussion
    - "I need to..." or "We should..." statements that indicate tasks
 
-3. For each potentially missed item, provide:
+3. For each potentially missed item, provide this EXACT schema:
    {
      "title": "what needs to be done (clear, actionable)",
      "owner": "who is responsible (use exact name from transcript)",
-     "source_quote": "exact 2-4 lines from transcript where this was discussed - VERBATIM with speaker names",
+     "evidence": {
+       "start_char": <integer 0-based offset into the transcript text we provided>,
+       "end_char": <integer 0-based offset, exclusive>,
+       "speaker": "speaker name as it appears in transcript",
+       "summary": "1-sentence summary of what was said in your own words"
+     },
      "confidence": "HIGH/MEDIUM/LOW",
      "reasoning": "why this is a commitment/task that should be tracked"
    }
+
+CRITICAL OFFSET RULES:
+- start_char/end_char are character offsets into the transcript text we provided above (after "ORIGINAL TRANSCRIPT:")
+- The slice transcript[start_char:end_char] MUST be the exact text where this commitment was made
+- The evidence span should be 50-300 characters (long enough to be meaningful, short enough to be precise)
+- Do NOT paraphrase or copy text into the JSON — just give us the offsets, our backend will render the slice
+- If you cannot identify a precise span, lower the confidence to LOW or skip the item entirely
 
 4. HIGH confidence: Explicit verbal commitment ("I will do X", "I'll handle that")
    MEDIUM confidence: Implied commitment or request that should probably be tracked
@@ -60,10 +88,11 @@ Your task:
 
 Return JSON:
 {
-  "missed_items": [...],
+  "missed_items": [...],         // B3X-side commitments, schema above
+  "client_commitments": [...],   // Client-side promises, same schema
   "verification_notes": "brief summary of your review process and what you checked",
   "completeness_assessment": "complete|mostly_complete|incomplete",
-  "sections_with_possible_commitments": ["line/timestamp ranges or quotes that seemed like they could contain commitments but were too vague to extract confidently"]
+  "sections_with_possible_commitments": ["line/timestamp ranges or short snippets that could contain commitments but were too vague to extract confidently"]
 }
 
 CRITICAL RULES:
@@ -71,7 +100,12 @@ CRITICAL RULES:
 - Only return genuinely NEW items that were missed
 - Finding nothing missed is FINE if the extraction is thorough - say "completeness_assessment": "complete"
 - If you find items, explain WHY they were likely missed (casual language, implied commitment, etc.)
-- LOW confidence items should only be included if there's reasonable doubt they're real tasks`;
+- LOW confidence items should only be included if there's reasonable doubt they're real tasks
+
+BEFORE OUTPUT: validate that every start_char/end_char points to a span
+that actually contains a commitment when sliced. If you cannot verify
+that the slice contains the commitment, mark confidence LOW or skip
+the item entirely. Quality over quantity.`;
 
 /**
  * Run adversarial verification on a meeting's extraction
@@ -115,9 +149,13 @@ export async function verifyExtraction(transcript, extractedItems) {
     const filteredItems = (parsed.missed_items || []).filter(item =>
       item.confidence === 'HIGH' || item.confidence === 'MEDIUM'
     );
+    const filteredClient = (parsed.client_commitments || []).filter(item =>
+      item.confidence === 'HIGH' || item.confidence === 'MEDIUM'
+    );
 
     return {
       missed_items: filteredItems,
+      client_commitments: filteredClient,
       all_findings: parsed.missed_items || [], // Keep all for logging
       verification_notes: parsed.verification_notes || '',
       completeness_assessment: parsed.completeness_assessment || 'unknown',

@@ -22,6 +22,10 @@ import { parseVTT, extractSpeakers } from './lib/vtt-parser.js';
 import { matchClient, isInternalMeeting } from './lib/client-matcher.js';
 import { extractMeetingData } from './lib/ai-extractor.js';
 import { styleTitle } from './lib/title-styler.js';
+import { verifyExtraction } from './lib/adversarial-verifier.js';
+import { sliceEvidence, canonicalCandidateHash } from './lib/transcript-utils.js';
+import { calculateConfidence } from './lib/confidence-calculator.js';
+import { scanTranscript } from './lib/keyword-scanner.js';
 import { postToSlack, formatSlackMessage, postAlert, resolveChannel } from './lib/slack-publisher.js';
 import * as db from './lib/database.js';
 import { isProofhubConfigured } from './lib/proofhub-client.js';
@@ -206,6 +210,55 @@ async function processMeeting(meeting) {
     if (extraction.decisions?.length) {
       db.insertDecisions(meetingId, clientId, extraction.decisions);
     }
+
+    // Path-C: auto-run adversarial verifier in the background. Fire-and-forget
+    // so meeting completion isn't blocked by ~5-15s of LLM latency. On success
+    // we slice each missed_item's offset evidence deterministically and write
+    // both missed_items + client_commitments to the meetings table; the
+    // confidence_signal flips from 'pending' to whatever completeness_assessment
+    // implies. On failure we just log and leave the regex_fallback signal alone.
+    setImmediate(async () => {
+      try {
+        const insertedItems = db.getActionItemsByMeeting?.(meetingId) || extraction.action_items || [];
+        const result = await verifyExtraction(parsedTranscript, insertedItems);
+        const missed = (result.missed_items || []).map(mi => {
+          const ev = mi.evidence || {};
+          const slice = sliceEvidence(parsedTranscript, ev.start_char, ev.end_char);
+          return {
+            ...mi,
+            evidence_text: slice,
+            evidence_valid: slice !== null,
+            candidate_hash: canonicalCandidateHash(mi),
+          };
+        });
+        const clientComm = (result.client_commitments || []).map(mi => {
+          const ev = mi.evidence || {};
+          const slice = sliceEvidence(parsedTranscript, ev.start_char, ev.end_char);
+          return {
+            ...mi,
+            evidence_text: slice,
+            evidence_valid: slice !== null,
+            candidate_hash: canonicalCandidateHash(mi),
+          };
+        });
+        const scan = scanTranscript(parsedTranscript);
+        const confidence = calculateConfidence(scan, insertedItems.length, parsedTranscript, 'completed', {
+          completeness_assessment: result.completeness_assessment,
+          missed_items: missed,
+        });
+        db.updateMeetingAdversarialV2(meetingId, {
+          adversarialResult: { ...result, missed_items: missed },
+          clientCommitments: clientComm,
+          completenessAssessment: result.completeness_assessment || 'unknown',
+          confidenceSignal: confidence.signal,
+          verifierModel: process.env.VERIFIER_MODEL || 'gemini-2.0-flash',
+          verifierVersion: 'v2-offsets',
+        });
+        log(`  Verifier auto-run: ${result.completeness_assessment} | ${missed.length} missed (${missed.filter(m=>m.evidence_valid).length} grounded) | ${clientComm.length} client | signal=${confidence.signal}`);
+      } catch (err) {
+        log(`  Verifier auto-run failed for meeting ${meetingId}: ${err.message}`);
+      }
+    });
 
     // Post to Slack with channel routing
     if (DRY_RUN) {

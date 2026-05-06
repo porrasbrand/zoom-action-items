@@ -1440,6 +1440,32 @@
       margin-top: 10px;
     }
 
+    /* Path-C verifier (v2-offsets) — workflow-integrated label buttons */
+    .v2-missed-panel { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 14px; margin-top: 16px; }
+    .v2-missed-panel h4 { margin: 0 0 12px 0; color: #f0f6fc; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+    .v2-missed-panel .v2-empty { color: #8b949e; font-size: 12px; }
+    .v2-missed-row { background: #21262d; border-radius: 6px; padding: 12px; margin-bottom: 8px; border-left: 4px solid #d29922; }
+    .v2-missed-row.invalid { border-left-color: #6e7681; opacity: 0.7; }
+    .v2-missed-row .v2-evidence { background: #0d1117; border-left: 3px solid #58a6ff; padding: 8px 10px; margin: 6px 0; font-size: 12px; color: #c9d1d9; font-family: 'SF Mono', Monaco, monospace; white-space: pre-wrap; word-break: break-word; }
+    .v2-missed-row .v2-evidence-stale { background: #21262d; color: #6e7681; font-style: italic; }
+    .v2-missed-row .v2-suggested { font-size: 14px; color: #f0f6fc; font-weight: 500; margin: 4px 0; }
+    .v2-missed-row .v2-meta { font-size: 11px; color: #8b949e; margin: 2px 0; }
+    .v2-missed-row .v2-reasoning { font-size: 12px; color: #8b949e; font-style: italic; margin: 6px 0; }
+    .v2-label-buttons { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+    .v2-label-buttons button { padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; border: 1px solid transparent; }
+    .v2-label-buttons button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .v2-lbl-real { background: #238636; color: white; border-color: #238636; }
+    .v2-lbl-real:hover { background: #2ea043; }
+    .v2-lbl-not { background: #21262d; color: #8b949e; border-color: #30363d; }
+    .v2-lbl-not:hover { background: #30363d; color: #c9d1d9; }
+    .v2-lbl-dupe { background: #1f6feb22; color: #58a6ff; border-color: #1f6feb55; }
+    .v2-lbl-dupe:hover { background: #1f6feb44; }
+    .v2-label-applied { font-size: 11px; color: #51cf66; margin-top: 6px; }
+    .v2-client-panel { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 14px; margin-top: 12px; }
+    .v2-client-panel h4 { margin: 0 0 8px 0; color: #f0f6fc; font-size: 13px; display: flex; align-items: center; gap: 6px; }
+    .v2-client-row { background: #21262d; border-radius: 4px; padding: 10px; margin-bottom: 6px; border-left: 3px solid #1f6feb; }
+    .v2-client-row .v2-evidence { font-size: 12px; color: #8b949e; padding: 6px 8px; background: #0d1117; border-radius: 3px; margin: 4px 0; font-family: 'SF Mono', Monaco, monospace; white-space: pre-wrap; }
+
     .accept-btn {
       background: #238636;
       color: white;
@@ -6379,6 +6405,8 @@
               </div>
             </div>
             ${renderSuggestedItemsSection(action_items.filter(i => i.source === 'adversarial_added'))}
+            ${renderV2MissedPanel(meeting)}
+            ${renderV2ClientPanel(meeting)}
           </div>
 
           <div class="section">
@@ -7729,15 +7757,29 @@
         }
       } else if (signal === 'red') {
         icon = '❌';
-        text = `Extraction issue — ${keywordCount} commitment phrases, ${itemCount} items — manual review required`;
+        const advParsed = meeting.adversarial_result_parsed || (meeting.adversarial_result ? safeJSON(meeting.adversarial_result) : null);
+        if (advParsed?.completeness_assessment === 'incomplete') {
+          const highCount = (advParsed.missed_items || []).filter(m => m.confidence === 'HIGH' && m.evidence_valid !== false).length;
+          text = `${highCount} likely missed items — review required`;
+        } else {
+          text = `Extraction issue — ${keywordCount} commitment phrases, ${itemCount} items — manual review required`;
+        }
+      } else if (signal === 'pending') {
+        icon = '⏳';
+        text = 'Awaiting AI verification…';
       } else {
         icon = '⏳';
         text = 'Not yet validated';
       }
 
+      // Path-C: tiny inline badge showing whether the AI verifier has run
+      const verifierBadge = verified
+        ? '<span class="verifier-badge" style="font-size:11px;color:#58a6ff;margin-left:8px">🤖 Verified by AI</span>'
+        : '<span class="verifier-badge" style="font-size:11px;color:#8b949e;margin-left:8px">🤖 Awaiting AI</span>';
+
       return `
         <div class="confidence-signal ${signal}" style="margin-top: 12px;">
-          <span>${icon} ${text}</span>
+          <span>${icon} ${text}${verifierBadge}</span>
           <button class="validate-btn" onclick="validateMeeting(${meeting.id})">Re-validate</button>
           <button class="verify-btn" onclick="verifyMeeting(${meeting.id})">${verified ? 'Re-verify' : 'Verify'}</button>
         </div>
@@ -7896,6 +7938,129 @@
           ` : ''}
         </div>
       `;
+    }
+
+    // ─── Path-C verifier (v2-offsets) — missed-items + client-commitments ─────────
+    function renderV2MissedPanel(meeting) {
+      const adv = meeting?.adversarial_result_parsed || (meeting?.adversarial_result ? safeJSON(meeting.adversarial_result) : null);
+      const items = adv?.missed_items || [];
+      const assessment = adv?.completeness_assessment || meeting?.completeness_assessment || null;
+      if (!adv && !assessment) return '';
+      const visible = items.filter(it => !it._labelHidden);
+      const headline = (() => {
+        if (assessment === 'complete') return '<span style="color:#3fb950">✓ Verified complete</span>';
+        if (assessment === 'mostly_complete') return '<span style="color:#d29922">⚠ Mostly complete — review below</span>';
+        if (assessment === 'incomplete') return '<span style="color:#f85149">✗ Incomplete — review below</span>';
+        return '<span style="color:#8b949e">⏳ Awaiting AI verifier</span>';
+      })();
+      return `
+        <div class="v2-missed-panel">
+          <h4>🤖 AI Verifier — Suggested Missed Items (${visible.length}) ${headline}</h4>
+          ${visible.length === 0
+            ? '<div class="v2-empty">No B3X-side commitments flagged. Click ✗ on any false positive to teach the system.</div>'
+            : visible.map(it => renderV2MissedRow(meeting, it)).join('')
+          }
+        </div>
+      `;
+    }
+
+    function renderV2MissedRow(meeting, item) {
+      const conf = item.confidence || 'MEDIUM';
+      const valid = item.evidence_valid !== false && item.evidence_text;
+      const evidence = valid
+        ? `<div class="v2-evidence">${escapeHtml(item.evidence_text)}</div>`
+        : `<div class="v2-evidence v2-evidence-stale">[evidence offset invalid — model returned a span we couldn't slice]</div>`;
+      const speakerHint = item.evidence?.speaker ? ` — said by <em>${escapeHtml(item.evidence.speaker)}</em>` : '';
+      const summary = item.evidence?.summary ? `<div class="v2-meta">📝 ${escapeHtml(item.evidence.summary)}</div>` : '';
+      const candidateHash = item.candidate_hash || '';
+      return `
+        <div class="v2-missed-row ${valid ? '' : 'invalid'}" data-meeting-id="${meeting.id}" data-candidate-hash="${escapeAttr(candidateHash)}">
+          <div class="v2-meta">
+            <span class="confidence-badge ${conf}">${conf}</span>
+            ${speakerHint}
+          </div>
+          <div class="v2-suggested"><strong>${escapeHtml(item.title || '(no title)')}</strong> — ${escapeHtml(item.owner || 'TBD')}</div>
+          ${summary}
+          ${evidence}
+          ${item.reasoning ? `<div class="v2-reasoning">💡 ${escapeHtml(item.reasoning)}</div>` : ''}
+          <div class="v2-label-buttons">
+            <button class="v2-lbl-real" onclick="labelCandidate(this, 'real_miss')">✓ Real miss → add as item</button>
+            <button class="v2-lbl-not"  onclick="labelCandidate(this, 'not_real')">✗ Not real</button>
+            <button class="v2-lbl-dupe" onclick="labelCandidate(this, 'already_captured')">🟢 Already captured</button>
+          </div>
+          <div class="v2-label-applied" style="display:none"></div>
+        </div>
+      `;
+    }
+
+    function renderV2ClientPanel(meeting) {
+      const items = meeting?.client_commitments_parsed || (meeting?.client_commitments ? safeJSON(meeting.client_commitments) : null);
+      if (!items || items.length === 0) return '';
+      return `
+        <div class="v2-client-panel">
+          <h4>📞 Client commitments (${items.length})</h4>
+          <div class="v2-meta" style="color:#8b949e;font-size:11px;margin-bottom:8px">Things the CLIENT promised — for tracking, not B3X execution.</div>
+          ${items.map(it => `
+            <div class="v2-client-row">
+              <div class="v2-suggested">${escapeHtml(it.title || '(no title)')} — <em>${escapeHtml(it.owner || 'client')}</em></div>
+              ${it.evidence_text ? `<div class="v2-evidence">${escapeHtml(it.evidence_text)}</div>` : ''}
+              ${it.reasoning ? `<div class="v2-reasoning">💡 ${escapeHtml(it.reasoning)}</div>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function safeJSON(s) { try { return JSON.parse(s); } catch { return null; } }
+    function escapeAttr(s) { return String(s || '').replace(/"/g, '&quot;'); }
+
+    async function labelCandidate(btn, label) {
+      const row = btn.closest('.v2-missed-row');
+      if (!row) return;
+      const meetingId = row.dataset.meetingId;
+      const candidateHash = row.dataset.candidateHash;
+      const adv = window._currentMeeting?.adversarial_result_parsed || safeJSON(window._currentMeeting?.adversarial_result || '');
+      const items = adv?.missed_items || [];
+      const item = items.find(i => i.candidate_hash === candidateHash) || {};
+      const buttons = row.querySelectorAll('.v2-label-buttons button');
+      buttons.forEach(b => b.disabled = true);
+      try {
+        const res = await fetch(API + '/truth-labels', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            meeting_id: parseInt(meetingId, 10),
+            candidate_hash: candidateHash,
+            candidate_title: item.title,
+            candidate_owner: item.owner,
+            candidate_evidence: item.evidence_text || (item.evidence?.summary ?? null),
+            candidate_confidence: item.confidence,
+            label,
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok && res.status !== 409) throw new Error(data.error || ('HTTP ' + res.status));
+        const applied = row.querySelector('.v2-label-applied');
+        if (applied) {
+          applied.style.display = '';
+          if (label === 'real_miss') {
+            applied.innerHTML = `✓ Saved · created action item${data.resulting_action_item_id ? ` #${data.resulting_action_item_id}` : ''}`;
+          } else if (label === 'not_real') {
+            applied.innerHTML = `✓ Saved as 'not real' — verifier will learn`;
+          } else {
+            applied.innerHTML = `✓ Saved as 'already captured'`;
+          }
+          applied.style.color = '#51cf66';
+        }
+        // Hide the row after a short delay so the toast stays readable
+        setTimeout(() => { row.style.transition = 'opacity .3s'; row.style.opacity = '0'; setTimeout(() => row.remove(), 350); }, 1200);
+        showToast(label === 'real_miss' ? 'Added as action item' : (label === 'not_real' ? 'Marked as not real' : 'Marked as already captured'));
+        if (label === 'real_miss') refreshStats?.();
+      } catch (err) {
+        buttons.forEach(b => b.disabled = false);
+        const applied = row.querySelector('.v2-label-applied');
+        if (applied) { applied.style.display = ''; applied.style.color = '#f85149'; applied.textContent = 'Failed: ' + err.message; }
+      }
     }
 
     // Render suggested item

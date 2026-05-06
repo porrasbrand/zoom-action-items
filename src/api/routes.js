@@ -20,6 +20,7 @@ import { extractMeetingData } from '../lib/ai-extractor.js';
 import { styleTitle, styleTitleForce } from '../lib/title-styler.js';
 import { styleDescription } from '../lib/description-styler.js';
 import { weekdayName } from '../lib/util.js';
+import { sliceEvidence, canonicalCandidateHash } from '../lib/transcript-utils.js';
 import { parseVTT, extractSpeakers } from '../lib/vtt-parser.js';
 import { detectSummary } from '../lib/summary-detector.js';
 import { extractSummaryItems } from '../lib/summary-extractor.js';
@@ -1193,7 +1194,7 @@ router.get('/validation-stats', (req, res) => {
 
 // ============ ADVERSARIAL VERIFICATION ============
 
-// POST /api/meetings/:id/verify - Run adversarial verification
+// POST /api/meetings/:id/verify - Run adversarial verification (Path-C: offsets + client_commitments)
 router.post('/meetings/:id/verify', async (req, res) => {
   try {
     const meetingId = parseInt(req.params.id);
@@ -1211,43 +1212,48 @@ router.post('/meetings/:id/verify', async (req, res) => {
 
     console.log(`[Verify] Running adversarial verification for meeting ${meetingId}: "${meeting.topic}"`);
 
-    // Run adversarial verification
     const result = await verifyExtraction(meeting.transcript_raw, items);
 
-    // Determine new confidence signal
-    let newSignal = meeting.confidence_signal || 'pending';
-    if (result.missed_items && result.missed_items.length > 0) {
-      // Downgrade to yellow if adversarial found items
-      if (newSignal === 'green') newSignal = 'yellow';
-    } else if (result.completeness_assessment === 'complete' && meeting.keyword_ratio <= 5) {
-      // Upgrade to green if verified complete and keywords align
-      newSignal = 'green';
-    }
-
-    // Store adversarial result
-    db.updateMeetingAdversarial(meetingId, {
-      adversarialResult: result,
-      completenessAssessment: result.completeness_assessment,
-      confidenceSignal: newSignal
+    // Path-C: slice each missed_item's offset evidence deterministically + canonical hash
+    const transcriptForSlicing = meeting.transcript_raw.slice(0, 80_000);
+    const enrichedMissed = (result.missed_items || []).map(mi => {
+      const ev = mi.evidence || {};
+      const slice = sliceEvidence(transcriptForSlicing, ev.start_char, ev.end_char);
+      return { ...mi, evidence_text: slice, evidence_valid: slice !== null, candidate_hash: canonicalCandidateHash(mi) };
+    });
+    const enrichedClient = (result.client_commitments || []).map(mi => {
+      const ev = mi.evidence || {};
+      const slice = sliceEvidence(transcriptForSlicing, ev.start_char, ev.end_char);
+      return { ...mi, evidence_text: slice, evidence_valid: slice !== null, candidate_hash: canonicalCandidateHash(mi) };
     });
 
-    // Create suggested action items for HIGH/MEDIUM confidence findings
-    let suggestedCount = 0;
-    for (const item of result.missed_items || []) {
-      db.insertSuggestedItem(meetingId, meeting.client_id, item);
-      suggestedCount++;
-    }
+    // Path-C: confidence signal driven by completeness_assessment (with regex fallback inside the helper).
+    const scan = scanTranscript(meeting.transcript_raw);
+    const confidence = calculateConfidence(scan, items.length, meeting.transcript_raw, meeting.status || 'completed', {
+      completeness_assessment: result.completeness_assessment,
+      missed_items: enrichedMissed,
+    });
 
-    console.log(`[Verify] Found ${suggestedCount} suggested items, assessment: ${result.completeness_assessment}`);
+    db.updateMeetingAdversarialV2(meetingId, {
+      adversarialResult: { ...result, missed_items: enrichedMissed },
+      clientCommitments: enrichedClient,
+      completenessAssessment: result.completeness_assessment || 'unknown',
+      confidenceSignal: confidence.signal,
+      verifierModel: process.env.VERIFIER_MODEL || 'gemini-2.0-flash',
+      verifierVersion: 'v2-offsets',
+    });
+
+    console.log(`[Verify] Found ${enrichedMissed.length} missed (${enrichedMissed.filter(m=>m.evidence_valid).length} grounded) + ${enrichedClient.length} client | assessment: ${result.completeness_assessment} | signal: ${confidence.signal}`);
 
     res.json({
       meeting_id: meetingId,
-      missed_items: result.missed_items || [],
+      missed_items: enrichedMissed,
+      client_commitments: enrichedClient,
       completeness_assessment: result.completeness_assessment,
       verification_notes: result.verification_notes,
-      suggested_count: suggestedCount,
-      new_confidence_signal: newSignal,
-      sections_with_possible_commitments: result.sections_with_possible_commitments || []
+      suggested_count: enrichedMissed.length,
+      new_confidence_signal: confidence.signal,
+      sections_with_possible_commitments: result.sections_with_possible_commitments || [],
     });
   } catch (err) {
     console.error('[Verify] Error:', err);
@@ -1493,6 +1499,70 @@ router.post('/meetings/:id/action-items', (req, res) => {
 
     res.json(item);
   } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/truth-labels — workflow-integrated 3-button labeling.
+// Phil clicks ✓ Real miss / ✗ Not real / 🟢 Already captured on a verifier
+// candidate. We persist the label so we accumulate ground truth from normal
+// usage. If label==='real_miss', also create the action item from the
+// candidate (same flow as the existing 'create from suggestion' path).
+router.post('/truth-labels', async (req, res) => {
+  try {
+    const {
+      meeting_id, candidate_hash, candidate_title, candidate_evidence,
+      candidate_confidence, candidate_owner, label, severity, notes,
+    } = req.body || {};
+    if (!meeting_id || !candidate_hash || !label) {
+      return res.status(400).json({ error: 'missing fields (meeting_id, candidate_hash, label required)' });
+    }
+    if (!['real_miss', 'not_real', 'already_captured'].includes(label)) {
+      return res.status(400).json({ error: 'invalid label — must be real_miss/not_real/already_captured' });
+    }
+    const meeting = db.getMeetingById(parseInt(meeting_id));
+    if (!meeting) return res.status(404).json({ error: 'meeting not found' });
+
+    // Dedup: if this candidate has already been labeled, return current state
+    const existing = db.getTruthLabel(parseInt(meeting_id), candidate_hash);
+    if (existing) {
+      return res.status(409).json({
+        error: 'already labeled',
+        existing_label: existing.label,
+        labeled_by: existing.labeled_by,
+        labeled_at: existing.labeled_at,
+        resulting_action_item_id: existing.resulting_action_item_id,
+      });
+    }
+
+    const labeledBy = (req.user && req.user.email) || (res.locals && res.locals.user && res.locals.user.email) || 'unknown';
+    let resulting_action_item_id = null;
+    if (label === 'real_miss' && candidate_title) {
+      const created = db.insertManualActionItem(parseInt(meeting_id), meeting.meeting?.client_id || meeting.client_id, {
+        title: candidate_title,
+        owner_name: candidate_owner || null,
+        description: candidate_evidence || null,
+      });
+      resulting_action_item_id = created?.id || created?.lastInsertRowid || null;
+    }
+
+    db.insertTruthLabel({
+      meetingId: parseInt(meeting_id),
+      candidateHash: candidate_hash,
+      candidateTitle: candidate_title || '(no title)',
+      candidateEvidence: candidate_evidence || null,
+      candidateConfidence: candidate_confidence || null,
+      label,
+      severity,
+      notes,
+      labeledBy,
+      resultingActionItemId: resulting_action_item_id,
+    });
+
+    res.json({ ok: true, label, resulting_action_item_id, labeled_by: labeledBy });
+  } catch (err) {
+    if (err.message?.includes('UNIQUE')) return res.status(409).json({ error: 'already labeled' });
+    console.warn('[truth-labels] failed:', err.message);
     res.status(500).json({ error: err.message });
   }
 });

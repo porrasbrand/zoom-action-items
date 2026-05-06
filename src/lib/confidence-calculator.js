@@ -1,74 +1,91 @@
 /**
- * Confidence Calculator - Determines green/yellow/red confidence signal
- * Based on keyword ratio and extraction quality
+ * Confidence Calculator — green/yellow/red dashboard signal.
+ *
+ * Path-C upgrade (2026-05-06): the AI adversarial verifier's
+ * completeness_assessment is now the PRIMARY signal source. The regex
+ * keyword ratio is fallback-only and no longer escalates to red on
+ * ratio alone (that rule produced the false positive on the 88k-char
+ * 2-Part Huddle).
  */
 
 /**
- * Calculate confidence signal for a meeting's extraction
- * @param {Object} scanResult - Result from keyword scanner
- * @param {number} actionItemCount - Number of extracted action items
- * @param {string} transcriptRaw - Raw transcript text
- * @param {string} meetingStatus - Meeting processing status
- * @returns {Object} Confidence assessment
+ * @param {Object}  scanResult       — keyword-scanner output (fallback only)
+ * @param {number}  actionItemCount  — # extracted action items
+ * @param {string}  transcriptRaw    — raw transcript text
+ * @param {string}  meetingStatus    — meeting processing status
+ * @param {Object?} verifierResult   — optional adversarial-verifier output
+ *                                     { completeness_assessment, missed_items: [{evidence_valid, confidence}, …] }
  */
-export function calculateConfidence(scanResult, actionItemCount, transcriptRaw, meetingStatus = 'completed') {
+export function calculateConfidence(scanResult, actionItemCount, transcriptRaw, meetingStatus = 'completed', verifierResult = null) {
   const keywordCount = scanResult?.totalPhrases || 0;
   const transcriptLength = transcriptRaw?.length || 0;
+  const baseFields = { keywordCount, itemCount: actionItemCount, categories: scanResult?.categories || {} };
 
-  // Handle edge cases first
+  // Edge cases first
   if (meetingStatus === 'error' || meetingStatus === 'failed') {
-    return {
-      signal: 'red',
-      ratio: 0,
-      reason: 'Extraction failed — manual review required',
-      keywordCount,
-      itemCount: actionItemCount
-    };
+    return { signal: 'red', ratio: 0, reason: 'Extraction failed — manual review required', source: 'edge', ...baseFields };
   }
-
   if (!transcriptRaw || transcriptLength < 100) {
+    return { signal: 'red', ratio: 0, reason: 'No transcript available — cannot validate', source: 'edge', ...baseFields };
+  }
+
+  // PRIMARY: AI verifier assessment
+  if (verifierResult?.completeness_assessment) {
+    const a = verifierResult.completeness_assessment;
+    const allMissed = Array.isArray(verifierResult.missed_items) ? verifierResult.missed_items : [];
+    // Items with explicit evidence_valid=false are dropped from the count;
+    // legacy rows without that flag are treated as valid.
+    const validMissed = allMissed.filter(m => m.evidence_valid !== false);
+    const highConf = validMissed.filter(m => m.confidence === 'HIGH').length;
+
+    if (a === 'complete') {
+      return { signal: 'green', ratio: 0, reason: 'Verified complete by AI auditor', source: 'verifier', suggestedCount: 0, ...baseFields };
+    }
+    if (a === 'mostly_complete') {
+      return {
+        signal: 'yellow',
+        ratio: 0,
+        reason: highConf > 0 ? `${highConf} possible missed items — review` : 'Minor verifier notes — see panel',
+        source: 'verifier',
+        suggestedCount: validMissed.length,
+        ...baseFields,
+      };
+    }
+    // 'incomplete' or anything else
     return {
-      signal: 'red',
+      signal: highConf > 0 ? 'red' : 'yellow',
       ratio: 0,
-      reason: 'No transcript available — cannot validate',
-      keywordCount,
-      itemCount: actionItemCount
+      reason: highConf > 0 ? `${highConf} likely missed items — review required` : `Verifier flagged ${validMissed.length} possible items`,
+      source: 'verifier',
+      suggestedCount: validMissed.length,
+      ...baseFields,
     };
   }
 
-  // Calculate ratio
+  // FALLBACK: regex (verifier hasn't run yet / failed)
+  // Drop the >10:1 ratio rule — caused the 88k Huddle / 23.5:1 false positive.
+  // Only keep the 'lots of phrases but 0 items' yellow flag.
   const ratio = actionItemCount > 0 ? (keywordCount / actionItemCount) : (keywordCount > 0 ? Infinity : 0);
+  const ratioOut = ratio === Infinity ? -1 : parseFloat(ratio.toFixed(2));
 
-  // Determine signal based on thresholds
-  let signal, reason;
-
-  if (ratio > 10 || (keywordCount > 20 && actionItemCount === 0)) {
-    // Red: Very high ratio or many keywords with no items
-    signal = 'red';
-    reason = `High keyword ratio (${ratio === Infinity ? '∞' : ratio.toFixed(1)}:1) — manual review required`;
-  } else if (ratio > 5 || actionItemCount === 0 || transcriptLength < 500) {
-    // Yellow: Moderate concern
-    signal = 'yellow';
-    if (actionItemCount === 0 && keywordCount > 0) {
-      reason = `${keywordCount} commitment phrases but no items extracted — review recommended`;
-    } else if (transcriptLength < 500) {
-      reason = `Short transcript (${transcriptLength} chars) — may be incomplete`;
-    } else {
-      reason = `Elevated keyword ratio (${ratio.toFixed(1)}:1) — review recommended`;
-    }
-  } else {
-    // Green: Normal extraction
-    signal = 'green';
-    reason = `Keywords align with items (ratio ${ratio.toFixed(1)}:1)`;
+  if (actionItemCount === 0 && keywordCount > 20) {
+    return {
+      signal: 'yellow', ratio: ratioOut,
+      reason: `${keywordCount} commitment phrases but 0 items — review`,
+      source: 'regex_fallback', ...baseFields,
+    };
   }
-
+  if (transcriptLength < 500) {
+    return {
+      signal: 'yellow', ratio: ratioOut,
+      reason: `Short transcript (${transcriptLength} chars) — may be incomplete`,
+      source: 'regex_fallback', ...baseFields,
+    };
+  }
+  // No verifier result yet → pending, not red. Verifier auto-run usually catches up within ~30s.
   return {
-    signal,
-    ratio: ratio === Infinity ? -1 : parseFloat(ratio.toFixed(2)),
-    reason,
-    keywordCount,
-    itemCount: actionItemCount,
-    categories: scanResult?.categories || {}
+    signal: 'pending', ratio: ratioOut,
+    reason: 'Awaiting AI verification', source: 'regex_fallback', ...baseFields,
   };
 }
 

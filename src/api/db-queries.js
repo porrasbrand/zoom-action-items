@@ -292,6 +292,17 @@ export function getMeetingById(id) {
     } catch { /* ignore parse errors */ }
   }
 
+  // Path-C: parse adversarial_result + client_commitments so the frontend
+  // can read missed_items[] / client_commitments[] directly without re-parsing.
+  if (meeting.adversarial_result) {
+    try { meeting.adversarial_result_parsed = JSON.parse(meeting.adversarial_result); }
+    catch { /* ignore */ }
+  }
+  if (meeting.client_commitments) {
+    try { meeting.client_commitments_parsed = JSON.parse(meeting.client_commitments); }
+    catch { /* ignore */ }
+  }
+
   // Get action items (exclude superseded by default)
   const action_items = d.prepare(`
     SELECT * FROM action_items WHERE meeting_id = ? AND (status IS NULL OR status != 'superseded') ORDER BY priority DESC, created_at ASC
@@ -657,6 +668,64 @@ export function updateMeetingAdversarial(id, { adversarialResult, completenessAs
     SET adversarial_result = ?, adversarial_run_at = datetime('now'), completeness_assessment = ?, confidence_signal = ?, updated_at = datetime('now')
     WHERE id = ?
   `).run(JSON.stringify(adversarialResult), completenessAssessment, confidenceSignal, id);
+}
+
+// Path-C: extended saver — writes the new columns introduced in
+// migrations/002 (client_commitments, verifier_model, verifier_version)
+// alongside the existing adversarial_result/completeness_assessment.
+export function updateMeetingAdversarialV2(id, {
+  adversarialResult,
+  clientCommitments,
+  completenessAssessment,
+  confidenceSignal,
+  verifierModel,
+  verifierVersion = 'v2-offsets',
+}) {
+  const d = getDb();
+  return d.prepare(`
+    UPDATE meetings
+    SET adversarial_result = ?,
+        client_commitments = ?,
+        adversarial_run_at = datetime('now'),
+        completeness_assessment = ?,
+        confidence_signal = ?,
+        verifier_model = ?,
+        verifier_version = ?,
+        updated_at = datetime('now')
+    WHERE id = ?
+  `).run(
+    JSON.stringify(adversarialResult),
+    JSON.stringify(clientCommitments || []),
+    completenessAssessment,
+    confidenceSignal,
+    verifierModel || null,
+    verifierVersion,
+    id,
+  );
+}
+
+// Truth-label helpers (workflow-integrated 3-button labeling)
+export function insertTruthLabel({ meetingId, candidateHash, candidateTitle, candidateEvidence, candidateConfidence, label, severity, notes, labeledBy, resultingActionItemId }) {
+  const d = getDb();
+  return d.prepare(`
+    INSERT INTO truth_labels
+      (meeting_id, candidate_hash, candidate_title, candidate_evidence, candidate_confidence,
+       label, label_severity, label_notes, labeled_by, resulting_action_item_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    meetingId, candidateHash, candidateTitle, candidateEvidence || null, candidateConfidence || null,
+    label, severity || null, notes || null, labeledBy || null, resultingActionItemId || null,
+  );
+}
+
+export function getTruthLabel(meetingId, candidateHash) {
+  const d = getDb();
+  return d.prepare('SELECT * FROM truth_labels WHERE meeting_id = ? AND candidate_hash = ?').get(meetingId, candidateHash);
+}
+
+export function getTruthLabelsByMeeting(meetingId) {
+  const d = getDb();
+  return d.prepare('SELECT * FROM truth_labels WHERE meeting_id = ? ORDER BY labeled_at').all(meetingId);
 }
 
 export function insertSuggestedItem(meetingId, clientId, item) {
