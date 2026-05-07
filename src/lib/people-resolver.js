@@ -26,6 +26,7 @@ const NAME_ALIASES = {
   'richard osterude': 'osterude@gmail.com',
   'manuel': 'manuel@breakthrough3x.com',
   'manuel porras': 'manuel@breakthrough3x.com',
+  'mp': 'manuel@breakthrough3x.com',
   'juan': 'jmejia@breakthrough3x.com',
   'juan mejia': 'jmejia@breakthrough3x.com',
   'joaco': 'jmejia@breakthrough3x.com',
