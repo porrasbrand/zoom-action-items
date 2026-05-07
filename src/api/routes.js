@@ -20,7 +20,7 @@ import { extractMeetingData } from '../lib/ai-extractor.js';
 import { styleTitle, styleTitleForce } from '../lib/title-styler.js';
 import { styleDescription } from '../lib/description-styler.js';
 import { weekdayName } from '../lib/util.js';
-import { sliceEvidence, canonicalCandidateHash } from '../lib/transcript-utils.js';
+import { sliceEvidence, canonicalCandidateHash, findAnchorRange } from '../lib/transcript-utils.js';
 import { embedActionItems, classifyDedup } from '../lib/dedup-matcher.js';
 import { parseVTT, extractSpeakers } from '../lib/vtt-parser.js';
 import { detectSummary } from '../lib/summary-detector.js';
@@ -1279,18 +1279,27 @@ router.post('/meetings/:id/verify', async (req, res) => {
 
     const result = await verifyExtraction(meeting.transcript_raw, items);
 
-    // Path-C: slice each missed_item's offset evidence deterministically + canonical hash
+    // Pattern A: locate evidence via anchor_quote — backend deterministic search
+    // replaces the prior LLM-emitted char offsets (which were unreliable in long contexts).
     const transcriptForSlicing = meeting.transcript_raw.slice(0, 80_000);
-    const baseMissed = (result.missed_items || []).map(mi => {
+    const buildEvidence = (mi) => {
       const ev = mi.evidence || {};
-      const slice = sliceEvidence(transcriptForSlicing, ev.start_char, ev.end_char);
-      return { ...mi, evidence_text: slice, evidence_valid: slice !== null, candidate_hash: canonicalCandidateHash(mi) };
-    });
-    const baseClient = (result.client_commitments || []).map(mi => {
-      const ev = mi.evidence || {};
-      const slice = sliceEvidence(transcriptForSlicing, ev.start_char, ev.end_char);
-      return { ...mi, evidence_text: slice, evidence_valid: slice !== null, candidate_hash: canonicalCandidateHash(mi) };
-    });
+      const range = findAnchorRange(transcriptForSlicing, ev.anchor_quote || '', { hintCenter: ev.start_char });
+      const slice = (range.anchor_match_quality === 'not_found')
+        ? null
+        : sliceEvidence(transcriptForSlicing, range.start_char, range.end_char);
+      return {
+        ...mi,
+        evidence: { ...ev, start_char: range.start_char, end_char: range.end_char,
+                    anchor_match_quality: range.anchor_match_quality,
+                    anchor_match_count: range.anchor_match_count },
+        evidence_text: slice,
+        evidence_valid: slice !== null,
+        candidate_hash: canonicalCandidateHash(mi),
+      };
+    };
+    const baseMissed = (result.missed_items || []).map(buildEvidence);
+    const baseClient = (result.client_commitments || []).map(buildEvidence);
 
     // Path-C-2: dedup matching layer. For each verifier candidate, classify
     // whether it duplicates an existing action_item in the same meeting.

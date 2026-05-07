@@ -1509,6 +1509,21 @@
     .v2-missed-row.severity-catastrophic { border-left: 4px solid #f85149; }
     .v2-missed-row.severity-nice { opacity: 0.85; }
 
+    /* Pattern A: anchor-quote match-quality indicators */
+    .v2-anchor-badge { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 3px; margin-left: 6px; vertical-align: middle; }
+    .v2-anchor-badge.fuzzy { background: #d2992222; color: #d29922; border: 1px solid #d2992255; }
+    .v2-anchor-badge.ambiguous { background: #1f6feb22; color: #58a6ff; border: 1px solid #1f6feb55; }
+    .v2-evidence-missing {
+      background: rgba(248,161,74,0.08);
+      border-left: 3px solid #f8a14a;
+      padding: 8px 10px;
+      margin: 6px 0;
+      font-size: 12px;
+      color: #d29922;
+      font-style: italic;
+    }
+    .v2-evidence-missing strong { color: #f8a14a; }
+
     .accept-btn {
       background: #238636;
       color: white;
@@ -8142,10 +8157,27 @@
       const conf = item.confidence || 'MEDIUM';
       const sev = item.severity || 'important';
       const valid = item.evidence_valid !== false && item.evidence_text;
-      const evidence = valid
-        ? `<div class="v2-evidence">${escapeHtml(item.evidence_text)}</div>`
-        : `<div class="v2-evidence v2-evidence-stale">[evidence offset invalid — model returned a span we couldn't slice]</div>`;
-      const speakerHint = item.evidence?.speaker ? ` — said by <em>${escapeHtml(item.evidence.speaker)}</em>` : '';
+      const matchQuality = item.evidence?.anchor_match_quality;
+      const matchCount = item.evidence?.anchor_match_count || 0;
+      // Pattern A render paths by anchor_match_quality:
+      //   exact     → render evidence normally, no badge
+      //   fuzzy     → render evidence + 🔍 'approximate match' badge
+      //   ambiguous → render best-guess + 🔀 'multiple matches' badge
+      //   not_found → warning block instead of confidently showing wrong text
+      let anchorBadge = '';
+      let evidence;
+      if (matchQuality === 'not_found' || (!valid && matchQuality)) {
+        const summary = item.evidence?.summary || '(no summary)';
+        const anchor = item.evidence?.anchor_quote || '';
+        evidence = `<div class="v2-evidence-missing">⚠ <strong>Evidence anchor not found</strong> in transcript — model may have paraphrased.<br>Summary: ${escapeHtml(summary)}${anchor ? `<br>Anchor it tried: <code>${escapeHtml(anchor.slice(0,120))}</code>` : ''}</div>`;
+      } else if (valid) {
+        evidence = `<div class="v2-evidence">${escapeHtml(item.evidence_text)}</div>`;
+        if (matchQuality === 'fuzzy') anchorBadge = ' <span class="v2-anchor-badge fuzzy">🔍 approximate match</span>';
+        else if (matchQuality === 'ambiguous') anchorBadge = ` <span class="v2-anchor-badge ambiguous">🔀 ${matchCount} matches — best guess</span>`;
+      } else {
+        evidence = `<div class="v2-evidence v2-evidence-stale">[evidence couldn't be sliced]</div>`;
+      }
+      const speakerHint = item.evidence?.speaker ? ` — said by <em>${escapeHtml(item.evidence.speaker)}</em>${anchorBadge}` : anchorBadge;
       const summary = item.evidence?.summary ? `<div class="v2-meta">📝 ${escapeHtml(item.evidence.summary)}</div>` : '';
       const candidateHash = item.candidate_hash || '';
       const tier = item.dedup_classification || 'not_duplicate';

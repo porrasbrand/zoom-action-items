@@ -23,7 +23,7 @@ import { matchClient, isInternalMeeting } from './lib/client-matcher.js';
 import { extractMeetingData } from './lib/ai-extractor.js';
 import { styleTitle } from './lib/title-styler.js';
 import { verifyExtraction } from './lib/adversarial-verifier.js';
-import { sliceEvidence, canonicalCandidateHash } from './lib/transcript-utils.js';
+import { sliceEvidence, canonicalCandidateHash, findAnchorRange } from './lib/transcript-utils.js';
 import { embedActionItems, classifyDedup } from './lib/dedup-matcher.js';
 import { calculateConfidence } from './lib/confidence-calculator.js';
 import { scanTranscript } from './lib/keyword-scanner.js';
@@ -222,26 +222,28 @@ async function processMeeting(meeting) {
       try {
         const insertedItems = db.getActionItemsByMeeting?.(meetingId) || extraction.action_items || [];
         const result = await verifyExtraction(parsedTranscript, insertedItems);
-        const baseMissed = (result.missed_items || []).map(mi => {
+        // Pattern A: locate evidence via anchor_quote (LLM emits a 10-20 word
+        // verbatim copy; backend deterministically finds it). If older
+        // start_char/end_char are still present (legacy prompts), use them
+        // as a hintCenter for the rare 'ambiguous' (multi-match) case.
+        const buildEvidence = (mi) => {
           const ev = mi.evidence || {};
-          const slice = sliceEvidence(parsedTranscript, ev.start_char, ev.end_char);
+          const range = findAnchorRange(parsedTranscript, ev.anchor_quote || '', { hintCenter: ev.start_char });
+          const slice = (range.anchor_match_quality === 'not_found')
+            ? null
+            : sliceEvidence(parsedTranscript, range.start_char, range.end_char);
           return {
             ...mi,
+            evidence: { ...ev, start_char: range.start_char, end_char: range.end_char,
+                        anchor_match_quality: range.anchor_match_quality,
+                        anchor_match_count: range.anchor_match_count },
             evidence_text: slice,
             evidence_valid: slice !== null,
             candidate_hash: canonicalCandidateHash(mi),
           };
-        });
-        const baseClient = (result.client_commitments || []).map(mi => {
-          const ev = mi.evidence || {};
-          const slice = sliceEvidence(parsedTranscript, ev.start_char, ev.end_char);
-          return {
-            ...mi,
-            evidence_text: slice,
-            evidence_valid: slice !== null,
-            candidate_hash: canonicalCandidateHash(mi),
-          };
-        });
+        };
+        const baseMissed = (result.missed_items || []).map(buildEvidence);
+        const baseClient = (result.client_commitments || []).map(buildEvidence);
         // Path-C-2: dedup classification (intra-meeting only). Best-effort —
         // any per-candidate failure leaves dedup_classification='not_duplicate'
         // so the user still sees the candidate (bias toward show, not silent hide).

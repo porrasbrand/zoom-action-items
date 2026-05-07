@@ -66,10 +66,9 @@ Your task:
      "title": "what needs to be done (clear, actionable)",
      "owner": "who is responsible (use exact name from transcript)",
      "evidence": {
-       "start_char": <integer 0-based offset into the transcript text we provided>,
-       "end_char": <integer 0-based offset, exclusive>,
        "speaker": "speaker name as it appears in transcript",
-       "summary": "1-sentence summary of what was said in your own words"
+       "summary": "1-sentence summary of what was said in your own words",
+       "anchor_quote": "<EXACT 10-20 word verbatim snippet from the transcript>"
      },
      "confidence": "HIGH/MEDIUM/LOW",
      "severity": "catastrophic" | "important" | "nice-to-have",
@@ -96,16 +95,24 @@ Be CONSERVATIVE with 'catastrophic' — reserve it for genuinely high-stakes
 items. When in doubt, choose 'important'. Most meetings have zero
 catastrophic items.
 
-CRITICAL OFFSET RULES:
-- start_char/end_char are character offsets into the transcript text we provided above (after "ORIGINAL TRANSCRIPT:")
-- The slice transcript[start_char:end_char] MUST be the exact text where this commitment was made
-- Each evidence span MUST be at least 150 characters wide — covering the
-  full speaker turn that contains the commitment PLUS 1–2 surrounding
-  turns for context. Prefer 150–400 chars. The 50–300 range previously
-  suggested produced fragments that were unreadable without context.
-- Do NOT paraphrase or copy text into the JSON — just give us the offsets, our backend will render the slice
-- If you cannot identify a span at least 150 chars wide, lower the
-  confidence to LOW or skip the item entirely
+CRITICAL ANCHOR_QUOTE RULES:
+- anchor_quote MUST be an EXACT verbatim copy from the transcript — every character
+  including punctuation, capitalization, ellipses, and whitespace as it appears in
+  the transcript above (after "ORIGINAL TRANSCRIPT:").
+- DO NOT paraphrase, normalize, or "clean up" the quote. We use string matching to
+  locate it in the transcript. Even one altered character breaks the match.
+- 10–20 words is the target. Capture the speaker's commitment phrase plus 2–5
+  surrounding words for disambiguation when multiple commitments use similar phrasing.
+- DO NOT include the speaker-name prefix (e.g. "[00:01:42] Bill Soady:") inside
+  anchor_quote — those are part of our transcript formatting and may have variant
+  whitespace.
+- If you cannot extract a verbatim 10–20 word snippet (e.g. the commitment is implied
+  across multiple turns and no single contiguous span captures it), set confidence to
+  LOW and set anchor_quote to "" (empty string).
+
+We DO NOT need character offsets. Backend will locate the anchor_quote in the
+transcript deterministically. This is critical: char offsets are unreliable for
+long transcripts — verbatim quotes are not.
 
 4. HIGH confidence: Explicit verbal commitment ("I will do X", "I'll handle that")
    MEDIUM confidence: Implied commitment or request that should probably be tracked
