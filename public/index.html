@@ -274,6 +274,29 @@
       color: #8b949e;
     }
 
+    /* Push-status indicator on meeting cards. Inline pill in the meta row. */
+    .meeting-card .push-indicator {
+      display: inline-block;
+      font-size: 11px;
+      padding: 1px 6px;
+      border-radius: 10px;
+      margin-left: 8px;
+      white-space: nowrap;
+      vertical-align: middle;
+      font-weight: 500;
+    }
+    .meeting-card .push-indicator.partial {
+      color: #d29922;
+      background: rgba(210,153,34,0.12);
+      border: 1px solid rgba(210,153,34,0.35);
+    }
+    .meeting-card .push-indicator.all-done {
+      color: #3fb950;
+      background: rgba(63,185,80,0.12);
+      border: 1px solid rgba(63,185,80,0.35);
+      font-weight: 600;
+    }
+
     /* Right Panel - Meeting Detail */
     .right-panel {
       flex: 1;
@@ -6265,6 +6288,18 @@
     }
 
     // Render meeting list
+    // Push-status indicator on each meeting card.
+    // Hide entirely if 0 pushed; amber '📤 N/M' for partial; green '✅ M done' for all-pushed.
+    function renderPushIndicator(m) {
+      const pushed = Number(m.ph_pushed_count ?? m.pushed_count ?? 0);
+      const total = Number(m.ph_total_items ?? m.action_item_count ?? 0);
+      if (pushed === 0 || total === 0) return '';
+      if (pushed >= total) {
+        return `<span class="push-indicator all-done" title="All ${total} action items pushed to ProofHub">✅ ${total} done</span>`;
+      }
+      return `<span class="push-indicator partial" title="${pushed} of ${total} action items pushed to ProofHub">📤 ${pushed}/${total}</span>`;
+    }
+
     function renderMeetingList() {
       const container = document.getElementById('meetingList');
 
@@ -6291,6 +6326,7 @@
               <span class="counts">
                 ${m.action_item_count || 0} actions · ${m.duration_minutes || 0}m
               </span>
+              ${renderPushIndicator(m)}
             </div>
           </div>
         `;

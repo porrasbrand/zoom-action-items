@@ -264,7 +264,9 @@ export function getMeetings({ client_id, status, from, to, limit = 50, offset = 
       (SELECT COUNT(*) FROM action_items WHERE meeting_id = m.id AND source != 'adversarial_added' AND (status IS NULL OR status NOT IN ('superseded'))) as action_item_count,
       (SELECT COUNT(*) FROM action_items WHERE meeting_id = m.id AND source = 'adversarial_added' AND status = 'suggested') as suggested_count,
       (SELECT COUNT(*) FROM decisions WHERE meeting_id = m.id) as decision_count,
-      (SELECT COUNT(*) FROM action_items WHERE meeting_id = m.id AND (ph_task_id IS NOT NULL OR status = 'pushed')) as pushed_count
+      (SELECT COUNT(*) FROM action_items WHERE meeting_id = m.id AND (ph_task_id IS NOT NULL OR status = 'pushed')) as pushed_count,
+      (SELECT COUNT(*) FROM action_items WHERE meeting_id = m.id AND ph_task_id IS NOT NULL) as ph_pushed_count,
+      (SELECT COUNT(*) FROM action_items WHERE meeting_id = m.id AND source != 'adversarial_added' AND (status IS NULL OR status NOT IN ('superseded','rejected'))) as ph_total_items
     FROM meetings m
     ${whereClause}
     ORDER BY m.start_time ${orderDir}
