@@ -809,7 +809,8 @@ router.get('/proofhub/client-project/:clientId', (req, res) => {
     res.json({
       client_id: client.id,
       client_name: client.name,
-      ph_project_id: client.ph_project_id || null
+      ph_project_id: client.ph_project_id || null,
+      internal: !!client.internal,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });

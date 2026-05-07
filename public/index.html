@@ -6797,11 +6797,31 @@
       return await res.json();
     }
 
-    // Get client's PH project
+    // Get client's PH project. Defensive fallback: if the matched client is
+    // internal:true but has no ph_project_id mapped (e.g. a future internal
+    // meeting type without an explicit PH project), fall back to the
+    // canonical b3x-internal entry so the push panel still pre-fills the
+    // Breakthrough3x project. Belt-and-suspenders against future config drift.
     async function getClientProject(clientId) {
       if (!clientId) return null;
-      const res = await fetch(`${API}/proofhub/client-project/${encodeURIComponent(clientId)}`);
-      return await res.json();
+      try {
+        const res = await fetch(`${API}/proofhub/client-project/${encodeURIComponent(clientId)}`);
+        if (!res.ok) return null;
+        const data = await res.json();
+        if (!data?.ph_project_id && data?.internal && clientId !== 'b3x-internal') {
+          const fb = await fetch(`${API}/proofhub/client-project/b3x-internal`);
+          if (fb.ok) {
+            const fbData = await fb.json();
+            if (fbData?.ph_project_id) {
+              return { ...data, ph_project_id: fbData.ph_project_id, _fallback: 'b3x-internal' };
+            }
+          }
+        }
+        return data;
+      } catch (err) {
+        console.warn('[getClientProject] failed:', err);
+        return null;
+      }
     }
 
     // Initialize Flatpickr on push panel date inputs when shown
