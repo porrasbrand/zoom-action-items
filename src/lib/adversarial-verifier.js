@@ -99,9 +99,13 @@ catastrophic items.
 CRITICAL OFFSET RULES:
 - start_char/end_char are character offsets into the transcript text we provided above (after "ORIGINAL TRANSCRIPT:")
 - The slice transcript[start_char:end_char] MUST be the exact text where this commitment was made
-- The evidence span should be 50-300 characters (long enough to be meaningful, short enough to be precise)
+- Each evidence span MUST be at least 150 characters wide — covering the
+  full speaker turn that contains the commitment PLUS 1–2 surrounding
+  turns for context. Prefer 150–400 chars. The 50–300 range previously
+  suggested produced fragments that were unreadable without context.
 - Do NOT paraphrase or copy text into the JSON — just give us the offsets, our backend will render the slice
-- If you cannot identify a precise span, lower the confidence to LOW or skip the item entirely
+- If you cannot identify a span at least 150 chars wide, lower the
+  confidence to LOW or skip the item entirely
 
 4. HIGH confidence: Explicit verbal commitment ("I will do X", "I'll handle that")
    MEDIUM confidence: Implied commitment or request that should probably be tracked
