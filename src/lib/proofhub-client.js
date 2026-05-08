@@ -169,26 +169,29 @@ export async function getTaskComments(projectId, taskListId, taskId) {
 }
 
 /**
- * Upload a file and attach it to a task in ProofHub.
+ * Upload a file and attach it to a task in ProofHub at the TASK level
+ * (same place the PH UI 'Attach files' paperclip button puts files —
+ * connected_with='todo_item').
  *
- * The ProofHub v3 API does NOT expose direct task attachments. The actual
- * working contract (verified empirically against breakthrough3x.proofhub.com
- * 2026-05-08, after the previous /api/v3/projects/{id}/files implementation
- * was found to silently 'succeed' with HTTP 200 + {success:false,code:1201}):
+ * Working contract (verified empirically 2026-05-08; prior implementation
+ * shipped attachments via comments which the user did not want):
  *
  *   Step 1: POST https://<host>/files/upload.php  (NOT /api/v3/...)
  *           multipart form-data: { project_id, file }
- *           → 200 OK, JSON body must include success:true and file_id
+ *           → 200 OK with body {success:true, file_id:<int>}.
  *
- *   Step 2: POST /api/v3/projects/<pid>/todolists/<tlid>/tasks/<taskId>/comments
- *           JSON body: { description, attachments: <file_id> }
- *           → returns the comment with attachments[] populated. The file is
- *             linked to the task via that comment (connected_with =
- *             "todo_item_comment"). PH renders these in the task's
- *             attachment list.
+ *   Step 2: GET  /api/v3/projects/<pid>/todolists/<tlid>/tasks/<taskId>
+ *           → read existing task.attachments to merge against
  *
- * Validates BOTH responses' JSON bodies — never trusts HTTP 200 alone.
- * Throws on any failure so the caller (POST /attach) can surface the error.
+ *   Step 3: PUT  /api/v3/projects/<pid>/todolists/<tlid>/tasks/<taskId>
+ *           JSON body: { attachments: [...existing_ids, new_fileId] }
+ *           → returns the task with attachments[] including the new file.
+ *
+ * Important: PH treats PUT.attachments as REPLACE (not append). We GET
+ * the current list first and union our new file_id. Without this, a
+ * second push would clobber the first attachment.
+ *
+ * Validates JSON bodies on every step — never trusts HTTP 200 alone.
  */
 export async function uploadFileToTask(projectId, taskListId, taskId, fileBuffer, filename) {
   if (!isProofhubConfigured()) throw new Error('ProofHub not configured');
@@ -227,37 +230,34 @@ export async function uploadFileToTask(projectId, taskListId, taskId, fileBuffer
   const fileId = uploadJson.file_id;
   console.log(`[PH attach] step1 OK — uploaded ${filename} (${fileBuffer.length} bytes) → file_id=${fileId}`);
 
-  // Step 2 — attach to task via a comment carrying the file_id
-  const commentRes = await request('POST', `/projects/${projectId}/todolists/${taskListId}/tasks/${taskId}/comments`, {
-    description: `<p>📎 Attachment: ${escapeForCommentDescription(filename || 'attachment')}</p>`,
-    attachments: fileId,
+  // Step 2 — read existing task.attachments[] so we don't clobber on PUT
+  const taskRes = await request('GET', `/projects/${projectId}/todolists/${taskListId}/tasks/${taskId}`);
+  const existingIds = Array.isArray(taskRes?.attachments)
+    ? taskRes.attachments.map(a => a && a.id).filter(Boolean)
+    : [];
+  console.log(`[PH attach] step2 OK — task currently has ${existingIds.length} attachment(s)`);
+
+  // Step 3 — PUT merged list (PH PUT REPLACES the attachments array)
+  const merged = [...existingIds, fileId];
+  const putRes = await request('PUT', `/projects/${projectId}/todolists/${taskListId}/tasks/${taskId}`, {
+    attachments: merged,
   });
-  // request() throws on non-2xx, but defensively check the body shape too.
-  const attached = Array.isArray(commentRes?.attachments)
-    ? commentRes.attachments.find(a => a && a.id === fileId)
+  const attached = Array.isArray(putRes?.attachments)
+    ? putRes.attachments.find(a => a && a.id === fileId)
     : null;
   if (!attached) {
-    console.error('[PH attach] step2 unexpected response:', JSON.stringify(commentRes).slice(0, 400));
-    throw new Error('PH comment created but attachments array missing the file_id');
+    console.error('[PH attach] step3 unexpected response:', JSON.stringify(putRes).slice(0, 400));
+    throw new Error('PH PUT succeeded but new file_id not present in task.attachments[]');
   }
-  console.log(`[PH attach] step2 OK — comment ${commentRes.id} created with attachment ${fileId} (${filename})`);
+  console.log(`[PH attach] step3 OK — file_id=${fileId} now at task level (${attached.connected_with || 'todo_item'}); task has ${putRes.attachments.length} attachment(s) total`);
 
   return {
     fileId,
     attached: true,
     filename,
     size: fileBuffer.length,
-    commentId: commentRes.id,
     fileUrl: attached.url?.view || attached.url?.download || null,
   };
-}
-
-function escapeForCommentDescription(s) {
-  return String(s || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
 }
 
 export async function addTaskComment(projectId, taskListId, taskId, content) {

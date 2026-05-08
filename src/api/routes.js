@@ -837,14 +837,13 @@ router.post('/proofhub/tasks/:taskId/attach', upload.single('file'), async (req,
 
     console.log(`[PH attach ${reqId}] start — task=${taskId} file=${req.file.originalname} size=${req.file.size}`);
     const result = await proofhub.uploadFileToTask(project_id, task_list_id, taskId, req.file.buffer, req.file.originalname);
-    console.log(`[PH attach ${reqId}] OK — file_id=${result.fileId} comment_id=${result.commentId}`);
+    console.log(`[PH attach ${reqId}] OK — file_id=${result.fileId} (task-level)`);
     res.json({
       success: true,
       attached: true,
       file_id: result.fileId,
       filename: result.filename || req.file.originalname,
       size: result.size || req.file.size,
-      comment_id: result.commentId || null,
       file_url: result.fileUrl || null,
     });
   } catch (err) {
