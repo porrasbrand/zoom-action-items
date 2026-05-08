@@ -1236,6 +1236,29 @@
       cursor: pointer;
       font-size: 13px;
     }
+    .push-panel.drop-active { outline: 2px dashed #58a6ff; outline-offset: -2px; background: #161b22f0; }
+    .push-panel .attach-row label .attach-add-btn {
+      display: inline-block; margin-left: 8px; padding: 2px 8px; font-size: 11px;
+      color: #58a6ff; background: #1f6feb22; border: 1px solid #1f6feb55;
+      border-radius: 4px; cursor: pointer;
+    }
+    .push-panel .attach-row label .attach-add-btn:hover { background: #1f6feb44; }
+    .push-panel .attach-list { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+    .push-panel .attach-list:empty { display: none; }
+    .push-panel .attach-chip {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px; padding: 6px 10px; font-size: 12px; color: #c9d1d9;
+      background: #21262d; border: 1px solid #30363d; border-radius: 4px;
+    }
+    .push-panel .attach-chip.too-big { border-color: #f85149; color: #f85149; }
+    .push-panel .attach-chip .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .push-panel .attach-chip .size { color: #8b949e; font-size: 11px; }
+    .push-panel .attach-chip .remove { cursor: pointer; color: #8b949e; padding: 0 4px; }
+    .push-panel .attach-chip .remove:hover { color: #f85149; }
+    .push-panel .attach-warning {
+      margin-top: 6px; padding: 6px 10px; font-size: 11px; color: #f85149;
+      background: rgba(248,81,73,0.08); border-left: 3px solid #f85149; border-radius: 3px;
+    }
 
     .style-indicator {
       font-size: 11px;
@@ -6746,6 +6769,15 @@
                 <label>Due Date</label>
                 <input type="date" id="ph-due-${item.id}" value="${item.due_date ? item.due_date.slice(0, 10) : ''}">
               </div>
+              <div class="form-row attach-row" id="attach-row-${item.id}">
+                <label>Attachments
+                  <label class="attach-add-btn" title="Add files (≤10 MB each)">📎 Add files
+                    <input type="file" multiple style="display:none" onchange="onStageFiles(${item.id}, this.files); this.value='';">
+                  </label>
+                </label>
+                <div class="attach-list" id="attach-list-${item.id}"></div>
+                <div class="attach-warning" id="attach-warning-${item.id}" style="display:none"></div>
+              </div>
               <div class="form-actions">
                 <label style="font-size:12px;color:#8b949e;display:flex;align-items:center;gap:4px"><input type="checkbox" id="ph-ak-${item.id}" checked style="cursor:pointer"> AK comment</label>
                 <button class="push-confirm-btn" id="push-btn-${item.id}" onclick="pushToPH(${item.id})">Push</button>
@@ -6887,6 +6919,11 @@
       const panel = document.getElementById(`push-panel-${itemId}`);
       panel.classList.add('visible');
       initPushDatePicker(itemId);
+      bindPushPanelDropZone(itemId);
+      // Reset staging on every open so a previously-cancelled panel doesn't
+      // surface stale files when the user re-opens.
+      window.pendingAttachments[itemId] = [];
+      renderAttachList(itemId);
 
       const projectSelect = document.getElementById(`ph-project-${itemId}`);
       const assigneeSelect = document.getElementById(`ph-assignee-${itemId}`);
@@ -7064,6 +7101,81 @@
       input.value = '';
     }
 
+    // ─── Push-panel staged attachments ────────────────────────────────
+    // In-memory only — staging is lost on page reload (acceptable v1).
+    window.pendingAttachments = window.pendingAttachments || {};
+    const ATTACH_MAX_BYTES = 10 * 1024 * 1024;
+
+    function fmtSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    function onStageFiles(itemId, fileList) {
+      const arr = Array.from(fileList || []);
+      if (!arr.length) return;
+      const list = (window.pendingAttachments[itemId] = window.pendingAttachments[itemId] || []);
+      // De-dup by name+size+lastModified to avoid double-staging the same file.
+      const key = (f) => `${f.name}::${f.size}::${f.lastModified}`;
+      const seen = new Set(list.map(key));
+      for (const f of arr) if (!seen.has(key(f))) list.push(f);
+      renderAttachList(itemId);
+    }
+
+    function removeStagedFile(itemId, idx) {
+      const list = window.pendingAttachments[itemId] || [];
+      list.splice(idx, 1);
+      renderAttachList(itemId);
+    }
+
+    function renderAttachList(itemId) {
+      const list = window.pendingAttachments[itemId] || [];
+      const el = document.getElementById('attach-list-' + itemId);
+      const warnEl = document.getElementById('attach-warning-' + itemId);
+      const pushBtn = document.getElementById('push-btn-' + itemId);
+      if (!el) return;
+      el.innerHTML = list.map((f, i) => {
+        const tooBig = f.size > ATTACH_MAX_BYTES;
+        return `<div class="attach-chip${tooBig ? ' too-big' : ''}">
+          <span class="name" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</span>
+          <span class="size">${fmtSize(f.size)}${tooBig ? ' · over 10 MB' : ''}</span>
+          <span class="remove" onclick="removeStagedFile(${itemId}, ${i})" title="Remove">✕</span>
+        </div>`;
+      }).join('');
+      const oversized = list.filter(f => f.size > ATTACH_MAX_BYTES);
+      if (warnEl) {
+        if (oversized.length) {
+          warnEl.style.display = '';
+          warnEl.textContent = `${oversized.length} file${oversized.length>1?'s':''} over the 10 MB limit — remove or resize before pushing.`;
+        } else {
+          warnEl.style.display = 'none';
+          warnEl.textContent = '';
+        }
+      }
+      if (pushBtn) {
+        pushBtn.disabled = oversized.length > 0;
+        pushBtn.title = oversized.length ? 'Remove oversized files first' : '';
+      }
+    }
+
+    // Drag-drop on the open push panel — anywhere in the panel accepts files.
+    function bindPushPanelDropZone(itemId) {
+      const panel = document.getElementById('push-panel-' + itemId);
+      if (!panel || panel.dataset.dropBound === '1') return;
+      panel.dataset.dropBound = '1';
+      const stop = (e) => { e.preventDefault(); e.stopPropagation(); };
+      panel.addEventListener('dragenter', (e) => { stop(e); panel.classList.add('drop-active'); });
+      panel.addEventListener('dragover',  (e) => { stop(e); panel.classList.add('drop-active'); });
+      panel.addEventListener('dragleave', (e) => { stop(e); if (e.target === panel) panel.classList.remove('drop-active'); });
+      panel.addEventListener('drop', (e) => {
+        stop(e);
+        panel.classList.remove('drop-active');
+        const dt = e.dataTransfer;
+        if (dt?.files?.length) onStageFiles(itemId, dt.files);
+      });
+    }
+
     async function pushToPH(itemId) {
       const btn = document.getElementById(`push-btn-${itemId}`);
       btn.disabled = true;
@@ -7102,6 +7214,44 @@
         if (!res.ok) throw new Error(data.error || 'Failed to push');
 
         showToast('Pushed to ProofHub ✓');
+
+        // Upload any staged attachments sequentially against the new PH task.
+        const staged = (window.pendingAttachments && window.pendingAttachments[itemId]) || [];
+        const phTaskId = data.ph_task_id || data.task?.id || data.id;
+        if (staged.length && phTaskId) {
+          btn.textContent = `Uploading 0/${staged.length}…`;
+          let ok = 0;
+          for (let i = 0; i < staged.length; i++) {
+            const f = staged[i];
+            if (f.size > ATTACH_MAX_BYTES) {
+              showToast(`❌ ${f.name} skipped (over 10 MB)`, true);
+              continue;
+            }
+            try {
+              const fd = new FormData();
+              fd.append('file', f);
+              fd.append('project_id', projectId);
+              if (taskListId) fd.append('task_list_id', taskListId);
+              const ar = await fetch(`${API}/proofhub/tasks/${phTaskId}/attach`, { method: 'POST', body: fd });
+              const aj = await ar.json().catch(() => ({}));
+              if (ar.ok && aj.success) {
+                ok++;
+                showToast(`📎 ${f.name} attached`);
+              } else {
+                showToast(`❌ ${f.name} attachment failed`, true);
+              }
+            } catch (e) {
+              showToast(`❌ ${f.name} upload error: ${e.message}`, true);
+            }
+            btn.textContent = `Uploading ${ok}/${staged.length}…`;
+          }
+          if (ok < staged.length) {
+            showToast(`Task pushed. ${ok} of ${staged.length} attachments uploaded. Use 📎 to retry the rest.`);
+          }
+        }
+
+        // Clear staging then close.
+        if (window.pendingAttachments) delete window.pendingAttachments[itemId];
         hidePushPanel(itemId);
         refreshActionItem(itemId);
         loadStats();
