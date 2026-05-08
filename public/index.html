@@ -5689,13 +5689,14 @@
     }
 
     // Toast notifications
-    function showToast(message, isError = false) {
+    function showToast(message, isError = false, opts = {}) {
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
       toast.className = 'toast' + (isError ? ' error' : '');
       toast.textContent = message;
       container.appendChild(toast);
-      setTimeout(() => toast.remove(), 3000);
+      const ttl = Number.isFinite(opts.ttlMs) ? opts.ttlMs : 3000;
+      setTimeout(() => toast.remove(), ttl);
     }
 
     // Format date
@@ -7085,20 +7086,60 @@
     }
 
     // Push single item to ProofHub
+    // Session-cache of attachments rendered inline beneath each pushed item.
+    // Source of truth = the /attach response. Lost on reload (acceptable per spec).
+    window.itemAttachments = window.itemAttachments || {};
+
     async function attachFileToPH(itemId, projectId, taskListId, taskId, input) {
       const file = input.files[0];
       if (!file) return;
+      console.log('[attach] starting', { itemId, taskId, name: file.name, size: file.size });
       const formData = new FormData();
       formData.append('file', file);
       formData.append('project_id', projectId);
       formData.append('task_list_id', taskListId);
       try {
         const res = await fetch(`${API}/proofhub/tasks/${taskId}/attach`, { method: 'POST', body: formData });
-        const data = await res.json();
-        if (data.success) { showToast('File attached to PH task'); }
-        else { showToast('Attachment failed: ' + (data.error || 'unknown'), true); }
-      } catch (e) { showToast('Upload failed: ' + e.message, true); }
+        const data = await res.json().catch(() => ({}));
+        console.log('[attach] response', res.status, data);
+        if (res.ok && data.success && data.file_id) {
+          (window.itemAttachments[itemId] = window.itemAttachments[itemId] || []).push({
+            file_id: data.file_id, filename: data.filename || file.name, size: data.size || file.size,
+            file_url: data.file_url || null,
+          });
+          renderAttachmentsLine(itemId);
+          showToast('📎 ' + (data.filename || file.name) + ' attached');
+        } else {
+          const err = data.error || ('HTTP ' + res.status);
+          console.error('[attach] failed', err);
+          showToast('❌ ' + file.name + ' attachment failed: ' + err, true, { ttlMs: 9000 });
+        }
+      } catch (e) {
+        console.error('[attach] exception', e);
+        showToast('❌ ' + file.name + ' upload error: ' + e.message, true, { ttlMs: 9000 });
+      }
       input.value = '';
+    }
+
+    // Render a small inline 'Attachments:' line under the action item meta row.
+    // Reads from window.itemAttachments[itemId] (populated as user uploads).
+    function renderAttachmentsLine(itemId) {
+      const card = document.getElementById('action-' + itemId);
+      if (!card) return;
+      let line = card.querySelector('.attachments-line');
+      const list = window.itemAttachments[itemId] || [];
+      if (list.length === 0) { if (line) line.remove(); return; }
+      if (!line) {
+        line = document.createElement('div');
+        line.className = 'attachments-line';
+        line.style.cssText = 'font-size:11px;color:#8b949e;margin-top:4px;padding-top:4px';
+        const header = card.querySelector('.item-row') || card;
+        header.insertAdjacentElement('afterend', line);
+      }
+      line.innerHTML = '📎 ' + list.map(a => {
+        const label = escapeHtml(a.filename || 'file');
+        return a.file_url ? `<a href="${escapeAttr(a.file_url)}" target="_blank" style="color:#58a6ff;text-decoration:none">${label}</a>` : label;
+      }).join(' · ');
     }
 
     // ─── Push-panel staged attachments ────────────────────────────────
@@ -7221,12 +7262,14 @@
         if (staged.length && phTaskId) {
           btn.textContent = `Uploading 0/${staged.length}…`;
           let ok = 0;
+          window.itemAttachments[itemId] = window.itemAttachments[itemId] || [];
           for (let i = 0; i < staged.length; i++) {
             const f = staged[i];
             if (f.size > ATTACH_MAX_BYTES) {
-              showToast(`❌ ${f.name} skipped (over 10 MB)`, true);
+              showToast(`❌ ${f.name} skipped (over 10 MB)`, true, { ttlMs: 9000 });
               continue;
             }
+            console.log('[push-attach] uploading', { itemId, phTaskId, name: f.name, size: f.size });
             try {
               const fd = new FormData();
               fd.append('file', f);
@@ -7234,26 +7277,35 @@
               if (taskListId) fd.append('task_list_id', taskListId);
               const ar = await fetch(`${API}/proofhub/tasks/${phTaskId}/attach`, { method: 'POST', body: fd });
               const aj = await ar.json().catch(() => ({}));
-              if (ar.ok && aj.success) {
+              console.log('[push-attach] response', ar.status, aj);
+              if (ar.ok && aj.success && aj.file_id) {
                 ok++;
+                window.itemAttachments[itemId].push({
+                  file_id: aj.file_id, filename: aj.filename || f.name, size: aj.size || f.size,
+                  file_url: aj.file_url || null,
+                });
                 showToast(`📎 ${f.name} attached`);
               } else {
-                showToast(`❌ ${f.name} attachment failed`, true);
+                const err = aj.error || ('HTTP ' + ar.status);
+                console.error('[push-attach] failed', err);
+                showToast(`❌ ${f.name} attachment failed: ${err}`, true, { ttlMs: 9000 });
               }
             } catch (e) {
-              showToast(`❌ ${f.name} upload error: ${e.message}`, true);
+              console.error('[push-attach] exception', e);
+              showToast(`❌ ${f.name} upload error: ${e.message}`, true, { ttlMs: 9000 });
             }
             btn.textContent = `Uploading ${ok}/${staged.length}…`;
           }
           if (ok < staged.length) {
-            showToast(`Task pushed. ${ok} of ${staged.length} attachments uploaded. Use 📎 to retry the rest.`);
+            showToast(`Task pushed. ${ok} of ${staged.length} attachments uploaded. Use 📎 to retry the rest.`, true, { ttlMs: 12000 });
           }
         }
 
         // Clear staging then close.
         if (window.pendingAttachments) delete window.pendingAttachments[itemId];
         hidePushPanel(itemId);
-        refreshActionItem(itemId);
+        await refreshActionItem(itemId);
+        renderAttachmentsLine(itemId);
         loadStats();
       } catch (err) {
         showToast(err.message, true);

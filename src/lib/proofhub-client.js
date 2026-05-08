@@ -168,6 +168,28 @@ export async function getTaskComments(projectId, taskListId, taskId) {
   return request('GET', `/projects/${projectId}/todolists/${taskListId}/tasks/${taskId}/comments`);
 }
 
+/**
+ * Upload a file and attach it to a task in ProofHub.
+ *
+ * The ProofHub v3 API does NOT expose direct task attachments. The actual
+ * working contract (verified empirically against breakthrough3x.proofhub.com
+ * 2026-05-08, after the previous /api/v3/projects/{id}/files implementation
+ * was found to silently 'succeed' with HTTP 200 + {success:false,code:1201}):
+ *
+ *   Step 1: POST https://<host>/files/upload.php  (NOT /api/v3/...)
+ *           multipart form-data: { project_id, file }
+ *           → 200 OK, JSON body must include success:true and file_id
+ *
+ *   Step 2: POST /api/v3/projects/<pid>/todolists/<tlid>/tasks/<taskId>/comments
+ *           JSON body: { description, attachments: <file_id> }
+ *           → returns the comment with attachments[] populated. The file is
+ *             linked to the task via that comment (connected_with =
+ *             "todo_item_comment"). PH renders these in the task's
+ *             attachment list.
+ *
+ * Validates BOTH responses' JSON bodies — never trusts HTTP 200 alone.
+ * Throws on any failure so the caller (POST /attach) can surface the error.
+ */
 export async function uploadFileToTask(projectId, taskListId, taskId, fileBuffer, filename) {
   if (!isProofhubConfigured()) throw new Error('ProofHub not configured');
 
@@ -176,35 +198,66 @@ export async function uploadFileToTask(projectId, taskListId, taskId, fileBuffer
   if (elapsed < MIN_INTERVAL) await new Promise(r => setTimeout(r, MIN_INTERVAL - elapsed));
   lastRequestTime = Date.now();
 
-  const baseUrl = `https://${process.env.PROOFHUB_COMPANY_URL}/api/v3`;
+  const host = process.env.PROOFHUB_COMPANY_URL;
 
-  // Step 1: Upload file
-  const boundary = '----FormBoundary' + Date.now();
-  const fileBody = Buffer.concat([
-    Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${filename}"\r\nContent-Type: application/octet-stream\r\n\r\n`),
-    fileBuffer,
-    Buffer.from(`\r\n--${boundary}--\r\n`)
-  ]);
+  // Step 1 — upload to /files/upload.php
+  const fd = new FormData();
+  fd.append('project_id', String(projectId));
+  fd.append('file', new Blob([fileBuffer]), filename || 'attachment.bin');
 
-  const uploadRes = await fetch(`${baseUrl}/projects/${projectId}/files`, {
+  const uploadRes = await fetch(`https://${host}/files/upload.php`, {
     method: 'POST',
     headers: {
-      'X-API-KEY': process.env.PROOFHUB_API_KEY,
+      'x-api-key': process.env.PROOFHUB_API_KEY,
       'User-Agent': 'ZoomPipeline/1.0',
-      'Content-Type': `multipart/form-data; boundary=${boundary}`
     },
-    body: fileBody
+    body: fd,
   });
+  const uploadText = await uploadRes.text();
+  let uploadJson;
+  try { uploadJson = JSON.parse(uploadText); }
+  catch (e) {
+    console.error('[PH attach] step1 non-JSON response:', uploadRes.status, uploadText.slice(0, 300));
+    throw new Error(`PH file upload returned non-JSON (${uploadRes.status}): ${uploadText.slice(0, 200)}`);
+  }
+  if (!uploadJson.success || !uploadJson.file_id) {
+    console.error('[PH attach] step1 failed:', uploadRes.status, JSON.stringify(uploadJson).slice(0, 400));
+    throw new Error(`PH file upload failed (${uploadJson.code || uploadRes.status}): ${uploadJson.message || uploadText.slice(0, 200)}`);
+  }
+  const fileId = uploadJson.file_id;
+  console.log(`[PH attach] step1 OK — uploaded ${filename} (${fileBuffer.length} bytes) → file_id=${fileId}`);
 
-  if (!uploadRes.ok) throw new Error(`PH file upload failed: ${uploadRes.status}`);
-  const uploaded = await uploadRes.json();
-
-  // Step 2: Attach to task
-  const attachRes = await request('PUT', `/projects/${projectId}/todolists/${taskListId}/tasks/${taskId}`, {
-    attachments: [uploaded.id]
+  // Step 2 — attach to task via a comment carrying the file_id
+  const commentRes = await request('POST', `/projects/${projectId}/todolists/${taskListId}/tasks/${taskId}/comments`, {
+    description: `<p>📎 Attachment: ${escapeForCommentDescription(filename || 'attachment')}</p>`,
+    attachments: fileId,
   });
+  // request() throws on non-2xx, but defensively check the body shape too.
+  const attached = Array.isArray(commentRes?.attachments)
+    ? commentRes.attachments.find(a => a && a.id === fileId)
+    : null;
+  if (!attached) {
+    console.error('[PH attach] step2 unexpected response:', JSON.stringify(commentRes).slice(0, 400));
+    throw new Error('PH comment created but attachments array missing the file_id');
+  }
+  console.log(`[PH attach] step2 OK — comment ${commentRes.id} created with attachment ${fileId} (${filename})`);
 
-  return { fileId: uploaded.id, attached: true };
+  return {
+    fileId,
+    attached: true,
+    filename,
+    size: fileBuffer.length,
+    commentId: commentRes.id,
+    fileUrl: attached.url?.view || attached.url?.download || null,
+  };
+}
+
+function escapeForCommentDescription(s) {
+  return String(s || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 export async function addTaskComment(projectId, taskListId, taskId, content) {

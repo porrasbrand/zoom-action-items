@@ -820,6 +820,8 @@ router.get('/proofhub/client-project/:clientId', (req, res) => {
 // POST /api/proofhub/tasks/:taskId/attach - Upload file attachment to PH task
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } }); // 10MB max
 router.post('/proofhub/tasks/:taskId/attach', upload.single('file'), async (req, res) => {
+  const reqId = Math.random().toString(36).slice(2, 8);
+  const { taskId } = req.params;
   try {
     if (!proofhub.isProofhubConfigured()) {
       return res.status(503).json({ error: 'ProofHub not configured' });
@@ -828,16 +830,25 @@ router.post('/proofhub/tasks/:taskId/attach', upload.single('file'), async (req,
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    const { taskId } = req.params;
     const { project_id, task_list_id } = req.body;
     if (!project_id || !task_list_id) {
       return res.status(400).json({ error: 'project_id and task_list_id required' });
     }
 
+    console.log(`[PH attach ${reqId}] start — task=${taskId} file=${req.file.originalname} size=${req.file.size}`);
     const result = await proofhub.uploadFileToTask(project_id, task_list_id, taskId, req.file.buffer, req.file.originalname);
-    res.json({ success: true, ...result });
+    console.log(`[PH attach ${reqId}] OK — file_id=${result.fileId} comment_id=${result.commentId}`);
+    res.json({
+      success: true,
+      attached: true,
+      file_id: result.fileId,
+      filename: result.filename || req.file.originalname,
+      size: result.size || req.file.size,
+      comment_id: result.commentId || null,
+      file_url: result.fileUrl || null,
+    });
   } catch (err) {
-    console.error('[PH] File upload failed:', err.message);
+    console.error(`[PH attach ${reqId}] FAILED — task=${taskId} file=${req.file?.originalname || '?'}: ${err.message}`);
     res.status(500).json({ error: err.message });
   }
 });
