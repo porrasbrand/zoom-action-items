@@ -1,0 +1,19 @@
+{
+  "_comment": "Echelon-pilot topic-tag dictionary for AI↔PH matching. Each tag is a normalized lowercase substring matched against title+description (case-insensitive). Curated per the daily-matcher-worker.md spec; tune as candidate-queue accept/reject ratios surface false positives.",
+  "echelon": [
+    "lsa", "google business profile", "gbp",
+    "ghl", "gohighlevel",
+    "servicetitan", "service titan",
+    "jackery", "generator",
+    "mailer", "check letter", "checkbox",
+    "hiring", "hvac technician", "tech",
+    "sarah", "admin", "workaround",
+    "goldenticket", "golden ticket",
+    "rhema",
+    "scorecard", "revenue",
+    "raise hand", "raisehand",
+    "referral", "gift card",
+    "connection campaign",
+    "lead gen video", "faq video"
+  ]
+}
