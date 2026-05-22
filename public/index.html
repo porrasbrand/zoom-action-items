@@ -418,6 +418,17 @@
       gap: 12px;
     }
 
+    /* Phase: deep-linking deep-link highlight (~6s warm-yellow pulse). Triggered
+       by ?focus=ai:<id> URL param matching a rendered action-item via JS. */
+    .action-item--focused {
+      animation: ai-focus-pulse 6s ease-out forwards;
+    }
+    @keyframes ai-focus-pulse {
+      0%   { background-color: rgba(255, 213, 79, 0.65); box-shadow: 0 0 0 3px rgba(255, 213, 79, 0.5); }
+      30%  { background-color: rgba(255, 213, 79, 0.40); box-shadow: 0 0 0 3px rgba(255, 213, 79, 0.3); }
+      100% { background-color: transparent; box-shadow: 0 0 0 0 transparent; }
+    }
+
     .action-item.complete {
       opacity: 0.6;
     }
@@ -6466,7 +6477,7 @@
       createMeetingOwnersList(meeting.id, attendees, action_items);
 
       panel.innerHTML = `
-        <div class="meeting-detail">
+        <div class="meeting-detail" data-meeting-id="${meeting.id || ''}">
           <div class="header-section">
             <div class="topic-title">${escapeHtml(meeting.topic || 'Untitled')}</div>
             <div class="meta-row">
@@ -6729,7 +6740,7 @@
 
       const taskClass = isClientTask ? ' client-task' : ' b3x-task';
       return `
-        <div class="action-item ${statusClass}${taskClass}" id="action-${item.id}" data-meeting-id="${item.meeting_id || meeting?.id || ''}">
+        <div class="action-item ${statusClass}${taskClass}" id="ai-${item.id}" data-action-item-id="${item.id}" data-meeting-id="${item.meeting_id || meeting?.id || ''}">
           <div class="item-content">
             <div class="item-row">
               <div class="item-title inline-edit" onclick="startEdit(${item.id}, 'title', this)">${escapeHtml(item.title)}</div>
@@ -6991,7 +7002,7 @@
       }
 
       // Show collaborator assignment preview
-      const itemEl = document.getElementById('action-' + itemId);
+      const itemEl = document.getElementById('ai-' + itemId);
       const collabText = itemEl?.querySelector('.collaborators')?.textContent || '';
       const collabMatch = collabText.match(/Also:\s*(.+)/);
       if (collabMatch) {
@@ -7229,7 +7240,7 @@
     // Render a small inline 'Attachments:' line under the action item meta row.
     // Reads from window.itemAttachments[itemId] (populated as user uploads).
     function renderAttachmentsLine(itemId) {
-      const card = document.getElementById('action-' + itemId);
+      const card = document.getElementById('ai-' + itemId);
       if (!card) return;
       let line = card.querySelector('.attachments-line');
       const list = window.itemAttachments[itemId] || [];
@@ -8045,7 +8056,7 @@
 
     // Scroll to action item or decision
     function scrollToItem(itemId, type = 'action') {
-      const el = document.getElementById(`action-${itemId}`);
+      const el = document.getElementById(`ai-${itemId}`);
       if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
         el.classList.add('flash-highlight');
@@ -8733,7 +8744,7 @@
     // Complete action item
 
     // Update a single action item card without re-rendering the whole panel
-    async function refreshActionItem(itemId) {      try {        const res = await fetch(API + "/action-items/" + itemId);        if (!res.ok) throw new Error("HTTP " + res.status);        const item = await res.json();        const card = document.getElementById("action-" + itemId);        if (!card) { console.warn("Card not found: action-" + itemId); return; }        const meeting = window._currentMeeting || {};        const newHtml = renderActionItem(item, meeting).trim();        const temp = document.createElement("div");        temp.innerHTML = newHtml;        const newCard = temp.firstElementChild;        if (!newCard) { console.warn("Failed to create new card element"); return; }        card.replaceWith(newCard);      } catch (e) {        console.warn("Failed to refresh action item " + itemId + ":", e);      }    }
+    async function refreshActionItem(itemId) {      try {        const res = await fetch(API + "/action-items/" + itemId);        if (!res.ok) throw new Error("HTTP " + res.status);        const item = await res.json();        const card = document.getElementById("ai-" + itemId);        if (!card) { console.warn("Card not found: ai-" + itemId); return; }        const meeting = window._currentMeeting || {};        const newHtml = renderActionItem(item, meeting).trim();        const temp = document.createElement("div");        temp.innerHTML = newHtml;        const newCard = temp.firstElementChild;        if (!newCard) { console.warn("Failed to create new card element"); return; }        card.replaceWith(newCard);      } catch (e) {        console.warn("Failed to refresh action item " + itemId + ":", e);      }    }
 
     // Update stats without full reload
     async function refreshStats() {
@@ -12161,6 +12172,69 @@ for (const [itemKey, { title, firstIdx }] of allItems) {        const _lastSnap 
 
       // Initialize tab from URL hash
       initTabFromHash();
+
+      // Deep-link URL convention (handoff: dashboard-url-convention.md).
+      // Supports ?meeting=<id>&focus=<entity>:<id>. v1: only `ai:<id>` active;
+      // meeting/commit/task focus entity types are no-op (forward-compat).
+      await handleDeepLink();
+    }
+
+    // Parse URL params and execute deep-link behavior.
+    // Returns a promise that resolves when scroll/highlight (if any) is done.
+    async function handleDeepLink() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const meetingParam = params.get('meeting');
+        const focusParam = params.get('focus');
+
+        // Step 1: if a meeting is specified, open its detail panel.
+        if (meetingParam && /^\d+$/.test(meetingParam)) {
+          const meetingId = parseInt(meetingParam, 10);
+          try {
+            await loadMeetingDetail(meetingId);
+          } catch (e) {
+            console.warn('[deep-link] loadMeetingDetail failed:', e?.message || e);
+          }
+        }
+
+        // Step 2: if focus=<entity>:<id> is present, dispatch by entity.
+        if (focusParam && typeof focusParam === 'string') {
+          const colonIdx = focusParam.indexOf(':');
+          if (colonIdx < 1) return; // malformed (no colon or empty entity) — no-op
+          const entity = focusParam.slice(0, colonIdx);
+          const id = focusParam.slice(colonIdx + 1);
+          if (!id) return; // empty id — no-op
+
+          // v1: only ai:<id> active. Other entity types reserved.
+          if (entity !== 'ai') {
+            console.debug('[deep-link] focus entity not yet active:', entity);
+            return;
+          }
+          // ai:<id> requires numeric id; gracefully no-op on non-numeric.
+          if (!/^\d+$/.test(id)) {
+            console.debug('[deep-link] focus=ai:<id> requires numeric id, got:', id);
+            return;
+          }
+
+          // Wait one frame so the meeting panel layout settles after expand.
+          await new Promise(r => requestAnimationFrame(r));
+          // Use data-action-item-id (the resilient hook per the spec).
+          const sel = `[data-action-item-id="${CSS.escape(id)}"]`;
+          const node = document.querySelector(sel);
+          if (!node) {
+            console.debug('[deep-link] focus target not in DOM:', sel);
+            return;
+          }
+          try {
+            node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } catch {}
+          node.classList.add('action-item--focused');
+          setTimeout(() => node.classList.remove('action-item--focused'), 6000);
+        }
+      } catch (e) {
+        // Failures must never break the page. Spec contract: graceful degradation.
+        console.warn('[deep-link] handler error:', e?.message || e);
+      }
     }
 
     init();
