@@ -865,7 +865,7 @@ router.post('/action-items/:id/push-ph', async (req, res) => {
       return res.status(404).json({ error: 'Action item not found' });
     }
 
-    const { ph_project_id, ph_task_list_id, ph_assignee_id, title, description } = req.body;
+    const { ph_project_id, ph_task_list_id, ph_assignee_id, ph_collaborator_ids, title, description } = req.body;
 
     if (!ph_project_id) {
       return res.status(400).json({ error: 'ph_project_id required' });
@@ -890,9 +890,21 @@ router.post('/action-items/:id/push-ph', async (req, res) => {
       }
     }
 
-    // Build assignee list: owner + B3X collaborators
+    // Build assignee list: owner + frontend-picked collaborators (ids) + B3X
+    // collaborators resolved from the legacy free-text 'collaborators' field
+    // (kept as fallback for items where the picker wasn't used).
     const assignedIds = [];
     if (assigneeId) assignedIds.push(parseInt(assigneeId));
+
+    // Frontend multi-assignee picker (Phase: multi-collaborator UI).
+    if (Array.isArray(ph_collaborator_ids)) {
+      for (const raw of ph_collaborator_ids) {
+        const id = parseInt(raw);
+        if (Number.isFinite(id) && id > 0 && !assignedIds.includes(id)) {
+          assignedIds.push(id);
+        }
+      }
+    }
 
     const { assignedIds: collabIds, clientNames } = resolveCollaborators(item.collaborators);
     for (const cid of collabIds) {
