@@ -1213,6 +1213,23 @@
       margin-top: 4px;
     }
 
+    .push-panel .ph-collab-picker { display: flex; flex-direction: column; gap: 6px; }
+    .push-panel .ph-collab-chips { display: flex; flex-wrap: wrap; gap: 6px; min-height: 4px; }
+    .push-panel .ph-collab-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #1f6feb; color: #fff; padding: 3px 4px 3px 10px;
+      border-radius: 12px; font-size: 12px; line-height: 1.2;
+    }
+    .push-panel .ph-collab-chip .ph-collab-chip-x {
+      background: rgba(255,255,255,0.18); border: 0; color: #fff;
+      width: 18px; height: 18px; border-radius: 50%;
+      cursor: pointer; font-size: 13px; line-height: 16px; padding: 0;
+    }
+    .push-panel .ph-collab-chip .ph-collab-chip-x:hover { background: rgba(255,255,255,0.32); }
+    .push-panel .ph-collab-chip-client {
+      background: #d29922; color: #1f1f1f;
+    }
+
     .push-panel .form-actions {
       display: flex;
       gap: 8px;
@@ -6764,10 +6781,20 @@
               </div>
               <div class="form-row">
                 <label>Owner</label>
-                <select id="ph-assignee-${item.id}">
+                <select id="ph-assignee-${item.id}" onchange="renderPhCollabPicker(${item.id})">
                   <option value="">Loading...</option>
                 </select>
                 <div class="resolved-info" id="resolved-info-${item.id}"></div>
+              </div>
+              <div class="form-row">
+                <label>Collaborators</label>
+                <div class="ph-collab-picker" id="ph-collab-picker-${item.id}">
+                  <div class="ph-collab-chips" id="ph-collab-chips-${item.id}"></div>
+                  <select id="ph-collab-select-${item.id}" onchange="addPhCollaborator(${item.id}, this)">
+                    <option value="">＋ Add collaborator…</option>
+                  </select>
+                  <div style="font-size:11px;color:#8b949e;margin-top:4px">All chips are also assigned to the PH task (multi-assignee). AK comment still goes only to the Owner above.</div>
+                </div>
               </div>
               <div class="form-row">
                 <label>Title <span class="style-indicator" id="style-chip-title-${item.id}" style="display:none"></span></label>
@@ -6983,13 +7010,91 @@
         const b3xNames = names.filter(n => INTERNAL_TEAM.some(t => n.toLowerCase().includes(t.name.toLowerCase())));
         const clientNames = names.filter(n => !INTERNAL_TEAM.some(t => n.toLowerCase().includes(t.name.toLowerCase())));
         let collabInfo = '';
-        if (b3xNames.length) collabInfo += `<div style="font-size:12px;color:#51cf66;margin-top:4px">👥 Also assigned: ${b3xNames.join(', ')}</div>`;
+        if (b3xNames.length) collabInfo += `<div style="font-size:12px;color:#51cf66;margin-top:4px">👥 Pre-filled from item: ${b3xNames.join(', ')}</div>`;
         if (clientNames.length) collabInfo += `<div style="font-size:12px;color:#d29922;margin-top:2px">📝 In description: ${clientNames.join(', ')}</div>`;
         resolvedInfo.innerHTML += collabInfo;
       }
 
+      // Populate the multi-assignee picker from the same people source as Owner.
+      initPhCollabPicker(itemId, people, collabMatch ? collabMatch[1] : '');
+
       // Fire-and-forget: pull push-time AI styling for this item.
       loadStyledSuggestions(itemId);
+    }
+
+    // ─── Push-panel multi-assignee picker (collaborators) ───
+    // Per-item state: { all: [people], selectedIds: Set<number> }
+    window.phCollabState = window.phCollabState || {};
+
+    function initPhCollabPicker(itemId, people, collabText) {
+      const select = document.getElementById(`ph-collab-select-${itemId}`);
+      if (!select) return;
+      const chips  = document.getElementById(`ph-collab-chips-${itemId}`);
+      // Pre-fill: best-effort name match against the item's existing collaborators text.
+      const selectedIds = new Set();
+      if (collabText) {
+        const names = collabText.split(',').map(n => n.trim()).filter(Boolean);
+        for (const n of names) {
+          const lower = n.toLowerCase();
+          const hit = people.find(p =>
+            p.ph_id && (
+              p.name?.toLowerCase().startsWith(lower) ||
+              lower.startsWith(p.name?.toLowerCase() || ' ')
+            )
+          );
+          if (hit && hit.ph_id) selectedIds.add(Number(hit.ph_id));
+        }
+      }
+      window.phCollabState[itemId] = { all: people, selectedIds };
+      renderPhCollabPicker(itemId);
+    }
+
+    function renderPhCollabPicker(itemId) {
+      const st = window.phCollabState[itemId];
+      if (!st) return;
+      const select = document.getElementById(`ph-collab-select-${itemId}`);
+      const chips  = document.getElementById(`ph-collab-chips-${itemId}`);
+      const ownerSelect = document.getElementById(`ph-assignee-${itemId}`);
+      const ownerId = ownerSelect && ownerSelect.value ? Number(ownerSelect.value) : null;
+      // Chips for every selected id (excluding owner — owner is its own row).
+      chips.innerHTML = '';
+      for (const id of st.selectedIds) {
+        if (id === ownerId) continue;
+        const p = st.all.find(x => Number(x.ph_id) === id);
+        if (!p) continue;
+        const isClient = !INTERNAL_TEAM.some(t => (p.name||'').toLowerCase().startsWith(t.name.toLowerCase()));
+        const chip = document.createElement('span');
+        chip.className = 'ph-collab-chip' + (isClient ? ' ph-collab-chip-client' : '');
+        chip.innerHTML = `${escapeHtml(p.name)} <button class="ph-collab-chip-x" title="Remove" onclick="removePhCollaborator(${itemId}, ${id})">×</button>`;
+        chips.appendChild(chip);
+      }
+      // Dropdown: everyone NOT already selected and NOT the owner.
+      const internal = st.all.filter(p => p.ph_id && INTERNAL_TEAM.some(t => p.name.toLowerCase().startsWith(t.name.toLowerCase())));
+      const other    = st.all.filter(p => p.ph_id && !INTERNAL_TEAM.some(t => p.name.toLowerCase().startsWith(t.name.toLowerCase())));
+      const opt = (p) => {
+        const id = Number(p.ph_id);
+        if (st.selectedIds.has(id) || id === ownerId) return '';
+        return `<option value="${id}">${escapeHtml(p.name)} (${escapeHtml(p.email || '')})</option>`;
+      };
+      select.innerHTML = '<option value="">＋ Add collaborator…</option>'
+        + (internal.length ? `<optgroup label="B3X Internal">${internal.map(opt).join('')}</optgroup>` : '')
+        + (other.length    ? `<optgroup label="Other Members">${other.map(opt).join('')}</optgroup>`    : '');
+    }
+
+    function addPhCollaborator(itemId, sel) {
+      const id = Number(sel.value);
+      if (!id) return;
+      const st = window.phCollabState[itemId];
+      if (!st) return;
+      st.selectedIds.add(id);
+      sel.value = '';
+      renderPhCollabPicker(itemId);
+    }
+    function removePhCollaborator(itemId, id) {
+      const st = window.phCollabState[itemId];
+      if (!st) return;
+      st.selectedIds.delete(Number(id));
+      renderPhCollabPicker(itemId);
     }
 
     // ─── Push-time AI styling: load & toggle ───
@@ -7239,6 +7344,13 @@
       const title = document.getElementById(`ph-title-${itemId}`).value;
       const description = document.getElementById(`ph-desc-${itemId}`).value;
       const dueDate = document.getElementById(`ph-due-${itemId}`).value;
+      // Multi-assignee picker (chips). Exclude the owner so the server doesn't
+      // dedupe-and-discard the owner row when it builds the final array.
+      const collabState = (window.phCollabState || {})[itemId];
+      const ownerNum = assigneeId ? Number(assigneeId) : null;
+      const phCollaboratorIds = collabState
+        ? Array.from(collabState.selectedIds).filter(id => id !== ownerNum)
+        : [];
 
       if (!projectId) {
         showToast('Please select a project', true);
@@ -7255,6 +7367,7 @@
             ph_project_id: projectId,
             ph_task_list_id: taskListId || null,
             ph_assignee_id: assigneeId || null,
+            ph_collaborator_ids: phCollaboratorIds,
             title,
             description,
             due_date: dueDate || null,
