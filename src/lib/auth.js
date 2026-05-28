@@ -305,7 +305,7 @@ export function authMiddleware(req, res, next) {
 
   if (!session) {
     // Clear invalid cookie
-    res.clearCookie('zoom_session', { path: '/zoom' });
+    res.clearCookie('zoom_session', { path: '/' });
     return res.redirect('/zoom/login');
   }
 

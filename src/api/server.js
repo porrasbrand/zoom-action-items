@@ -233,7 +233,7 @@ app.get(BASE_PATH + '/auth/callback', async (req, res) => {
       secure: process.env.NODE_ENV === 'production' || req.secure, // auto-detect HTTPS
       sameSite: req.secure ? 'none' : 'lax', // lax for HTTP, none for HTTPS
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      path: '/zoom'
+      path: '/'
     });
 
     console.log(`[Auth] Login successful: ${email}`);
@@ -258,7 +258,7 @@ app.get(BASE_PATH + '/auth/logout', (req, res) => {
     deleteSession(sessionId);
   }
 
-  res.clearCookie('zoom_session', { path: '/zoom' });
+  res.clearCookie('zoom_session', { path: '/' });
   res.redirect(BASE_PATH + '/login');
 });
 
