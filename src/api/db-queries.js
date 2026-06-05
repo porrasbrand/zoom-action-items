@@ -219,7 +219,28 @@ export function runMigrations() {
     )
   `);
 
+  // Per-user ProofHub API keys — lets a push be authored by the logged-in user
+  // instead of the shared agency key. Seeded by a one-off INSERT outside of git.
+  d.exec(`
+    CREATE TABLE IF NOT EXISTS ph_user_keys (
+      email TEXT PRIMARY KEY,
+      api_key TEXT NOT NULL,
+      created_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
   console.log('[Migration] Database schema up to date');
+}
+
+/**
+ * Look up a ProofHub per-user API key by email (case-insensitive).
+ * Returns the raw key string or null when no row exists.
+ */
+export function getPhApiKeyForEmail(email) {
+  if (!email) return null;
+  const d = getDb();
+  const row = d.prepare('SELECT api_key FROM ph_user_keys WHERE LOWER(email) = LOWER(?)').get(String(email));
+  return row ? row.api_key : null;
 }
 
 // ============ MEETINGS ============

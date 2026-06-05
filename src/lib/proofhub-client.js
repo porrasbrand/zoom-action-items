@@ -18,7 +18,7 @@ export function isProofhubConfigured() {
 /**
  * Rate-limited request to Proofhub API
  */
-async function request(method, path, data = null) {
+async function request(method, path, data = null, apiKey = null) {
   if (!isProofhubConfigured()) {
     throw new Error('ProofHub not configured (PROOFHUB_API_KEY, PROOFHUB_COMPANY_URL required)');
   }
@@ -35,7 +35,7 @@ async function request(method, path, data = null) {
   const url = `${baseUrl}${path}`;
 
   const headers = {
-    'X-API-KEY': process.env.PROOFHUB_API_KEY,
+    'X-API-KEY': apiKey || process.env.PROOFHUB_API_KEY,
     'User-Agent': 'ZoomPipeline/1.0 (porrasbrand@gmail.com)',
     'Content-Type': 'application/json'
   };
@@ -141,10 +141,11 @@ export async function getAllProjectTasks(projectId) {
 }
 
 /**
- * Create a task
+ * Create a task. Pass `apiKey` to author the task as that user (per-user key);
+ * omit it to fall back to the shared PROOFHUB_API_KEY env var.
  */
-export async function createTask(projectId, taskListId, taskData) {
-  return request('POST', `/projects/${projectId}/todolists/${taskListId}/tasks`, taskData);
+export async function createTask(projectId, taskListId, taskData, apiKey = null) {
+  return request('POST', `/projects/${projectId}/todolists/${taskListId}/tasks`, taskData, apiKey);
 }
 
 /**
@@ -260,10 +261,11 @@ export async function uploadFileToTask(projectId, taskListId, taskId, fileBuffer
   };
 }
 
-export async function addTaskComment(projectId, taskListId, taskId, content) {
+// Pass `apiKey` to author the comment as that user; omit it to fall back to the shared key.
+export async function addTaskComment(projectId, taskListId, taskId, content, apiKey = null) {
   return request('POST', `/projects/${projectId}/todolists/${taskListId}/tasks/${taskId}/comments`, {
     description: content
-  });
+  }, apiKey);
 }
 
 /**

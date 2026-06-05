@@ -941,16 +941,32 @@ router.post('/action-items/:id/push-ph', async (req, res) => {
       taskData.start_date = meeting.meeting.start_time.slice(0, 10);
     }
 
+    // Per-user authorship: if the logged-in user has a row in ph_user_keys,
+    // use their PH API key so the task + AK comment are authored as them.
+    // Otherwise fall back to the shared env key (Richard).
+    const pusherEmail = req.user?.email || null;
+    const pusherKey = pusherEmail ? db.getPhApiKeyForEmail(pusherEmail) : null;
+    const maskKey = (k) => k ? (k.slice(0, 4) + '…' + k.slice(-4)) : '(none)';
+    if (pusherKey) {
+      console.log('[PH Push] authoring as', pusherEmail, '· key=' + maskKey(pusherKey));
+    } else if (pusherEmail) {
+      console.log('[PH Push] no per-user PH key for', pusherEmail, '— falling back to shared key');
+    }
+
     // Insert into push queue before attempting
     console.log('[PH Push] Starting push for item', itemId);
     db.insertPushQueue(itemId, ph_project_id, taskListId);
 
-    // Create the task
+    // Create the task — pass per-user key when available so PH attributes
+    // the `creator` to that user. On failure from the per-user path,
+    // surface the error (do NOT silently retry with the shared key) so we
+    // can see access-level issues during the rollout.
     let task;
     try {
-      task = await proofhub.createTask(ph_project_id, taskListId, taskData);
+      task = await proofhub.createTask(ph_project_id, taskListId, taskData, pusherKey || undefined);
     } catch (pushErr) {
-      console.error('[PH Push] FAILED for item', itemId, pushErr.message);
+      const used = pusherKey ? `per-user key (${pusherEmail}, ${maskKey(pusherKey)})` : 'shared key';
+      console.error('[PH Push] FAILED for item', itemId, '· authored via', used, '·', pushErr.message);
       db.updatePushQueueFailed(itemId, pushErr.message);
       throw pushErr;
     }
@@ -976,7 +992,7 @@ router.post('/action-items/:id/push-ph', async (req, res) => {
           body = `${item.owner_name} - Please confirm receipt of this task... Thanks...`;
           console.warn('[PH] AK comment fell back to plain text — no PH users found for assignedIds', assignedIds);
         }
-        await proofhub.addTaskComment(ph_project_id, taskListId, task.id, body);
+        await proofhub.addTaskComment(ph_project_id, taskListId, task.id, body, pusherKey || undefined);
       } catch (e) {
         console.warn('[PH] AK comment failed:', e.message);
       }
@@ -1000,6 +1016,7 @@ router.post('/action-items/:id/push-ph', async (req, res) => {
       success: true,
       ph_task_id: task.id,
       ph_task_url: phTaskUrl,
+      authored_as: pusherKey ? pusherEmail : 'shared (fallback)',
       task
     });
   } catch (err) {
