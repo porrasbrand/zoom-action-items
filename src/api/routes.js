@@ -450,7 +450,12 @@ router.get('/action-items/:id/styled-suggestions', async (req, res) => {
 
     let styledDescription = null;
     if (middleParagraph) {
-      const greeting = ownerFirst ? `${ownerFirst} - Happy ${weekdayName()}!` : '';
+      const collabFirsts = (item.collaborators || '').split(',').map(n => n.trim().split(/\s+/)[0]).filter(Boolean);
+      const greetFirsts = [...new Set([ownerFirst, ...collabFirsts].filter(Boolean))];
+      const greetNames = greetFirsts.length > 1
+        ? greetFirsts.slice(0, -1).join(', ') + ' & ' + greetFirsts[greetFirsts.length - 1]
+        : (greetFirsts[0] || '');
+      const greeting = greetNames ? `${greetNames} - Happy ${weekdayName()}!` : '';
       styledDescription = [greeting, middleParagraph, 'Thanks...'].filter(Boolean).join('\n\n');
     }
 
@@ -957,21 +962,19 @@ router.post('/action-items/:id/push-ph', async (req, res) => {
     // AK comment: auto-post acknowledgment request to assignee.
     // Use a real PH @-mention (phmention/mprofile HTML) so the assignee gets
     // notified and the comment renders as a profile chip, not plain text.
-    if (req.body.ak_comment && (assigneeId || item.owner_name)) {
+    if (req.body.ak_comment && (assignedIds.length > 0 || item.owner_name)) {
       try {
         let body;
-        if (assigneeId) {
-          const people = await proofhub.getPeople();
-          const assignee = (people || []).find(p => String(p.id) === String(assigneeId));
-          if (assignee) {
-            const mention = proofhub.formatMention(assignee);
-            body = `${mention}- Please confirm receipt of this task... Thanks...`;
-          } else {
-            body = `${item.owner_name} - Please confirm receipt of this task... Thanks...`;
-            console.warn('[PH] AK comment fell back to plain text — no PH user found for assigneeId', assigneeId);
-          }
+        const people = await proofhub.getPeople();
+        const mentions = assignedIds
+          .map(id => (people || []).find(p => String(p.id) === String(id)))
+          .filter(Boolean)
+          .map(p => proofhub.formatMention(p));
+        if (mentions.length > 0) {
+          body = `${mentions.join(' ')} - Please confirm receipt of this task... Thanks...`;
         } else {
           body = `${item.owner_name} - Please confirm receipt of this task... Thanks...`;
+          console.warn('[PH] AK comment fell back to plain text — no PH users found for assignedIds', assignedIds);
         }
         await proofhub.addTaskComment(ph_project_id, taskListId, task.id, body);
       } catch (e) {
