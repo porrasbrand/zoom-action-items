@@ -1,0 +1,25 @@
+{
+  "triage": {
+    "unmatched": {
+      "id": "",
+      "name": "zoom-unmatched",
+      "description": "Meetings that don't match any client"
+    },
+    "internal": {
+      "id": "",
+      "name": "zoom-internal",
+      "description": "Agency internal meetings (huddles, standups, etc.)"
+    },
+    "fallback": {
+      "id": "",
+      "name": "zoom-meeting-notes",
+      "description": "Fallback when target channel is inaccessible"
+    }
+  },
+  "notes": [
+    "Channel IDs left empty because bot lacks channels:read scope",
+    "The bot will try to post by channel name and log warnings on failure",
+    "To fix: Add channels:read scope to the Slack bot, or manually add the bot to channels",
+    "Client channels are configured per client in clients.json (slack_channel_id)."
+  ]
+}

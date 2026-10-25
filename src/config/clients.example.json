@@ -1,0 +1,49 @@
+{
+  "_comment": "Example client configuration with fictional data. Copy to clients.json and fill in your own clients.",
+  "clients": [
+    {
+      "id": "acme-hvac",
+      "name": "Acme HVAC",
+      "keywords": ["Acme HVAC", "Acme"],
+      "slack_channel_id": "C_EXAMPLE_1",
+      "slack_channel_name": "int-acme-hvac",
+      "ph_project_id": "1000000003",
+      "industry": "home-services",
+      "services_active": ["paid-ads", "call-tracking", "website"],
+      "services_available": ["paid-ads", "email-marketing", "call-tracking", "website", "crm-automation", "gbp"],
+      "meeting_cadence": "weekly",
+      "primary_contact": "Dana",
+      "agency_lead": "Alex"
+    },
+    {
+      "id": "beta-plumbing",
+      "name": "Beta Plumbing",
+      "keywords": ["Beta Plumbing", "Beta"],
+      "slack_channel_id": "C_EXAMPLE_2",
+      "slack_channel_name": "int-beta-plumbing",
+      "ph_project_id": "1000000004",
+      "ph_list_id": "",
+      "industry": "home-services",
+      "services_active": ["paid-ads", "email-marketing"],
+      "services_available": ["paid-ads", "email-marketing", "call-tracking", "website"],
+      "meeting_cadence": "biweekly",
+      "primary_contact": "Jamie",
+      "agency_lead": "Alex",
+      "website": "https://www.example.com"
+    },
+    {
+      "id": "agency-internal",
+      "name": "Agency Internal",
+      "keywords": ["Agency Internal", "Internal", "Team Huddle"],
+      "slack_channel_id": "",
+      "ph_project_id": "",
+      "industry": "internal",
+      "services_active": [],
+      "services_available": [],
+      "meeting_cadence": "weekly",
+      "primary_contact": null,
+      "agency_lead": "Jordan",
+      "internal": true
+    }
+  ]
+}
