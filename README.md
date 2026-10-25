@@ -189,11 +189,9 @@ Tracks the lifecycle of PPC-related action items from meeting to execution:
 2. **Verify** — GPT-5.4 semantically matches PPC tasks against ProofHub tasks created within 10 days
 3. **Report** — Dashboard shows completion rates, at-risk tasks, per-client accountability
 
-### Current Results (as of April 2026)
+### Status
 
-- **107 PPC tasks** identified across 42 meetings, 19 clients
-- **15 tracked in ProofHub (14%)** — 86% accountability gap discovered
-- Integrated into pipeline: every new meeting auto-tracked
+- Integrated into the pipeline: every new meeting is tracked automatically
 
 ### Future Phases
 
@@ -211,7 +209,6 @@ Tracks the lifecycle of PPC-related action items from meeting to execution:
 - Action item extraction accuracy: **>90%** for explicitly stated tasks
 - **99 meetings** scored by GPT-5.4 on 12 quality dimensions
 - **7 no-shows** and **3 test recordings** correctly classified and excluded
-- **107 PPC tasks** tracked with 86% accountability gap discovered
 - **50+ automated UI checks** via Playwright + Gemini vision audit agent
 - **Model comparison** tested 4 AI providers; GPT-5.4 selected for best consensus alignment
 
